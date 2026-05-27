@@ -1,0 +1,117 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_cluster_metrics_endpoints.html'
+summary: 'ONTAP REST API storage cluster metrics endpoints'
+---
+
+= ONTAP REST API storage cluster metrics endpoints
+
+
+
+== Overview
+
+Retrieves cluster-wide historical capacity metrics.
+
+== Examples
+
+=== Retrieving cluster-wide historical space metrics for the past day
+
+----
+
+# The API:
+/api/storage/cluster/metrics
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/cluster/metrics?interval=1d&fields=**" -H "accept: application/hal+json"
+
+# The response:
+Snipped most of the records
+{
+"records": [
+  {
+    "uuid": "03ca3ef6-8173-11ef-825d-005056bb2d85",
+    "timestamp": "2024-10-07T03:17:45Z",
+    "status": "ok",
+    "duration": "PT15S",
+    "available_space": 862216192,
+    "used_space": 1810432,
+    "size": 864026624,
+    "_links": {
+      "self": {
+        "href": "/api/storage/cluster/metrics/2024-10-07T03%3A17%3A45Z?fields=**"
+      }
+    }
+  },
+  {
+    "uuid": "03ca3ef6-8173-11ef-825d-005056bb2d85",
+    "timestamp": "2024-10-07T02:18:00Z",
+    "status": "partial_no_data",
+    "duration": "PT15S",
+    "available_space": 0,
+    "used_space": 0,
+    "size": 0,
+    "_links": {
+      "self": {
+        "href": "/api/storage/cluster/metrics/2024-10-07T02%3A18%3A00Z?fields=**"
+      }
+    }
+  }
+],
+"num_records": 240,
+"_links": {
+  "self": {
+    "href": "/api/storage/cluster/metrics?fields=**"
+  }
+}
+}
+----
+
+=== Retrieving historical metrics within a time range defined by timestamp
+
+----
+curl -X GET "https://<mgmt-ip>/api/storage/cluster/metrics?fields=**&timestamp=2024-10-07T03:36:45Z..2024-10-07T03:36:30Z" -H "accept: application/hal+json"
+
+#### Response:
+{
+"records": [
+{
+  "uuid": "03ca3ef6-8173-11ef-825d-005056bb2d85",
+  "timestamp": "2024-10-07T03:36:45Z",
+  "status": "ok",
+  "duration": "PT15S",
+  "available_space": 862183424,
+  "used_space": 1843200,
+  "size": 864026624,
+  "_links": {
+    "self": {
+      "href": "/api/storage/cluster/metrics/2024-10-07T03%3A36%3A45Z?fields=**"
+    }
+  }
+},
+{
+  "uuid": "03ca3ef6-8173-11ef-825d-005056bb2d85",
+  "timestamp": "2024-10-07T03:36:30Z",
+  "status": "ok",
+  "duration": "PT15S",
+  "available_space": 862183424,
+  "used_space": 1843200,
+  "size": 864026624,
+  "_links": {
+    "self": {
+      "href": "/api/storage/cluster/metrics/2024-10-07T03%3A36%3A30Z?fields=**"
+    }
+  }
+}
+],
+"num_records": 2,
+"_links": {
+"self": {
+  "href": "/api/storage/cluster/metrics?fields=**&timestamp=2024-10-07T03:36:45Z..2024-10-07T03:36:30Z"
+}
+}
+}
+----
+
+

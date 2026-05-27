@@ -1,0 +1,225 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-group-role-mappings-.html'
+summary: 'Update a configured group role-mapping entry'
+---
+
+= Update a configured group role-mapping entry
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/group/role-mappings/{group_id}/{ontap_role.name}`#
+
+*Introduced In:* 9.16
+
+Updates a configured group role-mapping.
+
+== Related ONTAP commands
+
+* `security login group role-mapping modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|group_id
+|integer
+|path
+|True
+a|Group ID.
+
+* format: int64
+* Max value: 4294967295
+* Min value: 1
+
+
+|ontap_role.name
+|string
+|path
+|True
+a|Role name.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Any comment regarding this group entry.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "scope": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ontap_role]
+[.api-collapsible-fifth-title]
+ontap_role
+
+Role name.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#group_role_mappings]
+[.api-collapsible-fifth-title]
+group_role_mappings
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Any comment regarding this group entry.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

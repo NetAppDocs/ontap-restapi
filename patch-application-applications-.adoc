@@ -1,0 +1,2924 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-application-applications-.html'
+summary: 'Update application properties'
+---
+
+= Update application properties
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/application/applications/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the properties of an application.
+
+== Overview
+
+Similar to creating an application, modification is done using the template properties of an application. The `storage_service`, `size`, and `igroup_name` of an application may be modified.
+
+== `storage_service`
+
+Storage service modifications are processed in place, meaning that the storage can not be moved to a location with more performance headroom to accommodate the request. If the current backing storage of the application is in a location that can support increased performance, the QoS policies associated with the application will be modified to allow it. If not, an error will be returned. A storage service modification to a lower tier of performance is always allowed, but the reverse modification may not be supported if the cluster is over provisioned and the cluster is unlikely to be able to fulfil the original storage service.
+
+== `size`
+
+Size modifications are processed in a variety of ways depending on the type of application. For NAS applications, volumes are grown or new volumes are added. For SAN applications, LUNs are grown, new LUNs are added to existing volumes, or new LUNs are added to new volumes. If new storage elements are created, they can be found using the link:get-application-applications-components.html[GET /application/applications/{application.uuid}/components]  interface. The creation time of each storage object is included, and the newly created objects will use the same naming scheme as the previous objects. Resize follows the best practices associated with the type of application being expanded. Reducing the size of an application is not supported.
+
+== `igroup_name`
+
+Modification of the igroup name allows an entire application to be mapped from one initiator group to another. Data access will be interrupted as the LUNs are unmapped from the original igroup and remapped to the new one.
+
+== Application state
+
+During a modification, the `state` property of the application updates to indicate `modifying`. In `modifying` state, statistics are not available and snapshot operations are not allowed. If the modification fails, it is possible for the application to be left in an inconsistent state, with the underlying ONTAP storage elements not matching across a component. When this occurs, the application is left in the `modifying` state until the command is either retried and succeeds or a call to restore the original state is successful.
+
+== Examples
+
+. Change the storage service of the database of the Oracle application to _extreme_ and resize the redo logs to _100GB_.
++
+----
+  {
+ "oracle_on_nfs": {
+   "db": {
+     "storage_service": {
+       "name": "extreme"
+     }
+   },
+   "redo_log": {
+     "size": "100GB"
+   }
+ }
+  }
+----
+
+. Change the storage service, size, and igroup of a generic application by component name.
++
+----
+  {
+ "san": {
+   "application_components": [
+     {
+       "name": "component1",
+       "storage_service": {
+         "name": "value"
+       }
+     },
+     {
+       "name": "component2",
+       "size": "200GB"
+     },
+     {
+       "name": "component3",
+       "igroup_name": "igroup5"
+     }
+   ]
+ }
+  }
+----
+
+== Learn more
+
+* link:application_overview.html[DOC /application]
+* link:getting_started_with_the_ontap_rest_api.html#Synchronous_and_asynchronous_operations[Asynchronous operations]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Application UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|creation_timestamp
+|string
+a|The time when the application was created.
+
+
+|generation
+|integer
+a|The generation number of the application. This indicates which features are supported on the application. For example, generation 1 applications do not support Snapshot copies. Support for Snapshot copies was added at generation 2. Any future generation numbers and their feature set will be documented.
+
+
+|mongo_db_on_san
+|link:#mongo_db_on_san[mongo_db_on_san]
+a|MongoDB using SAN.
+
+
+|nas
+|link:#nas[nas]
+a|A generic NAS application.
+
+
+|nvme
+|link:#zapp_nvme[zapp_nvme]
+a|An NVME application.
+
+
+|oracle_on_nfs
+|link:#oracle_on_nfs[oracle_on_nfs]
+a|Oracle using NFS.
+
+
+|oracle_on_san
+|link:#oracle_on_san[oracle_on_san]
+a|Oracle using SAN.
+
+
+|oracle_rac_on_nfs
+|link:#oracle_rac_on_nfs[oracle_rac_on_nfs]
+a|Oracle RAC using NFS.
+
+
+|oracle_rac_on_san
+|link:#oracle_rac_on_san[oracle_rac_on_san]
+a|Oracle RAC using SAN.
+
+
+|protection_granularity
+|string
+a|Protection granularity determines the scope of Snapshot copy operations for the application. Possible values are "application" and "component". If the value is "application", Snapshot copy operations are performed on the entire application. If the value is "component", Snapshot copy operations are performed separately on the application components.
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|s3_bucket
+|link:#zapp_s3_bucket[zapp_s3_bucket]
+a|A generic S3 bucket application.
+
+
+|san
+|link:#san[san]
+a|A generic SAN application.
+
+
+|sql_on_san
+|link:#sql_on_san[sql_on_san]
+a|Microsoft SQL using SAN.
+
+
+|sql_on_smb
+|link:#sql_on_smb[sql_on_smb]
+a|Microsoft SQL using SMB.
+
+
+|state
+|string
+a|The state of the application. For full functionality, applications must be in the online state. Other states indicate that the application is in a transient state and not all operations are supported.
+
+
+|statistics
+|link:#statistics[statistics]
+a|
+
+|template
+|link:#template[template]
+a|
+
+|uuid
+|string
+a|Application UUID. This field is generated when the application is created.
+
+
+|vdi_on_nas
+|link:#vdi_on_nas[vdi_on_nas]
+a|A VDI application using NAS.
+
+
+|vdi_on_san
+|link:#vdi_on_san[vdi_on_san]
+a|A VDI application using SAN.
+
+
+|vsi_on_nas
+|link:#vsi_on_nas[vsi_on_nas]
+a|A VSI application using NAS.
+
+
+|vsi_on_san
+|link:#vsi_on_san[vsi_on_san]
+a|A VSI application using SAN.
+
+
+|===
+
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the database.
+
+
+|===
+
+
+[#dataset]
+[.api-collapsible-fifth-title]
+dataset
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the database. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of an igroup to nest within a parent igroup. Mutually exclusive with initiators and initiator_objects.
+
+
+|uuid
+|string
+a|The UUID of an igroup to nest within a parent igroup Usage: <UUID>
+
+
+|===
+
+
+[#initiator_objects]
+[.api-collapsible-fifth-title]
+initiator_objects
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|name
+|string
+a|The WWPN, IQN, or Alias of the initiator. Mutually exclusive with nested igroups and the initiators array.
+
+
+|===
+
+
+[#mongo_db_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+mongo_db_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the application. The default value is the host OS that is running the application.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#protection_type]
+[.api-collapsible-fifth-title]
+protection_type
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_rpo
+|string
+a|The local RPO of the application.
+
+
+|===
+
+
+[#secondary_igroups]
+[.api-collapsible-fifth-title]
+secondary_igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the initiator group for each secondary.
+
+
+|===
+
+
+[#mongo_db_on_san]
+[.api-collapsible-fifth-title]
+mongo_db_on_san
+
+MongoDB using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dataset
+|link:#dataset[dataset]
+a|
+
+|new_igroups
+|array[link:#mongo_db_on_san_new_igroups[mongo_db_on_san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|primary_igroup_name
+|string
+a|The initiator group for the primary.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|secondary_igroups
+|array[link:#secondary_igroups[secondary_igroups]]
+a|
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+[#component]
+[.api-collapsible-fifth-title]
+component
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+[#origin]
+[.api-collapsible-fifth-title]
+origin
+[#flexcache]
+[.api-collapsible-fifth-title]
+flexcache
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+[#qos]
+[.api-collapsible-fifth-title]
+qos
+[#retention]
+[.api-collapsible-fifth-title]
+retention
+[#snaplock]
+[.api-collapsible-fifth-title]
+snaplock
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the application component.
+
+
+|===
+
+
+[#object_stores]
+[.api-collapsible-fifth-title]
+object_stores
+[#nas_application_components_tiering]
+[.api-collapsible-fifth-title]
+nas_application_components_tiering
+
+application-components.tiering
+
+[#application_components]
+[.api-collapsible-fifth-title]
+application_components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the application component.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|tiering
+|link:#nas_application_components_tiering[nas_application_components_tiering]
+a|application-components.tiering
+
+
+|total_size
+|integer
+a|The total size of the application component, split across the member shares. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|===
+
+
+[#app_cifs_access]
+[.api-collapsible-fifth-title]
+app_cifs_access
+
+The list of CIFS access controls. You must provide either 'user_or_group' or 'access' to enable CIFS access.
+
+[#exclude_aggregates]
+[.api-collapsible-fifth-title]
+exclude_aggregates
+[#app_nfs_access]
+[.api-collapsible-fifth-title]
+app_nfs_access
+
+The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+[#nas]
+[.api-collapsible-fifth-title]
+nas
+
+A generic NAS application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_components
+|array[link:#application_components[application_components]]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#performance]
+[.api-collapsible-fifth-title]
+performance
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#dh_hmac_chap]
+[.api-collapsible-fifth-title]
+dh_hmac_chap
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|controller_secret_key
+|string
+a|Authentication Controller Secret.
+
+
+|group_size
+|string
+a|Authentication Diffie-Hellman Group.
+
+
+|hash_function
+|string
+a|Authentication Hash Function.
+
+
+|host_secret_key
+|string
+a|Authentication Host Secret.
+
+
+|===
+
+
+[#hosts]
+[.api-collapsible-fifth-title]
+hosts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dh_hmac_chap
+|link:#dh_hmac_chap[dh_hmac_chap]
+a|
+
+|nqn
+|string
+a|The host NQN.
+
+
+|priority
+|string
+a|Host Priority.
+
+
+|===
+
+
+[#zapp_nvme_components_subsystem]
+[.api-collapsible-fifth-title]
+zapp_nvme_components_subsystem
+
+components.subsystem
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hosts
+|array[link:#hosts[hosts]]
+a|
+
+|name
+|string
+a|The name of the subsystem accessing the component. If neither the name nor the UUID is provided, the name defaults to <application-name>_<component-name>, whether that subsystem already exists or not.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the component. The default value is the host OS that is running the application.
+
+
+|uuid
+|string
+a|The UUID of an existing subsystem to be granted access to the component.
+
+
+|===
+
+
+[#zapp_nvme_components_tiering]
+[.api-collapsible-fifth-title]
+zapp_nvme_components_tiering
+
+application-components.tiering
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the application component.
+
+
+|namespace_count
+|integer
+a|The number of namespaces supported per request, with a total limit of 1024 per volume.
+
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|performance
+|link:#performance[performance]
+a|
+
+|subsystem
+|link:#zapp_nvme_components_subsystem[zapp_nvme_components_subsystem]
+a|components.subsystem
+
+
+|tiering
+|link:#zapp_nvme_components_tiering[zapp_nvme_components_tiering]
+a|application-components.tiering
+
+
+|total_size
+|integer
+a|The total size of the component, spread across member namespaces. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The local RPO of the application.
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+[#rpo]
+[.api-collapsible-fifth-title]
+rpo
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local
+|link:#local[local]
+a|
+
+|===
+
+
+[#zapp_nvme]
+[.api-collapsible-fifth-title]
+zapp_nvme
+
+An NVME application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|components
+|array[link:#components[components]]
+a|
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the archive log.
+
+
+|===
+
+
+[#archive_log]
+[.api-collapsible-fifth-title]
+archive_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the archive log. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#db]
+[.api-collapsible-fifth-title]
+db
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the database. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the ORACLE_HOME storage volume.
+
+
+|===
+
+
+[#ora_home]
+[.api-collapsible-fifth-title]
+ora_home
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the ORACLE_HOME storage volume. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the redo log group.
+
+
+|===
+
+
+[#redo_log]
+[.api-collapsible-fifth-title]
+redo_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the redo log group. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#oracle_on_nfs]
+[.api-collapsible-fifth-title]
+oracle_on_nfs
+
+Oracle using NFS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#oracle_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+oracle_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the application. The default value is the host OS that is running the application.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#oracle_on_san]
+[.api-collapsible-fifth-title]
+oracle_on_san
+
+Oracle using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|new_igroups
+|array[link:#oracle_on_san_new_igroups[oracle_on_san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the Oracle grid binary storage volume.
+
+
+|===
+
+
+[#grid_binary]
+[.api-collapsible-fifth-title]
+grid_binary
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the Oracle grid binary storage volume. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the Oracle CRS volume.
+
+
+|===
+
+
+[#oracle_crs]
+[.api-collapsible-fifth-title]
+oracle_crs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#oracle_rac_on_nfs]
+[.api-collapsible-fifth-title]
+oracle_rac_on_nfs
+
+Oracle RAC using NFS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|grid_binary
+|link:#grid_binary[grid_binary]
+a|
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|oracle_crs
+|link:#oracle_crs[oracle_crs]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#db_sids]
+[.api-collapsible-fifth-title]
+db_sids
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|===
+
+
+[#oracle_rac_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+oracle_rac_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the application. The default value is the host OS that is running the application.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#oracle_rac_on_san]
+[.api-collapsible-fifth-title]
+oracle_rac_on_san
+
+Oracle RAC using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|db_sids
+|array[link:#db_sids[db_sids]]
+a|
+
+|grid_binary
+|link:#grid_binary[grid_binary]
+a|
+
+|new_igroups
+|array[link:#oracle_rac_on_san_new_igroups[oracle_rac_on_san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|oracle_crs
+|link:#oracle_crs[oracle_crs]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the local RPO. This will include details about the Snapshot copy schedule.
+
+
+|name
+|string
+a|The local RPO of the component. This indicates how often component Snapshot copies are automatically created.
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the remote RPO.
+
+
+|name
+|string
+a|The remote RPO of the component. A remote RPO of zero indicates that the component is synchronously replicated to another cluster.
+
+
+|===
+
+
+[#rpo]
+[.api-collapsible-fifth-title]
+rpo
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local
+|link:#local[local]
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Component Name.
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|uuid
+|string
+a|Component UUID.
+
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the local RPO. This will include details about the Snapshot copy schedule.
+
+
+|name
+|string
+a|The local RPO of the application. This indicates how often application Snapshot copies are automatically created.
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the remote RPO.
+
+
+|name
+|string
+a|The remote RPO of the application. A remote RPO of zero indicates that the application is synchronously replicated to another cluster.
+
+
+|===
+
+
+[#rpo]
+[.api-collapsible-fifth-title]
+rpo
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|components
+|array[link:#components[components]]
+a|
+
+|is_supported
+|boolean
+a|Is RPO supported for this application? Generation 1 applications did not support Snapshot copies or MetroCluster.
+
+
+|local
+|link:#local[local]
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+[#zapp_s3_bucket_application_components_access_policies_conditions]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket_application_components_access_policies_conditions
+
+conditions
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|delimiters
+|array[string]
+a|
+
+|max_keys
+|array[integer]
+a|
+
+|prefixes
+|array[string]
+a|
+
+|source_ips
+|array[string]
+a|
+
+|usernames
+|array[string]
+a|
+
+|===
+
+
+[#zapp_s3_bucket_application_components_access_policies]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket_application_components_access_policies
+
+The list of S3 objectstore policies to be created.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|actions
+|array[string]
+a|
+
+|principals
+|array[string]
+a|
+
+|resources
+|array[string]
+a|
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+[#zapp_s3_bucket_application_components]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket_application_components
+
+The list of application components to be created.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the application component.
+
+
+|size
+|integer
+a|The total size of the S3 Bucket, split across the member components. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|uuid
+|string
+a|Object Store Server Bucket UUID Usage: <UUID>
+
+
+|===
+
+
+[#zapp_s3_bucket]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket
+
+A generic S3 bucket application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_components
+|array[link:#zapp_s3_bucket_application_components[zapp_s3_bucket_application_components]]
+a|The list of application components to be created.
+
+
+|===
+
+
+[#san_application_components_tiering]
+[.api-collapsible-fifth-title]
+san_application_components_tiering
+
+application-components.tiering
+
+[#application_components]
+[.api-collapsible-fifth-title]
+application_components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|lun_count
+|integer
+a|The number of LUNs in the application component.
+
+
+|name
+|string
+a|The name of the application component.
+
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|tiering
+|link:#san_application_components_tiering[san_application_components_tiering]
+a|application-components.tiering
+
+
+|total_size
+|integer
+a|The total size of the application component, split across the member LUNs. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|===
+
+
+[#san_new_igroups]
+[.api-collapsible-fifth-title]
+san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the application. The default value is the host OS that is running the application.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#san]
+[.api-collapsible-fifth-title]
+san
+
+A generic SAN application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_components
+|array[link:#application_components[application_components]]
+a|
+
+|new_igroups
+|array[link:#san_new_igroups[san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the DB.
+
+
+|===
+
+
+[#db]
+[.api-collapsible-fifth-title]
+db
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the DB. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the log DB.
+
+
+|===
+
+
+[#log]
+[.api-collapsible-fifth-title]
+log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the log DB. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#sql_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+sql_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the application. The default value is the host OS that is running the application.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the temp DB.
+
+
+|===
+
+
+[#temp_db]
+[.api-collapsible-fifth-title]
+temp_db
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the temp DB. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#sql_on_san]
+[.api-collapsible-fifth-title]
+sql_on_san
+
+Microsoft SQL using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|db
+|link:#db[db]
+a|
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|log
+|link:#log[log]
+a|
+
+|new_igroups
+|array[link:#sql_on_san_new_igroups[sql_on_san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|temp_db
+|link:#temp_db[temp_db]
+a|
+
+|===
+
+
+[#access]
+[.api-collapsible-fifth-title]
+access
+[#sql_on_smb]
+[.api-collapsible-fifth-title]
+sql_on_smb
+
+Microsoft SQL using SMB.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|db
+|link:#db[db]
+a|
+
+|log
+|link:#log[log]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|temp_db
+|link:#temp_db[temp_db]
+a|
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|per_tb
+|integer
+a|The number of IOPS per terabyte of logical space currently being used by the application component.
+
+
+|total
+|integer
+a|The total number of IOPS being used by the application component.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|average
+|integer
+a|The cumulative average response time in microseconds for this component.
+
+
+|raw
+|integer
+a|The cumulative response time in microseconds for this component.
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reserve
+|integer
+a|The amount of space reserved by the system for Snapshot copies.
+
+
+|used
+|integer
+a|The amount of spacing currently in use by the system to store Snapshot copies.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The available amount of space left in the application component. Note that this field has limited meaning for SAN applications. Space may be considered used from ONTAP's perspective while the host filesystem still considers it available.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|logical_used
+|integer
+a|The amount of space that would currently be used if no space saving features were enabled. For example, if compression were the only space saving feature enabled, this field would represent the uncompressed amount of space used.
+
+
+|provisioned
+|integer
+a|The originally requested amount of space that was provisioned for the application component.
+
+
+|reserved_unused
+|integer
+a|The amount of space reserved for system features such as Snapshot copies that has not yet been used.
+
+
+|savings
+|integer
+a|The amount of space saved by all enabled space saving features.
+
+
+|used
+|integer
+a|The amount of space that is currently being used by the application component. Note that this includes any space reserved by the system for features such as Snapshot copies.
+
+
+|used_excluding_reserves
+|integer
+a|The amount of space that is currently being used, excluding any space that is reserved by the system for features such as Snapshot copies.
+
+
+|used_percent
+|integer
+a|The percentage of the originally provisioned space that is currently being used by the application component.
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service name. AFF systems support the extreme storage service. All other systems only support value.
+
+
+|uuid
+|string
+a|The storage service UUID.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops
+|link:#iops[iops]
+a|
+
+|latency
+|link:#latency[latency]
+a|
+
+|name
+|string
+a|Component Name.
+
+
+|shared_storage_pool
+|boolean
+a|An application component is considered to use a shared storage pool if storage elements for for other components reside on the same aggregate as storage elements for this component.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|statistics_incomplete
+|boolean
+a|If not all storage elements of the application component are currently available, the returned statistics might only include data from those elements that were available.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|uuid
+|string
+a|Component UUID.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|per_tb
+|integer
+a|The number of IOPS per terabyte of logical space currently being used by the application.
+
+
+|total
+|integer
+a|The total number of IOPS being used by the application.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|average
+|integer
+a|The cumulative average response time in microseconds for this application.
+
+
+|raw
+|integer
+a|The cumulative response time in microseconds for this application.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The available amount of space left in the application. Note that this field has limited meaning for SAN applications. Space may be considered used from ONTAP's perspective while the host filesystem still considers it available.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|logical_used
+|integer
+a|The amount of space that would currently be used if no space saving features were enabled. For example, if compression were the only space saving feature enabled, this field would represent the uncompressed amount of space used.
+
+
+|provisioned
+|integer
+a|The originally requested amount of space that was provisioned for the application.
+
+
+|reserved_unused
+|integer
+a|The amount of space reserved for system features such as Snapshot copies that has not yet been used.
+
+
+|savings
+|integer
+a|The amount of space saved by all enabled space saving features.
+
+
+|used
+|integer
+a|The amount of space that is currently being used by the application. Note that this includes any space reserved by the system for features such as Snapshot copies.
+
+
+|used_excluding_reserves
+|integer
+a|The amount of space that is currently being used, excluding any space that is reserved by the system for features such as Snapshot copies.
+
+
+|used_percent
+|integer
+a|The percentage of the originally provisioned space that is currently being used by the application.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|components
+|array[link:#components[components]]
+a|
+
+|iops
+|link:#iops[iops]
+a|
+
+|latency
+|link:#latency[latency]
+a|
+
+|shared_storage_pool
+|boolean
+a|An application is considered to use a shared storage pool if storage elements for multiple components reside on the same aggregate.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|statistics_incomplete
+|boolean
+a|If not all storage elements of the application are currently available, the returned statistics might only include data from those elements that were available.
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#template]
+[.api-collapsible-fifth-title]
+template
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|protocol
+|string
+a|The protocol access of the template that was used to provision this application.
+
+
+|version
+|integer
+a|The version of the template that was used to provision this application. The template version changes only if the layout of the application changes over time. For example, redo logs in Oracle RAC templates were updated and provisioned differently in DATA ONTAP 9.3.0 compared to prior releases, so the version number was increased. If layouts change in the future, the changes will be documented along with the corresponding version numbers.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the desktops.
+
+
+|===
+
+
+[#desktops]
+[.api-collapsible-fifth-title]
+desktops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of desktops to support.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#hyper_v_access]
+[.api-collapsible-fifth-title]
+hyper_v_access
+[#vdi_on_nas]
+[.api-collapsible-fifth-title]
+vdi_on_nas
+
+A VDI application using NAS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|desktops
+|link:#desktops[desktops]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#vdi_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+vdi_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#vdi_on_san]
+[.api-collapsible-fifth-title]
+vdi_on_san
+
+A VDI application using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|desktops
+|link:#desktops[desktops]
+a|
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|new_igroups
+|array[link:#vdi_on_san_new_igroups[vdi_on_san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the datastore.
+
+
+|===
+
+
+[#datastore]
+[.api-collapsible-fifth-title]
+datastore
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of datastores to support.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#vsi_on_nas]
+[.api-collapsible-fifth-title]
+vsi_on_nas
+
+A VSI application using NAS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|datastore
+|link:#datastore[datastore]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#vsi_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+vsi_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|
+
+|initiator_objects
+|array[link:#initiator_objects[initiator_objects]]
+a|
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|The name of the new initiator group.
+
+
+|protocol
+|string
+a|The protocol of the new initiator group.
+
+
+|===
+
+
+[#vsi_on_san]
+[.api-collapsible-fifth-title]
+vsi_on_san
+
+A VSI application using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|datastore
+|link:#datastore[datastore]
+a|
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|new_igroups
+|array[link:#vsi_on_san_new_igroups[vsi_on_san_new_igroups]]
+a|The list of initiator groups to create.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+Applications
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|creation_timestamp
+|string
+a|The time when the application was created.
+
+
+|generation
+|integer
+a|The generation number of the application. This indicates which features are supported on the application. For example, generation 1 applications do not support Snapshot copies. Support for Snapshot copies was added at generation 2. Any future generation numbers and their feature set will be documented.
+
+
+|mongo_db_on_san
+|link:#mongo_db_on_san[mongo_db_on_san]
+a|MongoDB using SAN.
+
+
+|nas
+|link:#nas[nas]
+a|A generic NAS application.
+
+
+|nvme
+|link:#zapp_nvme[zapp_nvme]
+a|An NVME application.
+
+
+|oracle_on_nfs
+|link:#oracle_on_nfs[oracle_on_nfs]
+a|Oracle using NFS.
+
+
+|oracle_on_san
+|link:#oracle_on_san[oracle_on_san]
+a|Oracle using SAN.
+
+
+|oracle_rac_on_nfs
+|link:#oracle_rac_on_nfs[oracle_rac_on_nfs]
+a|Oracle RAC using NFS.
+
+
+|oracle_rac_on_san
+|link:#oracle_rac_on_san[oracle_rac_on_san]
+a|Oracle RAC using SAN.
+
+
+|protection_granularity
+|string
+a|Protection granularity determines the scope of Snapshot copy operations for the application. Possible values are "application" and "component". If the value is "application", Snapshot copy operations are performed on the entire application. If the value is "component", Snapshot copy operations are performed separately on the application components.
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|s3_bucket
+|link:#zapp_s3_bucket[zapp_s3_bucket]
+a|A generic S3 bucket application.
+
+
+|san
+|link:#san[san]
+a|A generic SAN application.
+
+
+|sql_on_san
+|link:#sql_on_san[sql_on_san]
+a|Microsoft SQL using SAN.
+
+
+|sql_on_smb
+|link:#sql_on_smb[sql_on_smb]
+a|Microsoft SQL using SMB.
+
+
+|state
+|string
+a|The state of the application. For full functionality, applications must be in the online state. Other states indicate that the application is in a transient state and not all operations are supported.
+
+
+|statistics
+|link:#statistics[statistics]
+a|
+
+|template
+|link:#template[template]
+a|
+
+|uuid
+|string
+a|Application UUID. This field is generated when the application is created.
+
+
+|vdi_on_nas
+|link:#vdi_on_nas[vdi_on_nas]
+a|A VDI application using NAS.
+
+
+|vdi_on_san
+|link:#vdi_on_san[vdi_on_san]
+a|A VDI application using SAN.
+
+
+|vsi_on_nas
+|link:#vsi_on_nas[vsi_on_nas]
+a|A VSI application using NAS.
+
+
+|vsi_on_san
+|link:#vsi_on_san[vsi_on_san]
+a|A VSI application using SAN.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

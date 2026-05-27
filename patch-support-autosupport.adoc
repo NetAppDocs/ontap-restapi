@@ -1,0 +1,508 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-support-autosupport.html'
+summary: 'Update the AutoSupport configuration for an entire cluster'
+---
+
+= Update the AutoSupport configuration for an entire cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/support/autosupport`#
+
+*Introduced In:* 9.6
+
+Updates the AutoSupport configuration for the entire cluster.
+
+== Related ONTAP commands
+
+* `system node autosupport modify`
+
+== Learn more
+
+* link:support_autosupport_endpoint_overview.html[DOC /support/autosupport]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|force
+|boolean
+|query
+|False
+a|Set the force flag to true to modify some of the AutoSupport configurations that are otherwise blocked when the automatic update feature is enabled. Without this flag set to true, an attempt to disable AutoSupport, modify the transport to SMTP, or disable the AutoSupport OnDemand feature fails if the automatic update feature is enabled.
+
+* Introduced in: 9.16
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|contact_support
+|boolean
+a|Specifies whether to send the AutoSupport messages to vendor support.
+
+
+|enabled
+|boolean
+a|Specifies whether the AutoSupport daemon is enabled.  When this setting is disabled, delivery of all AutoSupport messages is turned off.
+
+
+|from
+|string
+a|The e-mail address from which the AutoSupport messages are sent. To generate node-specific 'from' addresses, enable '-node-specific-from' parameter via ONTAP CLI.
+
+* example: postmaster@example.com
+* format: email
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|is_minimal
+|boolean
+a|Specifies whether the system information is collected in compliant form, to remove private data or in complete form, to enhance diagnostics.
+
+
+|issues
+|array[link:#autosupport_issues[autosupport_issues]]
+a|A list of connectivity issues to the HTTPS/SMTP/AOD AutoSupport destinations on the nodes in the cluster along with the corrective actions.
+
+
+|mail_hosts
+|array[string]
+a|The names of the mail servers used to deliver AutoSupport messages via SMTP.
+
+
+|ondemand_enabled
+|boolean
+a|Specifies whether the AutoSupport OnDemand feature is enabled. When AutoSupport OnDemand is enabled, support personnel can remotely trigger new AutoSupport messages, resend existing AutoSupport messages, and decline the delivery of unwanted AutoSupport messages. When this option is disabled, the cluster does not respond to any AutoSupport OnDemand requests from support personnel.
+
+
+|partner_addresses
+|array[string]
+a|The list of partner addresses.
+
+
+|proxy_url
+|string
+a|Proxy server for AutoSupport message delivery via HTTPS. Optionally specify a username/password for authentication with the proxy server.
+
+
+|smtp_encryption
+|string
+a|The encryption protocol used to deliver AutoSupport messages via SMTP to the configured mail_hosts.
+
+
+|to
+|array[string]
+a|The e-mail addresses to which the AutoSupport messages are sent.
+
+
+|transport
+|string
+a|The name of the transport protocol used to deliver AutoSupport messages.
+
+NOTE: 'http' transport is no longer supported by AutoSupport servers.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "contact_support": 1,
+  "enabled": 1,
+  "from": "postmaster@example.com",
+  "is_minimal": 1,
+  "issues": [
+    {
+      "component": "mail_server",
+      "corrective_action": {
+        "code": "53149746",
+        "message": "Check the hostname of the SMTP server"
+      },
+      "destination": "mailhost1.example.com",
+      "issue": {
+        "code": "53149746",
+        "message": "SMTP connectivity check failed for destination: mailhost. Error: Could not resolve host - 'mailhost'"
+      },
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "mail_hosts": [
+    "mailhost1.example.com",
+    "mailhost2.example.com"
+  ],
+  "ondemand_enabled": 1,
+  "partner_addresses": [
+    "user1@partner.com",
+    "user2@partner.com"
+  ],
+  "proxy_url": "proxy.company.com",
+  "smtp_encryption": "none",
+  "to": [
+    "user1@example.com",
+    "user2@example.com"
+  ],
+  "transport": "smtp"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 8650862
+| The SMTP mail host provided cannot be empty
+
+| 8650863
+| A maximum of 5 SMTP mail hosts can be provided
+
+| 8650864
+| A maximum of 5 email addresses can be provided
+
+| 8650865
+| A maximum of 5 partner email addresses can be provided
+
+| 8650880
+| Automatic update requires AutoSupport to be enabled
+
+| 8650881
+| Automatic update requires AutoSupport to use the HTTPS transport
+
+| 8650882
+| Automatic update requires AutoSupport OnDemand to be enabled
+
+| 8650886
+| The provided parameter requires an effective cluster version of ONTAP 9.15.1 or later
+
+| 8650887
+| Username or password is not allowed in the AutoSupport url and put-url fields
+
+| 8650889
+| The provided parameter requires an effective cluster version of ONTAP 9.16.1 or later
+
+| 53149727
+| The proxy URI provided is invalid
+
+| 53149728
+| The SMTP mail host URI provided is invalid
+
+| 53149732
+| The proxy URI provided is invalid. IPv6 addresses must be enclosed within square brackets
+
+| 53149737
+| The proxy URI provided specifies an unsupported scheme
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#autosupport_connectivity_corrective_action]
+[.api-collapsible-fifth-title]
+autosupport_connectivity_corrective_action
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Corrective action code
+
+
+|message
+|string
+a|Corrective action message. The corrective action might contain commands which needs to be executed on the ONTAP CLI.
+
+* example: Check the hostname of the SMTP server
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#autosupport_connectivity_issue]
+[.api-collapsible-fifth-title]
+autosupport_connectivity_issue
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#autosupport_issues]
+[.api-collapsible-fifth-title]
+autosupport_issues
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|component
+|string
+a|The name of the component where the issue occurred.
+
+
+|corrective_action
+|link:#autosupport_connectivity_corrective_action[autosupport_connectivity_corrective_action]
+a|
+
+|destination
+|string
+a|The HTTPS/SMTP/AOD AutoSupport Destination.
+
+
+|issue
+|link:#autosupport_connectivity_issue[autosupport_connectivity_issue]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#autosupport]
+[.api-collapsible-fifth-title]
+autosupport
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|contact_support
+|boolean
+a|Specifies whether to send the AutoSupport messages to vendor support.
+
+
+|enabled
+|boolean
+a|Specifies whether the AutoSupport daemon is enabled.  When this setting is disabled, delivery of all AutoSupport messages is turned off.
+
+
+|from
+|string
+a|The e-mail address from which the AutoSupport messages are sent. To generate node-specific 'from' addresses, enable '-node-specific-from' parameter via ONTAP CLI.
+
+* example: postmaster@example.com
+* format: email
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|is_minimal
+|boolean
+a|Specifies whether the system information is collected in compliant form, to remove private data or in complete form, to enhance diagnostics.
+
+
+|issues
+|array[link:#autosupport_issues[autosupport_issues]]
+a|A list of connectivity issues to the HTTPS/SMTP/AOD AutoSupport destinations on the nodes in the cluster along with the corrective actions.
+
+
+|mail_hosts
+|array[string]
+a|The names of the mail servers used to deliver AutoSupport messages via SMTP.
+
+
+|ondemand_enabled
+|boolean
+a|Specifies whether the AutoSupport OnDemand feature is enabled. When AutoSupport OnDemand is enabled, support personnel can remotely trigger new AutoSupport messages, resend existing AutoSupport messages, and decline the delivery of unwanted AutoSupport messages. When this option is disabled, the cluster does not respond to any AutoSupport OnDemand requests from support personnel.
+
+
+|partner_addresses
+|array[string]
+a|The list of partner addresses.
+
+
+|proxy_url
+|string
+a|Proxy server for AutoSupport message delivery via HTTPS. Optionally specify a username/password for authentication with the proxy server.
+
+
+|smtp_encryption
+|string
+a|The encryption protocol used to deliver AutoSupport messages via SMTP to the configured mail_hosts.
+
+
+|to
+|array[string]
+a|The e-mail addresses to which the AutoSupport messages are sent.
+
+
+|transport
+|string
+a|The name of the transport protocol used to deliver AutoSupport messages.
+
+NOTE: 'http' transport is no longer supported by AutoSupport servers.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

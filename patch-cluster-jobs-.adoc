@@ -1,0 +1,147 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-cluster-jobs-.html'
+summary: 'Update the state of an asynchronous job'
+---
+
+= Update the state of an asynchronous job
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/cluster/jobs/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the state of a specific asynchronous job.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Job UUID
+
+
+|action
+|string
+|query
+|False
+a|Requests a job to pause, resume, or cancel. Note that not all jobs support these actions. A job can only be resumed if it is in a paused state. After you successfully request a job to be cancelled, the job state changes to either success or failure.
+
+* enum: ["pause", "resume", "cancel"]
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 458762
+| Job is already in a terminal state.
+
+| 458773
+| The Job Manager is not initialized.
+
+| 458771
+| The specified job is running.
+
+| 458776
+| The specified job is not currently running.
+
+| 458783
+| This job does not support pause.
+
+| 458784
+| This job does not support cancel.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

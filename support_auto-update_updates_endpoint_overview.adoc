@@ -1,0 +1,104 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_auto-update_updates_endpoint_overview.html'
+summary: 'Retrieve status for all automatic updates'
+---
+
+= Retrieve status for all automatic updates
+
+
+
+== Overview
+
+Use this API to retrieve the status for all the automatic package updates.
+
+This API only supports GET calls.
+
+'''
+
+== Examples
+
+=== Retrieving the status of all package updates
+
+The following example shows how to retrieve the status of all automatic updates:
+
+[,json]
+----
+
+# The API:
+GET /support/auto-update/updates/
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/auto-update/updates?fields=*"
+
+# The response:
+{
+"records": [
+  {
+    "uuid" : "440ae2e4-fd8f-4225-9bee-94e2da3f8d9d",
+    "package_id" : "572361f3-e769-439d-9c04-2ba48a08ff47",
+    "content_type" : "disk_fw",
+    "content_category" : "firmware",
+    "description" : "disk_fw version 3.0",
+    "state" : "downloading",
+    "creation_time" : "2020-12-01T09:12:03Z",
+    "expiry_time" : "2021-06-01T09:12:03Z",
+    "last_state_change_time" : "2020-12-01T09:12:23Z",
+    "start_time": "2020-12-01T09:12:23Z",
+    "percent_complete": 25,
+    "remaining_time": "PT1M30S",
+    "_links": {
+      "self": {
+        "href": "/support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d"
+      }
+    }
+  },
+  {
+    "uuid" : "440ae2e4-fd8f-4225-9bee-94e2da3f9d8d",
+    "package_id" : "e2e12753-8501-11e8-a7c1-00505695c997",
+    "content_type" : "disk_fw",
+    "content_category" : "firmware",
+    "description" : "disk_fw version 3.1",
+    "state" : "pending_confirmation",
+    "creation_time" : "2020-12-01T09:12:03Z",
+    "expiry_time" : "2021-06-01T09:12:03Z",
+    "last_state_change_time" : "2020-12-01T09:12:23Z",
+    "start_time": "2020-12-01T09:12:23Z",
+    "_links": {
+      "self": {
+        "href": "/support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d"
+      }
+    }
+  },
+  {
+    "uuid" : "440ae2e4-fd8f-4225-9aeb-94e2da3f8ef9",
+    "package_id" : "e2e12753-8501-11e8-a7c1-00505695c997",
+    "content_type" : "shelf_fw",
+    "content_category" : "Firmware",
+    "description" : "shelf_fw version 4.0",
+    "state" : "applying",
+    "creation_time" : "2020-12-01T09:11:53Z",
+    "expiry_time" : "2021-06-01T09:12:03Z",
+    "last_state_change_time" : "2020-12-01T09:12:13Z",
+    "start_time": "2020-12-01T09:12:23Z",
+    "percent_complete": 85,
+    "remaining_time": "PT30S",
+    "_links": {
+      "self": {
+        "href": "/support/auto-update/updates/440ae2e4-fd8f-4225-9aeb-94e2da3f8ef9"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/support/auto-update/updates?fields=*"
+  }
+}
+}
+----
+
+

@@ -1,0 +1,140 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_chassis_endpoint_overview.html'
+summary: 'Retrieve cluster chassis'
+---
+
+= Retrieve cluster chassis
+
+
+
+== Overview
+
+You can use the chassis GET API to retrieve all of the chassis information in the cluster.
+
+== Examples
+
+=== Retrieving a list of chassis from the cluster
+
+The following example shows the response with a list of chassis in the cluster:
+
+----
+
+# The API:
+/api/cluster/chassis
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/chassis" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "id": "021352005981",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/chassis/021352005981"
+      }
+    }
+  },
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/cluster/chassis"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific chassis from the cluster
+
+The following example shows the response of the requested chassis. If there is no chassis with the requested ID, an error is returned.
+
+----
+
+# The API:
+/api/cluster/chassis/{id}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/chassis/021352005981" -H "accept: application/hal+json"
+
+# The response:
+{
+"id": "021352005981",
+"state": "ok",
+"nodes": [
+  {
+    "name": "node-1",
+    "uuid": "6ede364b-c3d0-11e8-a86a-00a098567f31",
+    "position": "top",
+    "usbs": {
+      "supported": true,
+      "enabled": true,
+      "ports": [
+        {
+          "connected": false
+        }
+      ]
+    },
+    "pcis": {
+      "cards": [
+        {
+          "slot": "0",
+          "device": "Gigabit Ethernet I210",
+          "info": "\t  e0M MAC Address:    d0:39:ea:3f:06:2b (auto-1000t-fd-up) \n\t  e0S MAC Address:    d0:39:ea:3f:06:2c (auto-1000t-fd-up) \n\t  Device Type:        1533\n\t  Firmware Version:   3.25-0.0 0x800005D1\n"
+        },
+        {
+          "slot": "0",
+          "device": "Intel Lewisburg series chipset SATA Controller",
+          "info": "\t  Additional Info: 0 (0xaaf00000)   \n\t  SHM2S86Q120GLM22NP FW1146 114473MB 512B/sect (SPG190108HJ)  \n"
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/6ede364b-c3d0-11e8-a86a-00a098567f31"
+      }
+    }
+  }
+],
+"frus": [
+  {
+    "id": "PSU2",
+    "type": "psu",
+    "state": "ok"
+  },
+  {
+    "id": "PSU1",
+    "type": "psu",
+    "state": "ok"
+  },
+  {
+    "id": "Fan2",
+    "type": "fan",
+    "state": "ok"
+  },
+  {
+    "id": "Fan3",
+    "type": "fan",
+    "state": "ok"
+  },
+  {
+    "id": "Fan1",
+    "type": "fan",
+    "state": "ok"
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/cluster/chassis/021352005981"
+  }
+}
+}
+----
+
+

@@ -1,0 +1,639 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-vscan-server-status.html'
+summary: 'Retrieve the Vscan server status'
+---
+
+= Retrieve the Vscan server status
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/vscan/server-status`#
+
+*Introduced In:* 9.6
+
+Retrieves a Vscan server status.
+
+== Related ONTAP commands
+
+* `vserver vscan connection-status show-all`
+
+== Learn more
+
+* link:protocols_vscan_server-status_endpoint_overview.html[DOC /protocols/vscan/server-status]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|vendor
+|string
+|query
+|False
+a|Filter by vendor
+
+
+|update_time
+|string
+|query
+|False
+a|Filter by update_time
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|interface.ip.address
+|string
+|query
+|False
+a|Filter by interface.ip.address
+
+* Introduced in: 9.10
+
+
+|interface.name
+|string
+|query
+|False
+a|Filter by interface.name
+
+* Introduced in: 9.10
+
+
+|interface.uuid
+|string
+|query
+|False
+a|Filter by interface.uuid
+
+* Introduced in: 9.10
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|disconnected_reason
+|string
+|query
+|False
+a|Filter by disconnected_reason
+
+
+|ip
+|string
+|query
+|False
+a|Filter by ip
+
+
+|version
+|string
+|query
+|False
+a|Filter by version
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#vscan_server_status[vscan_server_status]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "disconnected_reason": "string",
+      "interface": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "ip": {
+          "address": "10.10.10.7"
+        },
+        "name": "lif1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "ip": "string",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "state": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "string",
+      "update_time": "string",
+      "vendor": "string",
+      "version": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+Address of the interface used for the Vscan connection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vscan_server_status]
+[.api-collapsible-fifth-title]
+vscan_server_status
+
+Displays the connection status information of the external virus-scanning servers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disconnected_reason
+|string
+a|Specifies the server disconnected reason.
+The following is a list of the possible reasons:
+
+* unknown                   - Disconnected, unknown reason.
+* vscan_disabled            - Disconnected, Vscan is disabled on the SVM.
+* no_data_lif               - Disconnected, SVM does not have data LIF.
+* session_uninitialized     - Disconnected, session is not initialized.
+* remote_closed             - Disconnected, server has closed the connection.
+* invalid_protocol_msg      - Disconnected, invalid protocol message received.
+* invalid_session_id        - Disconnected, invalid session ID received.
+* inactive_connection       - Disconnected, no activity on connection.
+* invalid_user              - Connection request by an invalid user.
+* server_removed            - Disconnected, server has been removed from the active Scanners List.
+enum:
+* unknown
+* vscan_disabled
+* no_data_lif
+* session_uninitialized
+* remote_closed
+* invalid_protocol_msg
+* invalid_session_id
+* inactive_connection
+* invalid_user
+* server_removed
+
+
+|interface
+|link:#interface[interface]
+a|Address of the interface used for the Vscan connection.
+
+
+|ip
+|string
+a|IP address of the Vscan server.
+
+
+|node
+|link:#node[node]
+a|
+
+|state
+|string
+a|Specifies the server connection state indicating if it is in the connected or disconnected state.
+The following is a list of the possible states:
+
+* connected                 - Connected
+* disconnected              - Disconnected
+enum:
+* connected
+* disconnected
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Server type. The possible values are:
+
+*** primary - Primary server
+
+*** backup  - Backup server
+
+
+|update_time
+|string
+a|Specifies the time the server is in the connected or disconnected state.
+
+
+|vendor
+|string
+a|Name of the connected virus-scanner vendor.
+
+
+|version
+|string
+a|Version of the connected virus-scanner.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,377 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-fpolicy-persistent-stores.html'
+summary: 'Retrieve the FPolicy persistent store configurations for an SVM'
+---
+
+= Retrieve the FPolicy persistent store configurations for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/persistent-stores`#
+
+*Introduced In:* 9.14
+
+Retrieves FPolicy Persistent Store configurations for a specified SVM.
+
+== Related ONTAP commands
+
+* `fpolicy persistent-store show`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_persistent-stores_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/persistent-stores]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|volume
+|string
+|query
+|False
+a|Filter by volume
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|size
+|integer
+|query
+|False
+a|Filter by size
+
+* Introduced in: 9.15
+
+
+|autosize_mode
+|string
+|query
+|False
+a|Filter by autosize_mode
+
+* Introduced in: 9.15
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#fpolicy_persistent_store[fpolicy_persistent_store]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "autosize_mode": "string",
+      "name": "ps1",
+      "size": "100M",
+      "svm": {
+        "uuid": "string"
+      },
+      "volume": "psvol"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#fpolicy_persistent_store]
+[.api-collapsible-fifth-title]
+fpolicy_persistent_store
+
+The information that an FPolicy process needs in order to configure a Persistent Store.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autosize_mode
+|string
+a|Autosize mode for the volume.
+grow &dash; Volume automatically grows in response to the amount of space used.
+grow_shrink &dash; Volume grows or shrinks in response to the amount of space used.
+off &dash; Autosizing of the volume is disabled.
+
+
+|name
+|string
+a|The name specified for the FPolicy Persistent Store.
+
+
+|size
+|integer
+a|The size of the Persistent Store volume, in bytes.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|volume
+|string
+a|The specified volume to store the events for the FPolicy Persistent Store.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

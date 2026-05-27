@@ -1,0 +1,366 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-cluster-nodes-.html'
+summary: 'Delete a node from a cluster'
+---
+
+= Delete a node from a cluster
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/cluster/nodes/{uuid}`#
+
+*Introduced In:* 9.7
+
+Deletes a node from the cluster.
+Note that before deleting a node from the cluster, you must shut down all of the node's shared resources, such as virtual interfaces to clients. If any of the node's shared resources are still active, the command fails.
+
+== Optional parameters:
+
+* `force` - Forcibly removes a node that is down and cannot be brought online to remove its shared resources. This flag is set to "false" by default.
+
+== Related ONTAP commands
+
+* `cluster remove-node`
+
+== Learn more
+
+* link:cluster_nodes_endpoint_overview.html[DOC /cluster/nodes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|
+
+|force
+|boolean
+|query
+|False
+a|Set the force flag to "true" to forcibly remove a node that is down and cannot be brought online to remove its shared resources.
+
+* Default value:
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 458755
+| Replication service is offline.
+
+| 458758
+| Failed to load job for cluster remove node operation as the job exists.
+
+| 1179732
+| Cannot remove a node in a single-node cluster.
+
+| 1179735
+| Node is not part of a cluster.
+
+| 1179848
+| Operation not supported at the current effective cluster version.
+
+| 1179849
+| Operation failed because the effective cluster version could not be verified.
+
+| 1182805
+| Cannot remove a node from the node network address of the node to be removed.
+
+| 2293765
+| Removing a node only works for nodes not in failover configuration.
+
+| 2293767
+| Node has volumes. Either move or delete them from the node before removing the node.
+
+| 2293768
+| Node is the home node for one or more logical interfaces.
+
+| 2293769
+| Node is the current node for one or more logical interfaces.
+
+| 2293770
+| Node has data logical interfaces configured as target node.
+
+| 2293787
+| Cannot remove node a node with epsilon.
+
+| 2293788
+| Failed to check HA configuration in the cluster.
+
+| 2293789
+| Removing a node only works for nodes not in HA configuration.
+
+| 2293790
+| Failed to check if the node has epsilon.
+
+| 2293796
+| Cluster ring is offline on the node
+
+| 2293798
+| Cannot forcibly remove a node that is online.
+
+| 2293800
+| Node is configured with MetroCluster.
+
+| 2293801
+| Cannot remove node because it has foreign LUN Imports.
+
+| 2293812
+| Node is a member of MetroCluster DR group.
+
+| 2293813
+| Cannot remove a node from the cluster because a controller replacement is in progress.
+
+| 2293814
+| The DELETE operation is not supported until the cluster is upgraded.
+
+| 2293816
+| Cannot remove node because its Storage Encryption devices use authentication keys (AKs) that will not be available to the node after it leaves the cluster.
+
+| 2293821
+| Cannot remove a node that is offline.
+
+| 2293842
+| A node can only be removed if all of its aggregates are home.
+
+| 2293843
+| Cannot determine if all aggregates belonging to the node to be removed are home.
+
+| 2293844
+| Cannot determine if storage failover is enabled.
+
+| 10551347
+| An update is in progress.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

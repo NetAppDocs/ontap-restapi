@@ -1,0 +1,524 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_luns_endpoint_overview.html'
+summary: 'Manage LUNs'
+---
+
+= Manage LUNs
+
+
+
+== Overview
+
+A LUN is the logical representation of storage in a storage area network (SAN).
+
+The LUN REST API allows you to create, update, delete, and discover LUNs.
+
+A LUN must be mapped to an initiator group to grant access to the initiator group's initiators (client hosts). Initiators can then access the LUN and perform I/O over a Fibre Channel (FC) fabric using the FC Protocol or a TCP/IP network using iSCSI.
+
+See the LUN object model to learn more about each of the properties supported by the LUN REST API.
+
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<lun>" where the qtree name is optional.
+
+A LUN can be created to a specified size using thin or thick provisioning. A LUN can then be renamed, resized, cloned, moved to a different volume and copied. LUNs support the assignment of a QoS policy for performance management or a QoS policy can be assigned to a volume containing one or more LUNs.
+
+== Performance monitoring
+
+Performance of a LUN can be monitored by observing the `metric.+*+` and `statistics.+*+` properties. These properties show the space utilization and performance of a LUN in terms of IOPS, latency and throughput. The `metric.+*+` properties denote an average whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+== Examples
+
+=== Creating a LUN
+
+This example creates a 300 gigabyte, thin-provisioned LUN in SVM _svm1_, volume _vol1_, configured for use by _linux_ initiators. The `return_records` query parameter is used to retrieve properties of the newly created LUN in the POST response.
+
+----
+
+# The API:
+POST /api/storage/luns
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/luns?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "os_type": "linux", "space": { "size": "300G" }, "name" : "/vol/vol1/lun1" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "5a24ae5b-28af-47fb-b129-5adf6cfba0a6",
+    "svm": {
+      "uuid": "6bf967fd-2a1c-11e9-b682-005056bbc17d",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/6bf967fd-2a1c-11e9-b682-005056bbc17d"
+        }
+      }
+    },
+    "name": "/vol/vol1/lun1",
+    "location": {
+      "logical_unit": "lun1",
+      "volume": {
+        "uuid": "71cd0dba-2a1c-11e9-b682-005056bbc17d",
+        "name": "vol1",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/71cd0dba-2a1c-11e9-b682-005056bbc17d"
+          }
+        }
+      }
+    },
+    "class": "regular",
+    "enabled": true,
+    "os_type": "linux",
+    "serial_number": "wf0Iq+N4uck3",
+    "space": {
+      "guarantee": {
+        "requested": false,
+        "reserved": false
+      },
+      "scsi_thin_provisioning_support_enabled": true,
+      "size": 322163441664,
+      "used": 0
+    },
+    "status": {
+      "container_state": "online",
+      "read_only": false,
+      "state": "online"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/5a24ae5b-28af-47fb-b129-5adf6cfba0a6"
+      }
+    }
+  }
+]
+}
+----
+
+=== Updating a LUN
+
+This example sets the `comment` property of a LUN.
+
+----
+
+# The API:
+PATCH /api/storage/luns/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/luns/5a24ae5b-28af-47fb-b129-5adf6cfba0a6' -H 'Accept: application/hal+json' -d '{ "comment": "Data for the finance department." }'
+----
+
+=== Retrieving LUNs
+
+This example retrieves summary information for all online LUNs in SVM _svm1_. The `svm.name` and `status.state` query parameters are used to find the desired LUNs.
+
+----
+
+# The API:
+GET /api/storage/luns
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/luns?svm.name=svm1&status.state=online' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "5a24ae5b-28af-47fb-b129-5adf6cfba0a6",
+    "svm": {
+      "name": "svm1"
+    },
+    "name": "/vol/vol1/lun1",
+    "status": {
+      "state": "online"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/5a24ae5b-28af-47fb-b129-5adf6cfba0a6"
+      }
+    }
+  },
+  {
+    "uuid": "c903a978-9bac-4ce9-8237-4a3ba8b13f08",
+    "svm": {
+      "name": "svm1"
+    },
+    "name": "/vol/vol1/lun2",
+    "status": {
+      "state": "online"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/c903a978-9bac-4ce9-8237-4a3ba8b13f08"
+      }
+    }
+  },
+  {
+    "uuid": "7faf0a9e-0a47-4876-8318-3638d5da16bf",
+    "svm": {
+      "name": "svm1"
+    },
+    "name": "/vol/vol2/lun3",
+    "status": {
+      "state": "online"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/7faf0a9e-0a47-4876-8318-3638d5da16bf"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/storage/luns?svm.name=svm1&status.state=online"
+  }
+}
+}
+----
+
+=== Retrieving details for a specific LUN
+
+In this example, the `fields` query parameter is used to request all fields, including advanced fields, that would not otherwise be returned by default for the LUN.
+
+----
+
+# The API:
+GET /api/storage/luns/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/luns/5a24ae5b-28af-47fb-b129-5adf6cfba0a6?fields=**' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"uuid": "5a24ae5b-28af-47fb-b129-5adf6cfba0a6",
+"svm": {
+  "uuid": "6bf967fd-2a1c-11e9-b682-005056bbc17d",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/6bf967fd-2a1c-11e9-b682-005056bbc17d"
+    }
+  }
+},
+"name": "/vol/vol1/lun1",
+"location": {
+  "logical_unit": "lun1",
+  "volume": {
+    "uuid": "71cd0dba-2a1c-11e9-b682-005056bbc17d",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/71cd0dba-2a1c-11e9-b682-005056bbc17d"
+      }
+    }
+  }
+},
+"auto_delete": false,
+"class": "vvol",
+"comment": "Data for the finance department.",
+"enabled": true,
+"lun_maps": [
+  {
+    "logical_unit_number": 0,
+    "igroup": {
+      "uuid": "2b9d57e1-2a66-11e9-b682-005056bbc17d",
+      "name": "ig1",
+      "_links": {
+        "self": {
+          "href": "/api/protocols/san/igroups/2b9d57e1-2a66-11e9-b682-005056bbc17d"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/lun-maps/5a24ae5b-28af-47fb-b129-5adf6cfba0a6/2b9d57e1-2a66-11e9-b682-005056bbc17d"
+      }
+    }
+  }
+],
+"os_type": "linux",
+"serial_number": "wf0Iq+N4uck3",
+"space": {
+  "guarantee": {
+    "requested": false,
+    "reserved": false
+  },
+  "scsi_thin_provisioning_support_enabled": true,
+  "size": 322163441664,
+  "used": 0
+},
+"vvol": {
+  "is_bound": true,
+  "bindings": [
+    {
+      "id": 4304512,
+      "partner": {
+        "uuid": "353c7262-be4b-4176-acf3-f1021faa8b64",
+        "name": "/vol/vol1/pelun1",
+        "_links": {
+          "self": {
+            "href": "/api/storage/luns/353c7262-be4b-4176-acf3-f1021faa8b64"
+          }
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "/api/protocols/san/vvol-bindings/353c7262-be4b-4176-acf3-f1021faa8b64/5a24ae5b-28af-47fb-b129-5adf6cfba0a6"
+        }
+      }
+    }
+  ]
+},
+ "metric": {
+  "timestamp": "2019-04-09T05:50:15Z",
+  "duration": "PT15S",
+  "status": "ok",
+  "latency": {
+    "other": 0,
+    "total": 0,
+    "read": 0,
+    "write": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  }
+},
+"statistics": {
+  "timestamp": "2019-04-09T05:50:42Z",
+  "status": "ok",
+  "latency_raw": {
+    "other": 38298,
+    "total": 38298,
+    "read": 0,
+    "write": 0
+  },
+  "iops_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 3,
+    "total": 3
+  },
+  "throughput_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  }
+},
+"status": {
+  "container_state": "online",
+  "mapped": true,
+  "read_only": false,
+  "state": "online"
+},
+"consistency_group": {
+  "name": "vol1",
+  "uuid": "6d657aaf-b57a-5396-82ea-c01329e46c79",
+  "_links": {
+    "self": {
+      "href": "/api/application/consistency-groups/6d657aaf-b57a-5396-82ea-c01329e46c79"
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/storage/luns/5a24ae5b-28af-47fb-b129-5adf6cfba0a6?fields=**"
+  }
+}
+}
+----
+
+=== Deleting a LUN
+
+----
+
+# The API:
+DELETE /api/storage/luns/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/storage/luns/c903a978-9bac-4ce9-8237-4a3ba8b13f08' -H 'Accept: application/hal+json'
+----
+
+'''
+
+== LUN data
+
+The LUN REST API also supports reading data from and writing data to a LUN via the REST API as multipart/form-data.
+
+Reading data is performed using a GET request on the LUN endpoint. The request header must include `Accept: multipart/form-data`. When this header entry is provided, query parameters `data.offset` and `data.size` are required and used to specify the portion of the LUN's data to read; no other query parameters are allowed. Reads are limited to one megabyte (1MB) per request. Data is returned as `multipart/form-data` content with exactly one form entry containing the data. The form entry has content type `application/octet-stream`.
+
+Writing data is performed using a PATCH request on the LUN endpoint. The request header must include `Content-Type: multipart/form-data`. When this header entry is provided, query parameter `data.offset` is required and used to specify the location within the LUN at which to write the data; no other query parameters are allowed. The request body must be `multipart/form-data` content with exactly one form entry containing the data to write. The content type entry of the form data is ignored and always treated as `application/octet-stream`. Writes are limited to one megabyte (1MB) per request.
+
+=== Reading data from a LUN
+
+----
+
+# The API:
+GET /api/storage/luns/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/luns/c903a978-9bac-4ce9-8237-4a3ba8b13f08?data.offset=0&data.size=9' -H 'Accept: multipart/form-data'
+
+# In the response header:
+Content-Type: multipart/form-data; boundary="c6e9cf51ab354af0"
+
+# The response body:
+--c6e9cf51ab354af0
+Content-Disposition: form-data;
+Content-Type: application/octet-stream
+data here
+--c6e9cf51ab354af0--
+----
+
+=== Writing data to a LUN
+
+This example writes the contents of a file to a LUN starting at offset 1024.
+
+----
+
+# The API:
+PATCH /api/storage/luns/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/luns/c903a978-9bac-4ce9-8237-4a3ba8b13f08?data.offset=1024' -F "data=@file;type=application/octet-stream"
+----
+
+'''
+
+== Cloning LUNs
+
+A clone of a LUN is an independent "copy" of the LUN that shares unchanged data blocks with the original. As blocks of the source and clone are modified, unique blocks are written for each. LUN clones can be created quickly and consume very little space initially. They can be created for the purpose of back-up, or to replicate data for multiple consumers.
+
+Space reservations can be set for the LUN clone independent of the source LUN by setting the `space.guarantee.requested` property in a POST or PATCH request.
+
+A LUN clone can be set to auto-delete by setting the `auto_delete` property. If the LUN's volume is configured for automatic deletion, LUNs that have auto-delete enabled are deleted when a volume is nearly full to reclaim a target amount of free space in the volume.
+
+The value of property `space.scsi_thin_provisioning_support_enabled` is not propagated to the destination when a LUN is cloned as a new LUN; it is reset to false. The value of this property is maintained from the destination LUN when a LUN is overwritten as a clone.
+
+=== Creating a new LUN clone
+
+You create a new LUN clone as you create any LUN - a POST request to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_create[/storage/luns]. Set `clone.source.uuid` or `clone.source.name` to identify the source LUN from which the clone is created. The LUN clone and its source must reside in the same volume.
+
+The source LUN can reside in a snapshot, in which case the `clone.source.name` field must be used to identify it. Add `/.snapshot/<snapshot_name>` to the path after the volume name to identify the snapshot. For example `/vol/vol1/.snapshot/snap1/lun1`.
+
+By default, new LUN clones do not inherit the QoS policy of the source LUN; a QoS policy should be set for the clone by setting the `qos_policy` property.
+
+----
+
+# The API:
+POST /api/storage/luns
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/luns' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "name": "/vol/vol1/lun2clone1", "clone": { "source": { "name": "/vol/vol1/lun2" } }, "qos_policy": { "name": "qos1" } }'
+----
+
+=== Over-writing an existing LUN's data as a clone of another
+
+You can overwrite an existing LUN as a clone of another, using a PATCH request to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_modify[/storage/luns/\{uuid}]. Set the `clone.source.uuid` or `clone.source.name` property to identify the source LUN from which the clone data is taken. The LUN clone and its source must reside in the same volume.
+
+When used in a PATCH request, the patched LUN's data is overwritten as a clone of the source. The following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `vvol`, `serial_number`, `status.state`, and `uuid`.
+
+Persistent reservations for the updated LUN are also preserved.
+
+----
+
+# The API:
+PATCH /api/storage/luns/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/luns/5a24ae5b-28af-47fb-b129-5adf6cfba0a6' -H 'Accept: application/hal+json' -d '{ "clone": { "source": { "name": "/vol/vol1/lun2" } } }'
+----
+
+'''
+
+== Converting an NVMe namespace into a LUN
+
+An existing NVMe namespace can be converted in-place to a LUN with no modification to the data blocks. In other words, there is no additional copy created for the data blocks. There are certain requirements for converting an NVMe namespace to a LUN. For instance, the namespace should not be mapped to an NVMe subsystem. Additionally, the namespace should not have a block size other than 512 bytes.
+
+The conversion process updates the metadata to the NVMe namespace, making it a LUN. The conversion is both time and space efficient. After conversion, the new LUN behaves as a regular LUN and may be mapped to an initiator group.
+
+=== Convert an NVMe namespace into a LUN
+
+You convert an NVMe namespace into a LUN by calling a POST to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_create[/storage/luns]. Set `convert.namespace.uuid` or `convert.namespace.name` to identify the source NVMe namespace which is to be converted in-place into a LUN.
+
+----
+
+# The API:
+POST /api/storage/luns
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/luns' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "convert": { "namespace": { "name": "/vol/vol1/namespace1" } } }'
+----
+
+'''
+
+== Moving LUNs between volumes
+
+You move a LUN between volumes by using a PATCH request to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_modify[/storage/luns/\{uuid}]. Set the volume portion of the fully qualified LUN path `name` property, `path.volume.uuid`, or `path.volume.name` property to a different volume than the LUN's current volume. Moving a LUN between volumes is an asynchronous activity. A successful request returns a response of 200 synchronously, which indicates that the movement has been successfully queued. The LUN object can then be further polled with a GET request to <<lun_get,`+/storage/luns/{uuid}+`>> to monitor the status of the movement.
+
+The `movement` sub-object of the LUN object is populated while a LUN movement is in progress and for two minutes following completion of a movement.
+
+=== Starting a LUN movement
+
+----
+
+# The API:
+PATCH /api/storage/luns/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/luns/7faf0a9e-0a47-4876-8318-3638d5da16bf' -H 'Accept: application/hal+json' -d '{ "name": "/vol/vol1/lun3" }'
+----
+
+=== Checking on the status of the LUN movement
+
+----
+
+# The API:
+GET /api/storage/luns/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/luns/7faf0a9e-0a47-4876-8318-3638d5da16bf?fields=movement' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"uuid": "7faf0a9e-0a47-4876-8318-3638d5da16bf",
+"name": "/vol/vol1/lun3",
+"movement": {
+  "paths": {
+    "destination": "/vol/vol1/lun3",
+    "source": "/vol/vol2/lun3"
+  },
+  "progress": {
+    "elapsed": 1,
+    "percent_complete": 0,
+    "state": "preparing",
+    "volume_snapshot_blocked": false
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/storage/luns/7faf0a9e-0a47-4876-8318-3638d5da16bf"
+  }
+}
+}
+----
+
+'''
+
+

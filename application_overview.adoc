@@ -1,0 +1,650 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'application_overview.html'
+summary: 'ONTAP REST API Application endpoints'
+---
+
+= ONTAP REST API Application endpoints
+
+
+
+== Overview
+
+ONTAP application APIs simplify storage management by using terminology specific to a type of application. This application-specific terminology can be used to provision and manage ONTAP storage objects. A single call using application-specific parameters provisions storage and enables protocol access for an application following NetApp best practices. You can view and manage the ONTAP objects making up the application as a group using the application APIs. The library of available application templates already includes several database and virtualization applications.
+
+== APIs
+
+There are several application APIs that must be used to fully manage an application. Templates are used to represent any parameters specific to a given application. Some APIs expose applications in terms of their specific template, while others only expose a generic view that all applications share. The template view is present on the _templates_ and _applications_ APIs (although these APIs do also include some generic fields). The _components_ and _snapshots_ APIs are entirely generic and do not differ across types of applications.
+
+The following section provides an overview of each API, followed by a lifecycle example of managing an application to demonstrate how the APIs can be used together.
+
+'''
+
+=== Template
+
+A template is an ONTAP representation of a specific type of application. Each template represents one type of application, the parameters that can be used to customize it, the layout of its storage, and how it can be accessed. Templates are intended to expose an application in terms specifically applicable to an administrator of a given application. As such, traditional ONTAP storage elements are generally not included in an application template.
+
+The template APIs can be used to discover what templates are currently available. The ONTAP API documentation also includes a model of the templates. The template APIs generally provide the same information as the documentation, but the template APIs might provide more up-to-date details about the default values of template parameters based on the current ONTAP configuration. However, only the ONTAP API documentation includes a full description of each template parameter, its usage, and whether it is optional.
+
+'''
+
+=== Application
+
+The application APIs are the only interfaces that allow management of an application using template properties.
+
+The application object includes the following three sections:
+
+. Generic metadata about the application, including common fields such as the name of the application, the template used to provision it, and the generation number of the application.
+. Statistics information about the application, including space and IOPS details about the entire application and each of its components. These are expensive to collect and should only be requested when needed using a _fields=_ query.
+. A template view of the application. The application object itself presents a mutually exclusive list of all possible templates. Only one of these fields can be used per application. The name of the field corresponds to the name of the template used by the application. Currently, the creation of a new application and the modification of the storage service for an existing application are supported through the template parameters.
+
+'''
+
+=== Component
+
+The component API offers a generic view of the application and how to access the application from the host application. This is the only API that exposes the underlying ONTAP storage elements of which the application is composed. It is read-only; it cannot support modifications specific to the type of application it is presenting.
+
+The component object includes the following details for an application:
+
+. The NFS export rules for accessing the application from the host.
+. The CIFS share and users that can access the application from the host.
+. For IP-based protocols, the IP addresses that are best suited for accessing the component.
+. The underlying storage elements that make up the component, such as volumes or LUNs.
+. The SAN initiators that can access the application from the host.
+
+'''
+
+=== Snapshot
+
+The snapshot APIs offer full CRUD for application-level snapshots. Application snapshots can be flagged as either crash-consistent or application-consistent. From the perspective of ONTAP, there is no difference between the two. It is the responsibility of the administrator to ensure that the application is in a consistent state before flagging a snapshot as application-consistent. Use of the SnapCenter Backup Management suite is recommended to ensure correct interaction between host applications and ONTAP.
+
+'''
+
+== Example
+
+The following example outlines the APIs necessary to manage applications and how they fit together. However, this example does not provide detailed information on each API. See the documentation for the individual APIs for more information.
+
+=== 1) Discover the templates
+
+This documentation, which includes the model of each template as part of the _templates_ and _applications_ APIs, is the easiest and most comprehensive way to discover the available templates. The _templates_ API can also be used to query the system for templates in a programmatic way.
+
+To discover the templates available to provision an Oracle application, the following query is used.
+
+'''
+
+----
+
+# The API:
+/api/application/templates
+
+# The query:
+name=oracle*
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/application/templates?name=oracle*" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "oracle_on_nfs", "description": "Oracle using NFS."
+  },
+
+  {
+    "name": "oracle_on_san", "description": "Oracle using SAN."
+  },
+
+  {
+    "name": "oracle_rac_on_nfs", "description": "Oracle RAC using NFS."
+  },
+  {
+    "name": "oracle_rac_on_san", "description": "Oracle RAC using SAN."
+  }
+
+],
+"num_records": 4
+}
+----
+
+'''
+
+=== 2) Create an application
+
+Now that we know the possible templates, we use one to create an application. The template properties differ from template to template, and can be found by exploring the model of the application object in this documentation. Each call to create an application must include the properties for exactly one template. These properties are provided under the property with the same name as the template. Other than the template properties, the only other required properties to create an application are the SVM and name.
+
+NOTE: In the following call example, not all of the template properties are included. Where a property is not needed or the default is sufficient, the property can be excluded. In this case using the _oracle_on_nfs_ template, the _archive_log_, and _protection_type_ are not included. The template name, _oracle_on_nfs_, is specified above the group of template properties, after the names of the application and the SVM.
+
+Creating an application is asynchronous, so the response for this API includes information about the job doing the work. The response header also includes the _location_ of where the application can be found if the job is successful.
+
+'''
+
+Prior to creating an application, the following prerequisites must be met for the protocols associated with the template:
+
+* Licences must be installed.
+
+*** link:post-cluster-licensing-licenses.html[POST /cluster/licensing/licenses]
+
+* Aggregates must exist with enough available space and IOPS to satisfy the requested size.
+
+*** link:post-storage-aggregates.html[POST /storage/aggregates]
+
+* An SVM must exist with protocol services enabled.
+
+*** link:post-svm-svms.html[POST /svm/svms]
+
+* LIFs must exist. For SAN applications, only High Availability groups where each node has at least one LIF will be considered for placement of storage objects.
+
+*** link:post-network-ip-interfaces.html[POST /network/ip/interfaces]
+
+*** link:post-network-fc-interfaces.html[POST /network/fc/interfaces]
+
+'''
+
+The following are not required prior to creating an application, but might be necessary before connecting to the application:
+
+* Network routes must be created to access ethernet based LIFs.
+
+*** link:post-network-ip-routes.html[POST /network/ip/routes]
+
+* For volumes created by this operation to be successfully mounted, ONTAP requirements related to mounting must be met.
+
+'''
+
+----
+
+# The API:
+/api/application/applications
+
+# The query:
+No query is needed for this command. Optionally, you can specify the return_timeout or set the return_records flag to alter the behavior of the command.
+
+# The body:
+{
+"name": "my_ora_app",
+"svm": {
+  "name": "svm1"
+},
+"oracle_on_nfs": {
+  "db": {
+    "size": "2GB",
+    "storage_service": {
+      "name": "value"
+    },
+    "nfs_access": [
+        {
+            "access": "rw",
+            "host": "0.0.0.0/0"
+        }
+    ]
+  },
+  "redo_log": {
+    "size": "1GB"
+  },
+  "ora_home": {
+    "size": "1GB"
+  }
+}
+}
+
+# The call:
+    curl -X POST "https://<mgmt-ip>/api/application/applications" -H "accept: application/hal+json" -H "content-type: application/json" -d '{ "name": "my_ora_app", "svm": { "name": "vs1" }, "oracle_on_nfs": { "db": { "size": "2GB", "storage_service": { "name": "value" }, "nfs_access": [ { "access": "rw", "host": "0.0.0.0/0" } ] }, "redo_log": { "size": "1GB" }, "ora_home": { "size": "1GB" } } }'
+
+# The response:
+{
+"job": {
+  "uuid": "dc0d01dd-df5a-11e7-b5d2-005056b47eb2",
+  "id": 94,
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/dc0d01dd-df5a-11e7-b5d2-005056b47eb2"
+    }
+  }
+}
+}
+
+# The response header:
+date: Tue, 12 Dec 2017 16:38:18 GMT
+server: libzapid-httpd
+content-type: application/hal+json
+location: /api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2
+cache-control: no-cache,no-store,must-revalidate
+connection: Keep-Alive
+keep-alive: timeout=5, max=100
+content-length: 203
+----
+
+'''
+
+=== 3) Wait for the application to be created
+
+The call to create the application returns information about the job, including a HAL link to retrieve details about the job. The job object includes a state and a message to indicate the progress of the job. When the job is complete, and the application has been fully created, the message indicates success and the _state_ of the job property is _success_.
+
+For brevity purposes, the successful job response is shown here. On a real cluster, an application might take several seconds to several minutes to be created, depending on the system load. If the job is not complete, the _message_ property includes a short description on the progress of the job, and the _state_ indicates _running_.
+
+'''
+
+----
+
+# The API:
+/api/cluster/jobs/{uuid}
+
+# The call, provided by the HAL link from step 3:
+curl -X GET "https://<mgmt-ip>/api/cluster/jobs/dc0d01dd-df5a-11e7-b5d2-005056b47eb2" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "dc0d01dd-df5a-11e7-b5d2-005056b47eb2",
+"state": "success",
+"message": "Complete: Success [0]",
+"code": 0,
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/dc0d01dd-df5a-11e7-b5d2-005056b47eb2"
+  }
+}
+}
+----
+
+'''
+
+=== 4) Retrieve the new application
+
+You can look up the application directly without listing all the applications. Use the _location_ header that is included in the response when the application is created.
+
+NOTE: The following example uses a query to retrieve only a small number of the application's properties.
+
+'''
+
+----
+
+# The API:
+/api/application/applications/{uuid}
+
+# The query:
+fields=name,template.name,generation,state
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2?fields=name,template.name,generation,state" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "dbc10d87-df5a-11e7-b5d2-005056b47eb2",
+"name": "my_ora_app",
+"template": { "name": "oracle_on_nfs" },
+"generation": 2,
+"state": "online"
+}
+----
+
+'''
+
+=== 5) Discover how to access the application
+
+The components API provides information on how to access the storage that is provisioned for the application.
+
+For brevity, only the names of the components are requested. See the API documentation for more information on the other available fields.
+
+'''
+
+----
+
+# The API:
+api/application/applications/{application.uuid}/components
+
+# The query:
+fields=name
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2/components?fields=name" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  { "uuid": "e06fb407-df5a-11e7-b5d2-005056b47eb2", "name": "db" },
+  { "uuid": "e0709732-df5a-11e7-b5d2-005056b47eb2", "name": "ora_home" },
+  { "uuid": "e07158eb-df5a-11e7-b5d2-005056b47eb2", "name": "redo_log" }
+],
+"num_records": 3
+}
+----
+
+'''
+
+=== 6) Update the application
+
+To update the storage service, the same template that is used for creating the application is reused, but with only the storage_service properties set. In the generic SAN and NAS templates, the name of each component must also be specified.
+
+In this example, the cluster only supports the _value_ storage service, so modifications of the application to a faster storage service fail. Note how the error message indicates the parameter that caused the problem.
+
+Application modification, like application creation, is an asynchronous operation. If a valid command is passed, the API returns information about the job instead of an error.
+
+'''
+
+----
+
+# The API:
+/api/application/applications/{uuid}
+
+# The body:
+{
+"oracle_on_nfs": { "db": { "storage_service": { "name": "extreme" } } }
+}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2" -H "accept: application/hal+json" -H "content-type: application/json" -d '{ "oracle_on_nfs": { "db": { "storage_service": { "name": "extreme" } } } }'
+
+# The response:
+{
+"error": {
+  "message": "Invalid value for parameter \"oracle_on_nfs.db.storage-service.name\": extreme. Supported values are: value.",
+  "code": "65995152"
+}
+}
+----
+
+'''
+
+=== 7) Manage snapshots
+
+For applications created with the _local_ _protection_type_ set to _hourly_, snapshots are automatically taken every hour. These snapshots can be retrieved or restored using the snapshot APIs. Snapshots can also be taken on demand using these APIs. It is important to note that the _consistency_type_ flag of the snapshot is for record-keeping only: it is the responsibility of the administrator to ensure that the application is in a consistent state prior to flagging a snapshot as _application_ consistent.
+
+Take a snapshot manually:
+
+'''
+
+----
+
+# The API:
+/api/application/applications/{uuid}/snapshots
+
+# The body:
+{
+  "name": "little_bobby_tables",
+  "consistency_type": "crash"
+}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2/snapshots" -H "accept: application/hal+json" -H "content-type: application/json" -d '{ "name": "little_bobby_tables", "consistency_type": "crash"}'
+
+# The response:
+{}
+
+# The response header:
+date: Tue, 12 Dec 2017 17:40:10 GMT
+server: libzapid-httpd
+content-type: application/hal+json
+location: /api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2/snapshots/dbc10d87-df5a-11e7-b5d2-005056b47eb2_13_little_bobby_tables
+cache-control: no-cache,no-store,must-revalidate
+connection: Keep-Alive
+keep-alive: timeout=5, max=100
+content-length: 3
+----
+
+'''
+
+In the above example, the response body is empty, and the response header includes the _location_ of the newly created snapshot. By default, all POST calls return an empty body unless a job is used to process the creation asynchronously. This behavior can be changed with the query flag _return_records_.
+
+Restoring a snapshot uses an action API. Action paths can also be performed asynchronously as jobs, as with creating or modifying an application. The response header does not include a _location_, because this action is not creating a resource.
+
+'''
+
+----
+
+# The API:
+/api/application/applications/{application.uuid}/snapshots/{snapshot.uuid}/restore
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2/snapshots/dbc10d87-df5a-11e7-b5d2-005056b47eb2_13_little_bobby_tables/restore" -H "accept: application/hal+json"
+
+# The response:
+{
+"job": {
+  "uuid": "00e81690-df64-11e7-b5d2-005056b47eb2",
+  "id": 100,
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/00e81690-df64-11e7-b5d2-005056b47eb2"
+    }
+  }
+}
+}
+
+# The response header:
+date: Tue, 12 Dec 2017 17:43:46 GMT
+cache-control: no-cache,no-store,must-revalidate
+server: libzapid-httpd
+connection: Keep-Alive
+keep-alive: timeout=5, max=100
+content-length: 204
+content-type: application/hal+json
+----
+
+'''
+
+== Smart containers
+
+Smart containers are traditional ONTAP storage objects such as FlexVol or FlexGroup created using the application REST API.
+
+* NAS - FlexVolume, FlexGroup, and FlexCache objects
+* SAN - LUNs
+* NVME - Namespaces
+* S3 - Object Store S3 Buckets
+
+'''
+
+The benefits of creating a Smart Container are as follows:
+
+* ONTAP determines the best placement for the storage object based on available performance and space capacity.
+* Access controls can be optionally set.
+* Snapshot schedules can be optionally set.
+* A single atomic job that does all the above.
+
+'''
+
+Smart containers are similar to generic enterprise applications (NAS, SAN, NVME), but with certain restrictions. Smart containers are restricted to one application-component. Any post-provisioning data management operations on smart containers must be performed via PATCH operations corresponding to the object created. However, the POST, GET and DELETE operations that exist for applications will also operate for smart containers.
+
+To create a Smart Container the "smart_container:true" parameter must be provided.
+
+'''
+
+Prior to creating a smart container, the following prerequisites must be met for the protocols associated with the template:
+
+* Licences must be installed.
+
+*** link:post-cluster-licensing-licenses.html[POST /cluster/licensing/licenses]
+
+* Aggregates must exist with enough available space to satisfy the requested size.
+
+*** link:post-storage-aggregates.html[POST /storage/aggregates]
+
+* An SVM must exist with protocol services enabled.
+
+*** link:post-svm-svms.html[POST /svm/svms]
+
+* LIFs must exist. For SAN objects, only High Availability groups where each node has at least one LIF to be considered for placement of storage objects.
+
+*** link:post-network-ip-interfaces.html[POST /network/ip/interfaces]
+
+*** link:post-network-fc-interfaces.html[POST /network/fc/interfaces]
+
+'''
+
+The following are not required prior to creating a smart container:
+
+* Network routes must be created to access Ethernet-based LIFs.
+
+*** link:post-network-ip-routes.html[POST /network/ip/routes]
+
+* To mount volumes by this operation successfully, all ONTAP requirements related to mounting must be met.
+
+'''
+
+=== Example
+
+The following examples outline the APIs necessary to create a smart container. Two types of smart container creation are supported:
+
+* A smart container with new ONTAP storage objects as specified in the JSON body.
+* An existing ONTAP volume can be converted into a smart container (supported only on generic SAN and NVME templates).
+
+This is an addendum to the example provided on how to create an application.
+
+'''
+
+----
+
+# The API:
+/api/application/applications
+
+# The query:
+No query is needed for this command. Optionally, you can specify the return_timeout or set the return_records flag to alter the behavior of the command.
+
+# The body:
+Creates a smart container with new ONTAP storage objects:
+{
+"name": "my_container",
+"svm": {
+    "name":"vs1"
+},
+"template": {
+    "name":"nas"
+},
+"smart_container": "true"
+"nas": {
+    "application_components": [
+        {
+            "share_count": "1",
+            "name": "myVolume",
+            "storage_service": {
+                "name": "value"
+            },
+            "total_size": "100mb"
+        }
+    ]
+}
+}
+
+Converting an existing volume into a smart container:
+{
+"name": "my_container",
+"svm": {
+    "name":"vs1"
+},
+"template": {
+    "name":"san"
+},
+"smart_container": "true"
+"san": {
+    "application_components": [
+        {
+            "name": "existingVolume" #name of an existing volume
+        }
+    ]
+}
+}
+
+
+# The call:
+Creates a smart container with new ONTAP storage objects:
+curl -X POST "https://<mgmt-ip>/api/application/applications" -H "accept: application/hal+json" -H "Content-Type: application/json" -d '{"name": "my_container", "svm": {"name": "vs1"} , "smart_container": true , "template": {"name": "nas"} , "nas": {"application_components": [{"share_count": "1", "name": "myVolume", "storage_service": {"name": "value"} , "total_size": "100mb"} ] } }'
+
+Converting an existing volume into a smart container:
+curl -X POST "https://<mgmt-ip>/api/application/applications" -H "accept: application/hal+json" -H "Content-Type: application/json" -d '{"name": "my_container", "svm": {"name": "vs1"} , "smart_container": true , "template": {"name": "san"} , "san": {"application_components": [{"name": "existingVolume"} ] } }'
+
+# The response:
+ {
+   "job": {
+       "uuid": "5440db05-77f0-11e9-a5a0-005056bba32f",
+       "_links": {
+           "self": {
+               "href": "/api/cluster/jobs/5440db05-77f0-11e9-a5a0-005056bba32f"
+           }
+       }
+   }
+ }
+
+
+# The response header:
+date: Tue, 23 May 2019 16:38:18 GMT
+server: libzapid-httpd
+content-type: application/hal+json
+location: /api/application/applications/5440db05-77f0-11e9-a5a0-005056bba32f
+cache-control: no-cache,no-store,must-revalidate
+connection: Keep-Alive
+keep-alive: timeout=5, max=100
+content-length: 203
+----
+
+'''
+
+== Smart Container Properties
+
+* exclude_aggregates - This property is available for SAN, NAS and S3 Smart Containers. The list of aggregates specified in this property will be excluded while provisioning the storage object. If no suitable aggregate can be found to place the storage object, smart container provisioning will fail.
+
+'''
+
+These sections are only allowed for smart containers and will return an error when provided on traditional applications. The following is an example of the error returned:
+
+----
+{
+"error": {
+  "message": "Field \"<field>\" is only supported on smart containers.",
+  "code": "65996161"
+  }
+}
+----
+
+'''
+
+== Updating the smart container
+
+A smart container can be updated to add more LUNS and/or namespaces, with the same template used to create a smart container being reused, and with the following fields set:
+
+* lun_count/namespace_count - represents the total number of LUNS/namespaces in the smart container.
+* os_type - represents the OS type of the new LUNS/namespaces.
+* total_size - represents the total size of the new LUNS/namespaces to be added.
+* igroup_name/subsystem - represents the igroup/subsystem mapping for the new LUNS/namespaces.
+Updates are allowed only on generic SAN and NVME templates.
+
+'''
+
+----
+
+# The API:
+/api/application/applications/{uuid}
+
+# The body:
+{
+"san": {
+    "application_components": [
+        {
+            "name": "myVolume",
+            "lun_count": 4
+            "total_size": "1gb"
+            "os-type": "linux",
+            "igroup_name": "igroup1"
+        }
+    ]
+}
+}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/application/applications/dbc10d87-df5a-11e7-b5d2-005056b47eb2" -H "accept: application/hal+json" -H "content-type: application/json" -d '{ "san": { "application_components": [{ "name": "myVolume", "total_size": "1GB", "lun_count": 4, "os_type": "linux", "igroup_name": "igroup1"}]}}'
+----
+
+== Application API limitations
+
+=== Template versus generic
+
+Applications can be represented in either template or generic terms. All applications can be represented in generic terms as a list of components. Each component generally maps to a field in the template. For example, Microsoft SQL Server applications have a component named _sqldata_ that corresponds to the _db_ parameter in the sql_on_san template. These mappings are usually straightforward and allow the templates to present application terminology, while the generic view uses the traditional naming schemes for ONTAP storage elements.
+
+The current release supports the creation and modification of applications in template terms, but retrieval is not supported. The mapping from template to generic terms is left to your own discretion.za
+
+=== ONTAP feature support
+
+Application APIs are interfaces layered on top of traditional ONTAP storage. While the intent is to provide a full management suite through application APIs, some features of the underlying ONTAP objects are not directly supported through application APIs. Applications are provisioned using ONTAP best practices, so the need for additional modifications of the underlying objects should be minimal. If such modifications are necessary, the traditional ONTAP APIs can be used. The _/api/application/{application.uuid}/components_ API provides a _backing_storage_ field that can be used to locate the storage objects associated with an application. This API also provides details of the NFS, SAN, or CIFS protocol access objects associated with the application.
+
+The application APIs use the extra information known about the application to coordinate multiple ONTAP objects in unison. When using non-application APIs, certain settings might interfere with the ONTAP object coordination and cause the application APIs to behave unexpectedly. To continue to supply the full ONTAP feature set, these modifications on the underlying objects are allowed, but there is no guarantee that these modifications will not adversely affect the application experience. You should use this feature with caution.
+
+

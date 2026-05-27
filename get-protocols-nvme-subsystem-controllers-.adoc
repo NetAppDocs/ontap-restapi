@@ -1,0 +1,659 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nvme-subsystem-controllers-.html'
+summary: 'Retrieve an NVMe subsystem controller'
+---
+
+= Retrieve an NVMe subsystem controller
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nvme/subsystem-controllers/{subsystem.uuid}/{id}`#
+
+*Introduced In:* 9.6
+
+Retrieves an NVMe subsystem controller.
+
+== Related ONTAP commands
+
+* `vserver nvme subsystem controller show`
+
+== Learn more
+
+* link:protocols_nvme_subsystem-controllers_endpoint_overview.html[DOC /protocols/nvme/subsystem-controllers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|subsystem.uuid
+|string
+|path
+|True
+a|The unique identifier of the NVMe subsystem.
+
+
+|id
+|string
+|path
+|True
+a|The unique identifier of the NVMe subsystem controller.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|admin_queue
+|link:#admin_queue[admin_queue]
+a|
+
+|dh_hmac_chap
+|link:#dh_hmac_chap[dh_hmac_chap]
+a|A container for properties of the NVMe in-band authentication DH-HMAC-CHAP protocol used by the the host connection to the controller.
+
+
+|digest
+|link:#digest[digest]
+a|Digests are properties of NVMe controllers created over the NVMe/TCP transport protocol. The usage of digests is negotiated between the host and the controller during connection setup. ONTAP enables digests only if the host requests them. The header digest is the crc32 checksum of the header portion of the NVMe/TCP PDU. The data digest is the crc32 checksum of the data portion of the NVMe/TCP PDU.
+
+If a digest is enabled, upon receiving an NVMe/TCP PDU, ONTAP calculates the crc32 checksum of the associated portion of the PDU and compares it with the digest value present in the transmitted PDU. If there is a mismatch, ONTAP returns an error and destroys the controller.
+
+* readOnly: 1
+* Introduced in: 9.15
+
+
+|host
+|link:#host[host]
+a|Properties of the connected host.
+
+
+|id
+|string
+a|The identifier of the subsystem controller. This field consists of 4 zero-filled hexadecimal digits followed by an 'h'.
+
+
+|interface
+|link:#interface[interface]
+a|The logical interface through which the host is connected.
+
+
+|io_queue
+|link:#io_queue[io_queue]
+a|Properties of the I/O queues available to the controller.
+
+
+|keep_alive_timeout
+|integer
+a|The keep-alive timeout value for the controller and all of its host connections, in milliseconds.
+
+If the NVMe controller does not receive a keep-alive request or an I/O request within the timeout window, the NVMe controller terminates its admin queue and I/O queue connections leading to NVMe controller teardown. If the NVMe host does not receive a response to a keep-alive request or an I/O request within the timeout window, the NVMe host initiates a connection disconnect.
+
+
+|node
+|link:#node[node]
+a|
+
+|subsystem
+|link:#subsystem[subsystem]
+a|An NVMe subsystem maintains configuration state and NVMe namespace access control for a set of NVMe-connected hosts.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|tls
+|link:#tls[tls]
+a|A container for properties that describe the encrypted NVMe/TCP transport connection between the host and the NVMe subsystem.
+
+
+|transport_protocol
+|string
+a|Transport Protocol
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "admin_queue": {
+    "depth": 0
+  },
+  "dh_hmac_chap": {
+    "group_size": "string",
+    "hash_function": "string",
+    "mode": "bidirectional"
+  },
+  "host": {
+    "id": "b8546ca6097349e5b1558dc154fc073b",
+    "nqn": "nqn.2014-08.org.nvmexpress:uuid:c2846cb1-89d2-4020-a3b0-71ce907b4eef",
+    "transport_address": "nn-0x20000090fae00806:pn-0x10000090fae00806"
+  },
+  "id": "0040h",
+  "interface": {
+    "name": "lif1",
+    "transport_address": "nn-0x200400a0989a1c8d:pn-0x200500a0989a1c8d",
+    "uuid": "fa1c5941-2593-11e9-94c4-00a0989a1c8e"
+  },
+  "io_queue": {
+    "count": 0,
+    "depth": [
+      "integer"
+    ]
+  },
+  "keep_alive_timeout": 1500,
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "subsystem": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "subsystem1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "tls": {
+    "cipher": "tls_aes_128_gcm_sha256",
+    "key_type": "configured",
+    "psk_identity": "NVMe1R01 nqn.2014-08.org.nvmexpress:uuid:713b3816-f9bf-ba43-b95a-5e4bf8c726e9 nqn.1992-08.com.netapp:sn.76f9d9bfb96511eea95e005056bb72b2:subsystem.ss1 mS1A7nrooevA9ZqAM09fQzWQlB2UZRt0BE1X4vINjY0=:"
+  },
+  "transport_protocol": "string"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 72090001
+| The supplied subsystem identifier does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#admin_queue]
+[.api-collapsible-fifth-title]
+admin_queue
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|depth
+|integer
+a|The depth of the admin queue for the controller.
+
+
+|===
+
+
+[#dh_hmac_chap]
+[.api-collapsible-fifth-title]
+dh_hmac_chap
+
+A container for properties of the NVMe in-band authentication DH-HMAC-CHAP protocol used by the the host connection to the controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group_size
+|string
+a|The Diffie-Hellman group size used for NVMe in-band authentication. This property is populated only when NVMe in-band authentication was performed for the NVMe-oF transport connection.
+
+
+|hash_function
+|string
+a|The hash function used for NVMe in-band authentication. This property is populated only when NVMe in-band authentication was performed for the NVMe-oF transport connection.
+
+
+|mode
+|string
+a|The NVMe in-band authentication mode used for the host connection. When set to:
+
+* none: Neither the host nor controller was authenticated.
+* unidirectional: The controller authenticated the host.
+* bidirectional: The controller authenticated the host and the host authenticated the controller.
+
+
+|===
+
+
+[#digest]
+[.api-collapsible-fifth-title]
+digest
+
+Digests are properties of NVMe controllers created over the NVMe/TCP transport protocol. The usage of digests is negotiated between the host and the controller during connection setup. ONTAP enables digests only if the host requests them. The header digest is the crc32 checksum of the header portion of the NVMe/TCP PDU. The data digest is the crc32 checksum of the data portion of the NVMe/TCP PDU.
+
+If a digest is enabled, upon receiving an NVMe/TCP PDU, ONTAP calculates the crc32 checksum of the associated portion of the PDU and compares it with the digest value present in the transmitted PDU. If there is a mismatch, ONTAP returns an error and destroys the controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|data
+|boolean
+a|Reports if digests are enabled for the data portion of the PDU.
+
+
+|header
+|boolean
+a|Reports if digests are enabled for the header portion of the PDU.
+
+
+|===
+
+
+[#host]
+[.api-collapsible-fifth-title]
+host
+
+Properties of the connected host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|The host identifier registered with the controller.
+
+
+|nqn
+|string
+a|The NVMe qualified name of the host.
+
+
+|transport_address
+|string
+a|The transport address of the host.
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+The logical interface through which the host is connected.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the logical interface.
+
+
+|transport_address
+|string
+a|The transport address of the logical interface.
+
+
+|uuid
+|string
+a|The unique identifier of the logical interface.
+
+
+|===
+
+
+[#io_queue]
+[.api-collapsible-fifth-title]
+io_queue
+
+Properties of the I/O queues available to the controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of I/O queues available to the controller.
+
+
+|depth
+|array[integer]
+a|The depths of the I/O queues.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#subsystem]
+[.api-collapsible-fifth-title]
+subsystem
+
+An NVMe subsystem maintains configuration state and NVMe namespace access control for a set of NVMe-connected hosts.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the NVMe subsystem.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe subsystem.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#tls]
+[.api-collapsible-fifth-title]
+tls
+
+A container for properties that describe the encrypted NVMe/TCP transport connection between the host and the NVMe subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cipher
+|string
+a|The cipher suite used for the transport by the encrypted NVMe/TCP transport connection between the host and the NVMe subsystem. This property is populated only when encryption is in use for the transport connection.
+
+
+|key_type
+|string
+a|The method by which the TLS pre-shared key (PSK) was obtained when establishing the encrypted NVMe/TCP transport connection between the host and the NVMe subsystem.
+Possible values:
+
+* `none` - TLS encryption is not configured for the host connection.
+* `configured` - A user supplied PSK was used for the encrypted NVMe/TCP-TLS transport connection between the host and the NVMe subsystem.
+
+
+|psk_identity
+|string
+a|The TLS PSK identity supplied by the host when establishing the encrypted NVMe/TCP transport connection between the host and the NVMe subsystem. This property is populated only when encryption is in use for the transport connection.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

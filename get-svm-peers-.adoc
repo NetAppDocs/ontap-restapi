@@ -1,0 +1,433 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-svm-peers-.html'
+summary: 'Retrieve an SVM peer relationship instance'
+---
+
+= Retrieve an SVM peer relationship instance
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/svm/peers/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves the SVM peer relationship instance.
+
+== Related ONTAP commands
+
+* `vserver peer show`
+
+== Example
+
+Retrieves the parameters of an SVM peer relationship.
+
+----
+GET "/api/svm/peers/d3268a74-ee76-11e8-a9bb-005056ac6dc9"
+----
+
+== Learn more
+
+* link:svm_peers_endpoint_overview.html[DOC /svm/peers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|SVM peer relationship UUID
+
+* Introduced in: 9.7
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|applications
+|array[string]
+a|A list of applications for an SVM peer relationship.
+
+
+|name
+|string
+a|A peer SVM alias name to avoid a name conflict on the local cluster.
+
+
+|peer
+|link:#peer[peer]
+a|Details for a peer SVM object.
+
+
+|state
+|string
+a|SVM peering state. To accept a pending SVM peer request, PATCH the state to "peered". To reject a pending SVM peer request, PATCH the state to "rejected". To suspend a peered SVM peer relationship, PATCH the state to "suspended". To resume a suspended SVM peer relationship, PATCH the state to "peered". The states "initiated", "pending", and "initializing" are system-generated and cannot be used for PATCH.
+
+
+|svm
+|link:#svm[svm]
+a|Local SVM details
+
+
+|uuid
+|string
+a|SVM peer relationship UUID
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "applications": [
+    "snapmirror",
+    "lun_copy"
+  ],
+  "force": true,
+  "name": "string",
+  "peer": {
+    "cluster": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "cluster2",
+      "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+    },
+    "svm": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    }
+  },
+  "state": "peered",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "string"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error codes | Description
+
+| 26345578
+| Internal error. Unable to retrieve local or peer SVM name.
+
+| 9896086
+| Peer SVM name conflicts with one of the following: a peer SVM in an existing SVM peer relationship, a local SVM, or an IPSpace. Use the "name" property to uniquely specify the peer SVM alias name.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#peer]
+[.api-collapsible-fifth-title]
+peer
+
+Details for a peer SVM object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Local SVM details
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

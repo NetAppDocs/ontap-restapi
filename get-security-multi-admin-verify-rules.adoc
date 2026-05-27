@@ -1,0 +1,489 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-multi-admin-verify-rules.html'
+summary: 'Retrieve multi-admin-verify rules'
+---
+
+= Retrieve multi-admin-verify rules
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/multi-admin-verify/rules`#
+
+*Introduced In:* 9.11
+
+Retrieves multi-admin-verify rules.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|approval_expiry
+|string
+|query
+|False
+a|Filter by approval_expiry
+
+
+|operation
+|string
+|query
+|False
+a|Filter by operation
+
+
+|required_approvers
+|integer
+|query
+|False
+a|Filter by required_approvers
+
+
+|query
+|string
+|query
+|False
+a|Filter by query
+
+
+|execution_expiry
+|string
+|query
+|False
+a|Filter by execution_expiry
+
+
+|system_defined
+|boolean
+|query
+|False
+a|Filter by system_defined
+
+
+|auto_request_create
+|boolean
+|query
+|False
+a|Filter by auto_request_create
+
+
+|approval_groups.name
+|string
+|query
+|False
+a|Filter by approval_groups.name
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#multi_admin_verify_rule[multi_admin_verify_rule]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "approval_expiry": "string",
+      "approval_groups": [
+        {
+          "name": "string"
+        }
+      ],
+      "create_time": "string",
+      "execution_expiry": "string",
+      "operation": "string",
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "query": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#approval_groups]
+[.api-collapsible-fifth-title]
+approval_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the approval group.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+The owner of the rule. The only valid owner is currently the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a POST or PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#multi_admin_verify_rule]
+[.api-collapsible-fifth-title]
+multi_admin_verify_rule
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approval_expiry
+|string
+a|Time for requests to be approved, in ISO-8601 duration format. If not set, the global setting is used.
+
+
+|approval_groups
+|array[link:#approval_groups[approval_groups]]
+a|List of approval groups that are allowed to approve requests for rules that don't have approval groups.
+
+
+|auto_request_create
+|boolean
+a|When true, ONTAP automatically creates a request for any failed operation where there is no matching pending request.
+
+* Default value:
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|create_time
+|string
+a|
+
+|execution_expiry
+|string
+a|Time for requests to be executed once approved, in ISO-8601 duration format. If not set, the global setting is used.
+
+
+|operation
+|string
+a|Command that requires one or more approvals.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the rule. The only valid owner is currently the cluster.
+
+
+|query
+|string
+a|When specified, this property limits the entries that require approvals to those that match the specified query.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|system_defined
+|boolean
+a|Specifies whether the rule is system-defined or user-defined.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

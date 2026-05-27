@@ -1,0 +1,86 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_ntp_servers_endpoint_overview.html'
+summary: 'Manage cluster NTP servers'
+---
+
+= Manage cluster NTP servers
+
+
+
+== Overview
+
+You can use this API to add external NTP servers to a cluster, update the configuration, use NTP keys, and retrieve the
+current NTP server configuration.
+
+== Adding an NTP server to a cluster
+
+To add an NTP server to a cluster, issue a POST /cluster/ntp/servers request.
+
+=== Fields used for adding an NTP server
+
+Except for the name of the NTP server (host name or IP address), which is specified by the server, all fields are optional:
+
+* `version`
+* `key`
+
+If the key is provided in POST, `authentication_enabled` is set to `true` by default.
+
+== Examples
+
+=== Adding an NTP server
+
+----
+
+# Body
+add_ntp_server.txt(body):
+{
+"server": "time.nist.gov"
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster/ntp/servers" -d "@add_ntp_server.txt"
+----
+
+'''
+
+=== Adding an NTP server with an authentication key
+
+----
+
+# Body
+add_authenticated_ntp_server.txt(body):
+{
+"server": "time.nist.gov",
+"key": { "id": 10 }
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster/ntp/servers" -d "@add_authenticated_ntp_server.txt"
+----
+
+'''
+
+=== Enabling a previously configured shared key (ID, type, and value) for an NTP server
+
+A combination of key number or identifier (ID), type of key, and shared key value is created with /api/cluster/ntp/keys.
+This operation will validate the NTP authentication works.
+
+----
+
+# Body
+enable_shared_key.txt(body):
+{
+"key": { "id": 10 },
+"authentication_enabled": true
+}
+
+# Request
+curl -X PATCH "https://<mgmt-ip>/api/cluster/ntp/servers/time.nist.gov" -d "@enable_shared_key.txt"
+----
+
+'''
+
+

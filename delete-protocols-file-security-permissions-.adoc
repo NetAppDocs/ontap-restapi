@@ -1,0 +1,188 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-file-security-permissions-.html'
+summary: 'Remove all SLAG ACLs for a path'
+---
+
+= Remove all SLAG ACLs for a path
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/file-security/permissions/{svm.uuid}/{path}`#
+
+*Introduced In:* 9.10
+
+Remove all SLAG ACLs for specified path. Bulk deletion is supported only for SLAG
+You must keep the following points in mind while using these endpoints:
+
+* Do not pass additional arguments that are not required.
+
+== Related ONTAP Commands
+
+* `vserver security file-directory remove-slag`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|path
+|string
+|path
+|True
+a|target path
+
+
+|access_control
+|string
+|query
+|False
+a|Remove all SLAG ACLs. Currently bulk deletion of file-directory ACLs is not supported.
+
+* enum: ["slag"]
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655865
+| The specified file or directory does not exist.
+
+| 10485811
+| Access is a required field.
+
+| 1260882
+| Specified SVM not found.
+
+| 6691623
+| User is not authorized.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

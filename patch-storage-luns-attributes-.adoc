@@ -1,0 +1,249 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-luns-attributes-.html'
+summary: 'Update a LUN attribute value'
+---
+
+= Update a LUN attribute value
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/luns/{lun.uuid}/attributes/{name}`#
+
+*Introduced In:* 9.10
+
+Updates a LUN attribute value.
+
+== Learn more
+
+* link:storage_luns_lun.uuid_attributes_endpoint_overview.html[DOC /storage/luns/{lun.uuid}/attributes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|lun.uuid
+|string
+|path
+|True
+a|The unique identifier of the LUN.
+
+
+|name
+|string
+|path
+|True
+a|The name of the attribute.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|lun
+|link:#lun[lun]
+a|The LUN for which the attribute is set.
+
+
+|value
+|string
+a|The attribute value. Required in POST; valid in PATCH.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "lun": {
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "value": "value1"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374875
+| The specified LUN was not found.
+
+| 5374929
+| The combined sizes of an attribute name and value are too large.
+
+| 5374931
+| The specified attribute was not found.
+
+| 5375060
+| The move start operation failed.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN for which the attribute is set.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_attribute]
+[.api-collapsible-fifth-title]
+lun_attribute
+
+A name/value pair optionally stored with the LUN. Attributes are available to callers to persist small amounts of application-specific metadata. They are in no way interpreted by ONTAP.
+
+Attribute names and values must be at least one byte and no more than 4091 bytes in length. The sum of the name and value lengths must be no more than 4092 bytes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|lun
+|link:#lun[lun]
+a|The LUN for which the attribute is set.
+
+
+|value
+|string
+a|The attribute value. Required in POST; valid in PATCH.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

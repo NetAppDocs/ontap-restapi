@@ -1,0 +1,184 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-certificates-.html'
+summary: 'Delete security certificates'
+---
+
+= Delete security certificates
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/certificates/{uuid}`#
+
+*Introduced In:* 9.6
+
+Deletes a security certificate.
+
+== Related ONTAP commands
+
+* `security certificate delete`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Certificate UUID
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 3735644
+| Cannot delete server-chain certificate. Reason: There is a corresponding server certificate for it.
+
+| 3735679
+| Cannot delete pre-installed server_ca certificates through REST. Use CLI or ZAPI.
+
+| 3735650
+| Deleting this client_ca certificate directly is not supported. Delete the corresponding root-ca certificate using type `root_ca` to delete the root, client, and server certificates.
+
+| 3735627
+| Deleting this server_ca certificate directly is not supported. Delete the corresponding root-ca certificate using type `root_ca` to delete the root, client, and server certificates.
+
+| 3735589
+| Cannot delete certificate.
+
+| 3735590
+| Cannot delete certificate. Failed to remove SSL configuration for the certificate.
+
+| 3735683
+| Cannot remove this certificate while external key manager is configured.
+
+| 3735681
+| Cannot delete preinstalled `server-ca` certificates. Use the CLI to complete the operation.
+
+| 52560272
+| The certificate could not be removed due to being in use by one or more subsystems.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

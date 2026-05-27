@@ -1,0 +1,180 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-vscan-.html'
+summary: 'Delete a Vscan configuration'
+---
+
+= Delete a Vscan configuration
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Deletes a Vscan configuration.
+
+Important notes:
+
+* The Vscan DELETE endpoint deletes all of the Vscan configuration of an SVM. It first disables the Vscan and then deletes all of the SVM scanner-pools, On-Access policies, and On-Demand policies.
+* Disable the active Vscan On-Access policy on an SVM before performing the Vscan delete operation on that SVM.
+
+== Related ONTAP commands
+
+* `vserver vscan scanner-pool delete`
+* `vserver vscan on-access-policy delete`
+* `vserver vscan on-demand-policy delete`
+
+== Learn more
+
+* link:protocols_vscan_endpoint_overview.html[DOC /protocols/vscan]
+* link:protocols_vscan_svm.uuid_scanner-pools_endpoint_overview.html[DOC /protocols/vscan/{svm.uuid}/scanner-pools]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|10027259 +
+//end row
+//start row
+|A scanner-pool, an On-Access policy, or an On-Demand policy might fail to get deleted due to either a systematic error or some hardware failure. The error code returned details the failure along with the reason for the failure. For example, "Failed to delete On-Access policy "sp1". Reason: "Failed to delete policy. Reason: policy must be disabled before being deleted.". Retry the operation."
+//end row
+|===
+//end table
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

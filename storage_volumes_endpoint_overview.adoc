@@ -1,0 +1,1192 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_volumes_endpoint_overview.html'
+summary: 'Manage storage volumes'
+---
+
+= Manage storage volumes
+
+
+
+== Overview
+
+FlexVol volumes are logical containers used by ONTAP to serve data to clients.  They contain file systems in a NAS environment and LUNs in a SAN environment.
+
+A FlexGroup volume is a scale-out NAS container that provides high performance along with automatic load distribution and scalability. A FlexGroup volume contains several constituents that automatically and transparently share the traffic.
+
+FlexClone volumes are writable, point-in-time copies of a FlexVol volume. At this time, FlexClones of FlexGroups are not supported.
+
+Volumes with SnapLock type Compliance or Enterprise, are referred to as SnapLock volumes. It is possible to create a SnapLock volume by specifying SnapLock parameters.
+
+ONTAP storage APIs allow you to create, modify, and monitor volumes and aggregates.
+
+== Storage efficiency
+
+Storage efficiency is used to remove duplicate blocks in the data and to compress the data. Efficiency has deduplication, compression, cross volume deduplication, compaction, policy-name, enabled, application_io_size, compression_type and storage_efficiency_mode options. On All Flash systems, all efficiencies are enabled by default, on volume creation. Options such as "background/inline/both" are treated as both, which means both background and inline are enabled for any efficiency option. The option "none"  disables both background and inline efficiency. Application-io-size and compression-type decides type of compression behavior in the system. Storage efficiency mode decides if the system is to run in default/efficient mode. Detailed information about each field is available under efficiency object for storage efficiency fields.
+
+To enable any efficiency option on all-flash or FAS systems, background deduplication is always enabled.
+
+== Quotas
+
+Quotas provide a way to restrict or track the files and space usage by a user, group, or qtree. Quotas are enabled for a specific FlexVol or a FlexGroup volume.
+
+The following APIs can be used to enable or disable and obtain quota state for a FlexVol or a FlexGroup volume:
+
+&ndash; PATCH  /api/storage/volumes/\{uuid} -d '{"quota.enabled":"true"}'
+
+&ndash; PATCH  /api/storage/volumes/\{uuid} -d '{"quota.enabled":"false"}'
+
+&ndash; GET    /api/storage/volumes/\{uuid}/?fields=quota.state
+
+== File System Analytics
+
+File system analytics (FSA) provide a quick method for obtaining information summarizing properties of all files within any directory tree of a volume. For more information on FSA, see link:storage_volumes_volume.uuid_files_path_endpoint_overview.html[DOC /storage/volumes{volume.uuid}/files/\{path}] . Analytics can be enabled or disabled on individual volumes.
+
+The following APIs can be used to enable or disable and obtain analytics state for a FlexVol volume or a FlexGroup volume:
+
+&ndash; PATCH  /api/storage/volumes/\{uuid} -d '{"analytics.state":"on"}'
+
+&ndash; PATCH  /api/storage/volumes/\{uuid} -d '{"analytics.state":"off"}'
+
+&ndash; GET    /api/storage/volumes/\{uuid}/?fields=analytics
+
+If the `analytics.state` field is "initializing" or "initialization_paused" and is set to "off", the FSA initialization scan is cancelled. If FSA is turned on again, the initialization scan restarts.
+
+== QoS
+
+QoS policy and settings enforce Service Level Objectives (SLO) on a volume. SLO can be set by specifying qos.max_throughput_iops and/or qos.max_throughput_mbps or qos.min_throughput_iops and/or qos.min_throughput_mbps. Specifying min_throughput_iops or min_throughput_mbps is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying qos.name or qos.uuid property.
+
+== Performance monitoring
+
+Performance of a volume can be monitored by the `metric.+*+` and `statistics.+*+` fields. These show the performance of the volume in terms of IOPS, latency and throughput. The `metric.+*+` fields denote an average whereas `statistics.+*+` fields denote a real-time monotonically increasing value aggregated across all nodes.
+
+== Rebalancing
+
+Non-disruptive capacity rebalancing of a FlexGroup volume is configured by the `rebalancing.+*+` fields. If not explicitly set, default values are provided. To initiate a capacity rebalancing operation, `rebalancing.state` is set to 'starting'. The `rebalancing.max_runtime` can be optionally set, which is the maximum length of time you want the capacity rebalancing to run for. You can stop capacity rebalancing by setting `rebalancing.state` to 'stopping'. You can also modify the configurations `rebalancing.max_runtime`, `rebalancing.max_threshold`, `rebalancing.min_threshold`, `rebalancing.max_file_moves`, `rebalancing.min_file_size`, and `rebalancing.exclude_snapshots`. When a new capacity rebalancing operation is started on a FlexGroup volume, it uses the current configuration values. Once the operation is started, changes to the configuration are not allowed, until the capacity rebalanding operations stops, either by exceeding their maximum runtime or by being stopped. To see runtime information about each constituent, for a running rebalancing operation, use the 'rebalancing.engine.*' fields.
+
+== Volume APIs
+
+The following APIs are used to perform operations related with FlexVol volumes and FlexGroup volumes:
+
+&ndash; POST      /api/storage/volumes
+
+&ndash; GET       /api/storage/volumes
+
+&ndash; GET       /api/storage/volumes/\{uuid}
+
+&ndash; PATCH     /api/storage/volumes/\{uuid}
+
+&ndash; DELETE    /api/storage/volumes/\{uuid}
+
+== Examples
+
+=== Creating a volume
+
+The POST request is used to create a new volume and to specify its properties.
+
+----
+
+# The API:
+/api/storage/volumes
+
+# The call:
+curl -X POST  "https://<mgmt-ip>/api/storage/volumes" -H "accept: application/hal+json" -d '{"name": "vol1", "aggregates":[{"name":"aggr1"}], "svm":{"name" : "vs1"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "b89bc5dd-94a3-11e8-a7a3-0050568edf84",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/b89bc5dd-94a3-11e8-a7a3-0050568edf84"
+    }
+  }
+}
+}
+----
+
+=== Creating a SnapLock volume and specifying its properties using POST
+
+----
+
+# The API:
+/api/storage/volumes
+
+# The call:
+curl -X POST  "https://<mgmt-ip>/api/storage/volumes" -H "accept: application/hal+json" -d '{"name": "vol1",  "aggregates":[{"name": "aggr1"}],  "svm":{"name" : "vs1"}, "snaplock":{"retention":{"default": "P20Y"}, "type": "compliance"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "e45b123b-c228-11e8-aa20-0050568e36bb",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/e45b123b-c228-11e8-aa20-0050568e36bb"
+    }
+  }
+}
+}
+----
+
+=== Creating a FlexGroup volume and specifying its properties using POST
+
+----
+
+# The API:
+/api/storage/volumes
+
+# The call:
+curl -X POST  "https://<mgmt-ip>/api/storage/volumes" -H "accept: application/hal+json" -d '{"name" : "vol1", "state" : "online", "type" : "RW", "aggregates" : [{"name" : "aggr1"}, {"name" : "aggr2"}, {"name":"aggr3"}], "constituents_per_aggregate" : "1", "svm" : {"name" : "vs1"}, "size" : "240MB", "encryption" : {"enabled" : "False"}, "efficiency" : {"compression" : "both"}, "autosize" : {"maximum" : "500MB", "minimum" : "240MB"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "3cfa38bd-3a78-11e9-ae39-0050568ed7dd",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/3cfa38bd-3a78-11e9-ae39-0050568ed7dd"
+    }
+  }
+}
+}
+----
+
+=== Creating a FlexGroup volume and specifying its properties using POST when the Performance_NAS license is installed.
+
+----
+
+# The API:
+/api/storage/volumes
+
+# The call:
+curl -X POST  "https://<mgmt-ip>/api/storage/volumes" -H "accept: application/hal+json" -d '{"name" : "vol1", "state" : "online", "type" : "RW", "svm" : {"name" : "vs1"}, "size" : "240TB", "encryption" : {"enabled" : "False"}, "efficiency" : {"compression" : "both"}, "autosize" : {"maximum" : "500TB", "minimum" : "240TB"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "3cfa38bd-3a78-11e9-ae39-0050568ed7dd",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/3cfa38bd-3a78-11e9-ae39-0050568ed7dd"
+    }
+  }
+}
+}
+----
+
+=== Creating a FlexClone and specifying its properties using POST
+
+----
+
+# The API:
+/api/storage/volumes
+
+# The call:
+curl -X POST  "https://<mgmt-ip>/api/storage/volumes" -H "accept: application/hal+json" -d '{"name":"vol1_clone", "clone": {"parent_volume": {"name": "vol1"}, "is_flexclone": "true"},"svm":{"name": "vs0"}}'
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Tue, 26 Feb 2019 09:06:22 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/storage/volumes/?name=vol1_clone
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "c9ee0040-39a5-11e9-9b24-00a098439a83",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c9ee0040-39a5-11e9-9b24-00a098439a83"
+    }
+  }
+}
+}
+----
+
+== Volumes reported in the GET REST API
+
+=== The following types of volumes are reported:
+
+&ndash;  RW, DP and LS volumes
+
+&ndash;  FlexGroup volume
+
+&ndash;  FlexCache volume
+
+&ndash;  FlexClone volume
+
+&ndash;  FlexGroup constituent
+
+=== The following volumes are not reported:
+
+&ndash;  DEL and TMP type volume
+
+&ndash;  Node Root volume
+
+&ndash;  System Vserver volume
+
+&ndash;  FlexCache constituent
+
+== Examples
+
+=== Retrieving the list of volumes
+
+----
+
+# The API:
+/api/storage/volumes
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "2d1167cc-c3f2-495a-a23f-8f50b071b9b8",
+    "name": "vsdata_root",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/2d1167cc-c3f2-495a-a23f-8f50b071b9b8"
+      }
+    }
+  },
+  {
+    "uuid": "3969be7e-78b4-4b4c-82a4-fa86331f03df",
+    "name": "vsfg_root",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/3969be7e-78b4-4b4c-82a4-fa86331f03df"
+      }
+    }
+  },
+  {
+    "uuid": "59c03ac5-e708-4ce8-a676-278dc249fda2",
+    "name": "svm_root",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/59c03ac5-e708-4ce8-a676-278dc249fda2"
+      }
+    }
+  },
+  {
+    "uuid": "6802635b-8036-11e8-aae5-0050569503ac",
+    "name": "fgvol",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/6802635b-8036-11e8-aae5-0050569503ac"
+      }
+    }
+  },
+  {
+    "uuid": "d0c3359c-5448-4a9b-a077-e3295a7e9057",
+    "name": "datavol",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057"
+      }
+    }
+  }
+],
+"num_records": 5,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes"
+  }
+}
+}
+----
+
+=== Retrieving the attributes of a volume
+
+The GET request is used to retrieve the attributes of a volume.
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "d0c3359c-5448-4a9b-a077-e3295a7e9057",
+"comment": "This is a data volume",
+"create_time": "2018-07-05T14:56:44+05:30",
+"language": "en_us",
+"name": "datavol",
+"size": 20971520,
+"state": "online",
+"style": "flexvol",
+"tiering_policy": "auto",
+"type": "rw",
+"aggregates": [
+  {
+    "name": "data",
+    "uuid": "aa742322-36bc-4d98-bbc4-0a827534c035",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/aggregates/data"
+      }
+    }
+  }
+],
+"efficiency": {
+  "ratio": 1
+},
+"encryption": {
+  "enabled": false,
+  "state": "none",
+  "key_id": "",
+  "type" : "none"
+},
+"error_state": {
+  "has_bad_blocks": false,
+  "is_inconsistent": false
+},
+"files": {
+  "maximum": 566,
+  "used": 96
+},
+"nas": {
+  "gid": 2468,
+  "security_style": "unix",
+  "uid": 1357,
+  "unix_permissions": 4755,
+  "export_policy": {
+    "name": "default",
+    "id": 8589934593
+  },
+  "junction_parent": {
+    "name": "vol1",
+    "uuid": "a2564f80-25fb-41e8-9b49-44de2600991f",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/a2564f80-25fb-41e8-9b49-44de2600991f"
+      }
+    }
+  }
+},
+"metric": {
+  "timestamp": "2019-04-09T05:50:15Z",
+  "status": "ok",
+  "duration": "PT15S",
+  "latency": {
+    "other": 0,
+    "total": 0,
+    "read": 0,
+    "write": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "cloud": {
+    "timestamp": "2019-04-09T05:50:15Z",
+    "status": "ok",
+    "duration": "PT15S",
+    "iops" : {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "latency": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+  },
+  "flexcache": {
+    "timestamp": "2019-04-09T05:50:15Z",
+    "status": "ok",
+    "duration": "PT1D",
+    "cache_miss_percent": 0,
+    "bandwidth_savings": 0
+  }
+},
+"statistics": {
+  "timestamp": "2019-04-09T05:50:42Z",
+  "status": "ok",
+  "latency_raw": {
+    "other": 38298,
+    "total": 38298,
+    "read": 0,
+    "write": 0
+  },
+  "iops_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 3,
+    "total": 3
+  },
+  "throughput_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "cloud": {
+    "timestamp": "2019-04-09T05:50:42Z",
+    "status": "ok",
+    "iops_raw" : {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "latency_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+  },
+  "flexcache_raw": {
+    "timestamp": "2019-04-09T05:50:15Z",
+    "status": "ok",
+    "cache_miss_blocks": 0,
+    "client_requested_blocks": 0
+  }
+},
+"qos": {
+  "policy": {
+  "min_throughput_iops": 0,
+  "min_throughput_mbps": 0,
+  "max_throughput_iops": 1000,
+  "max_throughput_mbps": 0,
+  "uuid": "228454af-5a8b-11e9-bd5b-005056ac6f1f",
+  "name": "pg1"
+  }
+},
+"snaplock": {
+  "append_mode_enabled": false,
+  "autocommit_period": "none",
+  "compliance_clock_time": "2019-05-24T10:59:00+05:30",
+  "expiry_time": "2038-01-19T08:44:28+05:30",
+  "is_audit_log": false,
+  "litigation_count": 0,
+  "privileged_delete": "disabled",
+  "type": "enterprise",
+  "retention": {
+    "default": "P0Y",
+    "minimum": "P0Y",
+    "maximum": "P30Y"
+  }
+},
+"snapshot_policy": {
+  "name": "default"
+},
+"svm": {
+  "name": "vsdata",
+  "uuid": "d61b69f5-7458-11e8-ad3f-0050569503ac"
+}
+}
+----
+
+=== Retrieving the quota state of a FlexVol or a FlexGroup volume
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717/?fields=quota.state" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+"name": "fv",
+"quota": {
+  "state": "on"
+},
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717/"
+  }
+}
+}
+----
+
+=== Retrieving the constituents of a FlexGroup volume
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes?flexgroup.uuid=fd87d06f-8876-11ec-94a3-005056a7484f&is_constituent=true" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "fd877f7c-8876-11ec-94a3-005056a7484f",
+    "name": "fg__0001",
+    "flexgroup": {
+      "uuid": "fd87d06f-8876-11ec-94a3-005056a7484f"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/fd877f7c-8876-11ec-94a3-005056a7484f?is_constituent=true"
+      }
+    }
+  },
+  {
+    "uuid": "fea631d6-8876-11ec-94a3-005056a7484f",
+    "name": "fg__0002",
+    "flexgroup": {
+      "uuid": "fd87d06f-8876-11ec-94a3-005056a7484f"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/fea631d6-8876-11ec-94a3-005056a7484f?is_constituent=true"
+      }
+    }
+  },
+  {
+    "uuid": "ff38a34e-8876-11ec-94a3-005056a7484f",
+    "name": "fg__0003",
+    "flexgroup": {
+      "uuid": "fd87d06f-8876-11ec-94a3-005056a7484f"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/ff38a34e-8876-11ec-94a3-005056a7484f?is_constituent=true"
+      }
+    }
+  },
+  {
+    "uuid": "ffdbbd1f-8876-11ec-94a3-005056a7484f",
+    "name": "fg__0004",
+    "flexgroup": {
+      "uuid": "fd87d06f-8876-11ec-94a3-005056a7484f"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/ffdbbd1f-8876-11ec-94a3-005056a7484f?is_constituent=true"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes?flexgroup.uuid=fd87d06f-8876-11ec-94a3-005056a7484f&is_constituent=true"
+  }
+}
+}
+----
+
+=== Retrieving the efficiency attributes of volume
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/5f098ebc-32c8-11eb-8dde-005056ace228/?fields=efficiency" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "5f098ebc-32c8-11eb-8dde-005056ace228",
+"name": "vol1",
+"efficiency": {
+  "compression": "both",
+  "dedupe": "background",
+  "cross_volume_dedupe": "none",
+  "compaction": "none",
+  "schedule": "sun-sat@0",
+  "svm": "vs0",
+  "state": "enabled",
+  "status": "idle",
+  "type": "regular",
+  "progress": "Idle for 00:10:37",
+  "last_op_begin_timestamp": "Mon Nov 30 00:00:02 2020",
+  "last_op_end_timestamp": "Mon Nov 30 00:00:03 2020",
+  "last_op_state": "Success",
+  "last_op_size": 0,
+  "addr": "/vol/vol1",
+  "policy": {
+    "name": "-"
+  },
+  "ratio": 1
+},
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/5f098ebc-32c8-11eb-8dde-005056ace228"
+   }
+}
+}
+----
+
+== Updating the attributes of a volume
+
+== Examples
+
+=== Updating the attributes of a volume
+
+The PATCH request is used to update the attributes of a volume.
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{ "size": 26214400, "nas": {"security_style": "mixed"}, "comment": "This is a data volume" }' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Tue, 31 Jul 2018 09:36:43 GMT
+Server: libzapid-httpd
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "3c5be5a6-94a5-11e8-8ca3-00505695c11b",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/3c5be5a6-94a5-11e8-8ca3-00505695c11b"
+    }
+  }
+}
+}
+----
+
+=== Updating the attributes of a FlexClone using PATCH
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"clone":{"split_initiated":"true"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 25 Feb 2019 10:10:19 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "8e01747f-38e5-11e9-8a3a-00a09843994b",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8e01747f-38e5-11e9-8a3a-00a09843994b"
+    }
+  }
+}
+}
+----
+
+=== Stopping a volume clone split operation on a FlexClone using PATCH.
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"clone":{"split_initiated":"false"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Wed, 03 Nov 2021 15:10:04 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "1f8b3673-3cb8-11ec-b89e-005056bb2cb5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/1f8b3673-3cb8-11ec-b89e-005056bb2cb5"
+    }
+  }
+}
+}
+----
+
+=== Enabling quotas for a FlexVol or a FlexGroup volume using PATCH
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"quota":{"enabled":"true"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 25 Feb 2019 10:10:19 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "d2fe7299-57d0-11e9-a2dc-005056a7f717",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/d2fe7299-57d0-11e9-a2dc-005056a7f717"
+    }
+  }
+}
+}
+----
+
+=== Disabling quotas for a FlexVol or a FlexGroup volume using PATCH
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"quota":{"enabled":"false"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 25 Feb 2019 10:10:19 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "0c8f6bea-57d1-11e9-a2dc-005056a7f717",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/0c8f6bea-57d1-11e9-a2dc-005056a7f717"
+    }
+  }
+}
+}
+----
+
+=== Starting non-disruptive volume capacity rebalancing for a FlexGroup volume using PATCH
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"rebalancing":{"state":"starting", "max_runtime":"PT6H"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 25 Feb 2019 10:10:19 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "d2fe7299-57d0-11e9-a2dc-005056a7f717",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/d2fe7299-57d0-11e9-a2dc-005056a7f717"
+    }
+  }
+}
+}
+----
+
+=== Starting a scheduled non-disruptive volume capacity rebalancing for a FlexGroup volume using PATCH
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"rebalancing":{"state":"starting", "start_time":"2022-12-21T15:30:00-05:00"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 21 Dec 2022 15:25:00 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "53b2a954-80d4-11ed-81d2-005056ac8ed0",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/53b2a954-80d4-11ed-81d2-005056ac8ed0"
+    }
+  }
+}
+}
+----
+
+=== Stopping non-disruptive volume capacity rebalancing OR scheduled rebalancing for a FlexGroup volume using PATCH. This works for scheduled or on-going rebalancing.
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"rebalancing":{"state":"stopping"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 25 Feb 2019 10:10:19 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "0c8f6bea-57d1-11e9-a2dc-005056a7f717",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/0c8f6bea-57d1-11e9-a2dc-005056a7f717"
+    }
+  }
+}
+}
+----
+
+=== Modifying non-disruptive volume capacity rebalancing configurations for a FlexGroup volume
+
+The following example shows how to use a PATCH request to modify non-disruptive volume capacity rebalancing configurations for a FlexGroup volume:
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"rebalancing":{"start_time":"2023-03-18T15:30:00-05:00","max_threshold":20, "min_threshold":5, "max_file_moves":15, "min_file_size":"100MB", "exclude_snapshots":"false", "max_runtime":"PT6H"}}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Thu, 16 Mar 2023 10:10:19 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "0c8f6bea-57d1-11e9-a2dc-005056a7f717",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/0c8f6bea-57d1-11e9-a2dc-005056a7f717"
+    }
+  }
+}
+}
+----
+
+=== Retrieving non-disruptive volume capacity rebalancing engine runtime information for a FlexGroup volume
+
+The following example shows how to use a GET request to retrieve non-disruptive volume capacity rebalancing engine runtime information for a FlexGroup volume:
+
+----
+
+# The API:
+/api/storage/volumes?is_constituent=true
+
+# The call:
+curl -X GET  "https://<mgmt-ip>/api/storage/volumes?fields=rebalancing.engine&is_constituent=true&flexgroup.uuid=d0c3359c-5448-4a9b-a077-e3295a7e9057" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "2b32fdf1-b916-11ec-b103-005056a79638",
+    "name": "fg__0001",
+    "flexgroup": {
+      "uuid": "2b3323db-b916-11ec-b103-005056a79638"
+    },
+    "rebalancing": {
+      "engine": {
+        "scanner": {
+          "files_scanned": 3522915,
+          "files_skipped": {
+            "too_small": 3812,
+            "too_large": 199,
+            "fast_truncate": 22,
+            "in_snapshot": 77499,
+            "efficiency_blocks": 1823,
+            "efficiency_percent": 355,
+            "incompatible": 9377,
+            "metadata": 85449,
+            "remote_cache": 1912,
+            "write_fenced": 28,
+            "on_demand_destination": 87,
+            "footprint_invalid": 12,
+            "other": 336
+          },
+          "blocks_scanned": 1542675000,
+          "blocks_skipped": {
+            "too_small": 8744000,
+            "too_large": 865000,
+            "fast_truncate": 54000,
+            "in_snapshot": 7749000,
+            "efficiency_blocks": 1472000,
+            "efficiency_percent": 366000,
+            "incompatible": 2287000,
+            "metadata": 85673000,
+            "remote_cache": 9914000,
+            "write_fenced": 19000,
+            "on_demand_destination": 66000,
+            "footprint_invalid": 98000,
+            "other":187000
+          }
+        },
+        "movement": {
+          "file_moves_started": 9833,
+          "most_recent_start_time": "2022-02-15T12:56:07-05:00",
+          "last_error": {
+            "time": "2022-02-15T09:09:27-05:00",
+            "file_id": 88,
+            "destination": 1089,
+            "code": 60
+          }
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/2b32fdf1-b916-11ec-b103-005056a79638?is_constituent=true"
+      }
+    }
+  },
+  {
+    "uuid": "2cc5da55-b916-11ec-b103-005056a79638",
+    "name": "fg__0002",
+    "flexgroup": {
+      "uuid": "2b3323db-b916-11ec-b103-005056a79638"
+    },
+    "rebalancing": {
+      "engine": {
+        "scanner": {
+          "files_scanned": 3522915,
+          "files_skipped": {
+            "too_small": 3812,
+            "too_large": 188,
+            "fast_truncate": 25,
+            "in_snapshot": 77499,
+            "efficiency_blocks": 1823,
+            "efficiency_percent": 355,
+            "incompatible": 9377,
+            "metadata": 85449,
+            "remote_cache": 1912,
+            "write_fenced": 28,
+            "on_demand_destination": 87,
+            "footprint_invalid": 12,
+            "other": 336
+          },
+          "blocks_scanned": 1542675000,
+          "blocks_skipped": {
+            "too_small": 8744000,
+            "too_large": 865000,
+            "fast_truncate": 54000,
+            "in_snapshot": 7749000,
+            "efficiency_blocks": 1472000,
+            "efficiency_percent": 366000,
+            "incompatible": 2287000,
+            "metadata": 85673000,
+            "remote_cache": 9914000,
+            "write_fenced": 19000,
+            "on_demand_destination": 66000,
+            "footprint_invalid": 98000,
+            "other":187000
+          }
+        },
+        "movement": {
+          "file_moves_started": 9833,
+          "most_recent_start_time": "2022-02-15T12:56:07-05:00",
+          "last_error": {
+            "time": "2022-02-15T08:09:27-05:00",
+            "file_id": 88,
+            "destination": 1089,
+            "code": 60
+          }
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/2cc5da55-b916-11ec-b103-005056a79638?is_constituent=true"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes?fields=rebalancing.engine&is_constituent=true&flexgroup.uuid=d0c3359c-5448-4a9b-a077-e3295a7e9057"
+  }
+}
+}
+----
+
+== Add tiering object tags for a FlexVol volume
+
+The following example shows how to use a PATCH request to add tiering object tags for a FlexVol volume:
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"tiering.object_tags": [ "key1=val1", "key2=val2" ]}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Tue, 11 Feb 2020 19:29:25 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "d05012de-4d04-11ea-836b-005056bb6f9d",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/d05012de-4d04-11ea-836b-005056bb6f9d"
+    }
+  }
+}
+}
+----
+
+=== Remove tiering object tags for a FlexVol using PATCH
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volumes/d0c3359c-5448-4a9b-a077-e3295a7e9057" -d '{"tiering.object_tags": []}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 Jan 2020 22:28:04 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "ca234df1-3ef8-11ea-9a56-005056bb69a1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/ca234df1-3ef8-11ea-9a56-005056bb69a1"
+    }
+  }
+}
+}
+----
+
+== Deleting a volume
+
+== Example
+
+=== Deleting a volume
+
+The DELETE request is used to delete a volume.
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X DELETE  "https://<mgmt-ip>/api/storage/volumes/{uuid} " -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+cache-control: no-cache,no-store,must-revalidate
+connection: Keep-Alive
+content-length: 189
+content-type: application/json
+date: Wed, 01 Aug 2018 09:40:36 GMT
+keep-alive: timeout=5, max=100
+server: libzapid-httpd
+{
+"job": {
+  "uuid": "f1aa3eb8-956e-11e8-86bf-0050568e2249",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/f1aa3eb8-956e-11e8-86bf-0050568e2249"
+    }
+  }
+}
+}
+----
+
+=== Deleting a volume and bypassing the recovery queue
+
+----
+
+# The API:
+/api/storage/volumes/{uuid}
+
+# The call:
+curl -X DELETE  "https://<mgmt-ip>/api/storage/volumes/{uuid}?force=true" -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Wed, 09 Feb 2022 09:59:55 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors: 'self'
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "08757020-898f-11ec-b367-005056bb7353",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/08757020-898f-11ec-b367-005056bb7353"
+    }
+  }
+}
+}
+----
+
+

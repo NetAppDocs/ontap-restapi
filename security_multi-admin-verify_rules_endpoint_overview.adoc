@@ -1,0 +1,286 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_rules_endpoint_overview.html'
+summary: 'Manage multi-admin-verify rules'
+---
+
+= Manage multi-admin-verify rules
+
+
+
+== Overview
+
+Rules define the ONTAP commands (operations) that should be protected by multi-admin approval.
+While the feature is turned on, any ONTAP operation that is defined with a rule will be enforced with multi-admin approval to execute the command (operation).
+ +
+
+'''
+
+== Examples
+
+=== Creating a multi-admin-verify rule
+
+Creates a rule for the specified ONTAP operation.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/rules
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/multi-admin-verify/rules?return_records=true" -H "accept: application/hal+json" -d '{"operation": "volume delete", "query": "-vserver vs0", "required_approvers": 1}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "owner": {
+      "uuid": "c109634f-7011-11ec-a23d-005056a78fd5",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/c109634f-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "volume delete",
+    "auto_request_create": true,
+    "query": "-vserver vs0",
+    "required_approvers": 1,
+    "create_time": "2022-01-07T22:14:03-05:00",
+    "system_defined": false,
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/c109634f-7011-11ec-a23d-005056a78fd5/volume%20delete"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving multi-admin-verify rules
+
+Displays information about multi admin verification rules.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/rules
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify/rules"
+
+# The response:
+{
+"records": [
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security login password",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20login%20password"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security login unlock",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20login%20unlock"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify approval-group create",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20approval-group%20create"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify approval-group delete",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20approval-group%20delete"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify approval-group modify",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20approval-group%20modify"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify approval-group replace",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20approval-group%20replace"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify modify",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20modify"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify rule create",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20rule%20create"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify rule delete",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20rule%20delete"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "security multi-admin-verify rule modify",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/security%20multi-admin-verify%20rule%20modify"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "operation": "volume delete",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/volume%20delete"
+      }
+    }
+  }
+],
+"num_records": 11,
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify/rules"
+  }
+}
+}
+----
+
+'''
+
+

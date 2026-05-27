@@ -1,0 +1,348 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-luns-attributes.html'
+summary: 'Add an attribute to a LUN'
+---
+
+= Add an attribute to a LUN
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/luns/{lun.uuid}/attributes`#
+
+*Introduced In:* 9.10
+
+Adds an attribute to a LUN.
+
+== Required properties
+
+* `name` - The name of the attribute to add.
+* `value` - The value of the attribute to add.
+
+== Learn more
+
+* link:storage_luns_lun.uuid_attributes_endpoint_overview.html[DOC /storage/luns/{lun.uuid}/attributes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|lun.uuid
+|string
+|path
+|True
+a|The unique identifier of the LUN.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|lun
+|link:#lun[lun]
+a|The LUN for which the attribute is set.
+
+
+|name
+|string
+a|The attribute name. Required in POST.
+
+
+|value
+|string
+a|The attribute value. Required in POST; valid in PATCH.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "lun": {
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "name1",
+  "value": "value1"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374875
+| The specified LUN was not found.
+
+| 5374928
+| An incomplete attribute name/value pair was supplied.
+
+| 5374929
+| The combined sizes of an attribute name and value are too large.
+
+| 5374930
+| The attribute already exists for the LUN.
+
+| 5375060
+| The copy start operation failed.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN for which the attribute is set.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_attribute]
+[.api-collapsible-fifth-title]
+lun_attribute
+
+A name/value pair optionally stored with the LUN. Attributes are available to callers to persist small amounts of application-specific metadata. They are in no way interpreted by ONTAP.
+
+Attribute names and values must be at least one byte and no more than 4091 bytes in length. The sum of the name and value lengths must be no more than 4092 bytes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|lun
+|link:#lun[lun]
+a|The LUN for which the attribute is set.
+
+
+|name
+|string
+a|The attribute name. Required in POST.
+
+
+|value
+|string
+a|The attribute value. Required in POST; valid in PATCH.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

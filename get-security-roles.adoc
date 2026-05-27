@@ -1,0 +1,517 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-roles.html'
+summary: 'Retrieve a list of roles configured in the cluster'
+---
+
+= Retrieve a list of roles configured in the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/roles`#
+
+*Introduced In:* 9.6
+
+Retrieves a list of roles configured in the cluster.
+
+== Related ONTAP commands
+
+* `security login rest-role show`
+* `security login role show`
+
+== Learn more
+
+* link:security_roles_endpoint_overview.html[DOC /security/roles]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+* Introduced in: 9.7
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+* Introduced in: 9.7
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* Introduced in: 9.7
+
+
+|builtin
+|boolean
+|query
+|False
+a|Filter by builtin
+
+* Introduced in: 9.7
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+* Introduced in: 9.7
+
+
+|privileges.path
+|string
+|query
+|False
+a|Filter by privileges.path
+
+* Introduced in: 9.7
+
+
+|privileges.access
+|string
+|query
+|False
+a|Filter by privileges.access
+
+* Introduced in: 9.7
+
+
+|privileges.query
+|string
+|query
+|False
+a|Filter by privileges.query
+
+* Introduced in: 9.11
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#role[role]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "admin",
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "privileges": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "access": "all",
+          "path": "volume move start",
+          "query": "-vserver vs1|vs2|vs3 -destination-aggregate aggr1|aggr2"
+        }
+      ],
+      "scope": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the role.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#role_privilege]
+[.api-collapsible-fifth-title]
+role_privilege
+
+A tuple containing a REST endpoint or a command/command directory path and the access level assigned to that endpoint or command/command directory. If the "path" attribute refers to a command/command directory path, the tuple could additionally contain an optional query. The REST endpoint can be a resource-qualified endpoint. At present, the only supported resource-qualified endpoints are the following
+
+Snapshots APIs
+
+* _/api/storage/volumes/{volume.uuid}/snapshots_
+
+File System Analytics APIs
+
+* _/api/storage/volumes/{volume.uuid}/files_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/clients_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/directories_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/files_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/users_
+* _/api/svm/svms/{svm.uuid}/top-metrics/clients_
+* _/api/svm/svms/{svm.uuid}/top-metrics/directories_
+* _/api/svm/svms/{svm.uuid}/top-metrics/files_
+* _/api/svm/svms/{svm.uuid}/top-metrics/users_
+* _/api/protocols/s3/services/{svm.uuid}/users_
+
+In the above APIs, wildcard character * could be used in place of _{volume.uuid}_ or _{svm.uuid}_ to denote _all_ volumes or _all_ SVMs, depending upon whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ refers to the _-instance-uuid_ field value in the "volume show" command output at diagnostic privilege level. It can also be fetched through REST endpoint _/api/storage/volumes_.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access
+|string
+a|Access level for the REST endpoint or command/command directory path. If it denotes the access level for a command/command directory path, the only supported enum values are 'none','readonly' and 'all'.
+
+
+|path
+|string
+a|Either of REST URI/endpoint OR command/command directory path.
+
+
+|query
+|string
+a|Optional attribute that can be specified only if the "path" attribute refers to a command/command directory path. The privilege tuple implicitly defines a set of objects the role can or cannot access at the specified access level. The query further reduces this set of objects to a subset of objects that the role is allowed to access. The query attribute must be applicable to the command/command directory specified by the "path" attribute. It is defined using one or more parameters of the command/command directory path specified by the "path" attribute.
+
+
+|===
+
+
+[#role]
+[.api-collapsible-fifth-title]
+role
+
+A named set of privileges that defines the rights an account has when it is assigned the role.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|builtin
+|boolean
+a|Indicates if this is a built-in (pre-defined) role which cannot be modified or deleted.
+
+
+|name
+|string
+a|Role name
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the role.
+
+
+|privileges
+|array[link:#role_privilege[role_privilege]]
+a|The list of privileges that this role has been granted.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

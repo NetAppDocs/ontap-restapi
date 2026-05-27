@@ -1,0 +1,507 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-s3-services-groups.html'
+summary: 'Create an S3 group configuration'
+---
+
+= Create an S3 group configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/groups`#
+
+*Introduced In:* 9.8
+
+Creates the S3 group configuration.
+
+== Important notes
+
+* Each SVM can have one or more s3 group configurations.
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the user configuration.
+* `name` - Group name that is to be created.
+* `users` - List of users to be added into the group.
+* `policies` - List of policies are to be attached to this group.
+
+== Recommended optional properties
+
+* `comment` - Short description about the S3 Group.
+
+== Related ONTAP commands
+
+* `vserver object-store-server group create`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_groups_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/groups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Can contain any additional information about the group being created or modified.
+
+
+|id
+|integer
+a|Specifies a unique Group ID used to identify a particular group. This parameter should not be specified in the POST or PATCH method. A Group ID is automatically generated and it is retrieved using the GET method. Group ID is SVM-scoped.
+
+
+|name
+|string
+a|Specifies the name of the group. A group name length can range from 1 to 128 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-".
+
+
+|policies
+|array[link:#policies[policies]]
+a|Specifies a list of policies that are attached to the group. The wildcard character "*" is a valid value for specifying all policies.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|users
+|array[link:#users[users]]
+a|Specifies the list of users who belong to the group.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "Admin group",
+  "id": 5,
+  "name": "Admin-Group",
+  "policies": [
+    {
+      "name": "Policy1"
+    }
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "users": [
+    {
+      "name": "user-1"
+    }
+  ]
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#s3_group[s3_group]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "comment": "Admin group",
+      "id": 5,
+      "name": "Admin-Group",
+      "policies": [
+        {
+          "name": "Policy1"
+        }
+      ],
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "users": [
+        {
+          "name": "user-1"
+        }
+      ]
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|92406207 +
+//end row
+//start row
+|An object store group cannot have an empty list of users.
+//end row
+//start row
+|92405930 +
+//end row
+//start row
+|Group name "{group name}" is not valid. Group names must have between 1 and 128 characters.
+//end row
+//start row
+|92405931 +
+//end row
+//start row
+|Group name "{group name}" contains invalid characters. Valid characters for a group name are 0-9, A-Z, a-z, "_", "+", "=", ",", ".", "@", and "-".
+//end row
+//start row
+|92405932 +
+//end row
+//start row
+|Creating an object store group requires an effective cluster version of 9.8 or later.
+//end row
+//start row
+|92405933 +
+//end row
+//start row
+|Failed to create group for SVM. Reason: "{reason of failure}".
+//end row
+//start row
+|92405934 +
+//end row
+//start row
+|Users {user name} specified in the user list do not exist for SVM "{vserver name}". Use the "object-store-server user create" command to create a user.
+//end row
+//start row
+|92405935 +
+//end row
+//start row
+|Internal Error. Unable to generate unique ID for the group.
+//end row
+//start row
+|92405936 +
+//end row
+//start row
+|Query characters such as * are not supported in the user list.
+//end row
+//start row
+|92405937 +
+//end row
+//start row
+|Policies {policy name} specified in the policy list do not exist for SVM "{vserver name}".
+//end row
+//start row
+|92405942 +
+//end row
+//start row
+|Group name "{group name}" already exists for SVM "{vserver name}".
+//end row
+//start row
+|92405858 +
+//end row
+//start row
+|Failed to "create" the "group" because the operation is only supported on data SVMs.
+//end row
+//start row
+|262222   +
+//end row
+//start row
+|User name is present more than once in the users field.
+//end row
+//start row
+|92406154 +
+//end row
+//start row
+|Users \{user} specified in the user list do not exist for SVM "vs1". Use the "/protocols/s3/services/{svm.uuid}/users" endpoint to create a user.
+//end row
+//start row
+|92406307 +
+//end row
+//start row
+|Cannot add object store user "user1" in SVM "vs1" to the group. Reason: The user is disabled, because it does not have keys generated.
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#policies]
+[.api-collapsible-fifth-title]
+policies
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Specifies the name of the policy. A policy name length can range from 1 to 128 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-".
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#users]
+[.api-collapsible-fifth-title]
+users
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Specifies the name of the user. A user name length can range from 1 to 64 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-".
+
+
+|===
+
+
+[#s3_group]
+[.api-collapsible-fifth-title]
+s3_group
+
+This is a container for S3 user groups.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Can contain any additional information about the group being created or modified.
+
+
+|id
+|integer
+a|Specifies a unique Group ID used to identify a particular group. This parameter should not be specified in the POST or PATCH method. A Group ID is automatically generated and it is retrieved using the GET method. Group ID is SVM-scoped.
+
+
+|name
+|string
+a|Specifies the name of the group. A group name length can range from 1 to 128 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-".
+
+
+|policies
+|array[link:#policies[policies]]
+a|Specifies a list of policies that are attached to the group. The wildcard character "*" is a valid value for specifying all policies.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|users
+|array[link:#users[users]]
+a|Specifies the list of users who belong to the group.
+
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

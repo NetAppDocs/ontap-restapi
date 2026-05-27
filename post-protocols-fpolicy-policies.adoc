@@ -1,0 +1,615 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-fpolicy-policies.html'
+summary: 'Create an FPolicy configuration for an SVM'
+---
+
+= Create an FPolicy configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/policies`#
+
+*Introduced In:* 9.6
+
+Creates an FPolicy policy configuration for the specified SVM. To create an FPolicy policy, you must specify the policy scope and the FPolicy events to be monitored.
+
+Important notes:
+
+* A single policy can monitor multiple events.
+* An FPolicy engine is an optional field whose default value is set to native. A native engine can be used to simply block the file access based on the file extensions specified in the policy scope.
+* To enable a policy, the policy priority  must be specified. If the priority is not specified, the policy is created but it is not enabled.
+* The "mandatory" field, if set to true, blocks the file access when the primary or secondary FPolicy servers are down.
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the FPolicy policy.
+* `events` - Name of the events to monitor.
+* `name` - Name of the FPolicy policy.
+* `scope` - Scope of the policy. Can be limited to exports, volumes, shares or file extensions.
+* `priority`- Priority of the policy (ranging from 1 to 10).
+
+== Default property values
+
+* `mandatory` - _true_
+* `engine` - _native_
+
+== Related ONTAP commands
+
+* `fpolicy policy scope create`
+* `fpolicy policy create`
+* `fpolicy enable`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_policies_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|engine
+|link:#fpolicy_engine_reference[fpolicy_engine_reference]
+a|FPolicy external engine
+
+
+|events
+|array[link:#fpolicy_event_reference[fpolicy_event_reference]]
+a|
+
+|mandatory
+|boolean
+a|Specifies what action to take on a file access event in a case when all primary and secondary servers are down or no response is received from the FPolicy servers within a given timeout period. When this parameter is set to true, file access events will be denied under these circumstances.
+
+
+|name
+|string
+a|Specifies the name of the policy.
+
+
+|passthrough_read
+|boolean
+a|Specifies whether passthrough-read should be allowed for FPolicy servers
+registered for the policy. Passthrough-read is a way to read data for
+offline files without restoring the files to primary storage. Offline
+files are files that have been moved to secondary storage.
+
+
+|persistent_store
+|string
+a|Specifies the persistent storage name. This can then be used
+to enable persistent mode for FPolicy events.
+
+
+|priority
+|integer
+a|Specifies the priority that is assigned to this policy.
+
+
+|privileged_user
+|string
+a|Specifies the privileged user name for accessing files on the cluster
+using a separate data channel with privileged access. The input for
+this field should be in "domain\username" format.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "allow_privileged_access": true,
+  "enabled": true,
+  "engine": {
+    "name": "string"
+  },
+  "events": [
+    "event_cifs",
+    "event_open"
+  ],
+  "name": "fp_policy_1",
+  "persistent_store": "ps1",
+  "priority": 1,
+  "privileged_user": "mydomain\\testuser",
+  "scope": {
+    "exclude_export_policies": [
+      "string"
+    ],
+    "exclude_extension": [
+      "string"
+    ],
+    "exclude_shares": [
+      "string"
+    ],
+    "exclude_volumes": [
+      "vol1",
+      "vol_svm1",
+      "*"
+    ],
+    "include_export_policies": [
+      "string"
+    ],
+    "include_extension": [
+      "string"
+    ],
+    "include_shares": [
+      "sh1",
+      "share_cifs"
+    ],
+    "include_volumes": [
+      "vol1",
+      "vol_svm1"
+    ]
+  },
+  "svm": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of Records
+
+
+|records
+|array[link:#fpolicy_policy[fpolicy_policy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "allow_privileged_access": true,
+      "enabled": true,
+      "engine": {
+        "name": "string"
+      },
+      "events": [
+        "event_cifs",
+        "event_open"
+      ],
+      "name": "fp_policy_1",
+      "persistent_store": "ps1",
+      "priority": 1,
+      "privileged_user": "mydomain\\testuser",
+      "scope": {
+        "exclude_export_policies": [
+          "string"
+        ],
+        "exclude_extension": [
+          "string"
+        ],
+        "exclude_shares": [
+          "string"
+        ],
+        "exclude_volumes": [
+          "vol1",
+          "vol_svm1",
+          "*"
+        ],
+        "include_export_policies": [
+          "string"
+        ],
+        "include_extension": [
+          "string"
+        ],
+        "include_shares": [
+          "sh1",
+          "share_cifs"
+        ],
+        "include_volumes": [
+          "vol1",
+          "vol_svm1"
+        ]
+      },
+      "svm": {
+        "uuid": "string"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 9764875
+| An FPolicy event does not exist
+
+| 9764888
+| An FPolicy engine does not exist
+
+| 9764898
+| An FPolicy policy cannot be created without defining its scope
+
+| 9765027
+| FPolicy creation is successful but it cannot be enabled as the priority is already in use by another policy
+
+| 9765037
+| FPolicy creation failed as passthrough-read cannot be enabled for policy without privileged user
+
+| 9765038
+| Passthrough-read policies are not supported with asynchronous external engine
+
+| 9765056
+| The specified Persistent Store does not exist
+
+| 9765059
+| Persistent Store feature is not supported with native engine
+
+| 9765060
+| Persistent Store feature is not supported with synchronous engine
+
+| 9765061
+| Persistent Store feature is not supported with mandatory screening
+
+| 9765065
+| A valid privileged user name must be in the form "domain-name\user-name"
+
+| 9765066
+| The privileged user contains characters that are not allowed
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#fpolicy_engine_reference]
+[.api-collapsible-fifth-title]
+fpolicy_engine_reference
+
+FPolicy external engine
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the FPolicy external engine.
+
+
+|===
+
+
+[#fpolicy_event_reference]
+[.api-collapsible-fifth-title]
+fpolicy_event_reference
+
+FPolicy events
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|check_extensions_on_directories
+|boolean
+a|Specifies whether the file name extension checks also apply to directory objects. If this parameter is set to true,
+the directory objects are subjected to the same extension checks as regular files. If this parameter is set to false,
+the directory names are not matched for extensions and notifications are sent for directories even if their name
+extensions do not match. Default is false.
+
+
+|exclude_export_policies
+|array[string]
+a|
+
+|exclude_extension
+|array[string]
+a|
+
+|exclude_shares
+|array[string]
+a|
+
+|exclude_volumes
+|array[string]
+a|
+
+|include_export_policies
+|array[string]
+a|
+
+|include_extension
+|array[string]
+a|
+
+|include_shares
+|array[string]
+a|
+
+|include_volumes
+|array[string]
+a|
+
+|object_monitoring_with_no_extension
+|boolean
+a|Specifies whether the extension checks also apply to objects with no extension. If this parameter is set to true,
+all objects with or without extensions are monitored. Default is false.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#fpolicy_policy]
+[.api-collapsible-fifth-title]
+fpolicy_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|engine
+|link:#fpolicy_engine_reference[fpolicy_engine_reference]
+a|FPolicy external engine
+
+
+|events
+|array[link:#fpolicy_event_reference[fpolicy_event_reference]]
+a|
+
+|mandatory
+|boolean
+a|Specifies what action to take on a file access event in a case when all primary and secondary servers are down or no response is received from the FPolicy servers within a given timeout period. When this parameter is set to true, file access events will be denied under these circumstances.
+
+
+|name
+|string
+a|Specifies the name of the policy.
+
+
+|passthrough_read
+|boolean
+a|Specifies whether passthrough-read should be allowed for FPolicy servers
+registered for the policy. Passthrough-read is a way to read data for
+offline files without restoring the files to primary storage. Offline
+files are files that have been moved to secondary storage.
+
+
+|persistent_store
+|string
+a|Specifies the persistent storage name. This can then be used
+to enable persistent mode for FPolicy events.
+
+
+|priority
+|integer
+a|Specifies the priority that is assigned to this policy.
+
+
+|privileged_user
+|string
+a|Specifies the privileged user name for accessing files on the cluster
+using a separate data channel with privileged access. The input for
+this field should be in "domain\username" format.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

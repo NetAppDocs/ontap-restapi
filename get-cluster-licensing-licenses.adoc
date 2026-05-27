@@ -1,0 +1,665 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-licensing-licenses.html'
+summary: 'Retrieve license packages'
+---
+
+= Retrieve license packages
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/licensing/licenses`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of license packages.
+
+NOTE: By default, the GET method only returns licensed packages. You must provide the following query "state=unlicensed" to retrieve unlicensed packages.
+*Note:* Starting with ONTAP 9.11.1, the GET method no longer returns the Base license record.
+
+== Related ONTAP commands
+
+* `system license show-status`
+* `system license show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|entitlement.risk
+|string
+|query
+|False
+a|Filter by entitlement.risk
+
+* Introduced in: 9.11
+
+
+|entitlement.action
+|string
+|query
+|False
+a|Filter by entitlement.action
+
+* Introduced in: 9.11
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|description
+|string
+|query
+|False
+a|Filter by description
+
+* Introduced in: 9.11
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|licenses.owner
+|string
+|query
+|False
+a|Filter by licenses.owner
+
+
+|licenses.host_id
+|string
+|query
+|False
+a|Filter by licenses.host_id
+
+* Introduced in: 9.9
+
+
+|licenses.active
+|boolean
+|query
+|False
+a|Filter by licenses.active
+
+
+|licenses.expiry_time
+|string
+|query
+|False
+a|Filter by licenses.expiry_time
+
+
+|licenses.capacity.measurement_unit
+|string
+|query
+|False
+a|Filter by licenses.capacity.measurement_unit
+
+* Introduced in: 9.18
+
+
+|licenses.capacity.maximum_size
+|integer
+|query
+|False
+a|Filter by licenses.capacity.maximum_size
+
+
+|licenses.capacity.disabled_size
+|integer
+|query
+|False
+a|Filter by licenses.capacity.disabled_size
+
+* Introduced in: 9.18
+
+
+|licenses.capacity.used_size
+|integer
+|query
+|False
+a|Filter by licenses.capacity.used_size
+
+
+|licenses.serial_number
+|string
+|query
+|False
+a|Filter by licenses.serial_number
+
+
+|licenses.evaluation
+|boolean
+|query
+|False
+a|Filter by licenses.evaluation
+
+
+|licenses.shutdown_imminent
+|boolean
+|query
+|False
+a|Filter by licenses.shutdown_imminent
+
+* Introduced in: 9.11
+
+
+|licenses.start_time
+|string
+|query
+|False
+a|Filter by licenses.start_time
+
+
+|licenses.compliance.state
+|string
+|query
+|False
+a|Filter by licenses.compliance.state
+
+
+|licenses.installed_license
+|string
+|query
+|False
+a|Filter by licenses.installed_license
+
+* Introduced in: 9.9
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "description": "NFS License",
+      "entitlement": {
+        "action": "string",
+        "risk": "string"
+      },
+      "licenses": [
+        {
+          "capacity": {
+            "disabled_size": 0,
+            "maximum_size": 0,
+            "measurement_unit": "string",
+            "used_size": 0
+          },
+          "compliance": {
+            "state": "compliant"
+          },
+          "expiry_time": "2019-03-02 19:00:00 +0000",
+          "host_id": "456-44-1234",
+          "installed_license": "Core Bundle",
+          "owner": "cluster1",
+          "serial_number": "123456789",
+          "start_time": "2019-02-02 19:00:00 +0000"
+        }
+      ],
+      "name": "NFS",
+      "scope": "string",
+      "state": "compliant"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#entitlement]
+[.api-collapsible-fifth-title]
+entitlement
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Entitlement action to be taken to mitigate the risk
+
+
+|risk
+|string
+a|Entitlement risk of the package
+
+
+|===
+
+
+[#capacity]
+[.api-collapsible-fifth-title]
+capacity
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disabled_size
+|integer
+a|Capacity that is currently disabled due to license limits. Its unit of measure is specified in the measurement_unit field.
+
+
+|maximum_size
+|integer
+a|Licensed capacity size that can be used. Its unit of measure is specified in the measurement_unit field.
+
+
+|measurement_unit
+|string
+a|Unit of measure for capacity based licenses.
+
+
+|used_size
+|integer
+a|Specifies the total number of GPUs in the system when measurement_unit is GPUs, else specifies the bytes used.
+
+
+|===
+
+
+[#compliance]
+[.api-collapsible-fifth-title]
+compliance
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|state
+|string
+a|Compliance state of the license.
+
+
+|===
+
+
+[#licenses]
+[.api-collapsible-fifth-title]
+licenses
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|active
+|boolean
+a|A flag indicating whether the license is currently being enforced.
+
+
+|capacity
+|link:#capacity[capacity]
+a|
+
+|compliance
+|link:#compliance[compliance]
+a|
+
+|evaluation
+|boolean
+a|A flag indicating whether the license is in evaluation mode.
+
+
+|expiry_time
+|string
+a|Date and time when the license expires.
+
+
+|host_id
+|string
+a|A string that associates the license with a node or cluster.
+
+
+|installed_license
+|string
+a|Name of license that enabled the feature.
+
+
+|owner
+|string
+a|Cluster, node or license manager that owns the license.
+
+
+|serial_number
+|string
+a|Serial number of the license.
+
+
+|shutdown_imminent
+|boolean
+a|A flag indicating whether the Cloud ONTAP system is going to shutdown as the Cloud platform license has already expired.
+
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|start_time
+|string
+a|Date and time when the license starts.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|description
+|string
+a|License description
+
+
+|entitlement
+|link:#entitlement[entitlement]
+a|
+
+|licenses
+|array[link:#licenses[licenses]]
+a|Installed licenses of the package.
+
+
+|name
+|string
+a|Name of the license.
+
+
+|scope
+|string
+a|Scope of the license.
+
+
+|state
+|string
+a|Summary state of package based on all installed licenses.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,66 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_file-security_effective-permissions_svm.uuid_path_endpoint_overview.html'
+summary: 'View file security permissions'
+---
+
+= View file security permissions
+
+
+
+== Overview
+
+This API displays the effective permission granted to a Windows or UNIX user on the specified file or folder path. A path within the FlexCache volume is not supported.
+
+== Examples
+
+=== Retrieving the effective permission for the specified Windows user on the specified path of an SVM.
+
+----
+
+# The API:
+curl -X GET "https://10.63.26.252/api/protocols/file-security/effective-permissions/cf5f271a-1beb-11ea-8fad-005056bb645e/administrator/windows/%2F?share.name=sh1&return_records=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"svm": {
+  "uuid": "cf5f271a-1beb-11ea-8fad-005056bb645e",
+  "name": "vs1"
+},
+"user": "administrator",
+"type": "windows",
+"path": "/",
+"share": {
+  "path": "/"
+},
+"file_permission": [
+  "read",
+  "write",
+  "append",
+  "read_ea",
+  "write_ea",
+  "execute",
+  "delete_child",
+  "read_attributes",
+  "write_attributes",
+  "delete",
+  "read_control",
+  "write_dac",
+  "write_owner",
+  "synchronize",
+  "system_security"
+],
+"share_permission": [
+  "read",
+  "read_ea",
+  "execute",
+  "read_attributes",
+  "read_control",
+  "synchronize"
+]
+}
+----
+
+

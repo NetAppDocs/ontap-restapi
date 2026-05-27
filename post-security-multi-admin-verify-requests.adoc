@@ -1,0 +1,526 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-multi-admin-verify-requests.html'
+summary: 'Create a multi-admin-verify request'
+---
+
+= Create a multi-admin-verify request
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/multi-admin-verify/requests`#
+
+*Introduced In:* 9.11
+
+Creates a multi-admin-verify request.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approve_expiry_time
+|string
+a|
+
+|approve_time
+|string
+a|
+
+|approved_users
+|array[string]
+a|The users that have approved the request.
+
+
+|comment
+|string
+a|Optional user-provided comment that is sent to the approval-group email indicating why the request was made.
+
+
+|create_time
+|string
+a|
+
+|execution_expiry_time
+|string
+a|
+
+|index
+|integer
+a|Unique index that represents a request.
+
+
+|operation
+|string
+a|The command to execute.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the request. This can identify the cluster or an SVM.
+
+
+|pending_approvers
+|integer
+a|The number of approvers remaining that are required to approve.
+
+
+|permitted_users
+|array[string]
+a|List of users that can execute the operation once approved. If not set, any authorized user can perform the operation.
+
+
+|potential_approvers
+|array[string]
+a|The users that are able to approve the request.
+
+
+|query
+|string
+a|Identifies the specific entry upon which the user wants to operate.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|state
+|string
+a|The state of the request. PATCH supports approved and vetoed. The state only changes after setting to approved once no more approvers are required.
+
+
+|user_requested
+|string
+a|The user that created the request. Automatically set by ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|user_vetoed
+|string
+a|The user that vetoed the request.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "approve_expiry_time": "string",
+  "approve_time": "string",
+  "approved_users": [
+    "string"
+  ],
+  "comment": "string",
+  "create_time": "string",
+  "execute_on_approval": true,
+  "execution_expiry_time": "string",
+  "index": 0,
+  "operation": "string",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "pending_approvers": 0,
+  "permitted_users": [
+    "string"
+  ],
+  "potential_approvers": [
+    "string"
+  ],
+  "query": "string",
+  "required_approvers": 0,
+  "state": "string",
+  "user_requested": "string",
+  "user_vetoed": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#multi_admin_verify_request[multi_admin_verify_request]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "approve_expiry_time": "string",
+      "approve_time": "string",
+      "approved_users": [
+        "string"
+      ],
+      "comment": "string",
+      "create_time": "string",
+      "execute_on_approval": true,
+      "execution_expiry_time": "string",
+      "index": 0,
+      "operation": "string",
+      "owner": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "pending_approvers": 0,
+      "permitted_users": [
+        "string"
+      ],
+      "potential_approvers": [
+        "string"
+      ],
+      "query": "string",
+      "required_approvers": 0,
+      "state": "string",
+      "user_requested": "string",
+      "user_vetoed": "string"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262148
+| The specified command is not recognized.
+
+| 262279
+| Invalid field set.
+
+| 262304
+| Too many requests. Delete one before creating another.
+
+| 262305
+| Can't approve non-pending request.
+
+| 262306
+| Can't veto an expired request.
+
+| 262308
+| The specified command is not supported by this feature.
+
+| 262309
+| The feature must be enabled first.
+
+| 262311
+| Value must be greater than zero.
+
+| 262312
+| Number of required approvers must be less than the total number of unique approvers in the approval-groups.
+
+| 262313
+| Number of unique approvers in the approval-groups must be greater than the number of required approvers.
+
+| 262326
+| Failed to parse query.
+
+| 262327
+| Failed to crate the request.
+
+| 262328
+| There is no matching rule for this request.
+
+| 262330
+| Cannot approve/veto a request multiple times.
+
+| 262334
+| The parameter specified in the command is not supported.
+
+| 262337
+| Cannot approve/veto the user's own request.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+The owner of the request. This can identify the cluster or an SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#multi_admin_verify_request]
+[.api-collapsible-fifth-title]
+multi_admin_verify_request
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approve_expiry_time
+|string
+a|
+
+|approve_time
+|string
+a|
+
+|approved_users
+|array[string]
+a|The users that have approved the request.
+
+
+|comment
+|string
+a|Optional user-provided comment that is sent to the approval-group email indicating why the request was made.
+
+
+|create_time
+|string
+a|
+
+|execution_expiry_time
+|string
+a|
+
+|index
+|integer
+a|Unique index that represents a request.
+
+
+|operation
+|string
+a|The command to execute.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the request. This can identify the cluster or an SVM.
+
+
+|pending_approvers
+|integer
+a|The number of approvers remaining that are required to approve.
+
+
+|permitted_users
+|array[string]
+a|List of users that can execute the operation once approved. If not set, any authorized user can perform the operation.
+
+
+|potential_approvers
+|array[string]
+a|The users that are able to approve the request.
+
+
+|query
+|string
+a|Identifies the specific entry upon which the user wants to operate.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|state
+|string
+a|The state of the request. PATCH supports approved and vetoed. The state only changes after setting to approved once no more approvers are required.
+
+
+|user_requested
+|string
+a|The user that created the request. Automatically set by ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|user_vetoed
+|string
+a|The user that vetoed the request.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

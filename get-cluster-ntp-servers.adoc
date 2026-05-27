@@ -1,0 +1,394 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-ntp-servers.html'
+summary: 'Retrieve external NTP time servers'
+---
+
+= Retrieve external NTP time servers
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/ntp/servers`#
+
+*Introduced In:* 9.7
+
+Retrieves the collection of external NTP time servers ONTAP uses for time adjustment and correction.
+
+== Related ONTAP commands
+
+* `cluster time-service ntp server show`
+
+== Learn more
+
+* link:cluster_ntp_servers_endpoint_overview.html[DOC /cluster/ntp/servers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|version
+|string
+|query
+|False
+a|Filter by version
+
+
+|server
+|string
+|query
+|False
+a|Filter by server
+
+
+|authentication_enabled
+|boolean
+|query
+|False
+a|Filter by authentication_enabled
+
+
+|key.id
+|integer
+|query
+|False
+a|Filter by key.id
+
+* Max value: 65535
+* Min value: 1
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#ntp_server[ntp_server]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "authentication_enabled": 1,
+      "key": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "id": 10
+      },
+      "server": "time.nist.gov",
+      "version": "auto"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ntp_key_reference]
+[.api-collapsible-fifth-title]
+ntp_key_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|id
+|integer
+a|NTP symmetric authentication key identifier or index number (ID). This ID,
+the type of cryptographic hash, and the cryptographic hash value are all
+provided by the remote NTP server.
+
+
+|===
+
+
+[#ntp_server]
+[.api-collapsible-fifth-title]
+ntp_server
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authentication_enabled
+|boolean
+a|Set NTP symmetric authentication on (true) or off (false).
+
+
+|key
+|link:#ntp_key_reference[ntp_key_reference]
+a|
+
+|server
+|string
+a|NTP server host name, IPv4, or IPv6 address.
+
+
+|version
+|string
+a|NTP protocol version for server. Valid versions are 3, 4, or auto.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

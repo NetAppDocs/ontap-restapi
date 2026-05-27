@@ -1,0 +1,425 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-authentication-duo-profiles.html'
+summary: 'Create a Duo profile'
+---
+
+= Create a Duo profile
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/authentication/duo/profiles`#
+
+*Introduced In:* 9.14
+
+Creates a Duo profile.
+
+== Required properties
+
+* `api_host` - Duo API host
+* `integration_key` - Integration key
+* `secret_key` - Secret key
+
+== Related ONTAP commands
+
+* `security login duo create`
+
+== Learn more
+
+* link:security_authentication_duo_profiles_endpoint_overview.html[DOC /security/authentication/duo/profiles]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|api_host
+|string
+a|The URL at which the Duo API is hosted.
+
+
+|auto_push
+|boolean
+a|Automatically sends a push notification for authentication when using Duo.
+
+
+|comment
+|string
+a|Comment for the Duo profile.
+
+
+|fail_mode
+|string
+a|Determines the behavior of the system when it cannot communicate with the Duo service.
+
+
+|fingerprint
+|string
+a|The SHA fingerprint corresponding to the Duo secret key.
+
+
+|http_proxy
+|string
+a|Specifies the HTTP proxy server to be used when connecting to the Duo service.
+
+
+|integration_key
+|string
+a|The Integration Key associated with the Duo profile.
+
+
+|is_enabled
+|boolean
+a|Indicates whether the Duo authentication feature is active or inactive.
+
+
+|max_prompts
+|integer
+a|The maximum number of authentication attempts allowed for a user before the process is terminated.
+
+
+|owner
+|link:#owner[owner]
+a|SVM name and UUID for which the Duo profile is configured.
+
+
+|push_info
+|boolean
+a|Additional information sent along with the push notification for Duo authentication.
+
+
+|secret_key
+|string
+a|The Secret Key associated with the Duo profile.
+
+
+|status
+|string
+a|Information on the reachability status of Duo.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "api_host": "api-****.duo.com",
+  "auto_push": 1,
+  "comment": "string",
+  "fail_mode": "safe",
+  "fingerprint": "string",
+  "http_proxy": "IPaddress:port",
+  "integration_key": "string",
+  "is_enabled": 1,
+  "max_prompts": 1,
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "push_info": 1,
+  "secret_key": "string",
+  "status": "OK"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#duo[duo]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "api_host": "api-****.duo.com",
+      "auto_push": 1,
+      "comment": "string",
+      "fail_mode": "safe",
+      "fingerprint": "string",
+      "http_proxy": "IPaddress:port",
+      "integration_key": "string",
+      "is_enabled": 1,
+      "max_prompts": 1,
+      "owner": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "push_info": 1,
+      "secret_key": "string",
+      "status": "OK"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+SVM name and UUID for which the Duo profile is configured.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#duo]
+[.api-collapsible-fifth-title]
+duo
+
+Duo profile for the SVM or cluster-management server (Cserver).
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|api_host
+|string
+a|The URL at which the Duo API is hosted.
+
+
+|auto_push
+|boolean
+a|Automatically sends a push notification for authentication when using Duo.
+
+
+|comment
+|string
+a|Comment for the Duo profile.
+
+
+|fail_mode
+|string
+a|Determines the behavior of the system when it cannot communicate with the Duo service.
+
+
+|fingerprint
+|string
+a|The SHA fingerprint corresponding to the Duo secret key.
+
+
+|http_proxy
+|string
+a|Specifies the HTTP proxy server to be used when connecting to the Duo service.
+
+
+|integration_key
+|string
+a|The Integration Key associated with the Duo profile.
+
+
+|is_enabled
+|boolean
+a|Indicates whether the Duo authentication feature is active or inactive.
+
+
+|max_prompts
+|integer
+a|The maximum number of authentication attempts allowed for a user before the process is terminated.
+
+
+|owner
+|link:#owner[owner]
+a|SVM name and UUID for which the Duo profile is configured.
+
+
+|push_info
+|boolean
+a|Additional information sent along with the push notification for Duo authentication.
+
+
+|secret_key
+|string
+a|The Secret Key associated with the Duo profile.
+
+
+|status
+|string
+a|Information on the reachability status of Duo.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

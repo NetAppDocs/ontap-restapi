@@ -1,0 +1,255 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_ldap-schemas_endpoint_overview.html'
+summary: 'Manage LDAP schemas'
+---
+
+= Manage LDAP schemas
+
+
+
+== Overview
+
+ONTAP provides four default LDAP schemas. These are:
+
+** MS-AD-BIS
+    Based on RFC-2307bis. This is the preferred LDAP schema for most standard Windows 2012 and later LDAP deployments.
+
+** AD-IDMU
+    Based on Active Directory Identity Management for UNIX. This schema is appropriate for most Windows 2008, Windows 2012, and later AD servers.
+
+** AD-SFU
+    Based on Active Directory Services for UNIX. This schema is appropriate for most Windows 2003 and earlier AD servers.
+
+** RFC-2307
+    Based on RFC-2307 (an approach that uses LDAP as a network information service). This schema is appropriate for most UNIX AD servers.
+
+== Examples
+
+=== Retrieving LDAP schema information
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/ldap-schemas
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap-schemas"
+
+# The response:
+{
+"records": [
+{
+  "owner": {
+    "uuid": "eda950c6-0a0c-11ec-bfcf-0050568e9150",
+    "name": "athiraacluster-1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/eda950c6-0a0c-11ec-bfcf-0050568e9150"
+      }
+    }
+  },
+  "name": "AD-IDMU",
+  "_links": {
+    "self": {
+      "href": "/api/name-services/ldap-schemas/eda950c6-0a0c-11ec-bfcf-0050568e9150/AD-IDMU"
+    }
+  }
+},
+{
+  "owner": {
+    "uuid": "eda950c6-0a0c-11ec-bfcf-0050568e9150",
+    "name": "athiraacluster-1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/eda950c6-0a0c-11ec-bfcf-0050568e9150"
+      }
+    }
+  },
+  "name": "AD-SFU",
+  "_links": {
+    "self": {
+      "href": "/api/name-services/ldap-schemas/eda950c6-0a0c-11ec-bfcf-0050568e9150/AD-SFU"
+    }
+  }
+},
+{
+  "owner": {
+    "uuid": "eda950c6-0a0c-11ec-bfcf-0050568e9150",
+    "name": "athiraacluster-1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/eda950c6-0a0c-11ec-bfcf-0050568e9150"
+      }
+    }
+  },
+  "name": "MS-AD-BIS",
+  "_links": {
+    "self": {
+      "href": "/api/name-services/ldap-schemas/eda950c6-0a0c-11ec-bfcf-0050568e9150/MS-AD-BIS"
+    }
+  }
+},
+{
+  "owner": {
+    "uuid": "eda950c6-0a0c-11ec-bfcf-0050568e9150",
+    "name": "athiraacluster-1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/eda950c6-0a0c-11ec-bfcf-0050568e9150"
+      }
+    }
+  },
+  "name": "RFC-2307",
+  "_links": {
+    "self": {
+      "href": "/api/name-services/ldap-schemas/eda950c6-0a0c-11ec-bfcf-0050568e9150/RFC-2307"
+    }
+  }
+}
+],
+"num_records": 4,
+"_links": {
+"self": {
+  "href": "/api/name-services/ldap-schemas"
+}
+}
+}
+----
+
+'''
+
+=== Retrieving LDAP schema information for a given SVM and "name"
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/ldap-schemas
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap-schemas/eda950c6-0a0c-11ec-bfcf-0050568e9150/RFC-2307"
+
+# The response:
+{
+"owner": {
+"uuid": "eda950c6-0a0c-11ec-bfcf-0050568e9150",
+"name": "svm1",
+"_links": {
+  "self": {
+    "href": "/api/svm/svms/eda950c6-0a0c-11ec-bfcf-0050568e9150"
+  }
+}
+},
+"name": "RFC-2307",
+"comment": "Schema based on RFC 2307 (read-only)",
+"name_mapping": {
+"account": {
+  "unix": "unixAccount",
+  "windows": "windowsAccount"
+},
+"windows_to_unix": {
+  "attribute": "windowsAccount",
+  "no_domain_prefix": false,
+  "object_class": "posixAccount"
+}
+},
+"rfc2307": {
+"attribute": {
+  "gecos": "gecos",
+  "gid_number": "gidNumber",
+  "home_directory": "homeDirectory",
+  "login_shell": "loginShell",
+  "uid": "uid",
+  "uid_number": "uidNumber",
+  "user_password": "userPassword"
+},
+"cn": {
+  "group": "cn",
+  "netgroup": "cn"
+},
+"member": {
+  "nis_netgroup": "memberNisNetgroup",
+  "uid": "memberUid"
+},
+"nis": {
+  "netgroup_triple": "nisNetgroupTriple",
+  "netgroup": "nisNetgroup",
+  "object": "nisObject",
+  "mapname": "nisMapName",
+  "mapentry": "nisMapEntry"
+},
+"posix": {
+  "account": "posixAccount",
+  "group": "posixGroup"
+}
+},
+"rfc2307bis": {
+"enabled": false,
+"group_of_unique_names": "groupOfUniqueNames",
+"maximum_groups": 256,
+"unique_member": "uniqueMember"
+},
+"scope": "cluster",
+"global_schema": true,
+"_links": {
+"self": {
+  "href": "/api/name-services/ldap-schemas/eda950c6-0a0c-11ec-bfcf-0050568e9150/RFC-2307"
+}
+}
+}
+----
+
+'''
+
+=== Creating an LDAP schema
+
+'''
+
+----
+
+# The API:
+POST /api/name-services/ldap-schemas
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/ldap-schemas" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"name\": \"schema\",\"template\": { \"name\": \"AD-IDMU\" }, \"owner\": { \"uuid\": \"52ba8197-0a23-11ec-9622-0050568e9150\", \"name\" : \"svm1\" }}"
+----
+
+'''
+
+=== Updating an LDAP schema
+
+'''
+
+----
+
+# The API:
+PATCH /api/name-services/ldap-schemas/{owner.uuid}/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/ldap-schemas/52ba8197-0a23-11ec-9622-0050568e9150/schema" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"comment\": \"This is a comment for schema\"}"
+----
+
+'''
+
+=== Deleting an LDAP schema
+
+'''
+
+----
+
+# The API:
+DELETE /api/name-services/ldap-schemas/{owner.uuid}/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/name-services/ldap-schemas/52ba8197-0a23-11ec-9622-0050568e9150/schema"
+----
+
+'''
+
+

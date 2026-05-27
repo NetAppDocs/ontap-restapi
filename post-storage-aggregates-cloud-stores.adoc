@@ -1,0 +1,488 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-aggregates-cloud-stores.html'
+summary: 'Attach an object store to an aggregate or add a second object store as a mirror'
+---
+
+= Attach an object store to an aggregate or add a second object store as a mirror
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/aggregates/{aggregate.uuid}/cloud-stores`#
+
+*Introduced In:* 9.6
+
+Attaches an object store to an aggregate, or adds a second object store as a mirror.
+
+== Required properties
+
+* `target.uuid` or `target.name` - UUID or name of the cloud target.
+
+== Recommended optional properties
+
+* `primary` - _true_ if the object store is primary or _false_ if it is a mirror.
+* `allow_flexgroups` - Allow attaching object store to an aggregate containing FlexGroup constituents.
+* `check_only` - Validate only and do not add the cloud store.
+
+== Default property values
+
+* `primary` - _true_
+* `allow_flexgroups` - _false_
+* `check_only` - _false_
+
+== Related ONTAP commands
+
+* `storage aggregate object-store attach`
+* `storage aggregate object-store mirror`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|aggregate.uuid
+|string
+|path
+|True
+a|Aggregate UUID
+
+
+|allow_flexgroups
+|boolean
+|query
+|False
+a|This optional parameter allows attaching object store to an aggregate containing FlexGroup constituents. The default value is false. Mixing FabricPools and non-FabricPools within a FlexGroup is not recommended. All aggregates hosting constituents of a FlexGroup should be attached to the object store.
+
+
+|check_only
+|boolean
+|query
+|False
+a|Validate only and do not add the cloud store.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|Aggregate
+
+
+|availability
+|string
+a|Availability of the object store.
+
+
+|availability_at_partner
+|string
+a|Availability of the object store at the HA partner.
+
+
+|mirror_degraded
+|boolean
+a|This field identifies if the mirror cloud store is in sync with the primary cloud store of a FabricPool.
+
+
+|primary
+|boolean
+a|This field indicates whether the cloud store is the primary cloud store of a mirrored FabricPool.
+
+
+|resync-progress
+|integer
+a|Resync progress of the mirror object store in percentage.
+
+
+|target
+|link:#target[target]
+a|Cloud target
+
+
+|unavailable_reason
+|link:#unavailable_reason[unavailable_reason]
+a|
+
+|unreclaimed_space_threshold
+|integer
+a|Usage threshold for reclaiming unused space in the cloud store. Valid values are 0 to 99. The default value depends on the provider type. This can be specified in PATCH but not POST.
+
+
+|used
+|integer
+a|The amount of object space used. Calculated every 5 minutes and cached.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "aggregate": {
+    "name": "aggr1"
+  },
+  "availability": "string",
+  "availability_at_partner": "string",
+  "resync-progress": 0,
+  "target": {
+    "name": "target1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "unavailable_reason": {
+    "message": "string"
+  },
+  "unreclaimed_space_threshold": 20,
+  "used": 0
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 787143
+| Object store is already attached to FabricPool.
+
+| 787144
+| Aggregate is not a FabricPool.
+
+| 787205
+| The operation failed because the previous unmirror operation on the aggregate is still in progress. Check that the previous unmirror operation is complete and try the command again.
+
+| 787218
+| The specified object store does not exist.
+
+| 7209876
+| Aggregate is already a FabricPool Aggregate.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#target]
+[.api-collapsible-fifth-title]
+target
+
+Cloud target
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#unavailable_reason]
+[.api-collapsible-fifth-title]
+unavailable_reason
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|string
+a|Indicates why the object store is unavailable.
+
+
+|===
+
+
+[#cloud_store]
+[.api-collapsible-fifth-title]
+cloud_store
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|Aggregate
+
+
+|availability
+|string
+a|Availability of the object store.
+
+
+|availability_at_partner
+|string
+a|Availability of the object store at the HA partner.
+
+
+|mirror_degraded
+|boolean
+a|This field identifies if the mirror cloud store is in sync with the primary cloud store of a FabricPool.
+
+
+|primary
+|boolean
+a|This field indicates whether the cloud store is the primary cloud store of a mirrored FabricPool.
+
+
+|resync-progress
+|integer
+a|Resync progress of the mirror object store in percentage.
+
+
+|target
+|link:#target[target]
+a|Cloud target
+
+
+|unavailable_reason
+|link:#unavailable_reason[unavailable_reason]
+a|
+
+|unreclaimed_space_threshold
+|integer
+a|Usage threshold for reclaiming unused space in the cloud store. Valid values are 0 to 99. The default value depends on the provider type. This can be specified in PATCH but not POST.
+
+
+|used
+|integer
+a|The amount of object space used. Calculated every 5 minutes and cached.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

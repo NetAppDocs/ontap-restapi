@@ -1,0 +1,63 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_groups_endpoint_overview.html'
+summary: 'Manage group configurations'
+---
+
+= Manage group configurations
+
+
+
+=== Overview
+
+This API is used to manage group configurations in ONTAP. The POST request creates a group configuration. Various responses are shown in the examples below.
+ +
+
+== Examples
+
+=== Creating a group configuration
+
+The following output shows how to create a group configuration.
+
+----
+
+# The API:
+/api/security/groups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/groups"  -d '{ "name": "AzureGroup1", "owner": { "name": "C1_sti213-vsim-sr023a_1718680001", "uuid": "116127b1-2d21-11ef-a5e1-005056ae1bc2" }, "type": "entra", "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "comment": "Azure Group"}'
+----
+
+=== Retrieving all group configurations
+
+The following output shows all group configurations.
+
+----
+
+# The API:
+/api/security/groups
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/groups"
+
+# The response:
+{
+"records": [
+  {
+    "owner": {
+      "uuid": "116127b1-2d21-11ef-a5e1-005056ae1bc2",
+      "name": "C1_sti213-vsim-sr023a_1718680001"
+    },
+    "name": "AzureGroup1",
+    "type": "entra",
+    "id": 1,
+    "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+],
+"num_records": 1
+}
+----
+
+

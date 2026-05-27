@@ -1,0 +1,112 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_s3_services_svm.uuid_buckets_s3_bucket.uuid_rules_endpoint_overview.html'
+summary: 'Manage S3 bucket lifecycle management rules'
+---
+
+= Manage S3 bucket lifecycle management rules
+
+
+
+== Overview
+
+An S3 bucket lifecycle management rule is a list of objects. Each rule defines a set of actions to be performed on the object within the bucket.
+
+=== Adding a lifecycle management rule on a S3 bucket under an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}/rules
+
+# The call:
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules?return_timeout=0&return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"name\": \"rule1\", \"expiration\" : { \"object_age_days\" : \"1000\" }, \"abort_incomplete_multipart_upload\" : { \"after_initiation_days\" : 200 } , \"object_filter\": { \"prefix\" : \"obj1*/\" ,  \"size_greater_than\" : \"1000\" } }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 30 November 2022 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules?name=bucket-4
+Content-Length: 353
+Content-Type: application/json
+{
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Updating a lifecycle management rule on a S3 bucket under an SVM
+
+----
+
+# The call:
+curl -iku admin:<password> -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules/rule1?return_timeout=0&return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"expiration\" : { \"object_age_days\" : \"3000\" }, \"abort_incomplete_multipart_upload\" : { \"after_initiation_days\" : \"5000\" } }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 30 November 2022 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules?name=bucket-4
+Content-Length: 353
+Content-Type: application/json
+{
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea124",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea124"
+    }
+  }
+}
+}
+----
+
+=== Deleting a lifecycle management rule on a S3 bucket under an SVM
+
+----
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules/rule1"  -H "accept: application/json"
+----
+
+=== To delete an action within a rule, pass null inside the action-object.
+
+----
+
+# The call:
+curl -iku admin:<password> -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules/rule1?return_timeout=0&return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"expiration\" : null }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 30 November 2022 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/259b4e78-2893-67ea-9785-890456bbbec4/buckets/259b4e46-2893-67ea-9145-909456bbbec4/rules?name=bucket-4
+Content-Length: 353
+Content-Type: application/json
+{
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea124",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea124"
+    }
+  }
+}
+}
+----
+
+

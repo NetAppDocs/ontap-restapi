@@ -1,0 +1,334 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-snapshot-policies-schedules-.html'
+summary: 'Retrieve snapshot policy schedule details'
+---
+
+= Retrieve snapshot policy schedule details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/snapshot-policies/{snapshot_policy.uuid}/schedules/{schedule.uuid}`#
+
+*Introduced In:* 9.8
+
+Retrieves details of a specific snapshot policy schedule.
+
+== Related ONTAP commands
+
+* `snapshot policy show`
+
+== Learn more
+
+* link:storage_snapshot-policies_snapshot_policy.uuid_schedules_endpoint_overview.html[DOC /storage/snapshot-policies/{snapshot_policy.uuid}/schedules]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|snapshot_policy.uuid
+|string
+|path
+|True
+a|Snapshot policy UUID
+
+
+|schedule.uuid
+|string
+|path
+|True
+a|Snapshot policy schedule ID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|count
+|integer
+a|The number of snapshots to maintain for this schedule.
+
+
+|prefix
+|string
+a|The prefix to use while creating snapshots at regular intervals.
+
+
+|retention_period
+|string
+a|The retention period of snapshots for this schedule.
+
+
+|schedule
+|link:#schedule[schedule]
+a|
+
+|snapmirror_label
+|string
+a|Label for SnapMirror operations
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|This is a reference to the snapshot policy.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "prefix": "string",
+  "retention_period": "string",
+  "schedule": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "weekly",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "snapmirror_label": "string",
+  "snapshot_policy": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+This is a reference to the snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,113 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_snmp_endpoint_overview.html'
+summary: 'Manage cluster-wide SNMP configuration'
+---
+
+= Manage cluster-wide SNMP configuration
+
+
+
+== Overview
+
+Cluster wide SNMP configuration. You can configure or retrieve the following SNMP parameters using this endpoint:
+
+* enable or disable SNMP
+* enable or disable SNMP authentication traps
+* enable or disable SNMP traps
+
+##
+This endpoint can also be used to trigger an SNMP test trap.
+
+== Examples
+
+=== Disables SNMP protocol in the cluster.
+
+----
+
+# The API:
+PATCH "/api/support/snmp"
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"enabled":"false"}'
+
+# The response
+200 OK
+{}
+----
+
+=== Enables SNMP authentication traps in the cluster.
+
+----
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"auth_traps_enabled":"true"}'
+
+# The response
+200 OK
+{}
+----
+
+=== Enables SNMP protocol and SNMP authentication traps in the cluster.
+
+----
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"enabled":"true", "auth_traps_enabled":"true"}'
+
+# The response
+200 OK
+{}
+----
+
+=== Disables the SNMP trap subsystem in the cluster. Once the SNMP trap subsystem is disabled, the cluster stops sending SNMP traps.
+
+----
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"traps_enabled":"false"}'
+
+# The response
+200 OK
+{}
+----
+
+=== Sets the contact and location for the SNMP server
+
+----
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"contact":"support@company.com", "location":"Building 1"}'
+
+#The response
+200 OK
+{}
+----
+
+=== Triggers an SNMP test trap.
+
+----
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"trigger_test_trap":"true"}'
+
+#The response
+200 OK
+{}
+----
+
+=== Enables the SNMP protocol in the cluster, SNMP traps, and triggers an SNMP test trap.
+
+----
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp" -d '{"enabled":"true", "traps_enabled":"true", "trigger_test_trap":"true"}'
+
+# The response
+200 OK
+{}
+----
+
+

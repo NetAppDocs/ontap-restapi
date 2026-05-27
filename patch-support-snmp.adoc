@@ -1,0 +1,248 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-support-snmp.html'
+summary: 'Update the cluster-wide SNMP configuration'
+---
+
+= Update the cluster-wide SNMP configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/support/snmp`#
+
+*Introduced In:* 9.7
+
+Updates the cluster wide SNMP configuration, such as:
+
+* enabling or disabling SNMP
+* enabling or disabling SNMP traps
+* enabling or disabling authentication traps
+* setting the contact and location information for the SNMP server
+* triggering an SNMP test trap
+
+== Related ONTAP commands
+
+* `options snmp.enable`
+* `system snmp authtrap`
+* `system snmp init`
+
+== Learn more
+
+* link:support_snmp_endpoint_overview.html[DOC /support/snmp]
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auth_traps_enabled
+|boolean
+a|Specifies whether to enable or disable SNMP authentication traps.
+
+
+|contact
+|string
+a|Specifies the contact person for the SNMP server
+
+
+|enabled
+|boolean
+a|Specifies whether to enable or disable SNMP.
+
+
+|location
+|string
+a|Specifies the location of the SNMP server
+
+
+|traps_enabled
+|boolean
+a|Specifies whether to enable or disable SNMP traps.
+
+
+|trigger_test_trap
+|boolean
+a|Trigger a test SNMP trap.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "auth_traps_enabled": 1,
+  "contact": "support@company.com",
+  "enabled": 1,
+  "location": "Building 1",
+  "traps_enabled": 1,
+  "trigger_test_trap": 1
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1179738
+| Cluster identification not available for modification since a cluster has not been created.
+
+| 1179739
+| Cluster identification modification is not available in maintenance mode or other boot modes.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#snmp]
+[.api-collapsible-fifth-title]
+snmp
+
+Cluster-wide SNMP configuration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auth_traps_enabled
+|boolean
+a|Specifies whether to enable or disable SNMP authentication traps.
+
+
+|contact
+|string
+a|Specifies the contact person for the SNMP server
+
+
+|enabled
+|boolean
+a|Specifies whether to enable or disable SNMP.
+
+
+|location
+|string
+a|Specifies the location of the SNMP server
+
+
+|traps_enabled
+|boolean
+a|Specifies whether to enable or disable SNMP traps.
+
+
+|trigger_test_trap
+|boolean
+a|Trigger a test SNMP trap.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

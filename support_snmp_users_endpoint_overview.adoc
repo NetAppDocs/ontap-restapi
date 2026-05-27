@@ -1,0 +1,111 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_snmp_users_endpoint_overview.html'
+summary: 'Retrieve and create SNMP users'
+---
+
+= Retrieve and create SNMP users
+
+
+
+== Overview
+
+Defines, retrieves and adds new SNMP users. An SNMP user can be an SNMPv1/SNMPv2c user or an SNMPv3 user. SNMPv1/SNMPv2c user is also called a "community" user. Use a "community" user to query ONTAP SNMP server over SNMPv1/SNMPv2c protocol. An SNMPv3 user, also called a User-based Security Model (USM) user, can be a local SNMPv3 user or a remote SNMPv3 user. Use a local SNMPv3 user to query ONTAP SNMP server over SNMPv3 and/or to send SNMPv3 traps. A remote SNMPv3 user is configured in ONTAP as well as on a remote switch. ONTAP SNMP client uses a remote SNMPv3 user to query the switch over SNMPv3.
+
+== Examples
+
+=== Retrieves a list of SNMP users in the cluster, sorted by SVM UUID
+
+----
+
+# The API:
+GET "/api/support/snmp/users"
+
+# The call:
+curl -H "accept: application/hal+json" -X GET "https://<mgmt-ip>/api/support/snmp/users?order_by=owner.uuid"
+
+# The response:
+{
+"records": [
+  {
+    "engine_id": "80000315052d7d2c4410b8e911bc9f005056bb942e",
+    "name": "snmpv1user1",
+    "owner": {
+      "uuid": "442c7d2d-b810-11e9-bc9f-005056bb942e"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/support/snmp/users/80000315052d7d2c4410b8e911bc9f005056bb942e/snmpv1user1"
+      }
+    }
+  },
+  {
+    "engine_id": "80000315058e02057c0fb8e911bc9f005056bb942e",
+    "name": "snmpv3user1",
+    "owner": {
+      "uuid": "7c05028e-b80f-11e9-bc9f-005056bb942e"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/support/snmp/users/80000315058e02057c0fb8e911bc9f005056bb942e/snmpv3user1"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/support/snmp/users?order_by=owner.uuid"
+  }
+}
+}
+----
+
+=== Creates an SNMPv1 or SNMPv2c community user
+
+----
+
+# The API:
+POST "/api/support/snmp/users"
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X POST "https://<mgmt-ip>/api/support/snmp/users" -d '{"owner":{"uuid":"02c9e252-41be-11e9-81d5-00a0986138f7", "name":"cluster1"}, "name":"public", "authentication_method":"community"}'
+
+# The response:
+201 Created
+{}
+----
+
+=== Creates a local SNMPv3 user
+
+----
+
+# The API:
+POST "/api/support/snmp/users"
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X POST "https://<mgmt-ip>/api/support/snmp/users" -d '{"owner":{"uuid":"02c9e252-41be-11e9-81d5-00a0986138f7", "name":"cluster1"}, "name":"snmpv3u1", "authentication_method":"usm", "snmpv3":{"authentication_protocol":"sha", "authentication_password":"jelly22fi$h", "privacy_protocol":"aes", "privacy_password":"a11Black$"}}'
+
+# The response:
+201 Created
+{}
+----
+
+=== Creates a remote SNMPv3 user
+
+----
+
+# The API:
+POST "/api/support/snmp/users"
+
+# The call
+curl -H "accept: application/json" -H "Content-Type: application/json" -X POST "https://<mgmt-ip>/api/support/snmp/users" -d '{"owner":{"uuid":"02c9e252-41be-11e9-81d5-00a0986138f7", "name":"cluster1"}, "engine_id":"8000031505b67667a26975e9118a480050568e6f74", "name":"switchuser1", "authentication_method":"usm", "switch_address":"fdf8:f53b:82e4::53", "snmpv3":{"authentication_protocol":"md5", "authentication_password":"TfhIeliw601lS.Rw$3pm"}}'
+
+# The response:
+201 Created
+{}
+----
+
+

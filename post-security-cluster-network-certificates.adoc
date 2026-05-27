@@ -1,0 +1,325 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-cluster-network-certificates.html'
+summary: 'Create a cluster network security certificate configuration'
+---
+
+= Create a cluster network security certificate configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/cluster-network/certificates`#
+
+*Introduced In:* 9.18
+
+Specifies the certificate configuration for cluster network security for a given node.
+
+== Required properties
+
+* 'node' - The node to which the certificate will be assigned.
+* 'name' - The certificate name.
+
+== Related ONTAP commands
+
+* 'security cluster-network certificate create'
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#security_certificate_reference[security_certificate_reference]
+a|Security certificate object reference
+
+
+|node
+|link:#node_reference[node_reference]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": {
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#security_certificate_reference[security_certificate_reference]
+a|Security certificate object reference
+
+
+|node
+|link:#node_reference[node_reference]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": {
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 70320128
+| Modifying the cluster network security configuration requires an effective cluster version of ONTAP 9.18.1 or later.
+
+| 70320132
+| The cluster has an out of quorum node, wait until all nodes are in quorum before modifying the cluster network security configuration.
+
+| 70320137
+| The specified certificate was not found on the admin SVM
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#security_certificate_reference]
+[.api-collapsible-fifth-title]
+security_certificate_reference
+
+Security certificate object reference
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#node_reference]
+[.api-collapsible-fifth-title]
+node_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#security_cluster_network_certificates]
+[.api-collapsible-fifth-title]
+security_cluster_network_certificates
+
+Manages the cluster network security certificate configuration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#security_certificate_reference[security_certificate_reference]
+a|Security certificate object reference
+
+
+|node
+|link:#node_reference[node_reference]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

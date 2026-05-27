@@ -1,0 +1,273 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-certificates-sign.html'
+summary: 'Sign security certificates'
+---
+
+= Sign security certificates
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/certificates/{ca.uuid}/sign`#
+
+*Introduced In:* 9.6
+
+Signs a certificate.
+
+== Required properties
+
+* `signing_request` - Certificate signing request to be signed by the given certificate authority.
+
+== Recommended optional properties
+
+* `expiry_time` - Certificate expiration time. Specifying an expiration time for a signed certificate is recommended.
+* `hash_function` - Hashing function. Specifying a strong hashing function is recommended when signing a certificate.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `expiry_time` - _P365DT_
+* `hash_function` - _sha256_
+
+== Related ONTAP commands
+
+* `security certificate sign`
+This API is used to sign a certificate request using a pre-existing self-signed root certificate. The self-signed root certificate acts as a certificate authority within its scope and maintains the records of its signed certificates.
+
+The root certificate can be created for a given SVM or for the cluster using [`POST security/certificates`].
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|ca.uuid
+|string
+|path
+|True
+a|UUID of the existing certificate authority certificate
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|string
+a|Certificate expiration time, in ISO 8601 duration format or date and time format. The allowed expiration time range is between 1 day to 10 years.
+
+
+|hash_function
+|string
+a|Hashing function
+
+
+|signing_request
+|string
+a|Certificate signing request to be signed by the given certificate authority. Request should be in X509 PEM format.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "expiry_time": "P1DT2H3M4S or '2030-01-25T11:20:13Z'",
+  "hash_function": "string",
+  "signing_request": "<CERTIFICATE-CONTENT>"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|public_certificate
+|string
+a|CA signed public key Certificate
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "public_certificate": "string"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 3735628
+| Failed to use CA certificate for signing.
+
+| 3735665
+| The specified hash function is not supported in FIPS mode.
+
+| 52559974
+| The certificate is not supported in FIPS mode.
+
+| 3735626
+| Failed to generate signed Certificate.
+
+| 3735558
+| Failed to extract information about Common Name from the certificate.
+
+| 3735588
+| The common name (CN) extracted from the certificate is not valid.
+
+| 3735632
+| Failed to extract Certificate Authority Information from the certificate.
+
+| 3735629
+| Failed to sign the certificate because Common Name of signing certificate and Common Name of CA certificate are same.
+
+| 3735630
+| Failed to sign the certificate because expiry date of signing certificate exceeds the expiry date of CA certificate.
+
+| 3735701
+| Invalid expiration period. The allowed range for expiration time is between 1 and 3652 days.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#security_certificate_sign]
+[.api-collapsible-fifth-title]
+security_certificate_sign
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|string
+a|Certificate expiration time, in ISO 8601 duration format or date and time format. The allowed expiration time range is between 1 day to 10 years.
+
+
+|hash_function
+|string
+a|Hashing function
+
+
+|signing_request
+|string
+a|Certificate signing request to be signed by the given certificate authority. Request should be in X509 PEM format.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

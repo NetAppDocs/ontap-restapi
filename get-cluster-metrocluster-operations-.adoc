@@ -1,0 +1,339 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-metrocluster-operations-.html'
+summary: 'Retrieve information about a MetroCluster operation'
+---
+
+= Retrieve information about a MetroCluster operation
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/metrocluster/operations/{uuid}`#
+
+*Introduced In:* 9.8
+
+Retrieves information about a specific MetroCluster operation.
+
+== Related ONTAP Commands
+
+* `metrocluster operation show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Unique identifier for the operation.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|additional_info
+|string
+a|Additional information for the auto heal.
+
+
+|command_line
+|string
+a|Command line executed with the options specified.
+
+
+|end_time
+|string
+a|End Time
+
+
+|errors
+|array[string]
+a|List of errors in the operation.
+
+
+|node
+|link:#node[node]
+a|Node from where the command is executed.
+
+
+|start_time
+|string
+a|Start Time
+
+
+|state
+|string
+a|Indicates the state of the operation.
+
+
+|type
+|string
+a|Name of the operation.
+
+
+|uuid
+|string
+a|Identifier for the operation.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "additional_info": "MetroCluster switchover with auto heal completed successfully.",
+  "command_line": "metrocluster switchover",
+  "end_time": "2016-03-10 14:35:16 -0800",
+  "errors": [
+    "siteB (warning): Unable to prepare the partner cluster for a pending switchback operation. Reason: entry doesn't exist. Reboot the nodes in the partner cluster before using the \"metrocluster switchback\" command."
+  ],
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "start_time": "2016-03-10 14:33:16 -0800",
+  "state": "completed_with_warnings",
+  "type": "switchover",
+  "uuid": "11111111-2222-3333-4444-abcdefabcdef"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node from where the command is executed.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,96 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'resource-tags_endpoint_overview.html'
+summary: 'View tags used for resources'
+---
+
+= View tags used for resources
+
+
+
+= Overview
+
+You can use this endpoint to list all of the tags that have been used on resources in the API. See the section labelled <<Tagging_Resources_for_Tracking_Purposes,Tagging Resources for Tracking Purposes>> to find out more information about how to tag a resource.
+
+== Examples
+
+The following examples show some ways that this endpoint can be used.
+
+=== List all of the used tags
+
+----
+
+# The API:
+/api/resource-tags
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/resource-tags"
+
+# The response:
+{
+"records": [
+  {
+    "value": "team:accounting",
+    "num_resources": 2,
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/team%3Aaccounting"
+      }
+    }
+  },
+  {
+    "value": "environment:test",
+    "num_resources": 5,
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment%3Atest"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/resource-tags"
+  }
+}
+}
+----
+
+'''
+
+=== Find tags that are being used by at least 3 resources
+
+----
+
+# The API:
+/api/resource-tags
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/resource-tags?num_resources=>=3"
+
+# The response:
+{
+"records": [
+  {
+    "value": "environment:test",
+    "num_resources": 5,
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment%3Atest"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/resource-tags?num_resources=>=3"
+  }
+}
+}
+----
+
+

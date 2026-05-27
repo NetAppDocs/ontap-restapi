@@ -1,0 +1,416 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-roles.html'
+summary: 'Create a new cluster-scoped or SVM-scoped role'
+---
+
+= Create a new cluster-scoped or SVM-scoped role
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/roles`#
+
+*Introduced In:* 9.6
+
+Creates a new cluster-scoped role or an SVM-scoped role. For an SVM-scoped role, specify either the SVM name as the owner.name or SVM UUID as the owner.uuid in the request body along with other parameters for the role. The owner.uuid or owner.name are not required to be specified for a cluster-scoped role.
+
+== Required parameters
+
+* `name` - Name of the role to be created.
+* `privileges` - Array of privilege tuples. Each tuple consists of a REST API or command/command directory path and its desired access level. If the tuple refers to a command/command directory path, it could optionally contain a query.
+
+== Optional parameters
+
+* `owner.name` or `owner.uuid`  - Name or UUID of the SVM for an SVM-scoped role.
+
+== Related ONTAP commands
+
+* `security login rest-role create`
+* `security login role create`
+
+== Learn more
+
+* link:security_roles_endpoint_overview.html[DOC /security/roles]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|builtin
+|boolean
+a|Indicates if this is a built-in (pre-defined) role which cannot be modified or deleted.
+
+
+|name
+|string
+a|Role name
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the role.
+
+
+|privileges
+|array[link:#role_privilege[role_privilege]]
+a|The list of privileges that this role has been granted.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "name": "admin",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "privileges": [
+    {
+      "access": "all",
+      "path": "volume move start",
+      "query": "-vserver vs1|vs2|vs3 -destination-aggregate aggr1|aggr2"
+    }
+  ],
+  "scope": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1263347
+| Cannot modify pre-defined roles
+
+| 2621462
+| The supplied SVM does not exist.
+
+| 5636129
+| Role with given name has not been defined.
+
+| 5636143
+| Vserver admin cannot use the API with this access level.
+
+| 5636144
+| Invalid value specified for access level.
+
+| 5636168
+| This role is mapped to a REST role and can only be modified by updating the REST role.
+
+| 5636169
+| Invalid character in URI.
+
+| 5636170
+| URI does not exist.
+
+| 5636171
+| Role already exists in legacy role table.
+
+| 5636184
+| Expanded REST roles for granular resource control feature is currently disabled.
+
+| 5636185
+| The specified UUID was not found.
+
+| 5636186
+| Expanded REST roles for granular resource control requires an effective cluster version of 9.10.1 or later.
+
+| 5636191
+| The "path" parameter in a "privileges" tuple can contain only API endpoint entries or only command and command directory entries.
+
+| 5636192
+| The query parameter cannot be specified for the privileges tuple with API endpoint entries.
+
+| 5636200
+| The specified value of the access parameter is invalid, if a command or command directory is specified in the path parameter.
+
+| 5636210
+| User creation failed because LDAP is not configured for the SVM or the LDAP connection is not secure.
+
+| 5636262
+| Cannot create a role with the specified role name because it is reserved by the system.
+
+| 13434890
+| Vserver-ID failed for Vserver roles.
+
+| 13434891
+| UUID lookup failed for Vserver roles.
+
+| 13434892
+| Roles is a required field.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the role.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#role_privilege]
+[.api-collapsible-fifth-title]
+role_privilege
+
+A tuple containing a REST endpoint or a command/command directory path and the access level assigned to that endpoint or command/command directory. If the "path" attribute refers to a command/command directory path, the tuple could additionally contain an optional query. The REST endpoint can be a resource-qualified endpoint. At present, the only supported resource-qualified endpoints are the following
+
+Snapshots APIs
+
+* _/api/storage/volumes/{volume.uuid}/snapshots_
+
+File System Analytics APIs
+
+* _/api/storage/volumes/{volume.uuid}/files_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/clients_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/directories_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/files_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/users_
+* _/api/svm/svms/{svm.uuid}/top-metrics/clients_
+* _/api/svm/svms/{svm.uuid}/top-metrics/directories_
+* _/api/svm/svms/{svm.uuid}/top-metrics/files_
+* _/api/svm/svms/{svm.uuid}/top-metrics/users_
+* _/api/protocols/s3/services/{svm.uuid}/users_
+
+In the above APIs, wildcard character * could be used in place of _{volume.uuid}_ or _{svm.uuid}_ to denote _all_ volumes or _all_ SVMs, depending upon whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ refers to the _-instance-uuid_ field value in the "volume show" command output at diagnostic privilege level. It can also be fetched through REST endpoint _/api/storage/volumes_.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Access level for the REST endpoint or command/command directory path. If it denotes the access level for a command/command directory path, the only supported enum values are 'none','readonly' and 'all'.
+
+
+|path
+|string
+a|Either of REST URI/endpoint OR command/command directory path.
+
+
+|query
+|string
+a|Optional attribute that can be specified only if the "path" attribute refers to a command/command directory path. The privilege tuple implicitly defines a set of objects the role can or cannot access at the specified access level. The query further reduces this set of objects to a subset of objects that the role is allowed to access. The query attribute must be applicable to the command/command directory specified by the "path" attribute. It is defined using one or more parameters of the command/command directory path specified by the "path" attribute.
+
+
+|===
+
+
+[#role]
+[.api-collapsible-fifth-title]
+role
+
+A named set of privileges that defines the rights an account has when it is assigned the role.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|builtin
+|boolean
+a|Indicates if this is a built-in (pre-defined) role which cannot be modified or deleted.
+
+
+|name
+|string
+a|Role name
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the role.
+
+
+|privileges
+|array[link:#role_privilege[role_privilege]]
+a|The list of privileges that this role has been granted.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

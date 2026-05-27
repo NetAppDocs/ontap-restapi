@@ -1,0 +1,997 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-metrocluster.html'
+summary: 'Set up a MetroCluster configuration'
+---
+
+= Set up a MetroCluster configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/metrocluster`#
+
+*Introduced In:* 9.8
+
+Sets up a MetroCluster.
+
+== Required properties
+
+* `partner_cluster.name`
+* `dr_pairs`
+
+== Recommended optional properties
+
+* `mediator.+*+`
+* `mccip_ports`
+
+== Learn more
+
+* link:cluster_metrocluster_endpoint_overview.html[DOC /cluster/metrocluster]
+
+== Related ONTAP commands
+
+* `metrocluster configuration-settings dr-group create`
+* `metrocluster configuration-settings interface create`
+* `metrocluster configuration-settings connection connect`
+* `metrocluster configuration-settings mediator add`
+* `storage aggregate create`
+* `storage aggregate mirror`
+* `metrocluster configure`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configuration_type
+|string
+a|Displays the MetroCluster configuration type.
+
+
+|dr_pairs
+|array[link:#dr_pairs[dr_pairs]]
+a|DR Pairs to create as part of a MetroCluster configure.
+
+
+|encryption_enabled
+|boolean
+a|Indicates if the encryption for NVLog and storage traffic is enabled.
+
+
+|local
+|link:#local[local]
+a|
+
+|mccip_ports
+|array[link:#mccip_ports[mccip_ports]]
+a|List of Port specifications.
+
+
+|mediator
+|link:#mediator[mediator]
+a|Mediator information
+
+
+|partner_cluster
+|link:#partner_cluster[partner_cluster]
+a|Partner cluster information.
+
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "configuration_type": "string",
+  "dr_pairs": [
+    {
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "partner": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "local": {
+    "automatic_uso_failure_domain": "string",
+    "cluster": {
+      "name": "cluster1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "configuration_state": "string",
+    "mode": "string"
+  },
+  "mccip_ports": [
+    {
+      "l3_config": {
+        "ipv4_interface": {
+          "address": "10.10.10.7",
+          "gateway": "10.1.1.1",
+          "netmask": "24"
+        }
+      },
+      "name": "e1b",
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "uuid": "string",
+      "vlan_id": 200
+    }
+  ],
+  "mediator": {
+    "bluexp_account_token": "string",
+    "bluexp_org_id": "string",
+    "ca_certificate": "string",
+    "dr_group": {
+      "id": 0
+    },
+    "ip_address": "10.10.10.7",
+    "local_mediator_connectivity": "connected",
+    "password": "mypassword",
+    "peer_cluster": {
+      "name": "cluster2",
+      "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+    },
+    "peer_mediator_connectivity": "connected",
+    "port": 31784,
+    "reachable": 1,
+    "service_account_client_id": "string",
+    "service_account_client_secret": "string",
+    "strict_cert_validation": 1,
+    "type": "string",
+    "use_http_proxy_local": 1,
+    "use_http_proxy_remote": 1,
+    "user": "myusername",
+    "uuid": "string"
+  },
+  "partner_cluster": {
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "remote": {
+    "automatic_uso_failure_domain": "string",
+    "cluster": {
+      "name": "cluster1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "configuration_state": "string",
+    "mode": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+
+| 2432832
+| Required environment variables are not set.
+
+| 2432833
+| Operation is already running.
+
+| 2432834
+| MetroCluster is already configured.
+
+| 2432835
+| Operation not supported.
+
+| 2432836
+| There are not enough disks in Pool1. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+
+| 2432839
+| Required parameters not set.
+
+| 2432840
+| Configuring DR Groups
+
+| 2432841
+| Generating IP addresses
+
+| 2432843
+| Running Aggregate Recommender
+
+| 2432844
+| Checking remote storage pool
+
+| 2432845
+| Mirroring aggregates
+
+| 2432846
+| Configuring MetroCluster and DR mirroring
+
+| 2432848
+| Setting up MetroCluster
+
+| 2432849
+| MetroCluster setup is complete
+
+| 2432851
+| Minimum number of required data aggregates for MetroCluster configuration are still not mirrored. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Local node of the DR Group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#partner]
+[.api-collapsible-fifth-title]
+partner
+
+Partner node of the DR Group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_pairs]
+[.api-collapsible-fifth-title]
+dr_pairs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|Local node of the DR Group.
+
+
+|partner
+|link:#partner[partner]
+a|Partner node of the DR Group.
+
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|automatic_uso_failure_domain
+|string
+a|This parameter specifies the configuration of automatic switchover.
+The valid values for the parameter are ':'
+cluster':' triggers an unplanned switchover if all nodes in a DR cluster are down.
+dr_group':' triggers an unplanned switchover if both nodes of a DR group are down.
+disabled':' automatic switchover is disabled.
+If the cluster is not reachable due to errors, the parameter value will be set to
+not_reachable. This value is read only.
+If the cluster configuration is unknown, the parameter value will be set to
+unknown and the value is read only.
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|configuration_state
+|string
+a|Indicates the state of the local cluster configuration.
+
+
+|mode
+|string
+a|Specifies the mode of operation of the local cluster.
+
+
+|partner_cluster_reachable
+|boolean
+a|Specifies whether the partner cluster is reachable from the local cluster.
+
+
+|periodic_check_enabled
+|boolean
+a|Indicates whether or not a periodic check is enabled on the local cluster.
+
+
+|===
+
+
+[#ipv4_interface]
+[.api-collapsible-fifth-title]
+ipv4_interface
+
+Object to setup an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|gateway
+|string
+a|The IPv4 or IPv6 address of the default router.
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#l3_config]
+[.api-collapsible-fifth-title]
+l3_config
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipv4_interface
+|link:#ipv4_interface[ipv4_interface]
+a|Object to setup an interface along with its default router.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#mccip_ports]
+[.api-collapsible-fifth-title]
+mccip_ports
+
+Port configuration specification.
+l3_config information is only needed when configuring a MetroCluster IP for use in a layer 3 network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|l3_config
+|link:#l3_config[l3_config]
+a|
+
+|name
+|string
+a|Port name
+
+
+|node
+|link:#node[node]
+a|Node information
+
+
+|uuid
+|string
+a|Port UUID
+
+
+|vlan_id
+|integer
+a|VLAN ID
+
+
+|===
+
+
+[#dr_group]
+[.api-collapsible-fifth-title]
+dr_group
+
+DR group reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|DR Group ID
+
+
+|===
+
+
+[#peer_cluster]
+[.api-collapsible-fifth-title]
+peer_cluster
+
+The peer cluster that the mediator service is used for.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#mediator]
+[.api-collapsible-fifth-title]
+mediator
+
+Mediator information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bluexp_account_token
+|string
+a|BlueXP account token. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|bluexp_org_id
+|string
+a|BlueXP organization ID. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|ca_certificate
+|string
+a|CA certificate for ONTAP Mediator. This is optional if the certificate is already installed.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|dr_group
+|link:#dr_group[dr_group]
+a|DR group reference.
+
+
+|ip_address
+|string
+a|The IP address of the mediator.
+
+
+|local_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the local cluster. Possible values are connected, unreachable, unusable and down-high-latency. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|password
+|string
+a|The password used to connect to the REST server on the mediator.
+
+
+|peer_cluster
+|link:#peer_cluster[peer_cluster]
+a|The peer cluster that the mediator service is used for.
+
+
+|peer_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the peer cluster. Possible values are connected, unreachable, unknown and down-high-latency.
+
+
+|port
+|integer
+a|The REST server's port number on the mediator.
+
+
+|reachable
+|boolean
+a|Indicates the connectivity status of the mediator.
+
+
+|service_account_client_id
+|string
+a|Client ID of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|service_account_client_secret
+|string
+a|Client secret token of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|strict_cert_validation
+|boolean
+a|Indicates if strict validation of certificates is performed while making REST API calls to the mediator. This field is only applicable to the ONTAP Cloud Mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|type
+|string
+a|Mediator type. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|use_http_proxy_local
+|boolean
+a|Indicates if the local cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|use_http_proxy_remote
+|boolean
+a|Indicates if the remote cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* writeOnly: 1
+* x-nullable: true
+
+
+|user
+|string
+a|The username used to connect to the REST server on the mediator.
+
+
+|uuid
+|string
+a|The unique identifier for the mediator service.
+
+
+|===
+
+
+[#partner_cluster]
+[.api-collapsible-fifth-title]
+partner_cluster
+
+Partner cluster information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|automatic_uso_failure_domain
+|string
+a|This parameter specifies the configuration of automatic switchover.
+The valid values for the parameter are ':'
+cluster':' triggers an unplanned switchover if all nodes in a DR cluster are down.
+dr_group':' triggers an unplanned switchover if both nodes of a DR group are down.
+disabled':' automatic switchover is disabled.
+If the cluster is not reachable due to errors, the parameter value will be set to
+not_reachable. This value is read only.
+If the cluster configuration is unknown, the parameter value will be set to
+unknown and the value is read only.
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|configuration_state
+|string
+a|Indicates the state of the remote cluster configuration.
+
+
+|mode
+|string
+a|Specifies the mode of operation of the remote cluster.
+
+
+|periodic_check_enabled
+|boolean
+a|Indicates whether or not a periodic check is enabled on the remote cluster.
+
+
+|===
+
+
+[#metrocluster]
+[.api-collapsible-fifth-title]
+metrocluster
+
+Holds MetroCluster status and configuration parameters for the local and remote clusters. REST: /api/cluster/metrocluster
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configuration_type
+|string
+a|Displays the MetroCluster configuration type.
+
+
+|dr_pairs
+|array[link:#dr_pairs[dr_pairs]]
+a|DR Pairs to create as part of a MetroCluster configure.
+
+
+|encryption_enabled
+|boolean
+a|Indicates if the encryption for NVLog and storage traffic is enabled.
+
+
+|local
+|link:#local[local]
+a|
+
+|mccip_ports
+|array[link:#mccip_ports[mccip_ports]]
+a|List of Port specifications.
+
+
+|mediator
+|link:#mediator[mediator]
+a|Mediator information
+
+
+|partner_cluster
+|link:#partner_cluster[partner_cluster]
+a|Partner cluster information.
+
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

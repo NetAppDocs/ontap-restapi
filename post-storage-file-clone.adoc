@@ -1,0 +1,444 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-file-clone.html'
+summary: 'Create a clone of the file'
+---
+
+= Create a clone of the file
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/file/clone`#
+
+*Introduced In:* 9.6
+
+Creates a clone of the file.
+
+== Required Properties
+
+* `source_path`
+* `destination_path`
+* `volume.uuid` - Instance UUID of the volume in which to create clone.
+
+== Optional Properties
+
+* `range` -  Required only in the case of a sub file clone.
+* `autodelete` - Marks a cloned file for auto deletion.
+* `is_backup` - Cloned file is used as a backup.
+* `volume.name` - Name of the volume in which to create the clone.
+* `token_uuid` - UUID of existing clone token.
+
+== Related Ontap commands
+
+* `volume file clone create`
+
+== Creating file clones
+
+The POST operation is used to create file clones with the specified attributes in the body. Set the `volume.uuid` to identify the volume.
+Set `source_path` and `destination_path` to identify the file path of the original and copied file. For a full file clone, the new file is created using `destination_path`.
+For a sub file clone, set `range` in the format source-file-block-number:destination-file-block-number:block-count. The API returns an error for the following overlapping conditions: (a) if the source and destination files are the same and if any of the source ranges  overlap with any of the destination ranges. (b) if any of the source ranges overlap amongst themselves. (c) if any of the destination ranges overlap amongst themselves. If not provided, full file cloning is assumed.
+
+If set to `autodelete`, the cloned file is deleted when the volumes are full.<br>
+
+----
+
+# The API:
+curl -X POST "https://<mgmt_ip>/api/storage/file/clone" -H "accept: application/hal+json" -d '{"volume": {"name": "vol1",  "uuid": "40e0fdc5-c28f-11eb-8270-005056bbeb0b"}, "source_path": "f1", "destination_path": "f2_c1"}'
+
+# The response:
+{
+"job": {
+  "uuid": "0d025fd9-c4dc-11eb-adb5-005056bbeb0b",
+  "_links": {
+     "self": {
+       "href": "/api/cluster/jobs/0d025fd9-c4dc-11eb-adb5-005056bbeb0b"
+     }
+  }
+}
+}
+----
+
+== Learn More
+
+* [`DOC /storage/file/clone`]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autodelete
+|boolean
+a|Mark clone file for auto deletion.
+
+
+|destination_path
+|string
+a|Relative path of the clone/destination file in the volume.
+
+
+|is_backup
+|boolean
+a|Mark clone file for backup.
+
+
+|overwrite_destination
+|boolean
+a|Destination file gets overwritten.
+
+
+|range
+|array[string]
+a|List of block ranges for sub-file cloning in the format "source-file-block-number:destination-file-block-number:block-count"
+
+
+|source_path
+|string
+a|Relative path of the source file in the volume.
+
+
+|token_uuid
+|string
+a|UUID of existing clone token with reserved split load.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "destination_path": "dest_file1 or dir1/dest_file2",
+  "is_backup": "",
+  "range": [
+    2
+  ],
+  "source_path": "src_file1 or dir1/src_file2 or ./.snapshot/snap1/src_file3",
+  "token_uuid": "string",
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917812
+| A relative path must be used for `destination_path` when a volume is specified.
+
+| 917864
+| Failed to get the file handle.
+
+| 917898
+| Invalid `value` for the field -range. Value must be provided in the format <source start block>:<destination start block>:<block length>.
+
+| 918236
+| The specified `volume.uuid` and `volume.name` refer to different volumes.
+
+| 13565952
+| Clone start failed.
+
+| 13565988
+| The destination file cannot be marked as a backup clone as only a full-file clone can be a backup clone.
+
+| 13565998
+| File clone using autodelete is not supported on a FlexGroup volume. Try the operation again without specifying the "autodelete" parameter.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#file_clone]
+[.api-collapsible-fifth-title]
+file_clone
+
+File clone
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autodelete
+|boolean
+a|Mark clone file for auto deletion.
+
+
+|destination_path
+|string
+a|Relative path of the clone/destination file in the volume.
+
+
+|is_backup
+|boolean
+a|Mark clone file for backup.
+
+
+|overwrite_destination
+|boolean
+a|Destination file gets overwritten.
+
+
+|range
+|array[string]
+a|List of block ranges for sub-file cloning in the format "source-file-block-number:destination-file-block-number:block-count"
+
+
+|source_path
+|string
+a|Relative path of the source file in the volume.
+
+
+|token_uuid
+|string
+a|UUID of existing clone token with reserved split load.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

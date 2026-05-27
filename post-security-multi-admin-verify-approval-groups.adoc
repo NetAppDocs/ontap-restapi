@@ -1,0 +1,322 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-multi-admin-verify-approval-groups.html'
+summary: 'Create a multi-admin-verify approval group'
+---
+
+= Create a multi-admin-verify approval group
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/multi-admin-verify/approval-groups`#
+
+*Introduced In:* 9.11
+
+Creates a multi-admin-verify approval group.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approvers
+|array[string]
+a|List of users that can approve a request.
+
+
+|email
+|array[string]
+a|Email addresses that are notified when a request is created, approved, vetoed, or executed.
+
+
+|name
+|string
+a|Name of the approval group.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the approval group. The only valid owner is currently the cluster.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "approvers": [
+    "string"
+  ],
+  "email": [
+    "string"
+  ],
+  "name": "string",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#multi_admin_verify_approval_group[multi_admin_verify_approval_group]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "approvers": [
+        "string"
+      ],
+      "email": [
+        "string"
+      ],
+      "name": "string",
+      "owner": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262309
+| The feature must be enabled first.
+
+| 262333
+| Invalid user in approval group.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+The owner of the approval group. The only valid owner is currently the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a POST or PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#multi_admin_verify_approval_group]
+[.api-collapsible-fifth-title]
+multi_admin_verify_approval_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approvers
+|array[string]
+a|List of users that can approve a request.
+
+
+|email
+|array[string]
+a|Email addresses that are notified when a request is created, approved, vetoed, or executed.
+
+
+|name
+|string
+a|Name of the approval group.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the approval group. The only valid owner is currently the cluster.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

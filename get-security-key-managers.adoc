@@ -1,0 +1,1084 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-key-managers.html'
+summary: 'Retrieve key managers'
+---
+
+= Retrieve key managers
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/key-managers`#
+
+*Introduced In:* 9.6
+
+Retrieves key managers.
+
+== Expensive properties
+
+There is an added computational cost to retrieving these properties. They are excluded from default GET results and must be explicitly requested using the `fields` query parameter. For more details, see link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields]. Additionally, these fields are unavailable for inactive configurations as they are only relevant to active configurations.
+
+* `status.message`
+* `status.code`
+
+== Examples
+
+* To retrieve basic information about a key manager:
+
+----
+GET /security/key-managers
+----
+
+* To retrieve specific fields, including expensive properties:
+
+----
+GET /security/key-managers/?fields=status.code,status.message
+----
+
+== Related ONTAP commands
+
+* `security key-manager show-key-store`
+* `security key-manager external show`
+* `security key-manager external show-status`
+* `security key-manager onboard show-backup`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|configuration.uuid
+|string
+|query
+|False
+a|Filter by configuration.uuid
+
+* Introduced in: 9.16
+
+
+|configuration.name
+|string
+|query
+|False
+a|Filter by configuration.name
+
+* Introduced in: 9.16
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|policy
+|string
+|query
+|False
+a|Filter by policy
+
+* Introduced in: 9.9
+
+
+|status.code
+|integer
+|query
+|False
+a|Filter by status.code
+
+* Introduced in: 9.7
+
+
+|status.message
+|string
+|query
+|False
+a|Filter by status.message
+
+* Introduced in: 9.7
+
+
+|onboard.enabled
+|boolean
+|query
+|False
+a|Filter by onboard.enabled
+
+
+|onboard.key_backup
+|string
+|query
+|False
+a|Filter by onboard.key_backup
+
+* Introduced in: 9.7
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+* Introduced in: 9.16
+
+
+|is_default_data_at_rest_encryption_disabled
+|boolean
+|query
+|False
+a|Filter by is_default_data_at_rest_encryption_disabled
+
+* Introduced in: 9.7
+
+
+|volume_encryption.message
+|string
+|query
+|False
+a|Filter by volume_encryption.message
+
+* Introduced in: 9.7
+
+
+|volume_encryption.supported
+|boolean
+|query
+|False
+a|Filter by volume_encryption.supported
+
+* Introduced in: 9.7
+
+
+|volume_encryption.code
+|integer
+|query
+|False
+a|Filter by volume_encryption.code
+
+* Introduced in: 9.7
+
+
+|external.client_certificate.name
+|string
+|query
+|False
+a|Filter by external.client_certificate.name
+
+* Introduced in: 9.8
+
+
+|external.client_certificate.uuid
+|string
+|query
+|False
+a|Filter by external.client_certificate.uuid
+
+
+|external.servers.connectivity.node_states.node.name
+|string
+|query
+|False
+a|Filter by external.servers.connectivity.node_states.node.name
+
+* Introduced in: 9.13
+
+
+|external.servers.connectivity.node_states.node.uuid
+|string
+|query
+|False
+a|Filter by external.servers.connectivity.node_states.node.uuid
+
+* Introduced in: 9.13
+
+
+|external.servers.connectivity.node_states.state
+|string
+|query
+|False
+a|Filter by external.servers.connectivity.node_states.state
+
+* Introduced in: 9.13
+
+
+|external.servers.connectivity.cluster_availability
+|boolean
+|query
+|False
+a|Filter by external.servers.connectivity.cluster_availability
+
+* Introduced in: 9.7
+
+
+|external.servers.username
+|string
+|query
+|False
+a|Filter by external.servers.username
+
+
+|external.servers.server
+|string
+|query
+|False
+a|Filter by external.servers.server
+
+
+|external.servers.timeout
+|integer
+|query
+|False
+a|Filter by external.servers.timeout
+
+* Max value: 60
+* Min value: 1
+
+
+|external.servers.secondary_key_servers
+|string
+|query
+|False
+a|Filter by external.servers.secondary_key_servers
+
+* Introduced in: 9.8
+
+
+|external.server_ca_certificates.name
+|string
+|query
+|False
+a|Filter by external.server_ca_certificates.name
+
+* Introduced in: 9.8
+
+
+|external.server_ca_certificates.uuid
+|string
+|query
+|False
+a|Filter by external.server_ca_certificates.uuid
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#security_key_manager[security_key_manager]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "configuration": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563434"
+      },
+      "external": {
+        "client_certificate": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "string",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "server_ca_certificates": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "string",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          }
+        ],
+        "servers": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "connectivity": {
+              "node_states": [
+                {
+                  "node": {
+                    "_links": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    },
+                    "name": "node1",
+                    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+                  },
+                  "state": "not_responding"
+                }
+              ]
+            },
+            "secondary_key_servers": "secondary1.com, 10.2.3.4",
+            "server": "keyserver1.com:5698",
+            "timeout": 60,
+            "username": "admin"
+          }
+        ]
+      },
+      "onboard": {
+        "existing_passphrase": "The cluster password of length 32-256 ASCII characters.",
+        "key_backup": "'--------------------------BEGIN BACKUP-------------------------- TmV0QXBwIEtleSBCbG9iAAEAAAAEAAAAcAEAAAAAAAAxBFWWAAAAACEAAAAAAAAA QAAAAAAAAABzDyyVAAAAALI5Jsjvy6gUxnT78KoDKXHYb6sSeraM00quOULY6BeV n6dMFxuErCD1lbERaOQZSuaYy1p8oQHtTEfGMLZM4TYiAAAAAAAAACgAAAAAAAAA 3WTh7gAAAAAAAAAAAAAAAAIAAAAAAAgAZJEIWvdeHr5RCAvHGclo+wAAAAAAAAAA IgAAAAAAAAAoAAAAAAAAAEOTcR0AAAAAAAAAAAAAAAACAAAAAAAJAGr3tJA/LRzU QRHwv+1aWvAAAAAAAAAAACQAAAAAAAAAgAAAAAAAAADV1Vd/AAAAAMFM9Q229Bhp mDaTSdqku5DCd8wG+fOZSr4bx4JT5WHvV/r5gJnXDQQAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABOZXRBcHAgS2V5IEJsb2IA AQAAAAMAAAAYAQAAAAAAALgePkcAAAAAIgAAAAAAAAAoAAAAAAAAAEOTcR0AAAAA AAAAAAAAAAACAAAAAAAJAGr3tJA/LRzUQRHwv+1aWvAAAAAAAAAAACIAAAAAAAAA KAAAAAAAAACIlCHZAAAAAAAAAAAAAAAAAgAAAAAAAQCafcabsxRXMM7gxhLRrzxh AAAAAAAAAAAkAAAAAAAAAIAAAAAAAAAA2JjQBQAAAACt4IqXcNpVggahl0axLsN4 yQjnNVKWY7mANB29O42hI7b70DTGCTaVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAE5ldEFwcCBLZXkgQmxvYgABAAAAAwAAABgBAAAAAAAA 7sbaoQAAAAAiAAAAAAAAACgAAAAAAAAAQ5NxHQAAAAAAAAAAAAAAAAIAAAAAAAkA ave0kD8tHNRBEfC/7Vpa8AAAAAAAAAAAIgAAAAAAAAAoAAAAAAAAALOHfWkAAAAA AAAAAAAAAAACAAAAAAABAMoI9UxrHOGthQm/CB+EHdAAAAAAAAAAACQAAAAAAAAA gAAAAAAAAACnMmUtAAAAAGVk8AtPzENFgsGdsFvnmucmYrlQCsFew0HDSFKaZqK6 W8IEVzBAhPoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ---------------------------END BACKUP---------------------------'",
+        "synchronize": true
+      },
+      "policy": "string",
+      "scope": "string",
+      "status": {
+        "code": 346758,
+        "message": "This cluster is part of a MetroCluster configuration. Use the REST API POST method security/key_managers/ with the synchronize option and the same passphrase on the partner cluster before proceeding with any key manager operations.  Failure to do so could lead to switchover or switchback failure."
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "string",
+      "volume_encryption": {
+        "code": 346758,
+        "message": "No platform support for volume encryption in following nodes - node1, node2."
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#configuration]
+[.api-collapsible-fifth-title]
+configuration
+
+Security keystore object reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Name of the configuration.
+
+
+|uuid
+|string
+a|Keystore UUID.
+
+
+|===
+
+
+[#client_certificate]
+[.api-collapsible-fifth-title]
+client_certificate
+
+Client certificate (name and UUID)
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#server_ca_certificates]
+[.api-collapsible-fifth-title]
+server_ca_certificates
+
+Security certificate object reference
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#key_server_state]
+[.api-collapsible-fifth-title]
+key_server_state
+
+The connectivity state of the key server for a specific node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|
+
+|state
+|string
+a|Key server connectivity state
+
+
+|===
+
+
+[#connectivity]
+[.api-collapsible-fifth-title]
+connectivity
+
+This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_availability
+|boolean
+a|Set to true when key server connectivity state is available on all nodes of the cluster.
+
+
+|node_states
+|array[link:#key_server_state[key_server_state]]
+a|An array of key server connectivity states for each node.
+
+
+|===
+
+
+[#key_server_readcreate]
+[.api-collapsible-fifth-title]
+key_server_readcreate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|connectivity
+|link:#connectivity[connectivity]
+a|This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|secondary_key_servers
+|string
+a|A comma delimited string of the secondary key servers associated with the primary key server.
+
+
+|server
+|string
+a|External key server for key management. If no port is provided, a default port of 5696 is used.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+
+
+|username
+|string
+a|Username credentials for connecting with the key server.
+
+
+|===
+
+
+[#external]
+[.api-collapsible-fifth-title]
+external
+
+Configures external key management
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_certificate
+|link:#client_certificate[client_certificate]
+a|Client certificate (name and UUID)
+
+
+|server_ca_certificates
+|array[link:#server_ca_certificates[server_ca_certificates]]
+a|The array of certificates that are common for all the keyservers per SVM.
+
+
+|servers
+|array[link:#key_server_readcreate[key_server_readcreate]]
+a|The set of external key servers.
+
+
+|===
+
+
+[#onboard]
+[.api-collapsible-fifth-title]
+onboard
+
+Configures onboard key management. After configuring onboard key management, save the encrypted configuration data in a safe location so that you can use it if you need to perform a manual recovery operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Is the onboard key manager enabled?
+
+
+|existing_passphrase
+|string
+a|The cluster-wide passphrase. This is not audited.
+
+
+|key_backup
+|string
+a|Backup of the onboard key manager's key hierarchy. It is required to save this backup after configuring the onboard key manager to help in the recovery of the cluster in case of catastrophic failures.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Optional status information on the current state of the key manager indicating if it is fully setup or requires more action.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message. Returns 0 if the setup is complete. This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|message
+|string
+a|Current state of the key manager indicating any additional steps to perform to finish the setup. This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume_encryption]
+[.api-collapsible-fifth-title]
+volume_encryption
+
+Indicates whether volume encryption is supported in the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message. Returns a 0 if volume encryption is supported in all nodes of the cluster.
+
+
+|message
+|string
+a|Reason for not supporting volume encryption.
+
+
+|supported
+|boolean
+a|Set to true when volume encryption support is available on all nodes of the cluster.
+
+
+|===
+
+
+[#security_key_manager]
+[.api-collapsible-fifth-title]
+security_key_manager
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|configuration
+|link:#configuration[configuration]
+a|Security keystore object reference.
+
+
+|enabled
+|boolean
+a|Indicates whether the configuration is enabled.
+
+
+|external
+|link:#external[external]
+a|Configures external key management
+
+
+|is_default_data_at_rest_encryption_disabled
+|boolean
+a|Indicates whether default data-at-rest encryption is disabled in the cluster. This field is deprecated in ONTAP 9.8 and later. Use the "software_data_encryption.disabled_by_default" of /api/security endpoint.
+
+* Default value:
+* Introduced in: 9.7
+* x-ntap-readModify: true
+* x-nullable: true
+
+
+|onboard
+|link:#onboard[onboard]
+a|Configures onboard key management. After configuring onboard key management, save the encrypted configuration data in a safe location so that you can use it if you need to perform a manual recovery operation.
+
+
+|policy
+|string
+a|Security policy associated with the key manager. This value is currently ignored if specified for the onboard key manager.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|status
+|link:#status[status]
+a|Optional status information on the current state of the key manager indicating if it is fully setup or requires more action.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|
+
+|volume_encryption
+|link:#volume_encryption[volume_encryption]
+a|Indicates whether volume encryption is supported in the cluster.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

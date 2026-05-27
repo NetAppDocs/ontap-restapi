@@ -1,0 +1,498 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_ip_subnets_endpoint_overview.html'
+summary: 'Manage network IP subnets'
+---
+
+= Manage network IP subnets
+
+
+
+== Overview
+
+The following operations are supported:
+
+* Creation: POST network/ip/subnets
+* Collection Get: GET network/ip/subnets
+* Instance Get: GET network/ip/subnets/\{uuid}
+* Instance Patch: PATCH network/ip/subnets/\{uuid}
+* Instance Delete: DELETE network/ip/subnets/\{uuid}
+
+== Retrieving IP subnet information
+
+The IP subnets GET API retrieves and displays relevant information pertaining to the subnets configured in the cluster. The response can contain a list of multiple subnets or a specific subnet.
+
+== Examples
+
+=== Retrieving all subnets in the cluster
+
+The following example shows the list of all subnets configured in a cluster.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "451d8d99-582c-11ec-8572-005056acd597",
+    "name": "Subnet-002",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/subnets/451d8d99-582c-11ec-8572-005056acd597"
+      }
+    }
+  },
+  {
+    "uuid": "615b722f-5795-11ec-8572-005056acd597",
+    "name": "Subnet-001",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/subnets/615b722f-5795-11ec-8572-005056acd597"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific subnet
+
+The following example shows the response when a specific subnet is requested. This is equivalent to fields=*, which returns most of the fields. The system returns an error when there is no subnet with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets/451d8d99-582c-11ec-8572-005056acd597" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "451d8d99-582c-11ec-8572-005056acd597",
+"name": "Subnet-002",
+"ipspace": {
+  "uuid": "6f62c691-5780-11ec-8572-005056acd597",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/6f62c691-5780-11ec-8572-005056acd597"
+    }
+  }
+},
+"broadcast_domain": {
+  "uuid": "9a1dce3b-5780-11ec-8572-005056acd597",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ethernet/broadcast-domains/9a1dce3b-5780-11ec-8572-005056acd597"
+    }
+  }
+},
+"subnet": {
+  "address": "10.2.1.0",
+  "netmask": "24",
+  "family": "ipv4"
+},
+"gateway": "10.2.1.1",
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets/451d8d99-582c-11ec-8572-005056acd597"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all the fields for a specific subnet
+
+The following example shows the response when all the fields for a specific subnet are requested, returning everything that fields=* returns plus the IP ranges and count fields. The system returns an error when there is no subnet with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets/451d8d99-582c-11ec-8572-005056acd597?fields=**" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "451d8d99-582c-11ec-8572-005056acd597",
+"name": "Subnet-002",
+"ipspace": {
+  "uuid": "6f62c691-5780-11ec-8572-005056acd597",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/6f62c691-5780-11ec-8572-005056acd597"
+    }
+  }
+},
+"broadcast_domain": {
+  "uuid": "9a1dce3b-5780-11ec-8572-005056acd597",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ethernet/broadcast-domains/9a1dce3b-5780-11ec-8572-005056acd597"
+    }
+  }
+},
+"subnet": {
+  "address": "10.2.1.0",
+  "netmask": "24",
+  "family": "ipv4"
+},
+"gateway": "10.2.1.1",
+"ip_ranges": [
+  {
+    "start": "10.2.1.10",
+    "end": "10.2.1.22",
+    "family": "ipv4"
+  },
+  {
+    "start": "10.2.1.101",
+    "end": "10.2.1.200",
+    "family": "ipv4"
+  }
+],
+"available_ip_ranges": [
+  {
+    "start": "10.2.1.10",
+    "end": "10.2.1.22",
+    "family": "ipv4"
+  },
+  {
+    "start": "10.2.1.101",
+    "end": "10.2.1.200",
+    "family": "ipv4"
+  }
+],
+"total_count": 113,
+"used_count": 0,
+"available_count": 113,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets/451d8d99-582c-11ec-8572-005056acd597?fields=**"
+  }
+}
+}
+----
+
+'''
+
+== Creating IP subnets
+
+You can use the IP subnets POST API to create IP subnets as shown in the following examples.
+
+'''
+
+== Examples
+
+=== Creating an IP subnet using the minimum number of parameters.
+
+The following example shows the record returned after the creation of an IP subnet.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/subnets" -H "accept: application/hal+json" -d '{ "name": "Subnet-003", "broadcast_domain": { "uuid": "6577524b-5863-11ec-8981-005056a7077f" }, "subnet": { "address": "10.3.0.0", "netmask": "16" } }'
+
+# The response:
+{
+}
+
+# The result:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets?name=Subnet-003&fields=**" -H "accept: application/hal+json"
+{
+"records": [
+  {
+    "uuid": "79ff5a5e-59b7-11ec-8981-005056a7077f",
+    "name": "Subnet-003",
+    "ipspace": {
+      "uuid": "36569d0f-5863-11ec-8981-005056a7077f",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/36569d0f-5863-11ec-8981-005056a7077f"
+        }
+      }
+    },
+    "broadcast_domain": {
+      "uuid": "6577524b-5863-11ec-8981-005056a7077f",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ethernet/broadcast-domains/6577524b-5863-11ec-8981-005056a7077f"
+        }
+      }
+    },
+    "subnet": {
+      "address": "10.3.0.0",
+      "netmask": "16",
+      "family": "ipv4"
+    },
+    "total_count": 0,
+    "used_count": 0,
+    "available_count": 0,
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/subnets/79ff5a5e-59b7-11ec-8981-005056a7077f?fields=**"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets?name=Subnet-003&fields=**"
+  }
+}
+}
+----
+
+'''
+
+=== Creating an IP subnet using all parameters.
+
+The following example shows the record returned after the creation of an IP subnet setting all parameters.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/subnets" -H "accept: application/hal+json" -d '{ "name": "Subnet-004", "ipspace": { "name": "Default", "uuid": "36569d0f-5863-11ec-8981-005056a7077f" }, "broadcast_domain": { "name": "Default", "uuid": "6577524b-5863-11ec-8981-005056a7077f" }, "subnet": { "address": "10.4.1.0", "netmask": "24" }, "gateway": "10.4.1.1", "ip_ranges": [ { "start": "10.4.1.30", "end": "10.4.1.39" }, { "start": "10.4.1.150", "end": "10.4.1.229" } ], "fail_if_lifs_conflict": "false" }'
+
+# The response:
+{
+}
+
+# The result:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets?name=Subnet-004&fields=**" -H "accept: application/hal+json"
+{
+"records": [
+  {
+    "uuid": "0e0a19e7-59ba-11ec-8981-005056a7077f",
+    "name": "Subnet-004",
+    "ipspace": {
+      "uuid": "36569d0f-5863-11ec-8981-005056a7077f",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/36569d0f-5863-11ec-8981-005056a7077f"
+        }
+      }
+    },
+    "broadcast_domain": {
+      "uuid": "6577524b-5863-11ec-8981-005056a7077f",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ethernet/broadcast-domains/6577524b-5863-11ec-8981-005056a7077f"
+        }
+      }
+    },
+    "subnet": {
+      "address": "10.4.1.0",
+      "netmask": "24",
+      "family": "ipv4"
+    },
+    "gateway": "10.4.1.1",
+    "ip_ranges": [
+      {
+        "start": "10.4.1.30",
+        "end": "10.4.1.39",
+        "family": "ipv4"
+      },
+      {
+        "start": "10.4.1.150",
+        "end": "10.4.1.229",
+        "family": "ipv4"
+      }
+    ],
+    "available_ip_ranges": [
+      {
+        "start": "10.4.1.30",
+        "end": "10.4.1.39",
+        "family": "ipv4"
+      },
+      {
+        "start": "10.4.1.150",
+        "end": "10.4.1.229",
+        "family": "ipv4"
+      }
+    ],
+    "total_count": 90,
+    "used_count": 0,
+    "available_count": 90,
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f?fields=**"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets?name=Subnet-004&fields=**"
+  }
+}
+}
+----
+
+'''
+
+== Updating IP subnets
+
+You can use the IP subnets PATCH API to update the attributes of an IP subnet.
+
+'''
+
+== Examples
+
+=== Updating the name of an IP subnet
+
+The following example shows how the PATCH request changes the name.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f" -H "accept: application/hal+json" -d '{ "name": "Subnet-004-NewName" }'
+
+# The response:
+{
+}
+
+# The result:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f?fields=name" -H "accept: application/hal+json"
+{
+"uuid": "0e0a19e7-59ba-11ec-8981-005056a7077f",
+"name": "Subnet-004-NewName",
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the ip_ranges of an IP subnet
+
+The following example shows how the PATCH request updates the ip_ranges.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f" -H "accept: application/hal+json" -d '{ "ip_ranges": [ { "start": "10.4.1.20", "end": "10.4.1.239" } ] }'
+
+# The response:
+{
+}
+
+# The result:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f?fields=ip_ranges" -H "accept: application/hal+json"
+{
+"uuid": "0e0a19e7-59ba-11ec-8981-005056a7077f",
+"name": "Subnet-004-NewName",
+"ip_ranges": [
+  {
+    "start": "10.4.1.20",
+    "end": "10.4.1.239",
+    "family": "ipv4"
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f"
+  }
+}
+}
+----
+
+'''
+
+== Deleting IP subnets
+
+You can use the IP subnets DELETE API to delete an IP subnet.
+
+'''
+
+== Example
+
+=== Deleting an IP subnet
+
+The following DELETE request deletes a specific network IP subnet.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/subnets/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f"
+
+# The response:
+{
+}
+
+# The result:
+curl -X GET "https://<mgmt-ip>/api/network/ip/subnets/0e0a19e7-59ba-11ec-8981-005056a7077f" -H "accept: application/hal+json"
+{
+"error": {
+  "message": "entry doesn't exist",
+  "code": "4",
+  "target": "uuid"
+}
+}
+----
+
+'''
+
+

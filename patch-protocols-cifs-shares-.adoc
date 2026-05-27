@@ -1,0 +1,641 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-shares-.html'
+summary: 'Update a CIFS share'
+---
+
+= Update a CIFS share
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/shares/{svm.uuid}/{name}`#
+
+*Introduced In:* 9.6
+
+Updates a CIFS share.
+
+== Related ONTAP commands
+
+* `vserver cifs share modify`
+* `vserver cifs share properties add`
+* `vserver cifs share properties remove`
+
+== Learn more
+
+* link:protocols_cifs_shares_endpoint_overview.html[DOC /protocols/cifs/shares]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Share Name
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_based_enumeration
+|boolean
+a|If enabled, all folders inside this share are visible to a user based on that individual user access right; prevents
+the display of folders or other shared resources that the user does not have access to.
+
+
+|allow_unencrypted_access
+|boolean
+a|Specifies whether or not the SMB2 clients are allowed to access the encrypted share.
+
+
+|attribute_cache
+|boolean
+a|Specifies that connections through this share cache attributes for a short time to improve performance.
+
+
+|browsable
+|boolean
+a|Specifies whether or not the Windows clients can browse the share.
+
+
+|change_notify
+|boolean
+a|Specifies whether CIFS clients can request for change notifications for directories on this share.
+
+
+|comment
+|string
+a|Specify the CIFS share descriptions.
+
+
+|continuously_available
+|boolean
+a|Specifies whether or not the clients connecting to this share can open files in a persistent manner.
+Files opened in this way are protected from disruptive events, such as, failover and giveback.
+If the Vscan ONTAP feature is used, it is not supported in continuous availability (CA) shares.
+
+* Default value: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|dir_umask
+|string
+a|Directory Mode Creation Mask to be viewed as an octal number.
+
+
+|encryption
+|boolean
+a|Specifies that SMB encryption must be used when accessing this share. Clients that do not support encryption are not
+able to access this share.
+
+
+|file_umask
+|string
+a|File Mode Creation Mask to be viewed as an octal number.
+
+
+|force_group_for_create
+|string
+a|Specifies that all files that CIFS users create in a specific share belong to the same group
+(also called the "force-group"). The "force-group" must be a predefined group in the UNIX group
+database. This setting has no effect unless the security style of the volume is UNIX or mixed
+security style.
+
+
+|max_connections_per_share
+|integer
+a|Maximum number of tree connections on share.
+
+
+|namespace_caching
+|boolean
+a|Specifies whether or not the SMB clients connecting to this share can cache the directory enumeration
+results returned by the CIFS servers.
+
+
+|no_strict_security
+|boolean
+a|Specifies whether or not CIFS clients can follow a unix symlinks outside the share boundaries.
+
+
+|offline_files
+|string
+a|Offline Files
+The supported values are:
+
+*** none - Clients are not permitted to cache files for offline access.
+
+*** manual - Clients may cache files that are explicitly selected by the user for offline access.
+
+*** documents - Clients may automatically cache files that are used by the user for offline access.
+
+*** programs - Clients may automatically cache files that are used by the user for offline access
+   and may use those files in an offline mode even if the share is available.
+
+
+|oplocks
+|boolean
+a|Specify whether opportunistic locks are enabled on this share. "Oplocks" allow clients to lock files and cache content locally,
+which can increase performance for file operations.
+
+
+|path
+|string
+a|The fully-qualified pathname in the owning SVM namespace that is shared through this share.
+If this is a home directory share then the path should be dynamic by specifying the pattern
+%w (Windows user name), %u (UNIX user name), or %d (domain name) variables in any combination.
+ONTAP generates the path dynamically for the connected user and this path is appended to each
+search path to find the full Home Directory path.
+
+* example: /volume_1/eng_vol/
+* maxLength: 256
+* minLength: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|show_previous_versions
+|boolean
+a|Specifies that the previous version can be viewed and restored from the client.
+
+
+|show_snapshot
+|boolean
+a|Specifies whether or not the snapshots can be viewed and traversed by clients.
+
+
+|unix_symlink
+|string
+a|Controls the access of UNIX symbolic links to CIFS clients.
+The supported values are:
+
+***** local - Enables only local symbolic links which is within the same CIFS share.
+
+***** widelink - Enables both local symlinks and widelinks.
+
+***** disable - Disables local symlinks and widelinks.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|vscan_profile
+|string
+a|Vscan File-Operations Profile
+The supported values are:
+
+*** no_scan - Virus scans are never triggered for accesses to this share.
+
+*** standard - Virus scans can be triggered by open, close, and rename operations.
+
+*** strict - Virus scans can be triggered by open, read, close, and rename operations.
+
+*** writes_only - Virus scans can be triggered only when a file that has been modified is closed.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "HR Department Share",
+  "dir_umask": "21",
+  "file_umask": "21",
+  "force_group_for_create": "string",
+  "home_directory": true,
+  "offline_files": "string",
+  "path": "/volume_1/eng_vol/",
+  "unix_symlink": "string",
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  },
+  "vscan_profile": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655628
+| 'SMB_ENCRYPTION' property cannot be set on CIFS share because the CIFS server does not support SMB3.0
+
+| 655551
+| CIFS Share modification failed because the specified path does not exist
+
+| 655620
+| Cannot set symlink properties for admin shares
+
+| 656420
+| Cannot modify the standard share ipc$
+
+| 656421
+| Cannot modify the standard share admin$
+
+| 656422
+| Failed to modify the home directory share because the directory shares must specify a path relative to one or more home directory search paths
+
+| 656423
+| Failed to modify CIFS share. The Shares must define an absolute share path
+
+| 656425
+| Failed to modify the CIFS share because the path for an administrative share cannot be modified
+
+| 656486
+| Failed to modify CIFS share because the share cannot be made continuously available for FlexCache volumes.
+
+| 655395
+| Failed to modify the CIFS share because share cannot be made continuously available unless running SMB3 or later.
+
+| 4849678
+| Failed to modify the CIFS share because the specified UNIX group does not exist
+
+| 655622
+| Invalid value for parameter \{max-connections-per-share}. Maximum connections on CIFS share \{name} must be between 1 to 4294967295.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#acls]
+[.api-collapsible-fifth-title]
+acls
+
+The permissions that users and groups have on a CIFS share.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|permission
+|string
+a|Specifies the access rights that a user or group has on the defined CIFS Share.
+The following values are allowed:
+
+* no_access    - User does not have CIFS share access
+* read         - User has only read access
+* change       - User has change access
+* full_control - User has full_control access
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#cifs_share]
+[.api-collapsible-fifth-title]
+cifs_share
+
+CIFS share is a named access point in a volume. Before users and applications can access data on the CIFS server over SMB,
+a CIFS share must be created with sufficient share permission. CIFS shares are tied to the CIFS server on the SVM.
+When a CIFS share is created, ONTAP creates a default ACL for the share with Full Control permissions for Everyone.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_based_enumeration
+|boolean
+a|If enabled, all folders inside this share are visible to a user based on that individual user access right; prevents
+the display of folders or other shared resources that the user does not have access to.
+
+
+|allow_unencrypted_access
+|boolean
+a|Specifies whether or not the SMB2 clients are allowed to access the encrypted share.
+
+
+|attribute_cache
+|boolean
+a|Specifies that connections through this share cache attributes for a short time to improve performance.
+
+
+|browsable
+|boolean
+a|Specifies whether or not the Windows clients can browse the share.
+
+
+|change_notify
+|boolean
+a|Specifies whether CIFS clients can request for change notifications for directories on this share.
+
+
+|comment
+|string
+a|Specify the CIFS share descriptions.
+
+
+|continuously_available
+|boolean
+a|Specifies whether or not the clients connecting to this share can open files in a persistent manner.
+Files opened in this way are protected from disruptive events, such as, failover and giveback.
+If the Vscan ONTAP feature is used, it is not supported in continuous availability (CA) shares.
+
+* Default value: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|dir_umask
+|string
+a|Directory Mode Creation Mask to be viewed as an octal number.
+
+
+|encryption
+|boolean
+a|Specifies that SMB encryption must be used when accessing this share. Clients that do not support encryption are not
+able to access this share.
+
+
+|file_umask
+|string
+a|File Mode Creation Mask to be viewed as an octal number.
+
+
+|force_group_for_create
+|string
+a|Specifies that all files that CIFS users create in a specific share belong to the same group
+(also called the "force-group"). The "force-group" must be a predefined group in the UNIX group
+database. This setting has no effect unless the security style of the volume is UNIX or mixed
+security style.
+
+
+|max_connections_per_share
+|integer
+a|Maximum number of tree connections on share.
+
+
+|namespace_caching
+|boolean
+a|Specifies whether or not the SMB clients connecting to this share can cache the directory enumeration
+results returned by the CIFS servers.
+
+
+|no_strict_security
+|boolean
+a|Specifies whether or not CIFS clients can follow a unix symlinks outside the share boundaries.
+
+
+|offline_files
+|string
+a|Offline Files
+The supported values are:
+
+*** none - Clients are not permitted to cache files for offline access.
+
+*** manual - Clients may cache files that are explicitly selected by the user for offline access.
+
+*** documents - Clients may automatically cache files that are used by the user for offline access.
+
+*** programs - Clients may automatically cache files that are used by the user for offline access
+     and may use those files in an offline mode even if the share is available.
+
+
+|oplocks
+|boolean
+a|Specify whether opportunistic locks are enabled on this share. "Oplocks" allow clients to lock files and cache content locally,
+which can increase performance for file operations.
+
+
+|path
+|string
+a|The fully-qualified pathname in the owning SVM namespace that is shared through this share.
+If this is a home directory share then the path should be dynamic by specifying the pattern
+%w (Windows user name), %u (UNIX user name), or %d (domain name) variables in any combination.
+ONTAP generates the path dynamically for the connected user and this path is appended to each
+search path to find the full Home Directory path.
+
+* example: /volume_1/eng_vol/
+* maxLength: 256
+* minLength: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|show_previous_versions
+|boolean
+a|Specifies that the previous version can be viewed and restored from the client.
+
+
+|show_snapshot
+|boolean
+a|Specifies whether or not the snapshots can be viewed and traversed by clients.
+
+
+|unix_symlink
+|string
+a|Controls the access of UNIX symbolic links to CIFS clients.
+The supported values are:
+
+***** local - Enables only local symbolic links which is within the same CIFS share.
+
+***** widelink - Enables both local symlinks and widelinks.
+
+***** disable - Disables local symlinks and widelinks.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|vscan_profile
+|string
+a|Vscan File-Operations Profile
+The supported values are:
+
+*** no_scan - Virus scans are never triggered for accesses to this share.
+
+*** standard - Virus scans can be triggered by open, close, and rename operations.
+
+*** strict - Virus scans can be triggered by open, read, close, and rename operations.
+
+*** writes_only - Virus scans can be triggered only when a file that has been modified is closed.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

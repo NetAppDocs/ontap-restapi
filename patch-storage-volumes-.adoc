@@ -1,0 +1,6710 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-volumes-.html'
+summary: 'Update volume attributes'
+---
+
+= Update volume attributes
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/volumes/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the attributes of a volume. For movement, use the "validate_only" field on the request to validate but not perform the operation. The PATCH API can be used to enable or disable quotas for a FlexVol or a FlexGroup volume. The PATCH API can also be used to start or stop non-disruptive volume capacity rebalancing for FlexGroup volumes in addition to modifying capacity rebalancing properties. An empty path in PATCH deactivates and unmounts the volume. Taking a volume offline removes its junction path.
+
+A PATCH request for volume encryption performs conversion/rekey operations asynchronously. You can retrieve the conversion/rekey progress details by calling a GET request on the corresponding volume endpoint.
+
+== Optional properties
+
+* `queue_for_encryption` - Queue volumes for encryption when `encryption.enabled=true`.  If this option is not provided or is false, conversion of volumes starts immediately. When there are volumes in the queue and less than four encryptions are running, volumes are encrypted in the order in which they are queued.
+* `encryption.action` - You can pause an ongoing rekey/conversion operation or resume a paused rekey/conversion operation using this field.  The following actions are supported for this field: &dash; conversion_pause - Pause an encryption conversion operation currently in progress &dash; conversion_resume - Resume a paused encryption conversion operation &dash; rekey_pause - Pause an encryption rekey operation currently in progress &dash; rekey_resume - Resume a paused encryption rekey operation
+
+== Related ONTAP commands
+
+* `volume unmount`
+* `volume mount`
+* `volume online`
+* `volume offline`
+* `volume modify`
+* `volume clone modify`
+* `volume efficiency modify`
+* `volume quota on`
+* `volume quota off`
+* `volume snaplock modify`
+* `volume encryption conversion start`
+* `volume encryption conversion pause`
+* `volume encryption conversion resume`
+* `volume encryption rekey start`
+* `volume encryption rekey pause`
+* `volume encryption rekey resume`
+* `volume rebalance start`
+* `volume rebalance stop`
+* `volume rebalance modify`
+* `security anti-ransomware volume enable`
+* `security anti-ransomware volume disable`
+* `security anti-ransomware volume dry-run`
+* `security anti-ransomware volume pause`
+* `security anti-ransomware volume resume`
+* `volume file async-delete client disable`
+* `volume file async-delete client enable`
+* `volume move`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Unique identifier of the volume.
+
+
+|restore_to.snapshot.uuid
+|string
+|query
+|False
+a|UUID of the snapshot to restore volume to the point in time the snapshot was taken.
+
+
+|restore_to.snapshot.name
+|string
+|query
+|False
+a|Name of the snapshot to restore volume to the point in time the snapshot was taken.
+
+
+|restore_to.path
+|string
+|query
+|False
+a|Path to the file which is restored from the snapshot.
+
+* Introduced in: 9.10
+
+
+|restore_to.restore_path
+|string
+|query
+|False
+a|Specifies the destination location inside the volume where the file is restored.
+
+* Introduced in: 9.10
+
+
+|restore_to.start_byte
+|number
+|query
+|False
+a|Starting byte offset of the source file, in multiples of 4096.
+
+* Introduced in: 9.10
+
+
+|restore_to.byte_count
+|number
+|query
+|False
+a|Number of bytes to restore from the source file, in multiples of 4096.
+
+* Introduced in: 9.10
+
+
+|preserve_lun_ids
+|boolean
+|query
+|False
+a|Specifies whether LUN IDs need to be preserved during a snapshot restore operation.
+
+* Introduced in: 9.10
+* Default value:
+
+
+|nvfail
+|string
+|query
+|False
+a|When this option is "on", the filer performs additional work at boot time if it finds that there has been any potential data loss due to an NVRAM failure. In such situations, it causes the invalidation of all NFS file handles on all volumes affected by the problem so that client-side users are forced to remount the affected file system (and thus not continue to use potentially incorrect data). It is also possible to specify a set of files per volume that are renamed in such cases. The filer sends error messages to the console whenever such problems are found.
+
+* Introduced in: 9.10
+* enum: ["off", "on"]
+
+
+|snapshot_directory_access_enabled
+|boolean
+|query
+|False
+a|This field, if true, enables the visible ".snapshot" directory from the client. The ".snapshot" directory will be available in every directory on the volume.
+
+* Introduced in: 9.10
+* Default value: 1
+
+
+|sizing_method
+|string
+|query
+|False
+a|Represents the method to modify the size of a Flexgroup. The following methods are supported:
+
+* use_existing_resources - Increases or decreases the size of the FlexGroup by increasing or decreasing the size of the current FlexGroup resources
+* add_new_resources - Increases the size of the FlexGroup by adding new resources. This is limited to two new resources per available aggregate.
+* Default value: 1
+* enum: ["use_existing_resources", "add_new_resources"]
+
+
+|scheduled_snapshot_naming_scheme
+|string
+|query
+|False
+a|Naming Scheme for automatic snapshots:
+
+* create_time - Automatic snapshots are saved as per the start of their current date and time.
+* ordinal - Latest automatic snapshot copy is saved as +++<scheduled_frequency>+++.0 and subsequent copies will follow the create_time naming convention.+++</scheduled_frequency>+++
+* Introduced in: 9.10
+* Default value: 1
+* enum: ["create_time", "ordinal"]
+
+</scheduled_frequency>
+
+
+|validate_only
+|boolean
+|query
+|False
+a|Validate the volume move or volume conversion operations and their parameters, without actually performing the operation.
+
+* Introduced in: 9.13
+
+
+|clone.match_parent_storage_tier
+|boolean
+|query
+|False
+a|Specifies whether the FlexClone volume splits the data blocks by matching its parent storage tier. This option is applicable only if the tiering policy and the tiering minimum cooling days of the parent volume and the FlexClone volume are the same.
+
+* Introduced in: 9.9
+
+
+|aggressive_readahead_mode
+|string
+|query
+|False
+a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. This feature is only available on FabricPool volumes on FSx for ONTAP and Cloud Volumes ONTAP. When the option is set to _sequential_read_, the system aggressively prefetches the file completely, or to a certain length based on the file size limit, and continues as the read makes progress. If the option is set to _cross_file_sequential_read_, then the system aggressively prefetches multiple files completely, or to a certain length, and continues as the read makes progress.
+
+* Introduced in: 9.13
+* Default value: 1
+* enum: ["none", "file_prefetch", "sequential_read", "cross_file_sequential_read"]
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|access_time_enabled
+|boolean
+a|Indicates whether or not access time updates are enabled on the volume.
+
+
+|activity_tracking
+|link:#activity_tracking[activity_tracking]
+a|
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|Aggregate(s) hosting the volume. Optional.
+
+
+|aggressive_readahead_mode
+|string
+a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. When the option is set to _sequential_read_, the system aggressively prefetches the file completely, or to a certain length based on the file size limit, and continues as the read makes progress. If the option is set to _cross_file_sequential_read_, then the system aggressively prefetches multiple files completely, or to a certain length, and continues as the read makes progress.
+
+
+|analytics
+|link:#analytics[analytics]
+a|
+
+|anti_ransomware
+|link:#anti_ransomware[anti_ransomware]
+a|Anti-ransomware related information of the volume.
+
+
+|application
+|link:#application[application]
+a|
+
+|asynchronous_directory_delete
+|link:#asynchronous_directory_delete[asynchronous_directory_delete]
+a|Configuration for asynchronous directory delete from the client. This is only supported on Flexible volumes and FlexGroup volumes.
+
+
+|autosize
+|link:#autosize[autosize]
+a|
+
+|clone
+|link:#clone[clone]
+a|
+
+|cloud_retrieval_policy
+|string
+a|This parameter specifies the cloud retrieval policy for the volume. This policy determines which tiered out blocks to retrieve from the capacity tier to the performance tier. The available cloud retrieval policies are
+"default" policy retrieves tiered data based on the underlying tiering policy. If the tiering policy is 'auto', tiered data is retrieved only for random client driven data reads. If the tiering policy is 'none' or 'snapshot_only', tiered data is retrieved for random and sequential client driven data reads. If the tiering policy is 'all', tiered data is not retrieved.
+"on_read" policy retrieves tiered data for all client driven data reads.
+"never" policy never retrieves tiered data.
+"promote" policy retrieves all eligible tiered data automatically during the next scheduled scan. It is only supported when the tiering policy is 'none' or 'snapshot_only'. If the tiering policy is 'snapshot_only', the only data brought back is the data in the AFS. Data that is only in a snapshot copy stays in the cloud and if tiering policy is 'none' then all data is retrieved.
+
+
+|cloud_write_enabled
+|boolean
+a|Indicates whether or not cloud writes are enabled on the volume. NFS writes to this volume are sent to the cloud directly instead of the local performance tier.
+This feature is only available on volumes in FabricPools.
+
+
+|comment
+|string
+a|A comment for the volume. Valid in POST or PATCH.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|Consistency group the volume is part of.
+
+
+|constituents
+|array[link:#constituents[constituents]]
+a|FlexGroup volume constituents. FlexGroup volume constituents can be retrieved more efficiently by specifying "is_constituent=true" or "is_constituent=true&flexgroup.uuid=+++<flexgroup.uuid>+++" as query parameters.+++</flexgroup.uuid>+++
+
+
+|constituents_per_aggregate
+|integer
+a|Specifies the number of times to iterate over the aggregates listed with the "aggregates.name" or "aggregates.uuid" when creating or expanding a FlexGroup volume. If a volume is being created on a single aggregate, the system creates a flexible volume if the "constituents_per_aggregate" field is not specified, or a FlexGroup volume if it is specified. If a volume is being created on multiple aggregates, the system always creates a FlexGroup volume. If a volume is being created on multiple aggregates and the "constituents_per_aggregate" field is not specified, the default value of the "constituents_per_aggregate" field is 4. The root constituent of a FlexGroup volume is always placed on the first aggregate in the list, unless 'optimize_aggregates' is specified as 'true'. If the "aggregates.name" or "aggregates.uuid" is specified in a PATCH request to expand an existing FlexGroup volume, the default value of the "constituents_per_aggregate" field is 1. The volume expand operation is only supported on FlexGroup volumes.
+
+
+|convert_unicode
+|boolean
+a|Specifies whether directory Unicode format conversion is enabled when directories are accessed by NFS clients.
+
+
+|create_time
+|string
+a|Creation time of the volume. This field is generated when the volume is created.
+
+
+|efficiency
+|link:#efficiency[efficiency]
+a|
+
+|encryption
+|link:#encryption[encryption]
+a|
+
+|error_state
+|link:#error_state[error_state]
+a|
+
+|files
+|link:#files[files]
+a|
+
+|flash_pool
+|link:#flash_pool[flash_pool]
+a|
+
+|flexcache_endpoint_type
+|string
+a|FlexCache endpoint type.
+none &dash; The volume is neither a FlexCache nor origin of any FlexCache.
+cache &dash; The volume is a FlexCache volume.
+origin &dash; The volume is origin of a FlexCache volume.
+
+
+|flexgroup
+|link:#flexgroup[flexgroup]
+a|
+
+|granular_data
+|boolean
+a|State of granular data on the volume. This setting is `true` by default when creating an AWS S3 FlexGroup volume via a POST request and `false` by default for creating any other type of FlexGroup volume via a POST request. On FlexVol volumes, the setting is always `false`, as only FlexGroup volumes support this feature. Once enabled, this setting can only be disabled by restoring a snapshot. Earlier versions of ONTAP (pre 9.12) are not compatible with this feature. Therefore, reverting to an earlier version of ONTAP is not possible unless this volume is deleted or restored to a snapshot that was taken before the setting was enabled.
+
+* Introduced in: 9.12
+* x-nullable: true
+
+
+|granular_data_mode
+|string
+a|Mode of granular data on the volume. This setting defaults to `basic` when the `granular_data` parameter is set to `true`, but can be specified at the time of creation via a POST request. Earlier versions of ONTAP (pre 9.12) are not compatible with the `basic` setting. Therefore, when set to `basic`, reverting to an earlier version of ONTAP is not possible unless this volume is deleted or restored to a snapshot that was taken before the `basic` mode was enabled. Earlier versions of ONTAP (pre 9.16) are not compatible with the `advanced` setting. Therefore, when set to `advanced`, reverting to an earlier version of ONTAP is not possible unless this volume is deleted or restored to a snapshot that was taken before the `advanced` mode was enabled.
+
+* enum: ["disabled", "basic", "advanced"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|
+
+|has_dir_index_public
+|boolean
+a|Specifies whether the volume has directories with public index files.
+
+
+|has_large_dir
+|boolean
+a|Specifies whether the volume has directories bigger than 4GB.
+
+
+|is_dir_index_transfer_enabled
+|boolean
+a|When set to true, this field enables support for directory index transfer.
+
+
+|is_large_dir_enabled
+|boolean
+a|When set to true, this field enables the large directory feature on a volume.
+
+
+|is_object_store
+|boolean
+a|Specifies whether the volume is provisioned for an object store server.
+
+
+|is_s3_arbitrary_part_size_enabled
+|boolean
+a|Specifies that the volume should allow Amazon S3 multipart uploads with arbitrary part lengths. This is only supported for FlexGroup volumes with `advanced` granular_data. The default value is `false`. When set to `true`, it cannot be reverted to `false`. Clusters with any volumes where this is `true` cannot be reverted to a release that does not support this feature.
+
+
+|is_svm_root
+|boolean
+a|Specifies whether the volume is a root volume of the SVM it belongs to.
+
+
+|max_dir_size
+|integer
+a|Maximum directory size. This value sets maximum size, in bytes, to which a directory can grow. The default maximum directory size for FlexVol volumes is model-dependent, and optimized for the size of system memory. Before increasing the maximum directory size, involve technical support.
+
+
+|movement
+|link:#movement[movement]
+a|Volume movement. All attributes are modify, that is, not writable through POST. Set PATCH state to destination_aggregate to initiate a volume move operation.
+
+
+|msid
+|integer
+a|The volume's Master Set ID.
+
+
+|name
+|string
+a|Volume name. The name of volume must start with an alphabetic character (a to z or A to Z) or an underscore (_). The name must be 197 or fewer characters in length for FlexGroup volumes, and 203 or fewer characters in length for all other types of volumes. Volume names must be unique within an SVM. Required on POST.
+
+
+|nas
+|link:#nas[nas]
+a|
+
+|nodes
+|array[link:#nodes[nodes]]
+a|List of the nodes hosting the volume.
+
+
+|qos
+|link:#qos[qos]
+a|QoS information
+
+
+|queue_for_encryption
+|boolean
+a|Specifies whether the volume is queued for encryption.
+
+
+|quota
+|link:#quota[quota]
+a|Quotas track the space or file usage of a user, group, or qtree in a FlexVol volume or a FlexGroup volume.
+
+
+|rebalancing
+|link:#rebalancing[rebalancing]
+a|Configuration and runtime properties involving non-disruptive volume capacity rebalancing for a FlexGroup volume.
+
+
+|scheduled_snapshot_naming_scheme
+|string
+a|Naming Scheme for automatic snapshots:
+
+* create_time - Automatic snapshots are saved as per the start of their current date and time.
+* ordinal - Latest automatic snapshot copy is saved as +++<scheduled_frequency>+++.0 and subsequent copies will follow the create_time naming convention.+++</scheduled_frequency>+++
+
+
+|size
+|integer
+a|Physical size of the volume, in bytes. The minimum size for a FlexVol volume is 20MB and the minimum size for a FlexGroup volume is 200MB per constituent. The recommended size for a FlexGroup volume is a minimum of 100GB per constituent. For all volumes, the default size is equal to the minimum size.
+
+
+|sizing_method
+|string
+a|When expanding a FlexGroup volume, this specifies whether to add new constituents, or to resize the current constituents.
+
+
+|snaplock
+|link:#snaplock[snaplock]
+a|
+
+|snapmirror
+|link:#snapmirror[snapmirror]
+a|Specifies attributes for SnapMirror protection.
+
+
+|snapshot_count
+|integer
+a|Number of snapshots in the volume.
+
+
+|snapshot_directory_access_enabled
+|boolean
+a|This field, if true, enables the visible ".snapshot" directory from the client. The ".snapshot" directory will be available in every directory on the volume.
+
+
+|snapshot_locking_enabled
+|boolean
+a|Specifies whether or not snapshot copy locking is enabled on the volume.
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|This is a reference to the snapshot policy.
+
+
+|space
+|link:#space[space]
+a|
+
+|state
+|string
+a|Volume state. Client access is supported only when volume is online and junctioned. Taking volume to offline or restricted state removes its junction path and blocks client access. When volume is in restricted state some operations like parity reconstruction and iron on commit are allowed. The 'mixed' state applies to FlexGroup volumes only and cannot be specified as a target state. An 'error' state implies that the volume is not in a state to serve data.
+
+
+|status
+|array[string]
+a|Describes the current status of a volume.
+
+
+|style
+|string
+a|The style of the volume. If "style" is not specified, the volume type is determined based on the specified aggregates or license. Specifying a single aggregate, without "constituents_per_aggregate", creates a flexible volume. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup volume. When the UDO License is installed, and no aggregates are specified, the system automatically provisions a FlexGroup volume on system selected aggregates. Specifying a volume "style" creates a volume of that type. For example, if the style is "flexvol", you must specify a single aggregate. If the style is "flexgroup", the system either uses the specified aggregates or automatically provisions aggregates if there are no specified aggregates. The style "flexgroup_constituent" is not supported when creating a volume.
+flexvol &dash; flexible volumes and FlexClone volumes
+flexgroup &dash; FlexGroup volumes
+flexgroup_constituent &dash; FlexGroup volume constituents.
+
+
+|tiering
+|link:#tiering[tiering]
+a|
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|validate_only
+|boolean
+a|Validate the volume move or volume conversion operations and their parameters, without actually performing the operation.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_tags": [
+    "team:csi",
+    "environment:test"
+  ],
+  "activity_tracking": {
+    "notices": [
+      {
+        "code": "124518424",
+        "message": "The top metrics report contains partial data for read operations because NFSv4 reads using Multi-Processor I/O (MPIO) are not tracked."
+      }
+    ],
+    "state": "string",
+    "unsupported_reason": {
+      "code": "124518405",
+      "message": "Volume activity tracking cannot be enabled on volumes that contain LUNs."
+    }
+  },
+  "aggregates": [
+    {
+      "name": "aggr1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "aggressive_readahead_mode": "string",
+  "analytics": {
+    "by_accessed_time": {
+      "bytes_used": {
+        "aged_data_metric": 15.23,
+        "labels": [
+          "2019-07",
+          "2019-06",
+          "2019-05",
+          "2019",
+          "2018",
+          "--2017",
+          "unknown"
+        ],
+        "newest_label": "2019-07",
+        "oldest_label": "2019-07",
+        "percentages": [
+          0.1,
+          11.24,
+          0.18,
+          15.75,
+          0.75,
+          83.5,
+          0
+        ],
+        "values": [
+          15925248,
+          1735569408,
+          27672576,
+          2430595072,
+          116105216,
+          12889948160,
+          0
+        ]
+      }
+    },
+    "by_modified_time": {
+      "bytes_used": {
+        "aged_data_metric": 15.23,
+        "labels": [
+          "2019-07",
+          "2019-06",
+          "2019-05",
+          "2019",
+          "2018",
+          "--2017",
+          "unknown"
+        ],
+        "newest_label": "2019-07",
+        "oldest_label": "2019-07",
+        "percentages": [
+          0.1,
+          11.24,
+          0.18,
+          15.75,
+          0.75,
+          83.5,
+          0
+        ],
+        "values": [
+          15925248,
+          1735569408,
+          27672576,
+          2430595072,
+          116105216,
+          12889948160,
+          0
+        ]
+      }
+    },
+    "bytes_used": 15436648448,
+    "file_count": 21134,
+    "files_scanned": 43002,
+    "initialization": {
+      "state": "string"
+    },
+    "report_time": "2024-11-06 13:57:15 -0500",
+    "scan_progress": 17,
+    "scan_throttle_reason": {
+      "arguments": [
+        "string"
+      ],
+      "code": "6739881",
+      "message": "The file system analytics scan running on volume \"fsavol2\" in SVM \"vs2\" has slowed down on node \"my_node\". Reason: Computing resources are being used by higher priority workloads."
+    },
+    "state": "string",
+    "subdir_count": 35,
+    "total_files": 101890,
+    "unsupported_reason": {
+      "code": "111411207",
+      "message": "File system analytics cannot be enabled on volumes that contain LUNs."
+    }
+  },
+  "anti_ransomware": {
+    "attack_detected_by": "string",
+    "attack_detection_parameters": {
+      "file_create_op_rate_surge_notify_percent": 100
+    },
+    "attack_probability": "string",
+    "attack_reports": [
+      {
+        "time": "2021-06-01 20:36:41 +0530"
+      }
+    ],
+    "block_device_detection_start_time": "string",
+    "block_device_detection_state": "string",
+    "clear_suspect": {
+      "phase": "string",
+      "start_time": "string"
+    },
+    "dry_run_start_time": "string",
+    "space": {
+      "snapshot_count": 0,
+      "used": 0,
+      "used_by_logs": 0,
+      "used_by_snapshots": 0
+    },
+    "state": "string",
+    "surge_usage": {
+      "file_create_peak_rate_per_minute": 10,
+      "file_delete_peak_rate_per_minute": 50,
+      "file_rename_peak_rate_per_minute": 30,
+      "high_entropy_data_write_peak_percent": 30,
+      "high_entropy_data_write_peak_rate_kb_per_minute": 2500,
+      "time": "2021-12-01 23:16:20 +0530"
+    },
+    "suspect_files": [
+      {
+        "count": 0,
+        "entropy": "string",
+        "format": "string"
+      }
+    ],
+    "typical_usage": {
+      "file_create_peak_rate_per_minute": 50,
+      "file_delete_peak_rate_per_minute": 10,
+      "file_rename_peak_rate_per_minute": 5,
+      "high_entropy_data_write_peak_percent": 10,
+      "high_entropy_data_write_peak_rate_kb_per_minute": 1200
+    },
+    "workload": {
+      "file_extension_types_count": 3,
+      "file_extensions_observed": [
+        "pdf",
+        "jpeg",
+        "txt"
+      ],
+      "historical_statistics": {
+        "file_create_peak_rate_per_minute": 50,
+        "file_delete_peak_rate_per_minute": 10,
+        "file_rename_peak_rate_per_minute": 5,
+        "high_entropy_data_write_peak_percent": 10,
+        "high_entropy_data_write_peak_rate_kb_per_minute": 1200
+      },
+      "newly_observed_file_extensions": [
+        {
+          "count": [
+            20
+          ],
+          "name": [
+            "lockile"
+          ]
+        }
+      ],
+      "surge_statistics": {
+        "file_create_peak_rate_per_minute": 10,
+        "file_delete_peak_rate_per_minute": 50,
+        "file_rename_peak_rate_per_minute": 30,
+        "high_entropy_data_write_peak_percent": 30,
+        "high_entropy_data_write_peak_rate_kb_per_minute": 2500,
+        "time": "2021-12-01 23:16:20 +0530"
+      },
+      "surge_usage": {
+        "file_create_peak_rate_per_minute": 10,
+        "file_delete_peak_rate_per_minute": 50,
+        "file_rename_peak_rate_per_minute": 30,
+        "high_entropy_data_write_peak_percent": 30,
+        "high_entropy_data_write_peak_rate_kb_per_minute": 2500,
+        "newly_observed_file_extensions": [
+          {
+            "count": [
+              20
+            ],
+            "name": [
+              "lockile"
+            ]
+          }
+        ],
+        "time": "2021-12-01 23:16:20 +0530"
+      },
+      "typical_usage": {
+        "file_create_peak_rate_per_minute": 50,
+        "file_delete_peak_rate_per_minute": 10,
+        "file_rename_peak_rate_per_minute": 5,
+        "high_entropy_data_write_peak_percent": 10,
+        "high_entropy_data_write_peak_rate_kb_per_minute": 1200
+      }
+    }
+  },
+  "application": {
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1d-123478563412"
+  },
+  "asynchronous_directory_delete": {
+    "trash_bin": "string"
+  },
+  "autosize": {
+    "mode": "string"
+  },
+  "clone": {
+    "inherited_physical_used": 0,
+    "inherited_savings": 0,
+    "is_flexclone": true,
+    "split_complete_percent": 0,
+    "split_estimate": 0
+  },
+  "cloud_retrieval_policy": "string",
+  "comment": "string",
+  "consistency_group": {
+    "name": "consistency_group_1",
+    "uuid": "1cd8a442-86d1-11e0-ae1d-123478563412"
+  },
+  "constituents": [
+    {
+      "aggregates": {
+        "name": "string",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      },
+      "movement": {
+        "cutover_window": 30,
+        "destination_aggregate": {
+          "name": "aggr1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "percent_complete": 0,
+        "state": "replicating",
+        "tiering_policy": "string"
+      },
+      "name": "string",
+      "node": {
+        "name": "string",
+        "uuid": "string"
+      },
+      "space": {
+        "available": 0,
+        "block_storage_inactive_user_data": 0,
+        "capacity_tier_footprint": 0,
+        "footprint": 0,
+        "local_tier_footprint": 0,
+        "logical_space": {
+          "available": 0,
+          "used_by_afs": 0
+        },
+        "max_size": "string",
+        "metadata": 0,
+        "over_provisioned": 0,
+        "performance_tier_footprint": 0,
+        "snapshot": {
+          "used": 0
+        },
+        "total_footprint": 0,
+        "total_metadata": 0,
+        "total_metadata_footprint": 0,
+        "used": 0
+      }
+    }
+  ],
+  "create_time": "2018-06-04 19:00:00 +0000",
+  "efficiency": {
+    "application_io_size": "string",
+    "auto_state": "string",
+    "compaction": "string",
+    "compression": "string",
+    "compression_type": "string",
+    "cross_volume_dedupe": "string",
+    "dedupe": "string",
+    "idcs_scanner": {
+      "mode": "string",
+      "operation_state": "string",
+      "status": "string",
+      "threshold_inactive_time": "P14D"
+    },
+    "last_op_begin": "string",
+    "last_op_end": "string",
+    "last_op_err": "string",
+    "last_op_size": 0,
+    "last_op_state": "string",
+    "op_state": "string",
+    "policy": {
+      "name": "string"
+    },
+    "progress": "string",
+    "ratio": 0,
+    "scanner": {
+      "state": "string"
+    },
+    "schedule": "string",
+    "space_savings": {
+      "compression": 0,
+      "compression_percent": 0,
+      "dedupe": 0,
+      "dedupe_percent": 0,
+      "dedupe_sharing": 0,
+      "total": 0,
+      "total_percent": 0
+    },
+    "state": "string",
+    "storage_efficiency_mode": "string",
+    "type": "string",
+    "volume_path": "string"
+  },
+  "encryption": {
+    "action": "string",
+    "key_create_time": "2022-01-01 19:00:00 +0000",
+    "key_id": "string",
+    "state": "string",
+    "status": {
+      "code": "string",
+      "message": "string"
+    },
+    "type": "string"
+  },
+  "files": {
+    "inodefile_capacity": 0,
+    "used": 0
+  },
+  "flash_pool": {
+    "cache_eligibility": "string",
+    "cache_retention_priority": "string",
+    "caching_policy": "string"
+  },
+  "flexcache_endpoint_type": "string",
+  "flexgroup": {
+    "name": "my_flexgroup",
+    "uuid": "75c9cfb0-3eb4-11eb-9fb4-005056bb088a"
+  },
+  "granular_data_mode": "string",
+  "guarantee": {
+    "type": "string"
+  },
+  "movement": {
+    "cutover_window": 30,
+    "destination_aggregate": {
+      "name": "aggr1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "percent_complete": 0,
+    "start_time": "2020-12-07 03:45:12 -0500",
+    "state": "replicating",
+    "tiering_policy": "string"
+  },
+  "name": "vol_cs_dept",
+  "nas": {
+    "export_policy": {
+      "id": 100,
+      "name": "default"
+    },
+    "junction_parent": {
+      "name": "vs1_root",
+      "uuid": "75c9cfb0-3eb4-11eb-9fb4-005056bb088a"
+    },
+    "path": "/user/my_volume",
+    "security_style": "string",
+    "unix_permissions": 493
+  },
+  "nodes": [
+    {
+      "name": "string",
+      "uuid": "string"
+    }
+  ],
+  "optimize_aggregates": true,
+  "qos": {
+    "policy": {
+      "max_throughput": [
+        "900KB/s",
+        "500MB/s",
+        "120GB/s",
+        "5000IOPS",
+        "5000IOPS,500KB/s",
+        "2500IOPS,100MB/s",
+        "1000IOPS,25MB/s"
+      ],
+      "max_throughput_iops": 10000,
+      "max_throughput_mbps": 500,
+      "min_throughput": [
+        "900KB/s",
+        "500MB/s",
+        "120GB/s",
+        "5000IOPS",
+        "5000IOPS,500KB/s",
+        "2500IOPS,100MB/s",
+        "1000IOPS,25MB/s"
+      ],
+      "min_throughput_iops": 2000,
+      "min_throughput_mbps": 500,
+      "name": "performance",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  },
+  "quota": {
+    "state": "string"
+  },
+  "rebalancing": {
+    "data_moved": 0,
+    "engine": {
+      "movement": {
+        "file_moves_started": 0,
+        "last_error": {
+          "code": 0,
+          "destination": 0,
+          "file_id": 0,
+          "time": "2018-06-04 19:00:00 +0000"
+        },
+        "most_recent_start_time": "2018-06-04 19:00:00 +0000"
+      },
+      "scanner": {
+        "blocks_scanned": 0,
+        "blocks_skipped": {
+          "efficiency_blocks": 0,
+          "efficiency_percent": 0,
+          "fast_truncate": 0,
+          "footprint_invalid": 0,
+          "in_snapshot": 0,
+          "incompatible": 0,
+          "metadata": 0,
+          "on_demand_destination": 0,
+          "other": 0,
+          "remote_cache": 0,
+          "too_large": 0,
+          "too_small": 0,
+          "write_fenced": 0
+        },
+        "files_scanned": 0,
+        "files_skipped": {
+          "efficiency_blocks": 0,
+          "efficiency_percent": 0,
+          "fast_truncate": 0,
+          "footprint_invalid": 0,
+          "in_snapshot": 0,
+          "incompatible": 0,
+          "metadata": 0,
+          "on_demand_destination": 0,
+          "other": 0,
+          "remote_cache": 0,
+          "too_large": 0,
+          "too_small": 0,
+          "write_fenced": 0
+        }
+      }
+    },
+    "imbalance_percent": 0,
+    "imbalance_size": 0,
+    "max_constituent_imbalance_percent": 0,
+    "max_runtime": "string",
+    "notices": [
+      {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": "4",
+        "message": "entry doesn't exist"
+      }
+    ],
+    "runtime": "string",
+    "start_time": "string",
+    "state": "rebalancing",
+    "stop_time": "string",
+    "target_used": 0,
+    "used_for_imbalance": 0
+  },
+  "scheduled_snapshot_naming_scheme": "string",
+  "sizing_method": "string",
+  "snaplock": {
+    "append_mode_enabled": "",
+    "autocommit_period": "P30M",
+    "compliance_clock_time": "2018-06-04 19:00:00 +0000",
+    "expiry_time": "Wed Sep  5 11:02:42 GMT 2018",
+    "is_audit_log": 1,
+    "litigation_count": 10,
+    "privileged_delete": "enabled",
+    "retention": {
+      "default": "P30Y",
+      "maximum": "P30Y",
+      "minimum": "P30Y"
+    },
+    "unspecified_retention_file_count": 10
+  },
+  "snapshot_count": 0,
+  "snapshot_policy": {
+    "name": "default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "space": {
+    "auto_adaptive_compression_footprint_data_reduction": 0,
+    "available": 0,
+    "block_storage_inactive_user_data": 0,
+    "block_storage_inactive_user_data_percent": 0,
+    "capacity_tier_footprint": 0,
+    "capacity_tier_footprint_data_reduction": 0,
+    "compaction_footprint_data_reduction": 0,
+    "cross_volume_dedupe_metafiles_footprint": 0,
+    "cross_volume_dedupe_metafiles_temporary_footprint": 0,
+    "dedupe_metafiles_footprint": 0,
+    "dedupe_metafiles_temporary_footprint": 0,
+    "delayed_free_footprint": 0,
+    "effective_total_footprint": 0,
+    "file_operation_metadata": 0,
+    "filesystem_size": 0,
+    "footprint": 0,
+    "local_tier_footprint": 0,
+    "logical_space": {
+      "available": 0,
+      "used": 0,
+      "used_by_afs": 0,
+      "used_by_snapshots": 0,
+      "used_percent": 0
+    },
+    "max_size": "string",
+    "metadata": 0,
+    "over_provisioned": 0,
+    "overwrite_reserve": 0,
+    "overwrite_reserve_used": 0,
+    "percent_used": 0,
+    "performance_tier_footprint": 0,
+    "size_available_for_snapshots": 0,
+    "snapmirror_destination_footprint": 0,
+    "snapshot": {
+      "autodelete": {
+        "commitment": "string",
+        "defer_delete": "string",
+        "delete_order": "string",
+        "prefix": "string",
+        "trigger": "string"
+      },
+      "autodelete_trigger": "string",
+      "reserve_available": 0,
+      "reserve_size": 0,
+      "space_used_percent": 0,
+      "used": 0
+    },
+    "snapshot_reserve_unusable": 0,
+    "snapshot_spill": 0,
+    "total_footprint": 0,
+    "total_metadata": 0,
+    "total_metadata_footprint": 0,
+    "used": 0,
+    "user_data": 0,
+    "volume_guarantee_footprint": 0
+  },
+  "state": "string",
+  "status": [
+    "string"
+  ],
+  "style": "string",
+  "tiering": {
+    "object_tags": [
+      "string"
+    ],
+    "policy": "string",
+    "supported": true
+  },
+  "use_mirrored_aggregates": true,
+  "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262256
+| Tags cannot be modified for the volume because of the specified reason.
+
+| 524511
+| Failed to restore snapshot "restore_to.snapshot.name".
+
+| 524849
+| Attribute cannot be modified for the target volume because of the specified reason.
+
+| 787141
+| The specified "aggregates.name" and "aggregates.uuid" refer to different aggregates.
+
+| 787144
+| The volume is on an aggregate that is not part of a FabricPool.
+
+| 917505
+| SVM not found.
+
+| 917534
+| The value specified for field "-size" is too small. Update the field "-size" with the minimum size allowed and retry.
+
+| 917597
+| Provisioning a volume on a root aggregate is not supported.
+
+| 917617
+| Cannot modify snapshot policy on volumes of type DC, DP, LS or TMP.
+
+| 917628
+| Modification of the specified fields is not allowed for the target volume type.
+
+| 917829
+| Volume autosize grow threshold must be larger than autosize shrink threshold.
+
+| 917831
+| Volume minimum autosize must be smaller than the maximum autosize.
+
+| 917888
+| Invalid character in volume name. It can have '_' and alphanumeric characters.;
+
+| 918183
+| The specified tiering policy is not supported for the current system configuration.
+
+| 918193
+| Cannot modify tiering min cooling days when vol move is in progress.
+
+| 918194
+| Tiering min cooling days not supported for SVMDR.
+
+| 918195
+| Tiering min cooling days not supported for non data volumes.
+
+| 918196
+| Tiering min cooling days not allowed for the provided tiering policy.
+
+| 918248
+| Specifying a value is not valid for initiating volume FlexClone split operation.
+
+| 918251
+| Specifying a value is not valid for a snapshot restore operation.
+
+| 918252
+| specified "nas.path" is invalid.
+
+| 918265
+| Volume is on the same aggregate.
+
+| 918266
+| "movement.destination_aggregate" and "movement.state" are mutually exclusive, unless the state is "cutover-wait".
+
+| 918267
+| The specified "movement.destination_aggregate" does not exist.
+
+| 918291
+| Invalid volume cloud retrieval policy for the provided tiering policy.
+
+| 918292
+| cloud retrieval policy not supported for non data volume.
+
+| 918293
+| Cannot modify cloud retrieval policy when vol move is in progress.
+
+| 918334
+| Cache cloud retrieval policy requires an effective cluster version of 9.14 or later.
+
+| 918521
+| The volume maximum autosize must be smaller than or equal to the maximum volume size.
+
+| 918532
+| The FlexClone match-parent-storage-tier option requires an effective cluster version of 9.9.1 or later.
+
+| 918533
+| The FlexClone match-parent-storage-tier option not applicable for FlexClone volumes hosted on non-FabricPool storage.
+
+| 918534
+| The tiering policy values are different for the FlexClone volume and its parent volume. The match-parent-storage-tier option cannot be set to true.
+
+| 918535
+| The tiering minimum cooling day values are different for the FlexClone volume and its parent volume. The match-parent-storage-tier option cannot be set to true.
+
+| 918537
+| Could not get the FlexClone volume tiering policy or its parent volume tiering policy. Wait a minute and try again.
+
+| 918538
+| The match-parent-storage-tier option is not supported for clone creation.
+
+| 918577
+| Only FlexVol to FlexGroup conversions are currently supported.
+
+| 918583
+| Disabling large volume size is not supported because the volume contains files larger than 16TB or the volume size is larger than 100TB.
+
+| 918599
+| Cloud write requires an effective cluster version of 9.13.1 or later.
+
+| 918600
+| Cloud write is only supported for volumes in a FabricPool on FSx for ONTAP or Cloud Volumes ONTAP.
+
+| 918601
+| Only the \"all\" tiering policy is allowed on a volume with cloud write.
+
+| 918602
+| Cannot move volume when cloud write is enabled.
+
+| 918603
+| Cloud write is only supported on volumes with Read-Write access.
+
+| 918604
+| Cloud write is not supported because the volume is the destination or source endpoint of one or more SnapMirror relationships.
+
+| 918605
+| Cloud write cannot be enabled on a clone volume.
+
+| 918606
+| Cloud write cannot be enabled on a volume containing LUNs.
+
+| 918607
+| Cloud write is not supported because this volume belongs to an SVM that is the source of a DR relationship.
+
+| 918624
+| Tiering storage class requires an effective cluster version of ONTAP 9.13.1 or later.
+
+| 918625
+| Tiering storage class is only supported for volumes in a FabricPool on FSx for ONTAP or Cloud Volumes ONTAP for AWS.
+
+| 918626
+| Tiering storage class is not supported for volumes in a FlexGroup.
+
+| 918627
+| The specified value for "tiering.storage_class" is not supported.
+
+| 918636
+| Volume "name" in SVM "svm.name" is part of a Consistency Group. Snapshot locking cannot be enabled on a volume that is part of a Consistency Group.
+
+| 918639
+| One or more of the fields "-max-size","-max-autosize","-size" are being set or modified. Set the values so that "-max-size" is always greater than or equal to "-max-autosize" and "-size".
+
+| 918641
+| The value passed for "-max-size" is invalid. Valid values for the current platform are specified.
+
+| 918647
+| One or more of the fields "-max-autosize","-size" are being set or modified. Set the values so that "-max-autosize" and "-size" are always less than or equal to the specified value.
+
+| 918650
+| The asynchronous directory delete trash bin name cannot be specified unless asynchronous directory delete from the client is being enabled.
+
+| 918652
+| "error" is an invalid value for field "-state". Valid values are "online", "offline" and "restricted".
+
+| 918655
+| Cloud write is not supported on the current configuration.
+
+| 918658
+| Volume is on a FabricPool-enabled aggregate. CIFS applications might time out when cloud write is enabled on a volume that is on a FabricPool-enabled aggregate.
+
+| 918659
+| Cloud write can only be enabled on FabricPool-enabled aggregates.
+
+| 918660
+| Cloud write enabled volumes can only be moved to FabricPool-enabled aggregates. Disable cloud write to move the volume to a non-FabricPool aggregates.
+
+| 918703
+| Modification of the specified volume properties are not supported on this platform.
+
+| 918775
+| The "constituent_count" parameter must be greater than the current number of constituents in the FlexGroup volume.
+
+| 918776
+| The "constituent_count" and "size" parameters cannot both be specified.
+
+| 918777
+| The "aggregates" parameter cannot contain both storage pods and aggregates.
+
+| 918786
+| The specified value for the "movement.state" parameter is invalid. Valid values are "replicating", "cutover", "aborted", "paused" and "cutover_wait".
+
+| 1638480
+| Failed to promote snapshot "restore_to.snapshot.name" because one or more newer snapshots are currently used as a reference snapshot for data protection operations.
+
+| 1638590
+| Promoting a "-pre-conversion" snapshot is not supported.
+
+| 2424998
+| Unable to determine whether MetroCluster is configured.
+
+| 2621572
+| Modification of the specified field is not permitted on an SVM that is configured as the destination for identity discard SVM DR.
+
+| 6488103
+| Async directory delete from the client is already enabled on volume "name" in SVM "svm.name".
+
+| 6488104
+| Async directory delete from the client is already disabled on volume "name" in SVM "svm.name".
+
+| 6881612
+| Cannot enable inline deduplication on a non AFF Platform or on non HYA aggregate.
+
+| 6881640
+| The "efficiency.state" field is only supported on read-write volumes on FSx for ONTAP and Cloud Volumes ONTAP.
+
+| 6881651
+| File compression is not supported on volumes with "max-size > 300TB". Modify the volume max-size, then retry.
+
+| 6881659
+| Changing "storage-efficiency-mode" from "efficient" to "default" is not supported.
+
+| 6881661
+| Volume efficiency scanner cannot be started on volume with efficiency policy set as inline-only.
+
+| 8454210
+| Failed to complete the operation because a QoS workload could not be created, modified or deleted. Wait a few seconds, and then try the operation again.
+
+| 9437885
+| The volume is not online.
+
+| 9437886
+| Volume snapshot restore failed because there are newer unexpired locked snapshots in the volume.
+
+| 13107256
+| Operation is only supported on FlexGroup volumes.
+
+| 13107349
+| Operation is only supported on flexible volumes and FlexGroup volumes.
+
+| 13107371
+| Operation is only supported on read-write FlexGroup volumes.
+
+| 13107404
+| When adding new resources to a FlexGroup by specifying "aggregates.name" or "aggregates.uuid", the FlexGroup cannot be resized using "size". These operations must be done separately.
+
+| 13107415
+| Failed to lookup a volume property.
+
+| 13107431
+| Failed to lookup an SVM property.
+
+| 13107433
+| A snapshot is scheduled to be taken within the volume capacity rebalancing runtime.
+
+| 13107434
+| A SnapMirror update is scheduled within the volume capacity rebalancing runtime.
+
+| 13109187
+| When adding new resources to a FlexGroup using "sizing_method", "size" must be specified.  Neither "aggregates.name" nor "aggregates.uuid" are allowed to be specified, as the aggregates are selected automatically by the system.
+
+| 13109198
+| Resizing by adding new resources is only supported for FlexGroups.
+
+| 13109258
+| Cannot enable granular data on volume "name" in Vserver "svm.name". This setting can only be enabled on FlexGroups.
+
+| 13109259
+| Granular data cannot be disabled on volume "name" in Vserver "svm.name". This property can only be disabled by restoring a snapshot.
+
+| 13109260
+| Failed to enable granular data on the volume.
+
+| 13763477
+| Cannot modify the SnapLock configuration on volume "name" in SVM "svm.name" because the volume is a part of a consistency group.
+
+| 65536965
+| The key manager on data Vserver \"\{0}\" is in the blocked state due to key access errors. Possible reasons for a blocked state include the top-level external key protection key is disabled or not found or the current user does not have access to perform the requested action. Fix the issues with the key manager that manages the top-level external key protection key on data Vserver \"\{0}\" to bring the key manager to the active state and then try to bring the volume online again.
+
+| 65539432
+| Cannot online volume \"\{1}\" on Vserver \"\{0}\" while the keystore is being initialized. Wait until the keystore is in the active state, and rerun the volume operation.
+
+| 65539433
+| Cannot online volume \"\{1}\" on Vserver \"\{0}\" while the keystore is being disabled.
+
+| 66846758
+| Modification of the specified fields is not allowed for FlexCache volumes.
+
+| 66846772
+| Modification of the specified fields is not allowed for origin of FlexCache volumes.
+
+| 111411201
+| File system analytics cannot be enabled on the target volume because of the specified reason.
+
+| 111411202
+| File system analytics cannot be disabled on the target volume because of the specified reason.
+
+| 111411205
+| File system analytics requires an effective cluster version of 9.8 or later.
+
+| 111411206
+| The specified "analytics.state" is invalid.
+
+| 111411207
+| File system analytics cannot be enabled on volumes that contain LUNs.
+
+| 111411207
+| Volume file system analytics is not supported on volumes that contain LUNs.
+
+| 111411209
+| Volume file system analytics is not supported on FlexCache volumes.
+
+| 111411210
+| Volume file system analytics is not supported on audit staging volumes.
+
+| 111411211
+| Volume file system analytics is not supported on object store server volumes.
+
+| 111411212
+| Volume file system analytics is not supported on SnapMirror destination volumes.
+
+| 111411216
+| Enabling or disabling volume file system analytics is not supported on individual FlexGroup constituents.
+
+| 111411217
+| Volume file system analytics is not supported on SnapLock volumes.
+
+| 111411230
+| Volume file system analytics is not supported on volumes that contain NVMe namespaces.
+
+| 111411241
+| Volume file system analytics is not supported for All SAN Array clusters.
+
+| 111411252
+| Failed to enable file system analytics on volume "name" in SVM "svm.name" because there is insufficient available space. Ensure there is at least "space.available_percent`" available space in the volume, then try the operation again.
+
+| 111411253
+| Failed to enable file system analytics on volume "name" in SVM "svm.name" because there is insufficient available space. Ensure there is at least "space.available_percent" available space in all constituents of the FlexGroup, then try the operation again."
+
+| 111411257
+| Failed to enable file system analytics on volume "name" in SVM "svm.name" because there is insufficient available space. Increase the volume size to "size", then try the operation again."
+
+| 124518405
+| Volume activity tracking is not supported on volumes that contain LUNs.
+
+| 124518407
+| Volume activity tracking is not supported on FlexCache volumes.
+
+| 124518408
+| Volume activity tracking is not supported on audit staging volumes.
+
+| 124518409
+| Volume activity tracking is not supported on object store server volumes.
+
+| 124518410
+| Volume activity tracking is not supported on SnapMirror destination volumes.
+
+| 124518411
+| Enabling or disabling volume activity tracking is not supported on individual FlexGroup constituents.
+
+| 124518412
+| Volume activity tracking is not supported on SnapLock volumes.
+
+| 124518414
+| Volume activity tracking is not supported on volumes that contain NVMe namespaces.
+
+| 124518422
+| Volume activity tracking is not supported on All SAN Array clusters.
+
+| 144180203
+| Volume capacity rebalancing is not supported on FlexCache volumes.
+
+| 144180204
+| Volume capacity rebalancing is not supported on object store volumes.
+
+| 144180207
+| Volume capacity rebalancing is not supported on inactive MetroCluster configurations.
+
+| 144182201
+| Volume capacity rebalancing using non-disruptive file move operations and granular data requires an effective cluster version of 9.11.1 or later.
+
+| 144182203
+| The specified value for the "rebalancing.state" parameter is invalid for a PATCH operation. Valid values are "starting" and "stopping".
+
+| 144182207
+| Modifying the volume capacity rebalancing configuration is not supported in the same operation that volume capacity rebalancing is being stopped.
+
+| 144182211
+| The specified value for "-max-file-moves" is not valid.
+
+| 144182212
+| The "-min-file-size" value specified must be larger than 0.
+
+| 144182213
+| The "-min-threshold" value specified must be larger than 0.
+
+| 144182214
+| The "-max-threshold" value specified must be larger than 0.
+
+| 144182215
+| The maximum imbalance threshold value must be larger than the minimum imbalance threshold value.
+
+| 144182216
+| Volume capacity rebalancing is running on the volume.
+
+| 144182219
+| Volume capacity rebalancing for the volume has been started on some constituents.
+
+| 144182221
+| The "-max-runtime" value specified must be 30 minutes or longer.
+
+| 144182223
+| Volume capacity rebalancing is not running on the volume.
+
+| 144182225
+| Internal error in the data component.
+
+| 144182226
+| Failed to load the volume capacity rebalancing configuration for the volume.
+
+| 144182233
+| The specified rebalancing start time must be set to the current time or a later time.
+
+| 144182235
+| The "-min-file-size" value specified must be larger than or equal to 20MB.
+
+| 144182238
+| Volume capacity rebalancing is running on the volume.
+
+| 196608022
+| Failed to start rekey on volume "name" in SVM "svm.name" because of the specified reason.
+
+| 196608023
+| Failed to pause rekey on volume "name" because of the specified reason.
+
+| 196608024
+| Failed to resume rekey on volume "name" because of the specified reason.
+
+| 196608038
+| Failed to start conversion on volume "name" in SVM "svm.name" because of the specified reason.
+
+| 196608039
+| Failed to pause conversion on volume "name" because of the specified reason.
+
+| 196608041
+| Failed to resume conversion on volume "name" because of the specified reason.
+
+| 196608207
+| Rekey operation is already in progress on volume "name".
+
+| 196608208
+| Encryption conversion operation is already in progress on volume "name".
+
+| 196608209
+| Operation is already paused.
+
+| 203161623
+| Disabling anti-ransomware for volume "volume_name" in SVM "vserver_name" is in progress. Wait a few minutes, and try the operation again.
+
+| 203161629
+| Anti-ransomware is not supported on a volume with Snapshot autodelete commitment set to "destroy".
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#notices]
+[.api-collapsible-fifth-title]
+notices
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|An error code related to activity tracking.
+
+
+|message
+|string
+a|A notice message related to activity tracking.
+
+
+|===
+
+
+[#unsupported_reason]
+[.api-collapsible-fifth-title]
+unsupported_reason
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|If volume activity tracking is not supported on the volume, this field provides an appropriate error code.
+
+
+|message
+|string
+a|If volume activity tracking is not supported on the volume, this field provides an error message detailing why this is the case.
+
+
+|===
+
+
+[#activity_tracking]
+[.api-collapsible-fifth-title]
+activity_tracking
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|notices
+|array[link:#notices[notices]]
+a|List of activity-tracking notices.
+
+
+|state
+|string
+a|Activity tracking state of the volume. If this value is "on", ONTAP collects top metrics information for the volume in real time. There is a slight impact to I/O performance in order to collect this information. If this value is "off", no activity tracking information is collected or available to view.
+
+* enum: ["off", "on"]
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|supported
+|boolean
+a|This field indicates whether or not volume activity tracking is supported on the volume. If volume activity tracking is not supported, the reason why is provided in the "activity_tracking.unsupported_reason" field.
+
+
+|unsupported_reason
+|link:#unsupported_reason[unsupported_reason]
+a|
+
+|===
+
+
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aged_data_metric
+|number
+a|A score summarizing how old the data is. A higher value means the data is older.
+
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|newest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|oldest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|percentages
+|array[number]
+a|Percentages for this histogram
+
+
+|values
+|array[integer]
+a|Values for this histogram
+
+
+|===
+
+
+[#by_accessed_time]
+[.api-collapsible-fifth-title]
+by_accessed_time
+
+File system analytics information, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_used
+|link:#bytes_used[bytes_used]
+a|Number of bytes used on-disk, broken down by date of last access.
+
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aged_data_metric
+|number
+a|A score summarizing how old the data is. A higher value means the data is older.
+
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|newest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|oldest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|percentages
+|array[number]
+a|Percentages for this histogram
+
+
+|values
+|array[integer]
+a|Values for this histogram
+
+
+|===
+
+
+[#by_modified_time]
+[.api-collapsible-fifth-title]
+by_modified_time
+
+File system analytics information, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_used
+|link:#bytes_used[bytes_used]
+a|Number of bytes used on-disk, broken down by date of last modification.
+
+
+|===
+
+
+[#initialization]
+[.api-collapsible-fifth-title]
+initialization
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|state
+|string
+a|State of the analytics file system scan.
+
+
+|===
+
+
+[#scan_throttle_reason]
+[.api-collapsible-fifth-title]
+scan_throttle_reason
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[string]
+a|Arguments present in the warning message encountered.
+
+
+|code
+|string
+a|Warning code indicating why scanner throttling is reported.
+
+
+|message
+|string
+a|A message that provides details for scan throttling.
+
+
+|===
+
+
+[#unsupported_reason]
+[.api-collapsible-fifth-title]
+unsupported_reason
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|If file system analytics is not supported on the volume, this field provides the error code explaining why.
+
+
+|message
+|string
+a|If file system analytics is not supported on the volume, this field provides the error message explaining why.
+
+
+|===
+
+
+[#analytics]
+[.api-collapsible-fifth-title]
+analytics
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|by_accessed_time
+|link:#by_accessed_time[by_accessed_time]
+a|File system analytics information, broken down by date of last access.
+
+
+|by_modified_time
+|link:#by_modified_time[by_modified_time]
+a|File system analytics information, broken down by date of last modification.
+
+
+|bytes_used
+|integer
+a|Number of bytes used on-disk.
+
+
+|file_count
+|integer
+a|Number of descendants.
+
+
+|files_scanned
+|integer
+a|Number of files in the volume that the file system analytics initialization scan has processed. Only returned when the state is `initializing`.
+
+
+|incomplete_data
+|boolean
+a|Returns true if data collection is incomplete for this directory tree.
+
+
+|initialization
+|link:#initialization[initialization]
+a|
+
+|report_time
+|string
+a|Time of data collection.
+
+
+|scan_progress
+|integer
+a|Percentage of files in the volume that the file system analytics initialization scan has processed. Only returned when the state is `initializing`.
+
+
+|scan_throttle_reason
+|link:#scan_throttle_reason[scan_throttle_reason]
+a|
+
+|state
+|string
+a|File system analytics state of the volume. If this value is "on", ONTAP collects extra file system analytics information for all directories on the volume. There will be a slight impact to I/O performance to collect this information. If this value is "off", file system analytics information is not collected and not available to be viewed. If this value is "initializing", that means file system analytics was recently turned on, and the initialization scan to gather information for all existing files and directories is currently running. If this value is "initialization_paused", this means that the initialization scan is currently paused. If this value is 'unknown', this means that there was an internal error when determining the file system analytics state for the volume.
+
+* enum: ["unknown", "initializing", "initialization_paused", "off", "on"]
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|subdir_count
+|integer
+a|Number of sub-directories.
+
+
+|supported
+|boolean
+a|This field indicates whether or not file system analytics is supported on the volume. If file system analytics is not supported, the reason will be specified in the "analytics.unsupported_reason" field.
+
+
+|total_files
+|integer
+a|Total number of files in the volume that the file system analytics initialization scan will process. Only returned when the state is `initializing`.
+
+
+|unsupported_reason
+|link:#unsupported_reason[unsupported_reason]
+a|
+
+|===
+
+
+[#anti_ransomware_volume_attack_detection_parameters]
+[.api-collapsible-fifth-title]
+anti_ransomware_volume_attack_detection_parameters
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|based_on_file_create_op_rate
+|boolean
+a|Specifies whether attack detection is based on the file create operations rate. This parameter is valid only for NAS volumes.
+
+
+|based_on_file_delete_op_rate
+|boolean
+a|Specifies whether attack detection is based on the file delete operations rate. This parameter is valid only for NAS volumes.
+
+
+|based_on_file_rename_op_rate
+|boolean
+a|Specifies whether attack detection is based on the file rename operations rate. This parameter is valid only for NAS volumes.
+
+
+|based_on_high_entropy_data_rate
+|boolean
+a|Specifies whether a high entropy data rate should be considered for attack detection.
+
+
+|based_on_never_seen_before_file_extension
+|boolean
+a|Specifies whether file extensions never seen before should be considered for attack detection.
+
+
+|block_device_auto_learned_encryption_threshold
+|integer
+a|Specifies the block device auto learned encryption threshold.
+
+
+|file_create_op_rate_surge_notify_percent
+|integer
+a|Specifies the percentage of surge in the file create rate up to which it is considered normal behavior.
+
+
+|file_delete_op_rate_surge_notify_percent
+|integer
+a|Specifies the percentage of surge in the file delete rate up to which it is considered normal behavior.
+
+
+|file_rename_op_rate_surge_notify_percent
+|integer
+a|Specifies the percent of surge in the file rename rate up to which it is considered normal behavior.
+
+
+|high_entropy_data_surge_notify_percent
+|integer
+a|Specifies the percentage of surge in high entropy data up to which it is considered as normal behavior. For example, if the usual high entropy data rate in the volume is 5% and if this parameter is set to 100%, it will be considered as an unusual surge if the high entropy data rate of the volume exceeds 10% at any time. Similarly, if this parameter is set to 400%, it will be considered as an unusual surge if the high entropy data rate of the volume exceeds 25%, and so on.
+
+
+|never_seen_before_file_extension_count_notify_threshold
+|integer
+a|Specifies the number of files found with a never seen before file extension up to which it is considered normal behavior.
+
+
+|never_seen_before_file_extension_duration_in_hours
+|integer
+a|Specifies the duration within which the specified number of files found with never seen before file extensions is considered normal behavior.
+
+
+|relaxing_popular_file_extensions
+|boolean
+a|Specifies whether popular file extensions should be relaxed from being treated as a suspect for the attack. Some popular file extensions are .txt, .pdf, and so on.
+
+
+|===
+
+
+[#anti_ransomware_attack_report]
+[.api-collapsible-fifth-title]
+anti_ransomware_attack_report
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|time
+|string
+a|Timestamp at which ransomware attack is observed.
+
+
+|===
+
+
+[#clear_suspect]
+[.api-collapsible-fifth-title]
+clear_suspect
+
+Clear suspect status.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|phase
+|string
+a|Clear suspect phase.
+
+
+|start_time
+|string
+a|Clear suspect start time.
+
+
+|===
+
+
+[#event_log]
+[.api-collapsible-fifth-title]
+event_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_enabled_on_new_file_extension_seen
+|boolean
+a|Specifies whether to send an EMS when a new file extension is discovered.
+
+
+|is_enabled_on_snapshot_copy_creation
+|boolean
+a|Specifies whether to send an EMS when a snapshot is created.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|snapshot_count
+|integer
+a|Total number of Anti-ransomware backup snapshots.
+
+
+|used
+|integer
+a|Total space in bytes used by the Anti-ransomware feature.
+
+
+|used_by_logs
+|integer
+a|Space in bytes used by the Anti-ransomware analytics logs.
+
+
+|used_by_snapshots
+|integer
+a|Space in bytes used by the Anti-ransomware backup snapshots.
+
+
+|===
+
+
+[#surge_usage]
+[.api-collapsible-fifth-title]
+surge_usage
+
+Usage values of the volume's workload during surge. This object is no longer supported use surge_statistics instead.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_create_peak_rate_per_minute
+|integer
+a|Peak rate of file creates per minute in the workload of the volume during surge.
+
+
+|file_delete_peak_rate_per_minute
+|integer
+a|Peak rate of file deletes per minute in the workload of the volume during surge.
+
+
+|file_rename_peak_rate_per_minute
+|integer
+a|Peak rate of file renames per minute in the workload of the volume during surge.
+
+
+|high_entropy_data_write_peak_percent
+|integer
+a|Peak percentage of high entropy data writes in the volume during surge.
+
+
+|high_entropy_data_write_peak_rate_kb_per_minute
+|integer
+a|Peak high entropy data write rate in the volume during surge, in KBs per minute.
+
+
+|time
+|string
+a|Timestamp at which the first surge in the volume's workload is observed.
+
+
+|===
+
+
+[#suspect_files]
+[.api-collapsible-fifth-title]
+suspect_files
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Total number of `suspect_files.format` files observed by the Anti-ransomware analytics engine on the volume.
+
+
+|entropy
+|string
+a|Indicates the entropy level of this file type.
+
+
+|format
+|string
+a|File formats observed by the Anti-ransomware analytics engine on the volume.
+
+
+|===
+
+
+[#typical_usage]
+[.api-collapsible-fifth-title]
+typical_usage
+
+Typical usage values of volume workload. This object is no longer supported use historical_statistics instead.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_create_peak_rate_per_minute
+|integer
+a|Typical peak rate of file creates per minute in the workload of the volume.
+
+
+|file_delete_peak_rate_per_minute
+|integer
+a|Typical peak rate of file deletes per minute in the workload of the volume.
+
+
+|file_rename_peak_rate_per_minute
+|integer
+a|Typical peak rate of file renames per minute in the workload of the volume.
+
+
+|high_entropy_data_write_peak_percent
+|integer
+a|Typical peak percentage of high entropy data writes in the volume.
+
+
+|high_entropy_data_write_peak_rate_kb_per_minute
+|integer
+a|Typical peak high entropy data write rate in the volume, in KBs per minute.
+
+
+|===
+
+
+[#historical_statistics]
+[.api-collapsible-fifth-title]
+historical_statistics
+
+Typical usage values of volume workload.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_create_peak_rate_per_minute
+|integer
+a|Typical peak rate of file creates per minute in the workload of the volume.
+
+
+|file_delete_peak_rate_per_minute
+|integer
+a|Typical peak rate of file deletes per minute in the workload of the volume.
+
+
+|file_rename_peak_rate_per_minute
+|integer
+a|Typical peak rate of file renames per minute in the workload of the volume.
+
+
+|high_entropy_data_write_peak_percent
+|integer
+a|Typical peak percentage of high entropy data writes in the volume.
+
+
+|high_entropy_data_write_peak_rate_kb_per_minute
+|integer
+a|Typical peak high entropy data write rate in the volume, in KBs per minute.
+
+
+|===
+
+
+[#newly_observed_file_extensions]
+[.api-collapsible-fifth-title]
+newly_observed_file_extensions
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Count of newly observed file extensions.
+
+
+|name
+|string
+a|Name of the newly observed file extension.
+
+
+|===
+
+
+[#surge_statistics]
+[.api-collapsible-fifth-title]
+surge_statistics
+
+Usage values of the volume's workload during surge.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_create_peak_rate_per_minute
+|integer
+a|Peak rate of file creates per minute in the workload of the volume during surge.
+
+
+|file_delete_peak_rate_per_minute
+|integer
+a|Peak rate of file deletes per minute in the workload of the volume during surge.
+
+
+|file_rename_peak_rate_per_minute
+|integer
+a|Peak rate of file renames per minute in the workload of the volume during surge.
+
+
+|high_entropy_data_write_peak_percent
+|integer
+a|Peak percentage of high entropy data writes in the volume during surge.
+
+
+|high_entropy_data_write_peak_rate_kb_per_minute
+|integer
+a|Peak high entropy data write rate in the volume during surge, in KBs per minute.
+
+
+|time
+|string
+a|Timestamp at which the first surge in the volume's workload is observed.
+
+
+|===
+
+
+[#surge_usage]
+[.api-collapsible-fifth-title]
+surge_usage
+
+Usage values of the volume's workload during surge. This object is no longer supported use surge_statistics instead.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_create_peak_rate_per_minute
+|integer
+a|Peak rate of file creates per minute in the workload of the volume during surge.
+
+
+|file_delete_peak_rate_per_minute
+|integer
+a|Peak rate of file deletes per minute in the workload of the volume during surge.
+
+
+|file_rename_peak_rate_per_minute
+|integer
+a|Peak rate of file renames per minute in the workload of the volume during surge.
+
+
+|high_entropy_data_write_peak_percent
+|integer
+a|Peak percentage of high entropy data writes in the volume during surge.
+
+
+|high_entropy_data_write_peak_rate_kb_per_minute
+|integer
+a|Peak high entropy data write rate in the volume during surge, in KBs per minute.
+
+
+|newly_observed_file_extensions
+|array[link:#newly_observed_file_extensions[newly_observed_file_extensions]]
+a|New file extensions observed in the volume during surge.
+
+
+|time
+|string
+a|Timestamp at which the first surge in the volume's workload is observed.
+
+
+|===
+
+
+[#anti_ransomware_volume_workload]
+[.api-collapsible-fifth-title]
+anti_ransomware_volume_workload
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_extension_types_count
+|integer
+a|Count of types of file extensions observed in the volume.
+
+
+|file_extensions_observed
+|array[string]
+a|File extensions observed in the volume.
+
+
+|historical_statistics
+|link:#historical_statistics[historical_statistics]
+a|Typical usage values of volume workload.
+
+
+|newly_observed_file_extensions
+|array[link:#newly_observed_file_extensions[newly_observed_file_extensions]]
+a|New file extensions observed in the volume during surge.
+
+
+|surge_statistics
+|link:#surge_statistics[surge_statistics]
+a|Usage values of the volume's workload during surge.
+
+
+|surge_usage
+|link:#surge_usage[surge_usage]
+a|Usage values of the volume's workload during surge. This object is no longer supported use surge_statistics instead.
+
+
+|typical_usage
+|link:#typical_usage[typical_usage]
+a|Typical usage values of volume workload. This object is no longer supported use historical_statistics instead.
+
+
+|===
+
+
+[#anti_ransomware]
+[.api-collapsible-fifth-title]
+anti_ransomware
+
+Anti-ransomware related information of the volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attack_detected_by
+|string
+a|This field specifies whether the attack was reported by `File Analysis` or `Encrypted data percentage analysis`.
+
+
+|attack_detection_parameters
+|link:#anti_ransomware_volume_attack_detection_parameters[anti_ransomware_volume_attack_detection_parameters]
+a|
+
+|attack_probability
+|string
+a|Probability of a ransomware attack.
+`none` No suspected ransomware activity.
+`low` Minimally suspected ransomware activity.
+`moderate` Moderately suspected ransomware activity.
+`high` Significantly suspected ransomware activity.
+
+
+|attack_reports
+|array[link:#anti_ransomware_attack_report[anti_ransomware_attack_report]]
+a|
+
+|block_device_detection_start_time
+|string
+a|This field specifies the block device evaluation start time.
+
+
+|block_device_detection_state
+|string
+a|This field specifies the block device attack detection status.
+ `evaluation_period` Attack detection is currently in its evaluation phase.
+ `active_unsuitable_workload` Attack detection is active, but the current workload is not suitable for Anti-ransomware protection.
+ `active_suitable_workload` Attack detection is active, and the current workload is appropriate for Anti-ransomware protection.
+
+
+|clear_suspect
+|link:#clear_suspect[clear_suspect]
+a|Clear suspect status.
+
+
+|dry_run_start_time
+|string
+a|Time when anti-ransomware monitoring `state` is set to dry-run value for starting evaluation mode.This field will no longer be supported in a future release.
+
+
+|event_log
+|link:#event_log[event_log]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|state
+|string
+a|Anti-ransomware state.
+`disabled` Anti-ransomware monitoring is disabled on the volume. This is the default state in a POST operation.
+`disable_in_progress` Anti-ransomware monitoring is being disabled and a cleanup operation is in effect. Valid in GET operation.
+`dry_run` Anti-ransomware monitoring is enabled in the evaluation mode.
+`enabled` Anti-ransomware monitoring is active on the volume.
+`paused` Anti-ransomware monitoring is paused on the volume.
+`enable_paused` Anti-ransomware monitoring is paused on the volume from its earlier enabled state. Valid in GET operation.
+`dry_run_paused` Anti-ransomware monitoring is paused on the volume from its earlier dry_run state. Valid in GET operation.
+For POST, the valid Anti-ransomware states are only `disabled`, `enabled` and `dry_run`, whereas for PATCH, `paused` is also valid along with the three valid states for POST.
+
+
+|surge_as_normal
+|boolean
+a|Indicates whether or not to set the surge values as historical values. This field is no longer supported. Use update_baseline_from_surge instead.
+
+
+|surge_usage
+|link:#surge_usage[surge_usage]
+a|Usage values of the volume's workload during surge. This object is no longer supported use surge_statistics instead.
+
+
+|suspect_files
+|array[link:#suspect_files[suspect_files]]
+a|
+
+|typical_usage
+|link:#typical_usage[typical_usage]
+a|Typical usage values of volume workload. This object is no longer supported use historical_statistics instead.
+
+
+|update_baseline_from_surge
+|boolean
+a|Sets the observed surge value as the new baseline on a volume.
+
+
+|workload
+|link:#anti_ransomware_volume_workload[anti_ransomware_volume_workload]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the application to which the volume belongs. Available only when the volume is part of an application.
+
+
+|uuid
+|string
+a|UUID of the application to which the volume belongs. Available only when the volume is part of an application.
+
+
+|===
+
+
+[#asynchronous_directory_delete]
+[.api-collapsible-fifth-title]
+asynchronous_directory_delete
+
+Configuration for asynchronous directory delete from the client. This is only supported on Flexible volumes and FlexGroup volumes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether asynchronous directory delete from the client is enabled on the volume.
+
+
+|trash_bin
+|string
+a|Name of the trash bin directory. If no "trash_bin" property is specified when enabling, the default trash bin name, "._ontaptrashbin", is used.
+
+
+|===
+
+
+[#autosize]
+[.api-collapsible-fifth-title]
+autosize
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|grow_threshold
+|integer
+a|Used space threshold size, in percentage, for the automatic growth of the volume. When the amount of used space in the volume becomes greater than this threshold, the volume automatically grows unless it has reached the maximum size. The volume grows when 'space.used' is greater than this percent of 'space.size'. The 'grow_threshold' size cannot be less than or equal to the 'shrink_threshold' size..
+
+
+|maximum
+|integer
+a|Maximum size in bytes up to which a volume grows automatically. This size cannot be less than the current volume size, or less than or equal to the minimum size of volume.
+
+
+|minimum
+|integer
+a|Minimum size in bytes up to which the volume shrinks automatically. This size cannot be greater than or equal to the maximum size of volume.
+
+
+|mode
+|string
+a|Autosize mode for the volume.
+grow &dash; Volume automatically grows when the amount of used space is above the 'grow_threshold' value.
+grow_shrink &dash; Volume grows or shrinks in response to the amount of space used.
+off &dash; Autosizing of the volume is disabled.
+
+
+|shrink_threshold
+|integer
+a|Used space threshold size, in percentage, for the automatic shrinkage of the volume.  When the amount of used space in the volume drops below this threshold, the volume automatically shrinks unless it has reached the minimum size. The volume shrinks when the 'space.used' is less than the 'shrink_threshold' percent of 'space.size'. The 'shrink_threshold' size cannot be greater than or equal to the 'grow_threshold' size.
+
+
+|===
+
+
+[#snapshot_reference]
+[.api-collapsible-fifth-title]
+snapshot_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#parent_svm]
+[.api-collapsible-fifth-title]
+parent_svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#parent_volume]
+[.api-collapsible-fifth-title]
+parent_volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#clone]
+[.api-collapsible-fifth-title]
+clone
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|has_flexclone
+|boolean
+a|Specifies whether this volume is a parent of any FlexClone volume.
+
+
+|inherited_physical_used
+|integer
+a|Inherited physical used from the clone's base snapshot.
+
+
+|inherited_savings
+|integer
+a|Inherited savings from the clone's base snapshot.
+
+
+|split_complete_percent
+|integer
+a|Percentage of FlexClone volume blocks split from its parent volume.
+
+
+|split_estimate
+|integer
+a|Space required by the containing-aggregate to split the FlexClone volume.
+
+
+|split_initiated
+|boolean
+a|This field is set when a split is executed on any FlexClone volume, that is when the FlexClone volume is split from its parent FlexVol volume. Setting this field initiates a split of a FlexClone volume from a FlexVol volume. Valid in PATCH.
+
+
+|===
+
+
+[#consistency_group]
+[.api-collapsible-fifth-title]
+consistency_group
+
+Consistency group the volume is part of.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the consistency group to which the volume belongs. Available only when the volume is part of a consistency group. If this volume belongs to a child consistency group, then this will be the UUID of the parent consistency group.
+
+
+|uuid
+|string
+a|The UUID of the consistency group to which the volume belongs. Available only when the volume is part of a consistency group. If this volume belongs to a child consistency group, then this will be the UUID of the parent consistency group.
+
+
+|===
+
+
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the aggregate hosting the FlexGroup volume constituent.
+
+
+|uuid
+|string
+a|Unique identifier for the aggregate.
+
+
+|===
+
+
+[#destination_aggregate]
+[.api-collapsible-fifth-title]
+destination_aggregate
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#movement]
+[.api-collapsible-fifth-title]
+movement
+
+Volume movement. All attributes are modify, that is, not writable through POST. Set PATCH state to destination_aggregate to initiate a volume move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_window
+|integer
+a|Time window in seconds for cutover. The allowed range is between 30 to 300 seconds.
+
+
+|destination_aggregate
+|link:#destination_aggregate[destination_aggregate]
+a|Aggregate
+
+
+|percent_complete
+|integer
+a|Completion percentage
+
+
+|state
+|string
+a|State of volume move operation. PATCH the state to "aborted" to abort the move operation. PATCH the state to "cutover" to trigger cutover. PATCH the state to "paused" to pause the volume move operation in progress. PATCH the state to "replicating" to resume the paused volume move operation. PATCH the state to "cutover_wait" to go into cutover manually. When volume move operation is waiting to go into "cutover" state, this is indicated by the "cutover_pending" state. A change of state is only supported if volume movement is in progress.
+
+
+|tiering_policy
+|string
+a|Tiering policy for FabricPool
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|List of the node names hosting the FlexGroup volume constituent.
+
+
+|uuid
+|string
+a|List of the node UUIDs hosting the FlexGroup volume constituent.
+
+
+|===
+
+
+[#logical_space]
+[.api-collapsible-fifth-title]
+logical_space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The amount of space available in this volume with storage efficiency space considered used, in bytes.
+
+
+|enforcement
+|boolean
+a|Specifies whether space accounting for operations on the volume is done along with storage efficiency.
+
+
+|reporting
+|boolean
+a|Specifies whether space reporting on the volume is done along with storage efficiency.
+
+
+|used_by_afs
+|integer
+a|The virtual space used by AFS alone (includes volume reserves) and along with storage efficiency, in bytes.
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autodelete_enabled
+|boolean
+a|Specifies whether snapshot autodelete is currently enabled on this volume.
+
+
+|reserve_percent
+|integer
+a|The space that has been set aside as a reserve for snapshot usage, in percent.
+
+
+|used
+|integer
+a|The total space used by snapshots in the volume, in bytes.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|afs_total
+|integer
+a|Total size of AFS, excluding snap-reserve, in bytes.
+
+
+|available
+|integer
+a|The available space, in bytes.
+
+
+|available_percent
+|integer
+a|The space available, as a percent.
+
+
+|block_storage_inactive_user_data
+|integer
+a|The size that is physically used in the block storage of the volume and has a cold temperature. In bytes. This parameter is only supported if the volume is in an aggregate that is either attached to a cloud store or could be attached to a cloud store.
+
+
+|capacity_tier_footprint
+|integer
+a|Space used by capacity tier for this volume in the FabricPool aggregate, in bytes.
+
+
+|footprint
+|integer
+a|Data used for this volume in the aggregate, in bytes.
+
+
+|large_size_enabled
+|boolean
+a|Specifies whether the support for large volumes and large files is enabled on the volume.
+
+
+|local_tier_footprint
+|integer
+a|Space used by the local tier for this volume in the aggregate, in bytes.
+
+
+|logical_space
+|link:#logical_space[logical_space]
+a|
+
+|max_size
+|string
+a|Indicates the maximum size supported for each constituent of the FlexGroup volume.
+
+
+|metadata
+|integer
+a|Space used by the volume metadata in the aggregate, in bytes.
+
+
+|over_provisioned
+|integer
+a|The amount of space not available for this volume in the aggregate, in bytes.
+
+
+|performance_tier_footprint
+|integer
+a|Space used by the performance tier for this volume in the FabricPool aggregate, in bytes.
+
+
+|size
+|integer
+a|Total provisioned size. The default size is equal to the minimum size of 20MB, in bytes.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|total_footprint
+|integer
+a|Data and metadata used for this volume in the aggregate, in bytes.
+
+
+|total_metadata
+|integer
+a|Space used by the total metadata in the volume, in bytes.
+
+
+|total_metadata_footprint
+|integer
+a|Space used by the volume metadata footprint in the aggregate, in bytes.
+
+
+|used
+|integer
+a|The virtual space used (includes volume reserves) before storage efficiency, in bytes.
+
+
+|used_by_afs
+|integer
+a|The space used by Active Filesystem, in bytes.
+
+
+|used_percent
+|integer
+a|The virtual space used (includes volume reserves) before storage efficiency, as a percent.
+
+
+|===
+
+
+[#constituents]
+[.api-collapsible-fifth-title]
+constituents
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregates
+|link:#aggregates[aggregates]
+a|
+
+|movement
+|link:#movement[movement]
+a|Volume movement. All attributes are modify, that is, not writable through POST. Set PATCH state to destination_aggregate to initiate a volume move operation.
+
+
+|name
+|string
+a|FlexGroup volume constituent name.
+
+
+|node
+|link:#node[node]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|===
+
+
+[#idcs_scanner]
+[.api-collapsible-fifth-title]
+idcs_scanner
+
+Inactive data compression scan looks and picks up blocks that have not been read for a certain amount of time(threshold_inactive_days). These blocks are then compressed in 32K chunks. All attributes are valid for GET only, except for 'operation_state' which is valid for PATCH and GET, and is used to start/stop the scanner.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies the administrative state of the inactive data compression scanner. Disabling inactive data compression is not allowed on Capacity optimized Flash with QAT supported platforms.
+
+
+|inactive_days
+|integer
+a|Data blocks older than, or equal to, 'inactive_days' are picked up by the inactive data compression scanner. Valid for PATCH only. Only applicable when 'operation_state' set to 'active'.
+
+
+|mode
+|string
+a|Specifies the mode of inactive data compression scanner. Valid for PATCH and GET.
+
+
+|operation_state
+|string
+a|Specifies the operational state of the inactive data compression scanner. VALID for PATCH and GET. Valid options for PATCH are "idle" and "active".
+
+
+|status
+|string
+a|Status of last inactive data compression scan on the volume.
+
+
+|threshold_inactive_time
+|string
+a|Time interval after which inactive data compression is automatically triggered. The value is in days and is represented in the ISO-8601 format "P+++<num>+++D", for example "P3D" represents a duration of 3 days. This field is not supported on QAT supported platforms.+++</num>+++
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Specifies the name of the efficiency policy. The "inline-only" and "none" policies are not supported on Capacity optimized Flash with QAT supported platform.
+
+
+|===
+
+
+[#scanner]
+[.api-collapsible-fifth-title]
+scanner
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|compression
+|boolean
+a|Start compression if scanning old data. Valid for PATCH and GET. This option is not supported for FSX/CVO platforms.
+
+
+|dedupe
+|boolean
+a|Start deduplication if scanning old data. Valid for PATCH and GET.
+
+
+|scan_old_data
+|boolean
+a|Indicates whether or not to scan old data. Valid for PATCH and GET.
+
+
+|state
+|string
+a|State of the volume efficiency scanner. Valid for PATCH and GET. Valid options for PATCH are "idle" and "active".
+
+
+|===
+
+
+[#space_savings]
+[.api-collapsible-fifth-title]
+space_savings
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|compression
+|integer
+a|Total disk space that is saved by compressing blocks on the referenced file system, in bytes.
+
+
+|compression_percent
+|integer
+a|Percentage of total disk space that is saved by compressing blocks on the referenced file system.
+
+
+|dedupe
+|integer
+a|Total disk space that is saved by deduplication and file cloning, in bytes.
+
+
+|dedupe_percent
+|integer
+a|Percentage of total disk space that is saved by deduplication and file cloning.
+
+
+|dedupe_sharing
+|integer
+a|Total disk space that is shared due to deduplication and file cloning.
+
+
+|total
+|integer
+a|Total disk space saved in the volume due to deduplication, compression and file cloning, in bytes.
+
+
+|total_percent
+|integer
+a|Percentage of total disk space saved in the volume due to deduplication, compression and file cloning.
+
+
+|===
+
+
+[#efficiency]
+[.api-collapsible-fifth-title]
+efficiency
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_io_size
+|string
+a|Block size to use by compression. 8k and auto are only allowed for POST. Only auto is supported on QAT supported platforms.
+
+
+|auto_state
+|string
+a|Automatic deduplication schedule volume state.
+auto &dash; Volumes with auto_state set to auto start post-process deduplication automatically.
+deprioritized &dash; Volumes with auto_state set to deprioritized do not start post-process deduplication automatically.
+
+
+|compaction
+|string
+a|The system can be enabled/disabled compaction.
+inline &dash; Data will be compacted first and written to the volume.
+none &dash; None
+mixed &dash; Read only field for FlexGroup volumes, where some of the constituent volumes are compaction enabled and some are disabled.
+
+
+|compression
+|string
+a|The system can be enabled/disabled compression. Disabling compression is not allowed on Capacity optimized Flash with QAT supported platforms.
+inline &dash; Data will be compressed first and written to the volume.
+background &dash; Data will be written to the volume and compressed later.
+both &dash; Inline compression compresses the data and write to the volume, background compression compresses only the blocks on which inline compression is not run.
+none &dash; None
+mixed &dash; Read only field for FlexGroup volumes, where some of the constituent volumes are compression enabled and some are disabled.
+
+NOTE: that On volumes with container compression enabled, background compression refers to inactive data compression scan enabled on the volume.
+
+
+|compression_type
+|string
+a|Compression type to use by compression. Valid for PATCH and GET.
+
+
+|cross_volume_dedupe
+|string
+a|The system can be enabled/disabled cross volume dedupe. it can be enabled only when dedupe is enabled. Disabling cross volume dedupe is not allowed on Capacity optimized Flash with QAT supported platforms.
+inline &dash; Data will be cross volume deduped first and written to the volume.
+background &dash; Data will be written to the volume and cross volume deduped later.
+both &dash; Inline cross volume dedupe dedupes the data and write to the volume, background cross volume dedupe dedupes only the blocks on which inline dedupe is not run.
+none &dash; None
+mixed &dash; Read only field for FlexGroup volumes, where some of the constituent volumes are cross volume dedupe enabled and some are disabled.
+
+
+|dedupe
+|string
+a|The system can be enabled/disabled dedupe. Disabling dedupe is not allowed on Capacity optimized Flash with QAT supported platforms.
+inline &dash; Data will be deduped first and written to the volume.
+background &dash; Data will be written to the volume and deduped later.
+both &dash; Inline dedupe dedupes the data and write to the volume, background dedupe dedupes only the blocks on which inline dedupe is not run.
+none &dash; None
+mixed &dash; Read only field for FlexGroup volumes, where some of the constituent volumes are dedupe enabled and some are disabled.
+
+
+|has_savings
+|boolean
+a|When true, indicates that the volume contains shared(deduplication, file clones) or compressed data.
+
+
+|idcs_scanner
+|link:#idcs_scanner[idcs_scanner]
+a|Inactive data compression scan looks and picks up blocks that have not been read for a certain amount of time(threshold_inactive_days). These blocks are then compressed in 32K chunks. All attributes are valid for GET only, except for 'operation_state' which is valid for PATCH and GET, and is used to start/stop the scanner.
+
+
+|last_op_begin
+|string
+a|Last sis operation begin timestamp.
+
+
+|last_op_end
+|string
+a|Last sis operation end timestamp.
+
+
+|last_op_err
+|string
+a|Last sis operation error text.
+
+
+|last_op_size
+|integer
+a|Last sis operation size.
+
+
+|last_op_state
+|string
+a|Last sis operation state.
+
+
+|logging_enabled
+|boolean
+a|When true, indicates that space savings for any newly-written data are being logged.
+
+
+|op_state
+|string
+a|Sis status of the volume.
+
+
+|policy
+|link:#policy[policy]
+a|
+
+|progress
+|string
+a|Sis progress of the volume.
+
+
+|ratio
+|number
+a|Storage efficiency that does not include the savings provided by snapshots.
+
+
+|scanner
+|link:#scanner[scanner]
+a|
+
+|schedule
+|string
+a|Schedule associated with volume.
+
+
+|space_savings
+|link:#space_savings[space_savings]
+a|
+
+|state
+|string
+a|Storage efficiency state of the volume. Currently, this field supports POST/PATCH only for RW (Read-Write) volumes on FSx for ONTAP and Cloud Volumes ONTAP.
+disabled &dash; All storage efficiency features are disabled.
+mixed &dash; Read-only field for FlexGroup volumes, storage efficiency is enabled on certain constituents and disabled on others.
+On FSx for ONTAP and Cloud Volumes ONTAP &dash;
+ &emsp; enabled &dash; All supported storage efficiency features for the volume are enabled.
+ &emsp; custom &dash; Read-only field currently only supported for the FSx for ONTAP and Cloud Volumes ONTAP, user-defined storage efficiency features are enabled.
+For other platforms &dash;
+ &emsp; enabled &dash; At least one storage efficiency feature for the volume is enabled.
+
+* enum: ["disabled", "enabled", "mixed", "custom"]
+* Introduced in: 9.9
+* x-nullable: true
+
+
+|storage_efficiency_mode
+|string
+a|Storage efficiency mode used by volume. This parameter is supported only on AFF platforms. There is no difference between default and efficient modes on QAT supported platforms and auto adaptive compression is set irrespective of the modes.
+
+
+|type
+|string
+a|Sis Type of the volume.
+
+
+|volume_path
+|string
+a|Absolute volume path of the volume.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Encryption progress message code.
+
+
+|message
+|string
+a|Encryption progress message.
+
+
+|===
+
+
+[#encryption]
+[.api-collapsible-fifth-title]
+encryption
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|This field can be used to pause an ongoing rekey or conversion operation or resume a paused rekey or conversion operation. Valid in PATCH. The following actions are supported for this field:
+conversion_pause &dash; Pause an encryption conversion operation currently in progress.
+conversion_resume &dash; Resume a paused encryption conversion operation.
+rekey_pause &dash; Pause an encryption rekey operation currently in progress.
+rekey_resume &dash; Resume a paused encryption rekey operation.
+
+
+|enabled
+|boolean
+a|Creates an encrypted or an unencrypted volume. For POST, when set to 'true', a new key is generated and used to encrypt the given volume. In that case, the underlying SVM must be configured with the key manager. When set to 'false', the volume created will be unencrypted. For PATCH, when set to 'true', it encrypts an unencrypted volume. Specifying the parameter as 'false' in a PATCH operation for an encrypted volume is only supported when moving the volume to another aggregate.
+
+
+|key_create_time
+|string
+a|Encryption key creation time of the volume.
+
+
+|key_id
+|string
+a|The key ID used for creating encrypted volume. A new key-id is generated for creating an encrypted volume. This key-id is associated with the generated key.
+
+
+|rekey
+|boolean
+a|If set to 'true', re-encrypts the volume with a new key. Valid in PATCH.
+
+
+|state
+|string
+a|Volume encryption state.
+encrypted &dash; The volume is completely encrypted.
+encrypting &dash; Encryption operation is in progress.
+partial &dash; Some constituents are encrypted and some are not. Applicable only for FlexGroup volume.
+rekeying. Encryption of volume with a new key is in progress.
+unencrypted &dash; The volume is a plain-text one.
+
+
+|status
+|link:#status[status]
+a|
+
+|type
+|string
+a|Volume encryption type.
+none &dash; The volume is a plain-text one.
+volume &dash; The volume is encrypted with NVE (NetApp Volume Encryption).
+aggregate &dash; The volume is encrypted with NAE (NetApp Aggregate Encryption).
+
+
+|===
+
+
+[#error_state]
+[.api-collapsible-fifth-title]
+error_state
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|has_bad_blocks
+|boolean
+a|Indicates whether the volume has any corrupt data blocks. If the damaged data block is accessed, an IO error, such as EIO for NFS or STATUS_FILE_CORRUPT for CIFS, is returned.
+
+
+|is_inconsistent
+|boolean
+a|Indicates whether the file system has any inconsistencies.
+true &dash; File system is inconsistent.
+false &dash; File system in not inconsistent.
+
+
+|===
+
+
+[#files]
+[.api-collapsible-fifth-title]
+files
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|inodefile_capacity
+|integer
+a|Number of inodes that can currently be stored on the volume for user-visible files.  This number dynamically increases as more user-visible files are created.
+
+
+|maximum
+|integer
+a|The maximum number of files (inodes) for user-visible data allowed on the volume. This value can be increased or decreased. Increasing the maximum number of files does not immediately cause additional disk space to be used to track files. Instead, as more files are created on the volume, the system dynamically increases the number of disk blocks that are used to track files. The space assigned to track files is never freed, and this value cannot be decreased below the current number of files that can be tracked within the assigned space for the volume. Valid in PATCH.
+
+
+|used
+|integer
+a|Number of files (inodes) used for user-visible data permitted on the volume. This field is valid only when the volume is online.
+
+
+|===
+
+
+[#flash_pool]
+[.api-collapsible-fifth-title]
+flash_pool
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cache_eligibility
+|string
+a|If this parameter is specified, the command displays information only about the volume or volumes with the specified Flash Pool caching attributes.
+
+
+|cache_retention_priority
+|string
+a|If this parameter is specified, the command displays the volumes that match the specified cache retention priority policy. A cache retention priority defines how long the blocks of a volume will be cached in the Flash Pool once they become cold.
+
+
+|caching_policy
+|string
+a|This optionally specifies the caching policy to apply to the volume. A caching policy defines how the system caches a volume's data in Flash Cache modules. If a caching policy is not assigned to a volume, the system uses the caching policy that is assigned to the containing SVM. If a caching policy is not assigned to the containing SVM, the system uses the default cluster-wide policy.
+
+
+|===
+
+
+[#flexgroup]
+[.api-collapsible-fifth-title]
+flexgroup
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the FlexGroup volume that the constituent is part of.
+
+
+|uuid
+|string
+a|Unique identifier for the FlexGroup volume that the constituent is part of.
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|honored
+|boolean
+a|Is the space guarantee of this volume honored in the aggregate?
+
+
+|type
+|string
+a|The type of space guarantee of this volume in the aggregate.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#cloud]
+[.api-collapsible-fifth-title]
+cloud
+
+Performance numbers (IOPS and latency) for cloud store. These numbers are relevant only for volumes hosted on FabricPools.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#flexcache]
+[.api-collapsible-fifth-title]
+flexcache
+
+Performance number for FlexCache used to measure cache effectiveness.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bandwidth_savings
+|integer
+a|Bandwidth savings denoting the amount of data served locally by the cache, in bytes.
+
+
+|cache_miss_percent
+|integer
+a|Cache miss percentage.
+
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS, latency and throughput.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cloud
+|link:#cloud[cloud]
+a|Performance numbers (IOPS and latency) for cloud store. These numbers are relevant only for volumes hosted on FabricPools.
+
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|flexcache
+|link:#flexcache[flexcache]
+a|Performance number for FlexCache used to measure cache effectiveness.
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#movement]
+[.api-collapsible-fifth-title]
+movement
+
+Volume movement. All attributes are modify, that is, not writable through POST. Set PATCH state to destination_aggregate to initiate a volume move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|capacity_tier_optimized
+|boolean
+a|Specifies whether this move should perform optimized volume move for the capacity tier, in which data in the capacity tier does not need to be copied over.
+
+
+|cutover_window
+|integer
+a|Time window in seconds for cutover. The allowed range is between 30 to 300 seconds.
+
+
+|destination_aggregate
+|link:#destination_aggregate[destination_aggregate]
+a|Aggregate
+
+
+|percent_complete
+|integer
+a|Completion percentage
+
+
+|start_time
+|string
+a|Start time of volume move.
+
+
+|state
+|string
+a|State of volume move operation. PATCH the state to "aborted" to abort the move operation. PATCH the state to "cutover" to trigger cutover. PATCH the state to "paused" to pause the volume move operation in progress. PATCH the state to "replicating" to resume the paused volume move operation. PATCH the state to "cutover_wait" to go into cutover manually. When volume move operation is waiting to go into "cutover" state, this is indicated by the "cutover_pending" state. A change of state is only supported if volume movement is in progress.
+
+
+|tiering_policy
+|string
+a|Tiering policy for FabricPool
+
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+Export Policy
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#junction_parent]
+[.api-collapsible-fifth-title]
+junction_parent
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the parent volume that contains the junction inode of this volume. The junction parent volume must belong to the same SVM that owns this volume.
+
+
+|uuid
+|string
+a|Unique identifier for the parent volume.
+
+
+|===
+
+
+[#nas]
+[.api-collapsible-fifth-title]
+nas
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|export_policy
+|link:#export_policy[export_policy]
+a|Export Policy
+
+
+|gid
+|integer
+a|The UNIX group ID of the volume. Valid in POST or PATCH.
+
+
+|junction_parent
+|link:#junction_parent[junction_parent]
+a|
+
+|path
+|string
+a|The fully-qualified path in the owning SVM's namespace at which the volume is mounted. The path is case insensitive and must be unique within a SVM's namespace. Path must begin with '/' and must not end with '/'. Only one volume can be mounted at any given junction path. An empty path in POST creates an unmounted volume. An empty path in PATCH deactivates and unmounts the volume. Taking a volume offline or restricted state removes its junction path. This attribute is reported in GET only when the volume is mounted.
+
+
+|security_style
+|string
+a|Security style associated with the volume. Valid in POST or PATCH.
+mixed &dash; Mixed-style security
+ntfs &dash; NTFS/WIndows-style security
+unified &dash; Unified-style security, unified UNIX, NFS and CIFS permissions
+unix &dash; Unix-style security.
+
+
+|uid
+|integer
+a|The UNIX user ID of the volume. Valid in POST or PATCH.
+
+
+|unix_permissions
+|integer
+a|UNIX permissions to be viewed as an octal number. It consists of 4 digits derived by adding up bits 4 (read), 2 (write) and 1 (execute). First digit selects the set user ID(4), set group ID (2) and sticky (1) attributes. The second digit selects permission for the owner of the file; the third selects permissions for other users in the same group; the fourth for other users not in the group. Valid in POST or PATCH. For security style "mixed" or "unix", the default setting is 0755 in octal (493 in decimal) and for security style "ntfs", the default setting is 0000. In cases where only owner, group and other permissions are given (as in 755, representing the second, third and fourth dight), first digit is assumed to be zero.
+
+
+|===
+
+
+[#nodes]
+[.api-collapsible-fifth-title]
+nodes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|List of the node names hosting the volume.
+
+
+|uuid
+|string
+a|List of the node UUIDs hosting the volume.
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+When "min_throughput_iops", "min_throughput_mbps", "min_throughput", "max_throughput_iops", "max_throughput_mbps" or "max_throughput" attributes are specified, the storage object is assigned to an auto-generated QoS policy group. If the attributes are later modified, the auto-generated QoS policy-group attributes are modified. Attributes can be removed by specifying "0" and policy group by specifying "none". Upon deletion of the storage object or if the attributes are removed, then the QoS policy-group is also removed.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#qos]
+[.api-collapsible-fifth-title]
+qos
+
+QoS information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|link:#policy[policy]
+a|When "min_throughput_iops", "min_throughput_mbps", "min_throughput", "max_throughput_iops", "max_throughput_mbps" or "max_throughput" attributes are specified, the storage object is assigned to an auto-generated QoS policy group. If the attributes are later modified, the auto-generated QoS policy-group attributes are modified. Attributes can be removed by specifying "0" and policy group by specifying "none". Upon deletion of the storage object or if the attributes are removed, then the QoS policy-group is also removed.
+
+
+|===
+
+
+[#quota]
+[.api-collapsible-fifth-title]
+quota
+
+Quotas track the space or file usage of a user, group, or qtree in a FlexVol volume or a FlexGroup volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|This option is used to enable or disable the quota for the volume. This option is valid only in PATCH. Quotas are enabled for FlexVol volumes or FlexGroup volumes when the quota state is "on". Quotas are disabled for FlexVol volumes or FlexGroup volumes when the quota state is "off".
+
+
+|state
+|string
+a|Quota state of the volume
+
+
+|===
+
+
+[#last_error]
+[.api-collapsible-fifth-title]
+last_error
+
+Error information for the last failed file move on the constituent.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Error code of the last file move error on the constituent.
+
+
+|destination
+|integer
+a|DSID of the destination constituent of the last file move error on the constituent.
+
+
+|file_id
+|integer
+a|File ID of the last file move error on the constituent.
+
+
+|time
+|string
+a|Time of the last file move error on the constituent.
+
+
+|===
+
+
+[#movement]
+[.api-collapsible-fifth-title]
+movement
+
+Properties on this constituent related to file movement.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_moves_started
+|integer
+a|Number of file moves started on this constituent.
+
+
+|last_error
+|link:#last_error[last_error]
+a|Error information for the last failed file move on the constituent.
+
+
+|most_recent_start_time
+|string
+a|Start time of the most recent file move on the constituent.
+
+
+|===
+
+
+[#blocks_skipped]
+[.api-collapsible-fifth-title]
+blocks_skipped
+
+Number of blocks skipped by the scanner on this constituent due to various reasons.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|efficiency_blocks
+|integer
+a|Number of blocks skipped by the scanner on this constituent because storage efficiency lost, in blocks, would be too high.
+
+
+|efficiency_percent
+|integer
+a|Number of blocks skipped by the scanner on this constituent because storage efficiency lost, in percent, would be too high.
+
+
+|fast_truncate
+|integer
+a|Number of blocks skipped by the scanner on this constituent because fast truncate is currently running on files.
+
+
+|footprint_invalid
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of files with invalid space footprints.
+
+
+|in_snapshot
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of files in snapshots.
+
+
+|incompatible
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of incompatible files.
+
+
+|metadata
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of metadata files.
+
+
+|on_demand_destination
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of on demand destination files.
+
+
+|other
+|integer
+a|Number of blocks skipped by the scanner on this constituent for all other reasons.
+
+
+|remote_cache
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of remote caches.
+
+
+|too_large
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of files that are larger than rebalancing.max_file_size.
+
+
+|too_small
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of files that are smaller than rebalancing.min_file_size.
+
+
+|write_fenced
+|integer
+a|Number of blocks skipped by the scanner on this constituent because of files fenced for write operations.
+
+
+|===
+
+
+[#files_skipped]
+[.api-collapsible-fifth-title]
+files_skipped
+
+Number of files skipped by the scanner on this constituent due to various reasons.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|efficiency_blocks
+|integer
+a|Number of files skipped by the scanner on this constituent because storage efficiency lost, in blocks, would be too high.
+
+
+|efficiency_percent
+|integer
+a|Number of files skipped by the scanner on this constituent because storage efficiency lost, in percent, would be too high.
+
+
+|fast_truncate
+|integer
+a|Number of files skipped by the scanner on this constituent because fast truncate is currently running on the file.
+
+
+|footprint_invalid
+|integer
+a|Number of files skipped by the scanner on this constituent because their space footprints are invalid.
+
+
+|in_snapshot
+|integer
+a|Number of files skipped by the scanner on this constituent because they are trapped in snapshots.
+
+
+|incompatible
+|integer
+a|Number of files skipped by the scanner on this constituent because they are incompatible.
+
+
+|metadata
+|integer
+a|Number of files skipped by the scanner on this constituent because they metadata files.
+
+
+|on_demand_destination
+|integer
+a|Number of files skipped by the scanner on this constituent because they are on demand destinations.
+
+
+|other
+|integer
+a|Number of files skipped by the scanner on this constituent for all other reasons.
+
+
+|remote_cache
+|integer
+a|Number of files skipped by the scanner on this constituent because they are remote caches.
+
+
+|too_large
+|integer
+a|Number of files skipped by the scanner on this constituent because they are larger than rebalancing.max_file_size.
+
+
+|too_small
+|integer
+a|Number of files skipped by the scanner on this constituent because they are smaller than rebalancing.min_file_size.
+
+
+|write_fenced
+|integer
+a|Number of files skipped by the scanner on this constituent because they are fenced for write operations.
+
+
+|===
+
+
+[#scanner]
+[.api-collapsible-fifth-title]
+scanner
+
+Properties related to determining which files to move and where to move them to.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|blocks_scanned
+|integer
+a|Number of blocks scanned on this constituent.
+
+
+|blocks_skipped
+|link:#blocks_skipped[blocks_skipped]
+a|Number of blocks skipped by the scanner on this constituent due to various reasons.
+
+
+|files_scanned
+|integer
+a|Number of files scanned on this constituent.
+
+
+|files_skipped
+|link:#files_skipped[files_skipped]
+a|Number of files skipped by the scanner on this constituent due to various reasons.
+
+
+|===
+
+
+[#engine]
+[.api-collapsible-fifth-title]
+engine
+
+Each constituent has one rebalancing engine that co-ordinates scanning constituents for free space and files to move, as well as moving files between constituents. The engine properties must be explicitly requested, are meant for helping diagnose why the volume rebalancer is making decisions.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|movement
+|link:#movement[movement]
+a|Properties on this constituent related to file movement.
+
+
+|scanner
+|link:#scanner[scanner]
+a|Properties related to determining which files to move and where to move them to.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#rebalancing]
+[.api-collapsible-fifth-title]
+rebalancing
+
+Configuration and runtime properties involving non-disruptive volume capacity rebalancing for a FlexGroup volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|data_moved
+|integer
+a|The amount of data that has been moved in or out of a constituent. A positive value represents data moving into the constituent while a negative value is data moving out of the constituent.
+
+
+|engine
+|link:#engine[engine]
+a|Each constituent has one rebalancing engine that co-ordinates scanning constituents for free space and files to move, as well as moving files between constituents. The engine properties must be explicitly requested, are meant for helping diagnose why the volume rebalancer is making decisions.
+
+
+|exclude_snapshots
+|boolean
+a|Specifies whether or not to exclude files that are stuck in snapshots during rebalancing operation. When a new capacity rebalancing operation is started on a FlexGroup volume, it uses the current "exclude_snapshots" value. Once the operation is started, any changes to the "exclude_snapshots" value do not affect the currently running capacity rebalancing operation. Only future capacity rebalancing operations will use the new "exclude_snapshots" value.
+
+
+|imbalance_percent
+|integer
+a|Represents the percentage the volume is out of balance.
+
+
+|imbalance_size
+|integer
+a|Represents how much the volume is out of balance, in bytes.
+
+
+|max_constituent_imbalance_percent
+|integer
+a|Absolute percentage of the constituent that is most out of balance. This value will update every 30 seconds when rebalancing is not active and every 10 seconds when rebalancing is active.
+
+
+|max_file_moves
+|integer
+a|Specifies the maximum number of concurrent file moves in a volume capacity rebalancing operation on a constituent of the FlexGroup volume. When a new capacity rebalancing operation is started on a FlexGroup volume, it uses the current "max_file_moves" value. Once the operation is started, any changes to the "max_file_moves" value do not affect the currently running capacity rebalancing operation. Only future capacity rebalancing operations will use the new "max_file_moves" value.
+
+
+|max_runtime
+|string
+a|This optional field specifies the maximum time a capacity rebalancing operation runs for. Once the maximum runtime has passed, the capacity rebalancing operation stops. If it is not set, the default value is 6 hours. This value cannot be updated while a capacity rebalancing operation is running.  The maximum runtime can be in years, months, days, hours, and minutes. A period specified for years, months, and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively, for example "P3D" represents a duration of 3 days. A duration in hours and minutes is represented by "PT+++<num>+++H" and "PT+++<num>+++M" respectively.+++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|max_threshold
+|integer
+a|Specifies the maximum imbalance percentage for FlexGroup volume constituents. When a constituent's imbalance percentage is larger than this value, files are moved from the constituent. When a new capacity rebalancing operation is started on a FlexGroup volume, it uses the current "max_threshold" value. Once the operation is started, any changes to the "max_threshold" value do not affect the currently running capacity rebalancing operation. Only future capacity rebalancing operations will use the new "max_threshold" value.
+
+
+|min_file_size
+|integer
+a|Specifies the minimum file size to consider for a volume capacity rebalancing operation. When a new capacity rebalancing operation is started on a FlexGroup volume, it uses the current "min_file_size" value. Once the operation is started, any changes to the "min_file_size" value do not affect the currently running capacity rebalancing operation. Only future capacity rebalancing operations will use the new "min_file_size" value. The value must be a multiple of 4KB. If it is not set, the default value is 100MB. Setting "min-file-size" to less than the default value leads to more files being moved. Moved files use granular data, which may impact read/write I/O performance.
+
+
+|min_threshold
+|integer
+a|Specifies the minimum imbalance percentage for FlexGroup volume constituents. When a constituent's imbalance percentage is smaller than this value, files are not moved from the constituent. When a new capacity rebalancing operation is started on a FlexGroup volume, it will use the current "min_threshold" value. Once the operation is started, any changes to the "min_threshold" value do not affect the currently running capacity rebalancing operation. Only future capacity rebalancing operations will use the new "min_threshold" value.
+
+
+|notices
+|array[link:#error[error]]
+a|Capacity rebalancing notice messages.
+
+
+|runtime
+|string
+a|Duration the capacity rebalancing operation has been running.
+
+
+|start_time
+|string
+a|Time when the current capacity rebalancing operation started, or when a future scheduled rebalancing operation begins.
+
+
+|state
+|string
+a|State of the volume capacity rebalancing operation. PATCH the state to "starting" to trigger the capacity rebalance operation, and include start_time to schedule rebalancing. PATCH the state to "stopping" to stop the capacity rebalance operation, or cancel a scheduled rebalancing operation. PATCH without the state with a valid start_time to modify the start_time of an existing scheduled rebalance operation.
+
+While a FlexGroup volume is rebalancing, every constituent will have a rebalancing engine that can either be scanning the filesystem for space usage and files to move, actively moving files or temporarily doing neither.
+
+If one or more constituents has a state of "rebalancing_source" or "rebalancing_dest", then files are being moved to rebalance the FlexGroup volume.
+
+If no files are being moved, more information about what the rebalancing engine is doing for each constituent is available using the "rebalancing.engine" property.
+
+The following values apply to FlexGroup volumes.
+not_running &dash; capacity rebalancing is not running on the volume.
+starting &dash; used in a PATCH operation to start a capacity rebalancing operation.
+rebalancing &dash; capacity rebalancing is running on the volume.
+ paused &dash; volume capacity rebalancing is paused on the volume.
+stopping &dash; used in a PATCH operation to stop a capacity rebalancing operation.
+unknown &dash; the system was unable to determine the rebalancing state for the volume.
+
+The following values apply to FlexGroup volume constituents.
+idle &dash; capacity rebalancing is running on the constituent, however, no active scanning or file movement is currently occurring.
+scanning &dash; the constituent's file system is being scanned to find files to move and determine free space.
+rebalancing_source &dash; a file is being moved off of the constituent.
+rebalancing_dest &dash; a file is being moved to the constituent.
+not_running &dash; capacity rebalancing is not running on the constituent.
+unknown &dash; the system was unable to determine the rebalancing state for the constituent.
+
+
+|stop_time
+|string
+a|Time when the capacity rebalancing operation stopped.
+
+
+|target_used
+|integer
+a|Represents the ideal used size of each constituent. Calculated by dividing the total FlexGroup volume used size by the number of constituents.
+
+
+|used_for_imbalance
+|integer
+a|Represents the used size of each constituent, as determined by the rebalancing engine. Calculated by subtracting the size used by snapshots, the size of files pending deletion and the size of filesystem metadata from the volume used size.
+
+
+|===
+
+
+[#retention]
+[.api-collapsible-fifth-title]
+retention
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default
+|string
+a|Specifies the default retention period that is applied to files while committing them to the WORM state without an associated retention period. The retention value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A duration specified for years, months, and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. A duration in hours and minutes is represented by "PT+++<num>+++H" and "PT+++<num>+++M" respectively. The retention string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example "P1Y10M" is not supported. Apart from the duration specified in the ISO-8601 format, the duration field also accepts the string "infinite" to set an infinite retention period and the string "unspecified" to set an unspecified retention period.+++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|maximum
+|string
+a|Specifies the maximum allowed retention period for files committed to the WORM state on the volume. The retention value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A duration specified for years, months, and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. A duration in hours and minutes is represented by "PT+++<num>+++H" and "PT+++<num>+++M" respectively. The retention string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example "P1Y10M" is not supported. Apart from the duration specified in the ISO-8601 format, the duration field also accepts the string "infinite" to set an infinite retention period.+++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|minimum
+|string
+a|Specifies the minimum allowed retention period for files committed to the WORM state on the volume. The retention value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A duration specified for years, month,s and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. A duration in hours and minutes is represented by "PT+++<num>+++H" and "PT+++<num>+++M" respectively. The retention string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example "P1Y10M" is not supported. Apart from the duration specified in the ISO-8601 format, the duration field also accepts the string "infinite" to set an infinite retention period.+++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|===
+
+
+[#snaplock]
+[.api-collapsible-fifth-title]
+snaplock
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|append_mode_enabled
+|boolean
+a|Specifies if the volume append mode is enabled or disabled. When it is enabled, all the files created with write permissions on the volume are, by default, WORM appendable files. The user can append the data to a WORM appendable file but cannot modify the existing contents of the file nor delete the file until it expires.
+
+
+|autocommit_period
+|string
+a|Specifies the autocommit period for SnapLock volume. All files which are not modified for a period greater than the autocommit period of the volume are committed to the WORM state. The autocommit period value represents a duration and must be specified in the ISO-8601 duration format. The autocommit period can be in years, months, days, hours, and minutes. A period specified for years, months, and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. A duration in hours and minutes is represented by "PT+++<num>+++H" and "PT+++<num>+++M" respectively. The period string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example "P1Y10M" is not supported. Apart from the duration specified in the ISO-8601 format, the autocommit field also accepts the string "none".+++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|compliance_clock_time
+|string
+a|This is the volume compliance clock time which is used to manage the SnapLock objects in the volume.
+
+
+|expiry_time
+|string
+a|Expiry time of the volume. For volumes with an infinite, indefinite or unspecified SnapLock expiry time, "9999-12-31T23:59:59" is used to denote the time.
+
+
+|is_audit_log
+|boolean
+a|Indicates if this volume has been configured as SnapLock audit log volume for the SVM .
+
+
+|litigation_count
+|integer
+a|Litigation count indicates the number of active legal-holds on the volume.
+
+
+|privileged_delete
+|string
+a|Specifies the privileged-delete attribute of a SnapLock volume. On a SnapLock Enterprise (SLE) volume, a designated privileged user can selectively delete files irrespective of the retention time of the file. SLE volumes can have privileged delete as disabled, enabled or permanently_disabled and for SnapLock Compliance (SLC) volumes it is always permanently_disabled.
+
+
+|retention
+|link:#retention[retention]
+a|
+
+|unspecified_retention_file_count
+|integer
+a|Indicates the number of files with an unspecified retention time in the volume.
+
+
+|===
+
+
+[#destinations]
+[.api-collapsible-fifth-title]
+destinations
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_cloud
+|boolean
+a|Specifies whether a volume is a SnapMirror source volume, using SnapMirror to protect its data to a cloud destination.
+
+
+|is_ontap
+|boolean
+a|Specifies whether a volume is a SnapMirror source volume, using SnapMirror to protect its data to an ONTAP destination.
+
+* readOnly: 1
+* Introduced in: 9.9
+* x-nullable: true
+
+
+|===
+
+
+[#snapmirror]
+[.api-collapsible-fifth-title]
+snapmirror
+
+Specifies attributes for SnapMirror protection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destinations
+|link:#destinations[destinations]
+a|
+
+|is_protected
+|boolean
+a|Specifies whether a volume is a SnapMirror source volume, using SnapMirror to protect its data.
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+This is a reference to the snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#logical_space]
+[.api-collapsible-fifth-title]
+logical_space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The amount of space available in this volume with storage efficiency space considered used, in bytes.
+
+
+|enforcement
+|boolean
+a|Specifies whether space accounting for operations on the volume is done along with storage efficiency.
+
+
+|reporting
+|boolean
+a|Specifies whether space reporting on the volume is done along with storage efficiency.
+
+
+|used
+|integer
+a|SUM of (physical-used, shared_refs, compression_saved_in_plane0, vbn_zero, future_blk_cnt), in bytes.
+
+
+|used_by_afs
+|integer
+a|The virtual space used by AFS alone (includes volume reserves) and along with storage efficiency, in bytes.
+
+
+|used_by_snapshots
+|integer
+a|Size that is logically used across all snapshots in the volume, in bytes.
+
+
+|used_percent
+|integer
+a|SUM of (physical-used, shared_refs, compression_saved_in_plane0, vbn_zero, future_blk_cnt), as a percentage.
+
+
+|===
+
+
+[#autodelete]
+[.api-collapsible-fifth-title]
+autodelete
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|commitment
+|string
+a|By default, snapshot autodelete does not delete snapshots locked by Snapmirror, clones of a volume, a LUN, an NVMe namespace, or a file.  Deletion of snapshots locked by these applications is specified using this option. The default value is try.
+
+
+|defer_delete
+|string
+a|Allows the user to inform snapshot autodelete to defer the deletion of a specified snapshot until the end. The default value is user_created.
+
+
+|delete_order
+|string
+a|Specifies the order in which snapshot autodelete occurs. Ordering is done using the date and time the snapshot is created. The default value is oldest_first.
+
+
+|enabled
+|boolean
+a|Specifies whether snapshot autodelete is currently enabled on this volume.
+
+
+|prefix
+|string
+a|Specifies the prefix of the snapshot which if matched, is deleted last. Used with autodelete_defer_delete when used with a prefix value.
+
+
+|target_free_space
+|integer
+a|Snapshots are deleted, one at a time, until the used volume space reaches the value specified. The default is 20% free space or 80% utilized.
+
+
+|trigger
+|string
+a|Specifies when the system should trigger an autodelete of snapshots. When set to _volume_, autodelete is triggered based on volume fullness. When set to _snap_reserve_, autodelete is triggered based on snapshot reserve fullness. The default value is _volume_.
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autodelete
+|link:#autodelete[autodelete]
+a|
+
+|autodelete_enabled
+|boolean
+a|Specifies whether snapshot autodelete is currently enabled on this volume. This field will no longer be supported in a future release. Use autodelete.enabled instead.
+
+
+|autodelete_trigger
+|string
+a|Specifies when the system should trigger an autodelete of snapshots. When set to _volume_, autodelete is triggered based on volume fullness. When set to _snap_reserve_, autodelete is triggered based on snapshot reserve fullness. The default value is _volume_. This field will no longer be supported in a future release. Use autodelete.trigger instead.
+
+
+|reserve_available
+|integer
+a|Size available for snapshots within the snapshot reserve, in bytes.
+
+
+|reserve_percent
+|integer
+a|The space that has been set aside as a reserve for snapshot usage, in percent.
+
+
+|reserve_size
+|integer
+a|Size in the volume that has been set aside as a reserve for snapshot usage, in bytes.
+
+
+|space_used_percent
+|integer
+a|Percentage of snapshot reserve size that has been used.
+
+
+|used
+|integer
+a|The total space used by snapshots in the volume, in bytes.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|afs_total
+|integer
+a|Total size of AFS, excluding snap-reserve, in bytes.
+
+
+|auto_adaptive_compression_footprint_data_reduction
+|integer
+a|Savings achieved due to Auto Adaptive Compression, in bytes.
+
+
+|available
+|integer
+a|The available space, in bytes.
+
+
+|available_percent
+|integer
+a|The space available, as a percent.
+
+
+|block_storage_inactive_user_data
+|integer
+a|The size that is physically used in the block storage of the volume and has a cold temperature. In bytes. This parameter is only supported if the volume is in an aggregate that is either attached to a cloud store or could be attached to a cloud store.
+
+
+|block_storage_inactive_user_data_percent
+|integer
+a|Percentage of size that is physically used in the performance tier of the volume.
+
+
+|capacity_tier_footprint
+|integer
+a|Space used by capacity tier for this volume in the FabricPool aggregate, in bytes.
+
+
+|capacity_tier_footprint_data_reduction
+|integer
+a|Savings achieved in the space used by the capacity tier for this volume in the FabricPool aggregate, in bytes.
+
+
+|compaction_footprint_data_reduction
+|integer
+a|Savings achieved due to Data Compaction, in bytes.
+
+
+|cross_volume_dedupe_metafiles_footprint
+|integer
+a|Cross volume deduplication metadata footprint, in bytes.
+
+
+|cross_volume_dedupe_metafiles_temporary_footprint
+|integer
+a|Cross volume temporary deduplication metadata footprint, in bytes.
+
+
+|dedupe_metafiles_footprint
+|integer
+a|Deduplication metadata footprint, in bytes.
+
+
+|dedupe_metafiles_temporary_footprint
+|integer
+a|Temporary deduplication metadata footprint, in bytes.
+
+
+|delayed_free_footprint
+|integer
+a|Delayed free blocks footprint, in bytes.
+
+
+|effective_total_footprint
+|integer
+a|Volume footprint after efficiency savings, in bytes. effective total footprint represents total footprint after deducting auto adaptive compression and compaction savings. effective-footprint includes aggregate metadata used by volume.
+
+
+|expected_available
+|integer
+a|Size that should be available for the volume, irrespective of available size in the aggregate, in bytes.
+
+
+|file_operation_metadata
+|integer
+a|File operation metadata footprint, in bytes.
+
+
+|filesystem_size
+|integer
+a|Total usable size of the volume, in bytes.
+
+
+|filesystem_size_fixed
+|boolean
+a|Specifies whether the file system is to remain of the same size when set to true or to grow when set to false. This option is automatically set to true when a volume becomes SnapMirrored.
+
+
+|footprint
+|integer
+a|Data used for this volume in the aggregate, in bytes.
+
+
+|fractional_reserve
+|integer
+a|Used to change the amount of space reserved for overwrites of reserved objects in a volume.
+
+
+|full_threshold_percent
+|integer
+a|Volume full threshold percentage at which EMS warnings can be sent.
+
+
+|is_used_stale
+|boolean
+a|Specifies if the virtual space used is stale.
+
+
+|large_size_enabled
+|boolean
+a|Indicates if the support for large FlexVol volumes and large files is enabled on this volume. When configured to true, FlexVol volume size can reach up to 300TB and single file size can reach 128TB.
+
+
+|local_tier_footprint
+|integer
+a|Space used by the local tier for this volume in the aggregate, in bytes.
+
+
+|logical_space
+|link:#logical_space[logical_space]
+a|
+
+|max_size
+|string
+a|Indicates the maximum size supported for the FlexVol volume or for each constituent of the FlexGroup volume.
+
+
+|metadata
+|integer
+a|Space used by the volume metadata in the aggregate, in bytes.
+
+
+|nearly_full_threshold_percent
+|integer
+a|Volume nearly full threshold percentage at which EMS warnings can be sent.
+
+
+|over_provisioned
+|integer
+a|The amount of space not available for this volume in the aggregate, in bytes.
+
+
+|overwrite_reserve
+|integer
+a|Reserved space for overwrites, in bytes.
+
+
+|overwrite_reserve_used
+|integer
+a|Overwrite logical reserve space used, in bytes.
+
+
+|percent_used
+|integer
+a|Percentage of the volume size that is used.
+
+
+|performance_tier_footprint
+|integer
+a|Space used by the performance tier for this volume in the FabricPool aggregate, in bytes.
+
+
+|physical_used
+|integer
+a|Size that is physically used in the volume, in bytes. Physical used is effective total footprint which is equivalent to total footprint after deducting auto adaptive compression and compaction savings. Physical-used also includes aggregate metadata used by volume.
+
+
+|physical_used_percent
+|integer
+a|Size that is physically used in the volume, as a percentage.
+
+
+|size
+|integer
+a|Total provisioned size. The default size is equal to the minimum size of 20MB, in bytes.
+
+
+|size_available_for_snapshots
+|integer
+a|Available space for snapshots from snap-reserve, in bytes.
+
+
+|snapmirror_destination_footprint
+|integer
+a|SnapMirror destination footprint, in bytes.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|snapshot_reserve_unusable
+|integer
+a|Snapshot reserve that is not available for snapshot creation, in bytes.
+
+
+|snapshot_spill
+|integer
+a|Space used by the snapshot copies beyond the snap-reserve, in bytes.
+
+
+|total_footprint
+|integer
+a|Data and metadata used for this volume in the aggregate, in bytes.
+
+
+|total_metadata
+|integer
+a|Space used by the total metadata in the volume, in bytes.
+
+
+|total_metadata_footprint
+|integer
+a|Space used by the volume metadata footprint in the aggregate, in bytes.
+
+
+|used
+|integer
+a|The virtual space used (includes volume reserves) before storage efficiency, in bytes.
+
+
+|used_by_afs
+|integer
+a|The space used by Active Filesystem, in bytes.
+
+
+|user_data
+|integer
+a|User data, in bytes.
+
+
+|volume_guarantee_footprint
+|integer
+a|Space reserved for future writes in the volume, in bytes.
+
+
+|===
+
+
+[#access]
+[.api-collapsible-fifth-title]
+access
+
+Raw count and latency data for access operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#audit]
+[.api-collapsible-fifth-title]
+audit
+
+Raw count and latency data for audit operations. These statistics are only applicable for CIFS protocol operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#dir]
+[.api-collapsible-fifth-title]
+dir
+
+Raw count and latency data for directory-create operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#file]
+[.api-collapsible-fifth-title]
+file
+
+Raw count and latency data for file-create operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#other]
+[.api-collapsible-fifth-title]
+other
+
+Raw count and latency data for create operations on objects other than files, directories and symlinks.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#symlink]
+[.api-collapsible-fifth-title]
+symlink
+
+Raw count and latency data for symlink-create operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#create]
+[.api-collapsible-fifth-title]
+create
+
+Raw count and latency data for create operations.
+
+[#getattr]
+[.api-collapsible-fifth-title]
+getattr
+
+Raw count and latency data for getattr operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#link]
+[.api-collapsible-fifth-title]
+link
+
+Raw count and latency data for link operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#lock]
+[.api-collapsible-fifth-title]
+lock
+
+Raw count and latency data for lock operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#lookup]
+[.api-collapsible-fifth-title]
+lookup
+
+Raw count and latency data for lookup operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#open]
+[.api-collapsible-fifth-title]
+open
+
+Raw count and latency data for open operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#read]
+[.api-collapsible-fifth-title]
+read
+
+Raw count and latency data for read operations, including histograms categorizing operations by size and latency.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* readOnly: 1
+* x-ntap-advanced: true
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|volume_protocol_latency_histogram_counts
+|array[integer]
+a|
+
+|volume_protocol_latency_histogram_labels
+|array[string]
+a|Labels for the latency histogram, ranging from <2us to >20s.
+
+
+|volume_protocol_size_histogram_counts
+|array[integer]
+a|
+
+|volume_protocol_size_histogram_labels
+|array[string]
+a|Labels for the size histogram, ranging from <4KB to >1024KB.
+
+
+|===
+
+
+[#readdir]
+[.api-collapsible-fifth-title]
+readdir
+
+Raw count and latency data for readdir operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#readlink]
+[.api-collapsible-fifth-title]
+readlink
+
+Raw count and latency data for readlink operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#rename]
+[.api-collapsible-fifth-title]
+rename
+
+Raw count and latency data for rename operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#setattr]
+[.api-collapsible-fifth-title]
+setattr
+
+Raw count and latency data for setattr operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#unlink]
+[.api-collapsible-fifth-title]
+unlink
+
+Raw count and latency data for unlink operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#watch]
+[.api-collapsible-fifth-title]
+watch
+
+Raw count and latency data for watch operations. These statistics are only applicable for CIFS protocol operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|===
+
+
+[#write]
+[.api-collapsible-fifth-title]
+write
+
+Raw count and latency data for write operations, including histograms categorizing operations by size and latency.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of operations of the given type performed on this volume.
+
+
+|total_time
+|integer
+a|The raw data component latency in microseconds measured within ONTAP for all operations of the given type.
+
+* example: 200
+* readOnly: 1
+* x-ntap-advanced: true
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|volume_protocol_latency_histogram_counts
+|array[integer]
+a|
+
+|volume_protocol_latency_histogram_labels
+|array[string]
+a|Labels for the latency histogram, ranging from <2us to >20s.
+
+
+|volume_protocol_size_histogram_counts
+|array[integer]
+a|
+
+|volume_protocol_size_histogram_labels
+|array[string]
+a|Labels for the size histogram, ranging from <4KB to >1024KB.
+
+
+|===
+
+
+[#cifs_ops_raw]
+[.api-collapsible-fifth-title]
+cifs_ops_raw
+
+Raw data component performance values for CIFS operations on this volume, including number of operations and raw latency, in microseconds for each operation. The values are cumulative and increase while the volume is online.
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#cloud]
+[.api-collapsible-fifth-title]
+cloud
+
+These are raw performance numbers (IOPS and latency) for the cloud store. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster. These numbers are relevant only for volumes hosted on FabricPools.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#flexcache_raw]
+[.api-collapsible-fifth-title]
+flexcache_raw
+
+Performance numbers for FlexCache used to measure cache effectiveness.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cache_miss_blocks
+|integer
+a|Blocks retrieved from origin in case of a cache miss. This can be divided by the raw client_requested_blocks and multiplied by 100 to calculate the cache miss percentage.
+
+
+|client_requested_blocks
+|integer
+a|Total blocks requested by the client.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#nfs_ops_raw]
+[.api-collapsible-fifth-title]
+nfs_ops_raw
+
+Raw data component performance values for NFS operations on this volume, including number of operations and raw latency, in microseconds for each operation. The values are cumulative and increase while the volume is online.
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance numbers, such as IOPS latency and throughput. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cifs_ops_raw
+|link:#cifs_ops_raw[cifs_ops_raw]
+a|Raw data component performance values for CIFS operations on this volume, including number of operations and raw latency, in microseconds for each operation. The values are cumulative and increase while the volume is online.
+
+
+|cloud
+|link:#cloud[cloud]
+a|These are raw performance numbers (IOPS and latency) for the cloud store. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster. These numbers are relevant only for volumes hosted on FabricPools.
+
+
+|flexcache_raw
+|link:#flexcache_raw[flexcache_raw]
+a|Performance numbers for FlexCache used to measure cache effectiveness.
+
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|nfs_ops_raw
+|link:#nfs_ops_raw[nfs_ops_raw]
+a|Raw data component performance values for NFS operations on this volume, including number of operations and raw latency, in microseconds for each operation. The values are cumulative and increase while the volume is online.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM containing the volume. Required on POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#tiering]
+[.api-collapsible-fifth-title]
+tiering
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|min_cooling_days
+|integer
+a|This parameter specifies the minimum number of days that user data blocks of the volume must be cooled before they can be considered cold and tiered out to the cloud tier. Note that this parameter is only used for tiering purposes and does not affect the reporting of inactive data. The value specified should be greater than the frequency with which applications in the volume shift between different sets of data. This parameter cannot be set when volume tiering policy is either "none" or "all". The default value of this parameter depends on the volume's tiering policy. See the tiering policy section of this documentation for corresponding default values. If the tiering policy on the volume gets changed, then this parameter will be reset to the default value corresponding to the new tiering policy.
+
+
+|object_tags
+|array[string]
+a|This parameter specifies tags of a volume for objects stored on a FabricPool-enabled aggregate. Each tag is a key,value pair and should be in the format "key=value".
+
+
+|policy
+|string
+a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold. FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+all &dash; This policy allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
+auto &dash; This policy allows tiering of both snapshot and active file system user data to the cloud store
+none &dash; Volume blocks will not be tiered to the cloud store.
+snapshot_only &dash; This policy allows tiering of only the volume snapshots not associated with the active file system. The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy is 31 days.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|access_time_enabled
+|boolean
+a|Indicates whether or not access time updates are enabled on the volume.
+
+
+|activity_tracking
+|link:#activity_tracking[activity_tracking]
+a|
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|Aggregate(s) hosting the volume. Optional.
+
+
+|aggressive_readahead_mode
+|string
+a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. When the option is set to _sequential_read_, the system aggressively prefetches the file completely, or to a certain length based on the file size limit, and continues as the read makes progress. If the option is set to _cross_file_sequential_read_, then the system aggressively prefetches multiple files completely, or to a certain length, and continues as the read makes progress.
+
+
+|analytics
+|link:#analytics[analytics]
+a|
+
+|anti_ransomware
+|link:#anti_ransomware[anti_ransomware]
+a|Anti-ransomware related information of the volume.
+
+
+|application
+|link:#application[application]
+a|
+
+|asynchronous_directory_delete
+|link:#asynchronous_directory_delete[asynchronous_directory_delete]
+a|Configuration for asynchronous directory delete from the client. This is only supported on Flexible volumes and FlexGroup volumes.
+
+
+|autosize
+|link:#autosize[autosize]
+a|
+
+|clone
+|link:#clone[clone]
+a|
+
+|cloud_retrieval_policy
+|string
+a|This parameter specifies the cloud retrieval policy for the volume. This policy determines which tiered out blocks to retrieve from the capacity tier to the performance tier. The available cloud retrieval policies are
+"default" policy retrieves tiered data based on the underlying tiering policy. If the tiering policy is 'auto', tiered data is retrieved only for random client driven data reads. If the tiering policy is 'none' or 'snapshot_only', tiered data is retrieved for random and sequential client driven data reads. If the tiering policy is 'all', tiered data is not retrieved.
+"on_read" policy retrieves tiered data for all client driven data reads.
+"never" policy never retrieves tiered data.
+"promote" policy retrieves all eligible tiered data automatically during the next scheduled scan. It is only supported when the tiering policy is 'none' or 'snapshot_only'. If the tiering policy is 'snapshot_only', the only data brought back is the data in the AFS. Data that is only in a snapshot copy stays in the cloud and if tiering policy is 'none' then all data is retrieved.
+
+
+|cloud_write_enabled
+|boolean
+a|Indicates whether or not cloud writes are enabled on the volume. NFS writes to this volume are sent to the cloud directly instead of the local performance tier.
+This feature is only available on volumes in FabricPools.
+
+
+|comment
+|string
+a|A comment for the volume. Valid in POST or PATCH.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|Consistency group the volume is part of.
+
+
+|constituents
+|array[link:#constituents[constituents]]
+a|FlexGroup volume constituents. FlexGroup volume constituents can be retrieved more efficiently by specifying "is_constituent=true" or "is_constituent=true&flexgroup.uuid=+++<flexgroup.uuid>+++" as query parameters.+++</flexgroup.uuid>+++
+
+
+|constituents_per_aggregate
+|integer
+a|Specifies the number of times to iterate over the aggregates listed with the "aggregates.name" or "aggregates.uuid" when creating or expanding a FlexGroup volume. If a volume is being created on a single aggregate, the system creates a flexible volume if the "constituents_per_aggregate" field is not specified, or a FlexGroup volume if it is specified. If a volume is being created on multiple aggregates, the system always creates a FlexGroup volume. If a volume is being created on multiple aggregates and the "constituents_per_aggregate" field is not specified, the default value of the "constituents_per_aggregate" field is 4. The root constituent of a FlexGroup volume is always placed on the first aggregate in the list, unless 'optimize_aggregates' is specified as 'true'. If the "aggregates.name" or "aggregates.uuid" is specified in a PATCH request to expand an existing FlexGroup volume, the default value of the "constituents_per_aggregate" field is 1. The volume expand operation is only supported on FlexGroup volumes.
+
+
+|convert_unicode
+|boolean
+a|Specifies whether directory Unicode format conversion is enabled when directories are accessed by NFS clients.
+
+
+|create_time
+|string
+a|Creation time of the volume. This field is generated when the volume is created.
+
+
+|efficiency
+|link:#efficiency[efficiency]
+a|
+
+|encryption
+|link:#encryption[encryption]
+a|
+
+|error_state
+|link:#error_state[error_state]
+a|
+
+|files
+|link:#files[files]
+a|
+
+|flash_pool
+|link:#flash_pool[flash_pool]
+a|
+
+|flexcache_endpoint_type
+|string
+a|FlexCache endpoint type.
+none &dash; The volume is neither a FlexCache nor origin of any FlexCache.
+cache &dash; The volume is a FlexCache volume.
+origin &dash; The volume is origin of a FlexCache volume.
+
+
+|flexgroup
+|link:#flexgroup[flexgroup]
+a|
+
+|granular_data
+|boolean
+a|State of granular data on the volume. This setting is `true` by default when creating an AWS S3 FlexGroup volume via a POST request and `false` by default for creating any other type of FlexGroup volume via a POST request. On FlexVol volumes, the setting is always `false`, as only FlexGroup volumes support this feature. Once enabled, this setting can only be disabled by restoring a snapshot. Earlier versions of ONTAP (pre 9.12) are not compatible with this feature. Therefore, reverting to an earlier version of ONTAP is not possible unless this volume is deleted or restored to a snapshot that was taken before the setting was enabled.
+
+* Introduced in: 9.12
+* x-nullable: true
+
+
+|granular_data_mode
+|string
+a|Mode of granular data on the volume. This setting defaults to `basic` when the `granular_data` parameter is set to `true`, but can be specified at the time of creation via a POST request. Earlier versions of ONTAP (pre 9.12) are not compatible with the `basic` setting. Therefore, when set to `basic`, reverting to an earlier version of ONTAP is not possible unless this volume is deleted or restored to a snapshot that was taken before the `basic` mode was enabled. Earlier versions of ONTAP (pre 9.16) are not compatible with the `advanced` setting. Therefore, when set to `advanced`, reverting to an earlier version of ONTAP is not possible unless this volume is deleted or restored to a snapshot that was taken before the `advanced` mode was enabled.
+
+* enum: ["disabled", "basic", "advanced"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|
+
+|has_dir_index_public
+|boolean
+a|Specifies whether the volume has directories with public index files.
+
+
+|has_large_dir
+|boolean
+a|Specifies whether the volume has directories bigger than 4GB.
+
+
+|is_dir_index_transfer_enabled
+|boolean
+a|When set to true, this field enables support for directory index transfer.
+
+
+|is_large_dir_enabled
+|boolean
+a|When set to true, this field enables the large directory feature on a volume.
+
+
+|is_object_store
+|boolean
+a|Specifies whether the volume is provisioned for an object store server.
+
+
+|is_s3_arbitrary_part_size_enabled
+|boolean
+a|Specifies that the volume should allow Amazon S3 multipart uploads with arbitrary part lengths. This is only supported for FlexGroup volumes with `advanced` granular_data. The default value is `false`. When set to `true`, it cannot be reverted to `false`. Clusters with any volumes where this is `true` cannot be reverted to a release that does not support this feature.
+
+
+|is_svm_root
+|boolean
+a|Specifies whether the volume is a root volume of the SVM it belongs to.
+
+
+|max_dir_size
+|integer
+a|Maximum directory size. This value sets maximum size, in bytes, to which a directory can grow. The default maximum directory size for FlexVol volumes is model-dependent, and optimized for the size of system memory. Before increasing the maximum directory size, involve technical support.
+
+
+|movement
+|link:#movement[movement]
+a|Volume movement. All attributes are modify, that is, not writable through POST. Set PATCH state to destination_aggregate to initiate a volume move operation.
+
+
+|msid
+|integer
+a|The volume's Master Set ID.
+
+
+|name
+|string
+a|Volume name. The name of volume must start with an alphabetic character (a to z or A to Z) or an underscore (_). The name must be 197 or fewer characters in length for FlexGroup volumes, and 203 or fewer characters in length for all other types of volumes. Volume names must be unique within an SVM. Required on POST.
+
+
+|nas
+|link:#nas[nas]
+a|
+
+|nodes
+|array[link:#nodes[nodes]]
+a|List of the nodes hosting the volume.
+
+
+|qos
+|link:#qos[qos]
+a|QoS information
+
+
+|queue_for_encryption
+|boolean
+a|Specifies whether the volume is queued for encryption.
+
+
+|quota
+|link:#quota[quota]
+a|Quotas track the space or file usage of a user, group, or qtree in a FlexVol volume or a FlexGroup volume.
+
+
+|rebalancing
+|link:#rebalancing[rebalancing]
+a|Configuration and runtime properties involving non-disruptive volume capacity rebalancing for a FlexGroup volume.
+
+
+|scheduled_snapshot_naming_scheme
+|string
+a|Naming Scheme for automatic snapshots:
+
+* create_time - Automatic snapshots are saved as per the start of their current date and time.
+* ordinal - Latest automatic snapshot copy is saved as +++<scheduled_frequency>+++.0 and subsequent copies will follow the create_time naming convention.+++</scheduled_frequency>+++
+
+
+|size
+|integer
+a|Physical size of the volume, in bytes. The minimum size for a FlexVol volume is 20MB and the minimum size for a FlexGroup volume is 200MB per constituent. The recommended size for a FlexGroup volume is a minimum of 100GB per constituent. For all volumes, the default size is equal to the minimum size.
+
+
+|sizing_method
+|string
+a|When expanding a FlexGroup volume, this specifies whether to add new constituents, or to resize the current constituents.
+
+
+|snaplock
+|link:#snaplock[snaplock]
+a|
+
+|snapmirror
+|link:#snapmirror[snapmirror]
+a|Specifies attributes for SnapMirror protection.
+
+
+|snapshot_count
+|integer
+a|Number of snapshots in the volume.
+
+
+|snapshot_directory_access_enabled
+|boolean
+a|This field, if true, enables the visible ".snapshot" directory from the client. The ".snapshot" directory will be available in every directory on the volume.
+
+
+|snapshot_locking_enabled
+|boolean
+a|Specifies whether or not snapshot copy locking is enabled on the volume.
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|This is a reference to the snapshot policy.
+
+
+|space
+|link:#space[space]
+a|
+
+|state
+|string
+a|Volume state. Client access is supported only when volume is online and junctioned. Taking volume to offline or restricted state removes its junction path and blocks client access. When volume is in restricted state some operations like parity reconstruction and iron on commit are allowed. The 'mixed' state applies to FlexGroup volumes only and cannot be specified as a target state. An 'error' state implies that the volume is not in a state to serve data.
+
+
+|status
+|array[string]
+a|Describes the current status of a volume.
+
+
+|style
+|string
+a|The style of the volume. If "style" is not specified, the volume type is determined based on the specified aggregates or license. Specifying a single aggregate, without "constituents_per_aggregate", creates a flexible volume. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup volume. When the UDO License is installed, and no aggregates are specified, the system automatically provisions a FlexGroup volume on system selected aggregates. Specifying a volume "style" creates a volume of that type. For example, if the style is "flexvol", you must specify a single aggregate. If the style is "flexgroup", the system either uses the specified aggregates or automatically provisions aggregates if there are no specified aggregates. The style "flexgroup_constituent" is not supported when creating a volume.
+flexvol &dash; flexible volumes and FlexClone volumes
+flexgroup &dash; FlexGroup volumes
+flexgroup_constituent &dash; FlexGroup volume constituents.
+
+
+|tiering
+|link:#tiering[tiering]
+a|
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|validate_only
+|boolean
+a|Validate the volume move or volume conversion operations and their parameters, without actually performing the operation.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

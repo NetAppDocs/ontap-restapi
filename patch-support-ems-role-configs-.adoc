@@ -1,0 +1,255 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-support-ems-role-configs-.html'
+summary: 'Update the EMS role-based configuration for an access control role'
+---
+
+= Update the EMS role-based configuration for an access control role
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/support/ems/role-configs/{access_control_role.name}`#
+
+*Introduced In:* 9.13
+
+Updates the EMS role-based configuration of the access control role.
+
+== Recommended optional properties
+
+* `event_filter` - Identifies the event filter.
+* `limit_access_to_global_configs` - Indicates whether the access control role has limited access to global EMS configurations.
+
+== Related ONTAP commands
+
+* `event role-config modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|access_control_role.name
+|string
+|path
+|True
+a|Access control role name
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|event_filter
+|link:#event_filter[event_filter]
+a|Event filter that is assigned to the access control role.
+
+
+|limit_access_to_global_configs
+|boolean
+a|Indicates whether the access control has limited access to global EMS configurations.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "event_filter": {
+    "name": "important-events"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 983197
+| The event filter provided is the same as the currently assigned filter.
+
+| 983198
+| The event filter provided does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#access_control_role]
+[.api-collapsible-fifth-title]
+access_control_role
+
+Access control role that the event filter is assigned to.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#event_filter]
+[.api-collapsible-fifth-title]
+event_filter
+
+Event filter that is assigned to the access control role.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#ems_role_config]
+[.api-collapsible-fifth-title]
+ems_role_config
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|event_filter
+|link:#event_filter[event_filter]
+a|Event filter that is assigned to the access control role.
+
+
+|limit_access_to_global_configs
+|boolean
+a|Indicates whether the access control has limited access to global EMS configurations.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

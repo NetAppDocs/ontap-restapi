@@ -1,0 +1,848 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-domains.html'
+summary: 'Retrieve the CIFS domain-related information of all SVMs'
+---
+
+= Retrieve the CIFS domain-related information of all SVMs
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/domains`#
+
+*Introduced In:* 9.10
+
+Retrieves the CIFS domain-related information of all SVMs.
+
+== Related ONTAP commands
+
+* `vserver cifs domain preferred-dc show`
+* `vserver cifs domain trusts show`
+* `vserver cifs domain discovered-servers show`
+* `vserver cifs domain name-mapping-search show`
+* `vserver cifs domain schedule show`
+
+== Learn more
+
+* link:protocols_cifs_domains_endpoint_overview.html[DOC /protocols/cifs/domains]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|password_schedule.schedule_warn_message
+|string
+|query
+|False
+a|Filter by password_schedule.schedule_warn_message
+
+
+|password_schedule.schedule_last_changed_time
+|string
+|query
+|False
+a|Filter by password_schedule.schedule_last_changed_time
+
+
+|password_schedule.schedule_randomized_minute
+|integer
+|query
+|False
+a|Filter by password_schedule.schedule_randomized_minute
+
+* Max value: 180
+* Min value: 1
+
+
+|password_schedule.schedule_description
+|string
+|query
+|False
+a|Filter by password_schedule.schedule_description
+
+
+|password_schedule.schedule_enabled
+|boolean
+|query
+|False
+a|Filter by password_schedule.schedule_enabled
+
+
+|password_schedule.schedule_weekly_interval
+|integer
+|query
+|False
+a|Filter by password_schedule.schedule_weekly_interval
+
+* Max value: 52
+* Min value: 1
+
+
+|tenant_id
+|string
+|query
+|False
+a|Filter by tenant_id
+
+* Introduced in: 9.16
+
+
+|trust_relationships.node.name
+|string
+|query
+|False
+a|Filter by trust_relationships.node.name
+
+
+|trust_relationships.node.uuid
+|string
+|query
+|False
+a|Filter by trust_relationships.node.uuid
+
+
+|trust_relationships.trusted_domains
+|string
+|query
+|False
+a|Filter by trust_relationships.trusted_domains
+
+
+|trust_relationships.home_domain
+|string
+|query
+|False
+a|Filter by trust_relationships.home_domain
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|server_discovery_mode
+|string
+|query
+|False
+a|Filter by server_discovery_mode
+
+* Introduced in: 9.13
+
+
+|name_mapping.trusted_domains
+|string
+|query
+|False
+a|Filter by name_mapping.trusted_domains
+
+
+|client_id
+|string
+|query
+|False
+a|Filter by client_id
+
+* Introduced in: 9.16
+
+
+|preferred_dcs.server_ip
+|string
+|query
+|False
+a|Filter by preferred_dcs.server_ip
+
+
+|preferred_dcs.fqdn
+|string
+|query
+|False
+a|Filter by preferred_dcs.fqdn
+
+
+|discovered_servers.node.name
+|string
+|query
+|False
+a|Filter by discovered_servers.node.name
+
+
+|discovered_servers.node.uuid
+|string
+|query
+|False
+a|Filter by discovered_servers.node.uuid
+
+
+|discovered_servers.preference
+|string
+|query
+|False
+a|Filter by discovered_servers.preference
+
+
+|discovered_servers.server_name
+|string
+|query
+|False
+a|Filter by discovered_servers.server_name
+
+
+|discovered_servers.server_type
+|string
+|query
+|False
+a|Filter by discovered_servers.server_type
+
+
+|discovered_servers.server_ip
+|string
+|query
+|False
+a|Filter by discovered_servers.server_ip
+
+
+|discovered_servers.domain
+|string
+|query
+|False
+a|Filter by discovered_servers.domain
+
+
+|discovered_servers.state
+|string
+|query
+|False
+a|Filter by discovered_servers.state
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of CIFS domain records.
+
+
+|records
+|array[link:#cifs_domain[cifs_domain]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "client_id": "e959d1b5-5a63-4284-9268-851e30e3eceb",
+      "discovered_servers": [
+        {
+          "domain": "test.com",
+          "node": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "node1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "preference": "string",
+          "server_ip": "string",
+          "server_name": "string",
+          "server_type": "string",
+          "state": "string"
+        }
+      ],
+      "name_mapping": {
+        "trusted_domains": [
+          "domain.com"
+        ]
+      },
+      "password_schedule": {
+        "schedule_day_of_week": "Sunday",
+        "schedule_description": "string",
+        "schedule_last_changed_time": "string",
+        "schedule_time_of_day": 36900,
+        "schedule_warn_message": "string"
+      },
+      "preferred_dcs": [
+        {
+          "fqdn": "test.com",
+          "server_ip": "4.4.4.4"
+        }
+      ],
+      "server_discovery_mode": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "tenant_id": "c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe",
+      "trust_relationships": [
+        {
+          "home_domain": "string",
+          "node": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "node1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "trusted_domains": [
+            "string"
+          ]
+        }
+      ]
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ad_domain]
+[.api-collapsible-fifth-title]
+ad_domain
+
+Specifies the credentials of a user with permissions to reset the password in the organizational unit for the machine account.
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#discovered_servers]
+[.api-collapsible-fifth-title]
+discovered_servers
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|domain
+|string
+a|Fully Qualified Domain Name.
+
+
+|node
+|link:#node[node]
+a|
+
+|preference
+|string
+a|Server Preference
+
+
+|server_ip
+|string
+a|Server IP address
+
+
+|server_name
+|string
+a|Server Name
+
+
+|server_type
+|string
+a|Server Type
+
+
+|state
+|string
+a|Server status
+
+
+|===
+
+
+[#name_mapping]
+[.api-collapsible-fifth-title]
+name_mapping
+
+Specifies the name mapping search records.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|trusted_domains
+|array[string]
+a|
+
+|===
+
+
+[#password_schedule]
+[.api-collapsible-fifth-title]
+password_schedule
+
+Specifies the password schedule records.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|schedule_day_of_week
+|string
+a|Day of the week for password change schedule.
+
+
+|schedule_description
+|string
+a|Schedule description.
+
+
+|schedule_enabled
+|boolean
+a|Is password schedule enabled.
+
+
+|schedule_last_changed_time
+|string
+a|Last successful password change time.
+
+
+|schedule_randomized_minute
+|integer
+a|Minutes within which schedule start can be randomized.
+
+
+|schedule_time_of_day
+|string
+a|Start time for password change schedule.
+
+
+|schedule_warn_message
+|string
+a|Warning message in case job is deleted.
+
+
+|schedule_weekly_interval
+|integer
+a|Interval in weeks for password change schedule.
+
+
+|===
+
+
+[#preferred_dcs]
+[.api-collapsible-fifth-title]
+preferred_dcs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fqdn
+|string
+a|Fully Qualified Domain Name.
+
+
+|server_ip
+|string
+a|IP address of the preferred domain controller (DC). The address can be either an IPv4 or an IPv6 address.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#trust_relationships]
+[.api-collapsible-fifth-title]
+trust_relationships
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|home_domain
+|string
+a|Home Domain Name
+
+
+|node
+|link:#node[node]
+a|
+
+|trusted_domains
+|array[string]
+a|Trusted Domain Name
+
+
+|===
+
+
+[#cifs_domain]
+[.api-collapsible-fifth-title]
+cifs_domain
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|link:#ad_domain[ad_domain]
+a|Specifies the credentials of a user with permissions to reset the password in the organizational unit for the machine account.
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|discovered_servers
+|array[link:#discovered_servers[discovered_servers]]
+a|Specifies the discovered servers records.
+
+
+|name_mapping
+|link:#name_mapping[name_mapping]
+a|Specifies the name mapping search records.
+
+
+|password_schedule
+|link:#password_schedule[password_schedule]
+a|Specifies the password schedule records.
+
+
+|preferred_dcs
+|array[link:#preferred_dcs[preferred_dcs]]
+a|Specifies the preferred DC records.
+
+
+|server_discovery_mode
+|string
+a|Specifies the mode of server discovery.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|trust_relationships
+|array[link:#trust_relationships[trust_relationships]]
+a|Specifies the trusted domain records.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

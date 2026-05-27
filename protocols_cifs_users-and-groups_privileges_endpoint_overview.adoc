@@ -1,0 +1,143 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_users-and-groups_privileges_endpoint_overview.html'
+summary: 'Manage CIFS user group privileges'
+---
+
+= Manage CIFS user group privileges
+
+
+
+== Overview
+
+Privileges associated with local or Active Directory users or groups defines the permissions for the specified user or group. You can use this API to display and/or control privileges of local or Active Directory users or groups.
+
+== Retrieving the privileges of a specific local or Active Directory user or group and an SVM
+
+The users and groups privileges GET endpoint retrieves privileges of the specified local or Active Directory user or group and the SVM.
+
+== Examples
+
+=== Retrieving the privileges of all of the users or groups of data SVMs.
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/privileges
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/privileges?fields=*" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "name": "VS1.CIFS\\user1",
+    "privileges": [
+      "sechangenotifyprivilege",
+      "setakeownershipprivilege"
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "name": "ACTIVE_DIRECTORY\\user",
+    "privileges": [
+      "sebackupprivilege",
+      "setakeownershipprivilege"
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "0ac79c37-3867-11eb-bece-0050568ed0a2",
+      "name": "vs2"
+    },
+    "name": "VS2.CIFS\\group1",
+    "privileges": [
+      "sesecurityprivilege",
+      "sebackupprivilege",
+      "serestoreprivilege"
+    ]
+  }
+]
+}
+----
+
+=== Retrieving the privileges of the specific SVM and user or group
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/{svm.uuid}/{name}/privileges
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/privileges/25b363a6-2971-11eb-88e1-0050568eefd4/user1" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+  "name": "vs1"
+},
+"name": "VS1.CIFS\\user1",
+"privileges": [
+  "sechangenotifyprivilege",
+  "setakeownershipprivilege"
+]
+}
+----
+
+== Adding privileges to the local or Active Directory user or group
+
+The users and groups privileges POST endpoint adds privileges to the specified local or Active Directory user or group and the SVM.
+
+=== Adding the privileges to the local user 'user1'
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/privileges/{svm.uuid}/{name}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/privileges/179d3c85-7053-11e8-b9b8-005056b41bd1/user1" -H "accept: application/json" -H "Content-Type: application/json" -d '{ "privileges": [ "SeSecurityPrivilege", "SeBackupPrivilege", "SeRestorePrivilege"] }'
+----
+
+== Updating the privileges of the local or Active Directory user or group of a specific SVM
+
+== Example
+
+=== Updating the privileges of local user 'user1' in SVM 'vs1' to 'SeRestorePrivilege' and 'SeSecurityPrivilege'
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/privileges/{svm.uuid}/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/privileges/179d3c85-7053-11e8-b9b8-005056b41bd1/user1" -H "accept: application/json" -d '{ "privileges": [ "SeRestorePrivilege", "SeSecurityPrivilege"] }'
+----
+
+=== Reset all the privileges associated with the local user 'user1' in SVM 'vs1'
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/privileges/{svm.uuid}/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/privileges/179d3c85-7053-11e8-b9b8-005056b41bd1/user1" -H "accept: application/json" -d '{ "privileges": [ ] }'
+----
+
+

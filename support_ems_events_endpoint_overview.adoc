@@ -1,0 +1,67 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_events_endpoint_overview.html'
+summary: 'Retrieve events'
+---
+
+= Retrieve events
+
+
+
+== Overview
+
+Queries a live collection of observed events on the system.
+Note: The `filter.name` parameter is used to pass a filter to be applied to the event collection returned. To retrieve the list of available filters, refer to <</docs/support/ems_filter_collection_get,/support/ems/filters>>
+
+== Example
+
+=== Querying for the latest event received by EMS
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/events
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/events?fields=message.name&max_records=1" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "f087b8e3-99ac-11e8-b5a5-005056bb4ec7",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/f087b8e3-99ac-11e8-b5a5-005056bb4ec7"
+        }
+      }
+    },
+    "index": 661,
+    "message": {
+      "name": "raid.aggr.log.CP.count"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/events/node1/661"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/support/ems/events?fields=message.name&max_records=1"
+  },
+}
+}
+----
+
+

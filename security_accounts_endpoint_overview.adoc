@@ -1,0 +1,367 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_accounts_endpoint_overview.html'
+summary: 'Manage security-related accounts'
+---
+
+= Manage security-related accounts
+
+
+
+== Overview
+
+A valid user account is required to login to and provision, monitor, and manage the cluster. The scope of the management operation can be at the cluster level or at an individual SVM level. There is a need to create user accounts with specific privileges apart from the default user accounts, "admin", for cluster and "vsadmin" for SVM. Custom user accounts can be configured to perform specific (scoped) operations. User accounts can either be created locally (on the Netapp system) or referenced from an external directory server (NIS, LDAP, or Active Directory).
+Apart from creation, modification, and deletion of a user account, locking and unlocking of a user account or resetting the password (for local accounts only) is possible.
+
+A user account must be associated with the following before it can become operational:
+
+. A management application (SSH, HTTP, console, service_processor, and such like) for user login. HTTP enables REST API access.
+. Scope - either cluster or SVM.
+. Authentication source - password (local, NIS/LDAP, Active Directory), public/private key pair-based, certificate based.
+. RBAC role - determines what operations are permitted for the user account.
+
+=== Restrictions
+
+A number of internal/restricted account names, such as admin, diag, autosupport, and root cannot be used.
+
+There must be at least one console cluster administrator account. Any attempt to delete the last remaining administrator account fails.
+
+Multi-factor authentication is only possible for SSH and Service Processor (SP) applications. For the SSH application, the only possible combinations are password (local or NIS/LDAP/Active Directory) and public key and password or public key (local) and TOTP. For the SP application, the only valid combination is password and public key.
+
+If an account is created using the HTTP application type, the password authentication method, and its username contains one of the following special characters: @ or \|, then you cannot use this account for basic authorization and its only purpose is for OAuth 2.0 validation.
+
+All authentication sources are not supported by all applications. You must select a compatible authentication method based on the application. The following types of authentications methods are supported:
+
+|===
+| Application | Supported Authentication Methods
+
+| amqp
+| password
+
+| console
+| password
+
+| service_processor
+| password, publickey
+
+| HTTP
+| password, domain, nsswitch, certificate
+
+| ONTAPI
+| password, domain, nsswitch, certificate
+
+| SSH
+| password, publickey (key pair), domain, nsswitch, totp
+|===
+
+NOTE: In this table, "totp" means time-based one-time password and is only allowed to be configured as second authentication, "certificate" means security certificate, "domain" means that the user directory server is an external Active Directory, "nsswitch" means the directory server is an external NIS or LDAP server. At login time, the user is authenticated with these external directory servers which must be provisioned separately. For the SP (_service_processor_ in above table) application, _publickey_ can only be configured as the second factor of authentication.
+
+Support for publickey authentication and MFA for Domain users has been added.
+
+Support for TOTP as a secondary authentication method with password or public key as the primary authentication method has been added.
+
+For SP (_service_processor_ in above table) application, support for _publickey_ as a secondary authentication method with password as the primary authentication method has been added.
+
+== Examples
+
+=== Creating a cluster-scoped user account
+
+Specify the user account name, role name, and the tuples (of application and authentication methods) in the body of the POST request. The owner.uuid or owner.name are not required to be specified for a cluster-scoped user account.
+
+NOTE: Each entry in the applications array must be for a different application.
+
+----
+
+# The API:
+POST "/api/security/accounts"
+
+# The call to create a cluster user account with applications ssh, http and password authentication scheme:
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"name":"cluster_user1","applications":[{"application":"ssh","authentication_methods":["password"],"second_authentication_method":"none"},{"application":"http","authentication_methods":["password"]}],"role":"admin","password":"p@ssw@rd123"}'
+Note: The password is an optional parameter for creation and can be set later using a PATCH request. See the examples for modification of user account or password.
+----
+
+=== Creating an SVM-scoped user account
+
+For an SVM-scoped account, specify either the SVM name as the owner.name or SVM uuid as the owner.uuid along with other parameters for the user account. These indicate the SVM for which the user account is being created and can be obtained from the response body of GET performed on the _/api/svm/svms_ API.
+
+----
+
+# The API:
+POST "/api/security/accounts"
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"owner":{"uuid":"aaef7c38-4bd3-11e9-b238-0050568e2e25"},"name":"svm_user1","applications":[{"application":"ssh","authentication_methods":["password"],"second_authentication_method":"none"}],"role":"vsadmin","password":"p@ssw@rd123"}'
+----
+
+=== Retrieving the configured user accounts
+
+Use the following API to retrieve all of the user accounts or a filtered list of user accounts (by name, for a specific SVM, and so on).
+
+----
+
+# The API:
+GET "/api/security/accounts"
+
+# The call to retrieve all the user accounts configured in the cluster:
+curl -X GET "https://<mgmt-ip>/api/security/accounts"
+
+# The response:
+{
+"records": [
+  {
+    "owner": {
+      "uuid": "2903de6f-4bd2-11e9-b238-0050568e2e25",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2903de6f-4bd2-11e9-b238-0050568e2e25"
+        }
+      }
+    },
+    "name": "admin",
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/2903de6f-4bd2-11e9-b238-0050568e2e25/admin"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "2903de6f-4bd2-11e9-b238-0050568e2e25",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2903de6f-4bd2-11e9-b238-0050568e2e25"
+        }
+      }
+    },
+    "name": "autosupport",
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/2903de6f-4bd2-11e9-b238-0050568e2e25/autosupport"
+            }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "2903de6f-4bd2-11e9-b238-0050568e2e25",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2903de6f-4bd2-11e9-b238-0050568e2e25"
+        }
+      }
+    },
+    "name": "cluster_user1",
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/2903de6f-4bd2-11e9-b238-0050568e2e25/cluster_user1"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/aaef7c38-4bd3-11e9-b238-0050568e2e25"
+        }
+      }
+    },
+    "name": "svm_user1",
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1"
+      }
+    }
+  },
+  {
+    "owner": {
+      "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/aaef7c38-4bd3-11e9-b238-0050568e2e25"
+        }
+      }
+    },
+    "name": "vsadmin",
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/vsadmin"
+      }
+    }
+  }
+],
+"num_records": 5,
+"_links": {
+  "self": {
+    "href": "/api/security/accounts"
+  }
+}
+}
+
+# The scoped call to retrieve the configured cluster-scoped user accounts:
+curl -X GET "https://<mgmt-ip>/api/security/accounts/?scope=cluster"
+
+# The scoped call to retrieve the configured SVM-scoped user accounts:
+curl -X GET "https://<mgmt-ip>/api/security/accounts/?scope=svm"
+
+# The scoped call to retrieve the user accounts configured for the SVM "svm1":
+curl -X GET "https://<mgmt-ip>/api/security/accounts/?owner.name=svm1"
+
+# The scoped call to retrieve the user accounts configured with the "admin" role:
+curl -X GET "https://<mgmt-ip>/api/security/accounts/?role=admin"
+----
+
+=== Creating an Active Directory users with publickey authentication
+
+Specify the Active Directory user account name, role name, and the tuples (application and authentication methods) in the body of the POST request. The owner.uuid or owner.name are not required to be specified for a cluster-scoped user account.
+
+----
+
+# The API:
+POST "/api/security/accounts"
+
+# The call to create a cluster user account with application ssh and publickey authentication scheme for domain users:
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"name":"domain_name\\cluster_user__u1","applications":[{"application":"ssh","authentication_methods":["publickey"]}]}'
+----
+
+=== Creating an Active Directory user with MFA(domain+publickey)
+
+Specify the Active Directory user account name, role name, and the tuples (application and authentication methods) in the body of the POST request. The owner.uuid or owner.name are not required to be specified for a cluster-scoped user account.
+
+----
+
+# The API:
+POST "/api/security/accounts"
+
+# The call to create a cluster user account with application ssh and and MFA for domain users:
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"name":"domain_name\\cluster_user_u1","applications":[{"application":"ssh","authentication_methods":["domain"],"second_authentication_method":"publickey"}]}'
+----
+
+=== Retrieving the configured Active directory user accounts
+
+Use the following API to retrieve all of the Active directory user accounts.
+
+----
+
+# The API:
+curl -X GET "https://<mgmt-ip>/api/security/accounts/?name=*\*"
+
+# The response:
+{
+"records": [
+{
+  "owner": {
+    "uuid": "d6a740a0-4086-11ed-9f68-0050568edfd7",
+    "name": "cluster-1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/d6a740a0-4086-11ed-9f68-0050568edfd7"
+      }
+    }
+  },
+  "name": "domain\\ad_user_u1",
+  "_links": {
+    "self": {
+      "href": "/api/security/accounts/d6a740a0-4086-11ed-9f68-0050568edfd7/domain%5Cad_user_u1"
+    }
+  }
+}
+ ],
+ "num_records": 1,
+ "_links": {
+"self": {
+  "href": "/api/security/accounts/?name=*\\*"
+}
+ }
+}
+----
+
+=== Creating a user with MFA (password+TOTP)
+
+Cluster-scoped user account:
+Follow the cluster-scoped user creation example and additionally specify the 'totp' as the second_authentication_method.
+
+----
+
+# The API:
+POST "/api/security/accounts"
+
+# The call to create a cluster user account with application ssh, authentication password and totp:
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"name":"cluster_user_1","applications":[{"application":"ssh","authentication_methods":["password"],"second_authentication_method":"totp"}]}'
+----
+
+SVM-scoped user account:
+Follow the SVM-scoped user creation example and additionally specify the 'totp' as the second_authentication_method.
+
+----
+
+#The API
+
+# The call to create a SVM-scoped user account with application ssh, authentication password and totp:
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"owner":{"uuid":"aaef7c38-4bd3-11e9-b238-0050568e2e25"},"name":"svm_user1","applications":[{"application":"ssh","authentication_methods":["password"],"second_authentication_method":"totp"}],"role":"vsadmin","password":"<SVM-USER-PASSWORD>"}'
+----
+
+=== Creating an SP user with MFA (password + publickey)
+
+Specify the SP user account name, role name, and the tuples (application and authentication methods) in the body of the POST request. The owner.uuid or owner.name are not required to be specified for a cluster-scoped user account.
+
+----
+
+# The API:
+POST "/api/security/accounts"
+
+# The call to create a cluster user account with application service_processor, authentication method password and second authentication publickey
+curl -X POST "https://<mgmt-ip>/api/security/accounts" -d '{"name":"cluster_sp_user1","applications":[{"application":"service_processor","authentication_methods":["password"],"second_authentication_method":"publickey"}]}'
+----
+
+=== Retrieving the configured SP user accounts
+
+Use the following API to retrieve all of the configured SP user accounts.
+
+----
+
+# The API:
+curl -X GET "https://<mgmt-ip>/api/security/accounts/?applications.application=service_processor"
+
+# The response:
+{
+"records": [
+  {
+    "owner": {
+      "uuid": "2903de6f-4bd2-11e9-b238-0050568e2e25",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2903de6f-4bd2-11e9-b238-0050568e2e25"
+        }
+      }
+    },
+    "name": "cluster_sp_user1",
+    "applications": [
+      {
+        "application": "service_processor"
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/2903de6f-4bd2-11e9-b238-0050568e2e25/"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/accounts/?applications.application=service_processor"
+  }
+}
+}
+----
+
+

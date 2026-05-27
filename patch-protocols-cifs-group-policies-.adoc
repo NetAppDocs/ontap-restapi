@@ -1,0 +1,163 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-group-policies-.html'
+summary: 'Create a background task to update the GPO settings for an SVM'
+---
+
+= Create a background task to update the GPO settings for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/group-policies/{svm.uuid}`#
+
+*Introduced In:* 9.12
+
+Creates a background task to update the GPO settings for the specified SVM.
+Note: The group policy can be enabled or disabled using "group_policy_object_enabled" field in PATCH "/protocols/cifs/services/{svm.uuid}" API.
+
+== Related ONTAP commands
+
+* `vserver cifs group-policy update`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|apply_updates
+|boolean
+|query
+|False
+a|Indicates whether to apply updates or not.
+
+* Default value: 1
+
+
+|force_reapply_all_settings
+|boolean
+|query
+|False
+a|Indicates whether or not a re-applying of all settings is enforced.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 4456649
+| Unable to get Group Policy information for SVM.
+
+| 4456650
+| Group Policy is disabled for SVM.
+
+| 4456651
+| Unable to get CIFS server information for SVM.
+
+| 4456652
+| CIFS server is down for SVM.
+
+| 4456851
+| An update is already in progress for specified SVM. Wait a few minutes, then try the command again.
+
+| 4456852
+| Failed to set forced update for specified SVM. Reason: Internal error. Starting normal update.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

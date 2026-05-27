@@ -1,0 +1,256 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_barbican-kms_endpoint_overview.html'
+summary: 'Manage Barbican KMS configurations'
+---
+
+= Manage Barbican KMS configurations
+
+
+
+== Overview
+
+Barbican Key Management Services (KMS) is a key management service that provides a secure store for encryption keys. This feature
+allows ONTAP to securely protect its encryption keys using Barbican KMS.
+Before you can use Barbican KMS with ONTAP, you must provide ONTAP with the necessary details to allow ONTAP to communicate with the deployed Barbican application.
+These details include the key ID URL, Keystone authentication URL, and the application credentials ID and secret.
+The property `barbican_reachability` is considered an advanced property and is populated only when explicitly requested.
+
+== Examples
+
+=== Creating an inactive Barbican configuration for an SVM
+
+The example Barbican configuration is created for a specific SVM but is not enabled.
+Note the _return_records=true_ query parameter can be used to return the newly created key-manager keystore configuration.
+
+----
+
+# The API:
+POST /api/security/barbican-kms
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/barbican-kms' -H 'accept: application/hal+json' -H 'Content-Type: application/json' -d '{ "svm": { "name": "barbican_svm" }, "configuration": {"name": "myConfiguration"}, "application_cred_id": "app1", "application_cred_secret": "secret1", "key_id": "https://sample.keyid.com:9311/v1/secrets/5c610a4f-ea97-44b5-8682-f4daeafa9647/", "keystone_url": "https://sample.keystone.com:5000/v3/auth/tokens" }'
+
+# The response:
+{
+"job": {
+  "uuid": "5a208fb0-fa58-11ef-8c9f-005056bbeee5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/5a208fb0-fa58-11ef-8c9f-005056bbeee5"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Listing all Barbican configurations
+
+The following example shows how to retrieve a list of all created Barbican configurations.
+
+----
+
+# The API:
+GET /api/security/barbican-kms
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/barbican-kms'
+
+# The response:
+{
+"records": [
+  {
+    "configuration": {
+      "name": "myConfiguration",
+      "uuid": "5a134975-fa58-11ef-8c9f-005056bbeee5"
+    },
+    "uuid": "5a134975-fa58-11ef-8c9f-005056bbeee5",
+    "_links": {
+      "self": {
+        "href": "/api/security/barbican-kms/5a134975-fa58-11ef-8c9f-005056bbeee5"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/barbican-kms"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific Barbican configuration
+
+The following example shows how to retrieve information for a specific Barbican configuration.
+
+----
+
+# The API:
+GET /api/security/barbican-kms/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/barbican-kms/5a134975-fa58-11ef-8c9f-005056bbeee5?fields=*'
+
+# The response:
+{
+"configuration": {
+  "name": "myConfiguration",
+  "uuid": "5a134975-fa58-11ef-8c9f-005056bbeee5"
+},
+"uuid": "5a134975-fa58-11ef-8c9f-005056bbeee5",
+"scope": "svm",
+"svm": {
+  "uuid": "ec8e0954-fa10-11ef-8c9f-005056bbeee5",
+  "name": "barbican_svm"
+},
+"key_id": "https://sample.keyid.com:9311/v1/secrets/5c610a4f-ea97-44b5-8682-f4daeafa9647/",
+"application_cred_id": "app1",
+"keystone_url": "https://sample.keystone.com:5000/v3/auth/tokens",
+"proxy_type": "https",
+"proxy_host": "",
+"proxy_port": 0,
+"proxy_username": "",
+"verify": true,
+"verify_host": true,
+"enabled": false,
+"timeout": 10,
+"_links": {
+  "self": {
+    "href": "/api/security/barbican-kms/5a134975-fa58-11ef-8c9f-005056bbeee5"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving an advanced property for a specific Barbican configuration
+
+The following example shows how to retrieve an advanced property for a specific Barbican configuration.
+
+----
+
+# The API:
+GET /api/security/barbican-kms/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/barbican-kms/f72098a2-e908-11ea-bd56-005056bb4222?fields=barbican_reachability'
+
+# The response:
+{
+"configuration": {
+  "name": "myConfiguration",
+  "uuid": "f72098a2-e908-11ea-bd56-005056bb4222"
+},
+"uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+"barbican_reachability": {
+  "reachable": true,
+  "message": "",
+  "code": "0"
+},
+"_links": {
+  "self": {
+    "href": "/api/security/barbican-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the application credentials ID and secret for a specific Barbican configuration
+
+The following example shows how to update the application credentials for a specific Barbican configuration.
+
+----
+
+# The API:
+PATCH /api/security/barbican-kms/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/barbican-kms/f72098a2-e908-11ea-bd56-005056bb4222/' -d '{"application_cred_id": "app345", "application_cred_secret" : "secret"}'
+
+# The response:
+{
+"job": {
+  "uuid": "921ee66a-fa5a-11ef-8c9f-005056bbeee5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/921ee66a-fa5a-11ef-8c9f-005056bbeee5"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Enabling a Barbican configuration
+
+The newly created Barbican configuration is inactive by default. Use the REST API PATCH method "/api/security/key-stores/\{uuid}" to enable the configuration.
+
+'''
+
+=== Restoring keys
+
+The following example shows how to restore keys for a specific Barbican configuration.
+
+----
+
+# The API:
+POST /api/security/barbican-kms/{uuid}/restore
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/barbican-kms/f72098a2-e908-11ea-bd56-005056bb4222/restore'
+
+# The response:
+{
+"job": {
+  "uuid": "e89e7283-2c49-11f0-831c-005056bb33a5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/e89e7283-2c49-11f0-831c-005056bb33a5"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Rekey the internal key
+
+The following example shows how to rekey the internal key based on a specific Barbican configuration.
+
+----
+
+# The API:
+POST /api/security/barbican-kms/{uuid}/rekey-internal
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/barbican-kms/f72098a2-e908-11ea-bd56-005056bb4222/rekey-internal'
+
+# The response:
+{
+"job": {
+  "uuid": "921ee66a-fa5a-11ef-8c9f-005056bbeee5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/921ee66a-fa5a-11ef-8c9f-005056bbeee5"
+    }
+  }
+}
+}
+----
+
+'''
+
+

@@ -1,0 +1,90 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_filters_name_rules_endpoint_overview.html'
+summary: 'Create or retrieve filter rules'
+---
+
+= Create or retrieve filter rules
+
+
+
+== Overview
+
+Manages the list of rules associated with a specific filter. A filter contains a list of rules that are evaluated to determine whether an event matches the filter. When a rule matches an event, the filter is considered a match.
+See the documentation for <</docs/support/support_ems_filters,/support/ems/filters>> for details on the various properties in a rule.
+
+== Examples
+
+=== Retrieving the collection of rules connected to a filter
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/filters/{name}/rules
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/filters/no-info-debug-events/rules" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "index": 1,
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/filters/no-info-debug-events/rules/1"
+      }
+    }
+  },
+  {
+    "index": 2,
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/filters/no-info-debug-events/rules/2"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/support/ems/filters/no-info-debug-events/rules"
+  }
+}
+}
+----
+
+=== Creating a new rule under an existing filter
+
+NOTE: The absence of a position index appends the rule to the end of the list.
+
+[,json]
+----
+
+# The API:
+POST /api/support/ems/filters/{name}/rules
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/filters/test-filter/rules" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_filter_rules_post.txt"
+test_ems_filter_rules_post.txt(body):
+
+# JSON Body
+{
+"type": "include",
+"message_criteria": {
+  "name_pattern": "wafl.*",
+  "severities": "error,informational"
+}
+}
+
+# The response:
+201 Created
+----
+
+

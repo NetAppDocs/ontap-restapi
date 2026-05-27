@@ -1,0 +1,564 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-vscan-on-demand-policies.html'
+summary: 'Retrieve a Vscan On-Demand policy'
+---
+
+= Retrieve a Vscan On-Demand policy
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}/on-demand-policies`#
+
+*Introduced In:* 9.6
+
+Retrieves the Vscan On-Demand policy.
+
+== Related ONTAP commands
+
+* `vserver vscan on-demand-task show`
+
+== Learn more
+
+* link:protocols_vscan_svm.uuid_on-demand-policies_endpoint_overview.html[DOC /protocols/vscan/{svm.uuid}/on-demand-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|log_path
+|string
+|query
+|False
+a|Filter by log_path
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+* Introduced in: 9.10
+
+
+|schedule.name
+|string
+|query
+|False
+a|Filter by schedule.name
+
+
+|schedule.uuid
+|string
+|query
+|False
+a|Filter by schedule.uuid
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 256
+* minLength: 1
+
+
+|scan_paths
+|string
+|query
+|False
+a|Filter by scan_paths
+
+
+|scope.include_extensions
+|string
+|query
+|False
+a|Filter by scope.include_extensions
+
+
+|scope.max_file_size
+|integer
+|query
+|False
+a|Filter by scope.max_file_size
+
+* Max value: 1099511627776
+* Min value: 1024
+
+
+|scope.exclude_extensions
+|string
+|query
+|False
+a|Filter by scope.exclude_extensions
+
+
+|scope.scan_without_extension
+|boolean
+|query
+|False
+a|Filter by scope.scan_without_extension
+
+
+|scope.exclude_paths
+|string
+|query
+|False
+a|Filter by scope.exclude_paths
+
+* maxLength: 255
+* minLength: 1
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#vscan_on_demand[vscan_on_demand]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "log_path": "/vol0/report_dir",
+      "name": "task-1",
+      "scan_paths": [
+        "/vol1/",
+        "/vol2/cifs/"
+      ],
+      "schedule": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "weekly",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "scope": {
+        "exclude_extensions": [
+          "mp3",
+          "mp4"
+        ],
+        "exclude_paths": [
+          "/vol1/cold-files/",
+          "/vol1/cifs/names"
+        ],
+        "include_extensions": [
+          "vmdk",
+          "mp*"
+        ],
+        "max_file_size": 10737418240
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+Schedule of the task.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|exclude_extensions
+|array[string]
+a|List of file extensions for which scanning is not performed.
+
+
+|exclude_paths
+|array[string]
+a|List of file paths for which scanning must not be performed.
+
+
+|include_extensions
+|array[string]
+a|List of file extensions to be scanned.
+
+
+|max_file_size
+|integer
+a|Maximum file size, in bytes, allowed for scanning.
+
+
+|scan_without_extension
+|boolean
+a|Specifies whether or not files without any extension can be scanned.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vscan_on_demand]
+[.api-collapsible-fifth-title]
+vscan_on_demand
+
+Use On-Demand scanning to check files for viruses on a schedule. An On-Demand policy defines the scope of an On-Demand scan.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|log_path
+|string
+a|The path from the Vserver root where the task report is created.
+
+
+|name
+|string
+a|On-Demand task name
+
+
+|scan_paths
+|array[string]
+a|List of paths that need to be scanned.
+
+
+|schedule
+|link:#schedule[schedule]
+a|Schedule of the task.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

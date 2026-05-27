@@ -1,0 +1,319 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-igroups-igroups-.html'
+summary: 'Retrieve a nested initiator group of an initiator group'
+---
+
+= Retrieve a nested initiator group of an initiator group
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/igroups/{igroup.uuid}/igroups/{uuid}`#
+
+*Introduced In:* 9.9
+
+Retrieves a nested initiator group of an initiator group.
+
+This API only reports the nested initiator groups that are direct children of the initiator group. Further nested initiator groups are reported by their direct parent initiator group.
+
+== Related ONTAP commands
+
+* `lun igroup show`
+
+== Learn more
+
+* link:protocols_san_igroups_endpoint_overview.html[DOC /protocols/san/igroups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the parent initiator group.
+
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the nested initiator group.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|igroup
+|link:#igroup[igroup]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "igroup": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "igroup1",
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 4
+| The nested initiator group is not a member of the initiator group.
+
+| 5374852
+| The parent initiator group specified in the URI does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The unique identifier of the parent initiator group.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

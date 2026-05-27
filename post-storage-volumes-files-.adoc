@@ -1,0 +1,970 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-volumes-files-.html'
+summary: 'Create a new file with the supplied data'
+---
+
+= Create a new file with the supplied data
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/volumes/{volume.uuid}/files/{path}`#
+
+*Introduced In:* 9.8
+
+Creates a new file with the supplied data, a new directory or a new symlink.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|volume.uuid
+|string
+|path
+|True
+a|Volume UUID
+
+
+|path
+|string
+|path
+|True
+a|Relative path of a new file, directory or symlink. The path field requires using "%2E" to represent "." and "%2F" to represent "/" for the path provided.
+
+
+|byte_offset
+|integer
+|query
+|False
+a|Indicates the number of bytes into the file to begin writing. Use "-1" to append (default). Note that the byte-offset field is only supported for writing to a new or existing file, which requires specifying the Content-Type as 'multipart/form-data'.
+
+
+|overwrite
+|boolean
+|query
+|False
+a|If false, and the file exists, the write will fail. Default is false.
+
+
+|stream_name
+|string
+|query
+|False
+a|Name of stream associated with the file to write data to.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|accessed_time
+|string
+a|Last access time of the file in date-time format.
+
+
+|analytics
+|link:#analytics[analytics]
+a|Additional file system analytics information summarizing all descendants of a directory.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+
+
+|bytes_used
+|integer
+a|The actual number of bytes used on disk by this file. If byte_offset and length parameters are specified, this will return the bytes used by the file within the given range.
+
+
+|changed_time
+|string
+a|Last time data or attributes changed on the file in date-time format.
+
+
+|constituent
+|link:#constituent[constituent]
+a|
+
+|creation_time
+|string
+a|Creation time of the file in date-time format.
+
+
+|group_id
+|integer
+a|The integer ID of the group of the file owner.
+
+
+|hard_links_count
+|integer
+a|The number of hard links to the file.
+
+
+|inode_generation
+|integer
+a|Inode generation number.
+
+
+|inode_number
+|integer
+a|The file inode number.
+
+
+|is_empty
+|boolean
+a|Specifies whether or not a directory is empty. A directory is considered empty if it only contains entries for "." and "..". This element is present if the file is a directory. In some special error cases, such as when the volume goes offline or when the directory is moved while retrieving this info, this field might not get set.
+
+
+|is_junction
+|boolean
+a|Returns "true" if the directory is a junction.
+
+
+|is_snapshot
+|boolean
+a|Returns "true" if the directory is a snapshot.
+
+
+|is_vm_aligned
+|boolean
+a|Returns true if the file is vm-aligned. A vm-aligned file is a file that is initially padded with zero-filled data so that its actual data starts at an offset other than zero. The amount by which the start offset is adjusted depends on the vm-align setting of the hosting volume.
+
+
+|modified_time
+|string
+a|Last data modification time of the file in date-time format.
+
+
+|name
+|string
+a|Name of the file.
+
+
+|owner_id
+|integer
+a|The integer ID of the file owner.
+
+
+|path
+|string
+a|Path of the file.
+
+
+|target
+|string
+a|The relative or absolute path contained in a symlink, in the form +++<some>+++/+++<path>+++.+++</path>++++++</some>+++
+
+
+|type
+|string
+a|Type of the file.
+
+
+|unique_bytes
+|integer
+a|Number of bytes uniquely held by this file. If byte_offset and length parameters are specified, this will return bytes uniquely held by the file within the given range.
+
+
+|unix_permissions
+|integer
+a|UNIX permissions to be viewed as an octal number. It consists of 4 digits derived by adding up bits 4 (read), 2 (write), and 1 (execute). The first digit selects the set user ID(4), set group ID (2), and sticky (1) attributes. The second digit selects permissions for the owner of the file; the third selects permissions for other users in the same group; the fourth selects permissions for other users not in the group.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "accessed_time": "2019-06-12 11:00:16 -0400",
+  "analytics": {
+    "by_accessed_time": {
+      "bytes_used": {
+        "aged_data_metric": 15.23,
+        "labels": [
+          "2019-07",
+          "2019-06",
+          "2019-05",
+          "2019",
+          "2018",
+          "--2017",
+          "unknown"
+        ],
+        "newest_label": "2019-07",
+        "oldest_label": "2019-07",
+        "percentages": [
+          0.1,
+          11.24,
+          0.18,
+          15.75,
+          0.75,
+          83.5,
+          0
+        ],
+        "values": [
+          15925248,
+          1735569408,
+          27672576,
+          2430595072,
+          116105216,
+          12889948160,
+          0
+        ]
+      }
+    },
+    "by_modified_time": {
+      "bytes_used": {
+        "aged_data_metric": 15.23,
+        "labels": [
+          "2019-07",
+          "2019-06",
+          "2019-05",
+          "2019",
+          "2018",
+          "--2017",
+          "unknown"
+        ],
+        "newest_label": "2019-07",
+        "oldest_label": "2019-07",
+        "percentages": [
+          0.1,
+          11.24,
+          0.18,
+          15.75,
+          0.75,
+          83.5,
+          0
+        ],
+        "values": [
+          15925248,
+          1735569408,
+          27672576,
+          2430595072,
+          116105216,
+          12889948160,
+          0
+        ]
+      }
+    },
+    "bytes_used": 15436648448,
+    "file_count": 21134,
+    "report_time": "string",
+    "subdir_count": 35
+  },
+  "bytes_used": 4096,
+  "changed_time": "2019-06-12 11:00:16 -0400",
+  "constituent": {
+    "name": "fg__0001",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "creation_time": "2019-06-12 11:00:16 -0400",
+  "fill_enabled": true,
+  "group_id": 30,
+  "hard_links_count": 1,
+  "inode_generation": 214753547,
+  "inode_number": 1695,
+  "is_junction": "",
+  "is_snapshot": "",
+  "is_vm_aligned": "",
+  "modified_time": "2019-06-12 11:00:16 -0400",
+  "name": "string",
+  "overwrite_enabled": true,
+  "owner_id": 54738,
+  "path": "string",
+  "target": "string",
+  "type": "file",
+  "unique_bytes": 4096,
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917505
+| The SVM does not exist.
+
+| 917525
+| The volume in the symlink path does not exist in the SVM.
+
+| 917698
+| Volume (vol name) in SVM (vserver) is not mounted in the namespace.
+
+| 917698
+| The volume in the symlink path is not mounted in the namespace.
+
+| 918235
+| A volume with the specified UUID was not found.
+
+| 6488064
+| This command is not supported.
+
+| 6488065
+| The volume in the symlink path is invalid.
+
+| 6488066
+| Mounting the unjunctioned volume in the symlink path failed.
+
+| 6488069
+| Internal file error.
+
+| 6488084
+| Failed to create \{path} because the "unix_permissions" field was not specified.
+
+| 6488085
+| Failed to create \{path} because the "type" field was not specified.
+
+| 6488118
+| File exists.
+
+| 8257536
+| This operation is not supported for the system volume specified in the symlink path.
+
+| 8257541
+| Failed to compute the SVM identification from this content.
+
+| 8257542
+| This operation is not supported for the administrative SVM.
+
+| 9437549
+| This operation is not allowed on SVMs with Infinite Volume.
+
+| 13172837
+| This operation is not permitted because the SVM is locked for a migrate operation.
+
+| 111411203
+| Failed to get the volume file system analytics report on the volume.
+
+| 111411204
+| Internal error. Failed to retrieve the volume file system analytics report on the volume.
+
+| 111411207
+| Volume file system analytics is not supported on volumes that contain LUNs.
+
+| 111411209
+| Volume file system analytics is not supported on FlexCache volumes.
+
+| 111411210
+| Volume file system analytics is not supported on audit staging volumes.
+
+| 111411211
+| Volume file system analytics is not supported on object store server volumes.
+
+| 111411212
+| Volume file system analytics is not supported on SnapMirror destination volumes.
+
+| 111411215
+| Internal error. Volume file system analytics report timed out for volume volume.name in SVM svm.name.
+
+| 111411216
+| Enabling or disabling volume file system analytics is not supported on individual FlexGroup constituents.
+
+| 111411217
+| Volume file system analytics is not supported on SnapLock volumes.
+
+| 111411230
+| Volume file system analytics is not supported on volumes that contain NVMe namespaces.
+
+| 111412203
+| Volume file system analytics is not enabled on the volume.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aged_data_metric
+|number
+a|A score summarizing how old the data is. A higher value means the data is older.
+
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|newest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|oldest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|percentages
+|array[number]
+a|Percentages for this histogram
+
+
+|values
+|array[integer]
+a|Values for this histogram
+
+
+|===
+
+
+[#by_accessed_time]
+[.api-collapsible-fifth-title]
+by_accessed_time
+
+File system analytics information, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_used
+|link:#bytes_used[bytes_used]
+a|Number of bytes used on-disk, broken down by date of last access.
+
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aged_data_metric
+|number
+a|A score summarizing how old the data is. A higher value means the data is older.
+
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|newest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|oldest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|percentages
+|array[number]
+a|Percentages for this histogram
+
+
+|values
+|array[integer]
+a|Values for this histogram
+
+
+|===
+
+
+[#by_modified_time]
+[.api-collapsible-fifth-title]
+by_modified_time
+
+File system analytics information, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_used
+|link:#bytes_used[bytes_used]
+a|Number of bytes used on-disk, broken down by date of last modification.
+
+
+|===
+
+
+[#analytics]
+[.api-collapsible-fifth-title]
+analytics
+
+Additional file system analytics information summarizing all descendants of a directory.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|by_accessed_time
+|link:#by_accessed_time[by_accessed_time]
+a|File system analytics information, broken down by date of last access.
+
+
+|by_modified_time
+|link:#by_modified_time[by_modified_time]
+a|File system analytics information, broken down by date of last modification.
+
+
+|bytes_used
+|integer
+a|Number of bytes used on-disk
+
+
+|file_count
+|integer
+a|Number of descendants
+
+
+|incomplete_data
+|boolean
+a|Returns true if data collection is incomplete for this directory tree.
+
+
+|report_time
+|string
+a|The date and time analytics information was collected.
+
+
+|subdir_count
+|integer
+a|Number of sub directories
+
+
+|===
+
+
+[#constituent]
+[.api-collapsible-fifth-title]
+constituent
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|FlexGroup volume constituent name.
+
+
+|uuid
+|string
+a|FlexGroup volume constituent UUID.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+The QoS policy for the file. Both traditional and adaptive QoS policies are supported. If both `qos_policy.uuid` and `qos_policy.name` properties are specified in the same request, they must refer to the same QoS policy. To remove the file from a QoS policy, set the property `qos_policy.name` in a PATCH request to an empty string "" or "none".
+
+NOTE: Files which are in use as a LUN cannot be assigned to a QoS policy, instead use PATCH on /storage/luns to assign a QoS policy for such files.
+
+Note that a QoS policy can be set on a file, or a file's volume, but not on both.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the QoS policy. To remove the file from a QoS policy, set this property to an empty string "" or set it to "none" in a PATCH request.
+
+
+|uuid
+|string
+a|The unique identifier of the QoS policy. Valid in PATCH.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#file_info]
+[.api-collapsible-fifth-title]
+file_info
+
+Information about a single file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|accessed_time
+|string
+a|Last access time of the file in date-time format.
+
+
+|analytics
+|link:#analytics[analytics]
+a|Additional file system analytics information summarizing all descendants of a directory.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+
+
+|bytes_used
+|integer
+a|The actual number of bytes used on disk by this file. If byte_offset and length parameters are specified, this will return the bytes used by the file within the given range.
+
+
+|changed_time
+|string
+a|Last time data or attributes changed on the file in date-time format.
+
+
+|constituent
+|link:#constituent[constituent]
+a|
+
+|creation_time
+|string
+a|Creation time of the file in date-time format.
+
+
+|group_id
+|integer
+a|The integer ID of the group of the file owner.
+
+
+|hard_links_count
+|integer
+a|The number of hard links to the file.
+
+
+|inode_generation
+|integer
+a|Inode generation number.
+
+
+|inode_number
+|integer
+a|The file inode number.
+
+
+|is_empty
+|boolean
+a|Specifies whether or not a directory is empty. A directory is considered empty if it only contains entries for "." and "..". This element is present if the file is a directory. In some special error cases, such as when the volume goes offline or when the directory is moved while retrieving this info, this field might not get set.
+
+
+|is_junction
+|boolean
+a|Returns "true" if the directory is a junction.
+
+
+|is_snapshot
+|boolean
+a|Returns "true" if the directory is a snapshot.
+
+
+|is_vm_aligned
+|boolean
+a|Returns true if the file is vm-aligned. A vm-aligned file is a file that is initially padded with zero-filled data so that its actual data starts at an offset other than zero. The amount by which the start offset is adjusted depends on the vm-align setting of the hosting volume.
+
+
+|modified_time
+|string
+a|Last data modification time of the file in date-time format.
+
+
+|name
+|string
+a|Name of the file.
+
+
+|owner_id
+|integer
+a|The integer ID of the file owner.
+
+
+|path
+|string
+a|Path of the file.
+
+
+|target
+|string
+a|The relative or absolute path contained in a symlink, in the form +++<some>+++/+++<path>+++.+++</path>++++++</some>+++
+
+
+|type
+|string
+a|Type of the file.
+
+
+|unique_bytes
+|integer
+a|Number of bytes uniquely held by this file. If byte_offset and length parameters are specified, this will return bytes uniquely held by the file within the given range.
+
+
+|unix_permissions
+|integer
+a|UNIX permissions to be viewed as an octal number. It consists of 4 digits derived by adding up bits 4 (read), 2 (write), and 1 (execute). The first digit selects the set user ID(4), set group ID (2), and sticky (1) attributes. The second digit selects permissions for the owner of the file; the third selects permissions for other users in the same group; the fourth selects permissions for other users not in the group.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,347 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-cifs-local-groups.html'
+summary: 'Create the local group configuration for an SVM'
+---
+
+= Create the local group configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/cifs/local-groups`#
+
+*Introduced In:* 9.9
+
+Creates the local group configuration for the specified SVM.
+
+== Important notes
+
+* The group name can contain up to 256 characters.
+* The group name cannot be terminated by a period.
+* The group name does not support any of the following characters: " / ? [ ] , : \| < > + = ; ? * @ or ASCII characters in the range 1-31.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the local group.
+* `name` - Name of the local group.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups local-group create`
+
+== Learn more
+
+* link:protocols_cifs_local-groups_endpoint_overview.html[DOC /protocols/cifs/local-groups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|Description for the local group.
+
+
+|members
+|array[link:#members[members]]
+a|
+
+|name
+|string
+a|Local group name. The maximum supported length of a group name is 256 characters.
+
+
+|sid
+|string
+a|The security ID of the local group which uniquely identifies the group. The group SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "description": "This is a local group",
+  "members": [
+    {
+      "name": "string"
+    }
+  ],
+  "name": "SMB_SERVER01\\group",
+  "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262278
+| Name is a required field.
+
+| 655399
+| CIFS server must exist to create a local group.
+
+| 655660
+| The operation is allowed only on data SVMs.
+
+| 655661
+| The group name and description should not exceed 256 characters.
+
+| 655668
+| The specified group name contains illegal characters.
+
+| 655675
+| The local domain name specified in the group name does not exist.
+
+| 655677
+| This operation does not allow for the creation of a group in the BUILTIN domain.
+
+| 655682
+| The group name cannot be blank.
+
+| 655717
+| The specified group name already exists.
+
+| 2621706
+| The specified SVM UUID is incorrect for the specified SVM name.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#members]
+[.api-collapsible-fifth-title]
+members
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Local user, Active Directory user, or Active Directory group which is a member of the specified local group.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_cifs_group]
+[.api-collapsible-fifth-title]
+local_cifs_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|Description for the local group.
+
+
+|members
+|array[link:#members[members]]
+a|
+
+|name
+|string
+a|Local group name. The maximum supported length of a group name is 256 characters.
+
+
+|sid
+|string
+a|The security ID of the local group which uniquely identifies the group. The group SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

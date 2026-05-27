@@ -1,0 +1,161 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'resource-tags_resource_tag.value_resources_endpoint_overview.html'
+summary: 'Manage resource tags'
+---
+
+= Manage resource tags
+
+
+
+= Overview
+
+You can use this endpoint to list all of the resources in the API that have been tagged with a particular tag value and to create new tags on existing resources. Each resource has a limit of 64 tags that cannot be exceeded. See the section labelled <<Tagging_Resources_for_Tracking_Purposes,Tagging Resources for Tracking Purposes>> to find out more information about how to tag a resource.
+
+== Examples
+
+The following examples show some ways that this endpoint can be used.
+
+=== List all resources that are tagged for the test environment.
+
+----
+
+# The API:
+/api/resource-tags/environment:test/resources
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/resource-tags/environment:test/resources"
+
+# The response:
+{
+"records": [
+  {
+    "href": "/api/storage/volumes/558949d1-d4cf-445e-ada5-e340dee6a581",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment:test/resources/%2Fapi%2Fstorage%2Fvolumes%2F558949d1-d4cf-445e-ada5-e340dee6a581"
+      }
+    }
+  },
+  {
+    "href": "/api/svm/svms/7f97a0b1-fe4f-11e8-b9c5-005056a76061",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment:test/resources/%2Fapi%2Fsvm%2Fsvms%2F7f97a0b1-fe4f-11e8-b9c5-005056a76061"
+      }
+    }
+  },
+  {
+    "href": "/api/cluster",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment:test/resources/%2Fapi%2Fcluster"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/resource-tags/environment:test/resources"
+  }
+}
+}
+----
+
+'''
+
+=== List all volumes that have been tagged for the accounting team
+
+----
+
+# The API:
+/api/resource-tags/team:accounting/resources
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/resource-tags/team:accounting/resources?label=storage_volumes"
+
+# The response:
+{
+"records": [
+  {
+    "href": "/api/storage/volumes/558949d1-d4cf-445e-ada5-e340dee6a581",
+    "label": "storage_volumes",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment:test/resources/%2Fapi%2Fstorage%2Fvolumes%2F558949d1-d4cf-445e-ada5-e340dee6a581"
+      }
+    }
+  },
+  {
+    "href": "/api/storage/volumes/64750961-fda7-4327-9f16-00034c3f5ad2",
+    "label": "storage_volumes",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment:test/resources/%2Fapi%2Fstorage%2Fvolumes%2F64750961-fda7-4327-9f16-00034c3f5ad2"
+      }
+    }
+  },
+  {
+    "href": "/api/storage/volumes/bee17b91-f90a-4854-b146-8b102a0a9882",
+    "label": "storage_volumes",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/environment:test/resources/%2Fapi%2Fstorage%2Fvolumes%2Fbee17b91-f90a-4854-b146-8b102a0a9882"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/resource-tags/environment:test/resources?label=storage_volumes"
+  }
+}
+}
+----
+
+'''
+
+=== Create a new tag on a volume
+
+----
+
+# The API:
+/api/resource-tags/team:accounting/resources
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/resource-tags/team:accounting/resources" -d '{"href": "/api/storage/volumes/f288168e-bd3e-11ed-9516-005056acd4e8"}'
+
+# The response
+{
+"num_records": 1,
+"records": [
+  {
+    "href": "/api/storage/volumes/f288168e-bd3e-11ed-9516-005056acd4e8",
+    "_links": {
+      "self": {
+        "href": "/api/resource-tags/team:accounting/resources/%2Fapi%2Fstorage%2Fvolumes%2Ff288168e-bd3e-11ed-9516-005056acd4e8"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Delete a new tag on a volume
+
+----
+
+# The API:
+/resource-tags/{resource_tag.value}/resources/{href}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/resource-tags/team:accounting/resources/%2Fapi%2Fstorage%2Fvolumes%2Ff288168e-bd3e-11ed-9516-005056acd4e8"
+----
+
+

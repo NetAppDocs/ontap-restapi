@@ -1,0 +1,90 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_connections_endpoint_overview.html'
+summary: 'View CIFS connection information'
+---
+
+= View CIFS connection information
+
+
+
+== Overview
+
+ONTAP CIFS connections show functionality is used to display currently established CIFS connections.
+
+=== Information on the CIFS connection
+
+* Retrieve the list of the established CIFS connections
+
+== Example
+
+=== Retrieving established connection information
+
+To retrieve the list of CIFS connections, use the following API.
+
+'''
+
+----
+
+# The API:
+GET /protocols/cifs/connections
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/cifs/connections?return_timeout=15&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+  "records": [
+    {
+      "node": {
+        "uuid": "85d46998-4e5d-11ea-afb1-0050568ec4e4",
+        "name": "example_node_name"
+      },
+      "svm": {
+        "uuid": "fc824aa8-4e60-11ea-afb1-0050568ec4e4",
+        "name": "vs1"
+      },
+      "sessions": [
+            {
+              identifier: 625718873227788312
+            }
+                  ],
+      "identifier": 91842,
+      "server_ip": "10.140.70.197",
+      "client_ip": "10.74.7.182",
+      "client_port": 12345,
+      "network_context_id": 3
+    },
+    {
+      "node": {
+        "uuid": "85d46998-4e5d-11ea-afb1-0050568ec4e4",
+        "name": "example_node_name"
+      },
+      "svm": {
+        "uuid": "fc824aa8-4e60-11ea-afb1-0050568ec4e4",
+         "name": "vs1"
+      },
+      "sessions": [
+          {
+            identifier: 625718873227788579
+          },
+          {
+            identifier: 625718873227788577
+          }
+                  ],
+      "identifier": 92080,
+      "server_ip": "10.140.70.197",
+      "client_ip": "10.140.133.97",
+      "client_port": 23413,
+      "network_context_id": 5
+    }
+  ],
+  "num_records": 2
+}
+----
+
+'''
+
+

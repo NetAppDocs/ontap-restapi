@@ -1,0 +1,883 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-ipsec-security-associations.html'
+summary: 'Retrieve IPsec and IKE security associations'
+---
+
+= Retrieve IPsec and IKE security associations
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/ipsec/security-associations`#
+
+*Introduced In:* 9.8
+
+Retrieves the IPsec and IKE (Internet Key Exchange) security associations.
+
+== Related ONTAP commands
+
+* `security ipsec show-ipsecsa`
+* `security ipsec show-ikesa`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|ike.is_initiator
+|boolean
+|query
+|False
+a|Filter by ike.is_initiator
+
+
+|ike.initiator_security_parameter_index
+|string
+|query
+|False
+a|Filter by ike.initiator_security_parameter_index
+
+
+|ike.state
+|string
+|query
+|False
+a|Filter by ike.state
+
+
+|ike.responder_security_parameter_index
+|string
+|query
+|False
+a|Filter by ike.responder_security_parameter_index
+
+
+|ike.version
+|integer
+|query
+|False
+a|Filter by ike.version
+
+
+|ike.authentication
+|string
+|query
+|False
+a|Filter by ike.authentication
+
+
+|remote_address
+|string
+|query
+|False
+a|Filter by remote_address
+
+
+|cipher_suite
+|string
+|query
+|False
+a|Filter by cipher_suite
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|ipsec.action
+|string
+|query
+|False
+a|Filter by ipsec.action
+
+
+|ipsec.state
+|string
+|query
+|False
+a|Filter by ipsec.state
+
+
+|ipsec.inbound.offload_bytes
+|integer
+|query
+|False
+a|Filter by ipsec.inbound.offload_bytes
+
+* Introduced in: 9.16
+
+
+|ipsec.inbound.packets
+|integer
+|query
+|False
+a|Filter by ipsec.inbound.packets
+
+
+|ipsec.inbound.security_parameter_index
+|string
+|query
+|False
+a|Filter by ipsec.inbound.security_parameter_index
+
+
+|ipsec.inbound.bytes
+|integer
+|query
+|False
+a|Filter by ipsec.inbound.bytes
+
+
+|ipsec.inbound.offload_packets
+|integer
+|query
+|False
+a|Filter by ipsec.inbound.offload_packets
+
+* Introduced in: 9.16
+
+
+|ipsec.outbound.security_parameter_index
+|string
+|query
+|False
+a|Filter by ipsec.outbound.security_parameter_index
+
+
+|ipsec.outbound.packets
+|integer
+|query
+|False
+a|Filter by ipsec.outbound.packets
+
+
+|ipsec.outbound.offload_bytes
+|integer
+|query
+|False
+a|Filter by ipsec.outbound.offload_bytes
+
+* Introduced in: 9.16
+
+
+|ipsec.outbound.offload_packets
+|integer
+|query
+|False
+a|Filter by ipsec.outbound.offload_packets
+
+* Introduced in: 9.16
+
+
+|ipsec.outbound.bytes
+|integer
+|query
+|False
+a|Filter by ipsec.outbound.bytes
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|local_address
+|string
+|query
+|False
+a|Filter by local_address
+
+
+|lifetime
+|integer
+|query
+|False
+a|Filter by lifetime
+
+
+|policy_name
+|string
+|query
+|False
+a|Filter by policy_name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|error
+|link:#error[error]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "cipher_suite": "string",
+      "ike": {
+        "authentication": "string",
+        "initiator_security_parameter_index": "string",
+        "responder_security_parameter_index": "string",
+        "state": "string"
+      },
+      "ipsec": {
+        "action": "string",
+        "inbound": {
+          "security_parameter_index": "string"
+        },
+        "outbound": {
+          "security_parameter_index": "string"
+        },
+        "state": "string"
+      },
+      "local_address": "string",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "policy_name": "string",
+      "remote_address": "string",
+      "scope": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "string",
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#ike]
+[.api-collapsible-fifth-title]
+ike
+
+Objects containing parameters specific to IKE (Internet Key Exchange) security association.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication
+|string
+a|Authentication method for internet key exchange protocol.
+
+
+|initiator_security_parameter_index
+|string
+a|Initiator's security parameter index for the IKE security association.
+
+
+|is_initiator
+|boolean
+a|Indicates whether or not IKE has been initiated by this node.
+
+
+|responder_security_parameter_index
+|string
+a|Responder's security parameter index for the IKE security association.
+
+
+|state
+|string
+a|State of the IKE connection.
+
+
+|version
+|integer
+a|Internet key exchange protocol version.
+
+
+|===
+
+
+[#inbound]
+[.api-collapsible-fifth-title]
+inbound
+
+Status for inbound parameters for the IPsec security association.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes
+|integer
+a|Number of inbound bytes for the IPsec security association.
+
+
+|offload_bytes
+|integer
+a|Number of inbound bytes processed by offload for the IPsec security association.
+
+
+|offload_packets
+|integer
+a|Number of inbound packets processed by offload for the IPsec security association.
+
+
+|packets
+|integer
+a|Number of inbound packets for the IPsec security association.
+
+
+|security_parameter_index
+|string
+a|Inbound security parameter index for the IPSec security association.
+
+
+|===
+
+
+[#outbound]
+[.api-collapsible-fifth-title]
+outbound
+
+Status for outbound parameters for the IPsec security association.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes
+|integer
+a|Number of outbound bytes for the IPsec security association.
+
+
+|offload_bytes
+|integer
+a|Number of outbound bytes processed by offload for the IPsec security association.
+
+
+|offload_packets
+|integer
+a|Number of outbound packets processed by offload for the IPsec security association.
+
+
+|packets
+|integer
+a|Number of outbound packets for the IPsec security association.
+
+
+|security_parameter_index
+|string
+a|Outbound security parameter index for the IPSec security association.
+
+
+|===
+
+
+[#ipsec]
+[.api-collapsible-fifth-title]
+ipsec
+
+Objects containing parameters specific to IPsec security association.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Action for the IPsec security association.
+
+
+|inbound
+|link:#inbound[inbound]
+a|Status for inbound parameters for the IPsec security association.
+
+
+|outbound
+|link:#outbound[outbound]
+a|Status for outbound parameters for the IPsec security association.
+
+
+|state
+|string
+a|State of the IPsec security association.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node with the security association.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+Security association object for IPsec security association and IKE (Internet Key Exchange) security association.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cipher_suite
+|string
+a|Cipher suite for the security association.
+
+
+|ike
+|link:#ike[ike]
+a|Objects containing parameters specific to IKE (Internet Key Exchange) security association.
+
+
+|ipsec
+|link:#ipsec[ipsec]
+a|Objects containing parameters specific to IPsec security association.
+
+
+|lifetime
+|integer
+a|Lifetime for the security association in seconds.
+
+
+|local_address
+|string
+a|Local address of the security association.
+
+
+|node
+|link:#node[node]
+a|Node with the security association.
+
+
+|policy_name
+|string
+a|Policy name for the security association.
+
+
+|remote_address
+|string
+a|Remote address of the security association.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Type of security association, it can be IPsec or IKE (Internet Key Exchange).
+
+
+|uuid
+|string
+a|Unique identifier of the security association.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

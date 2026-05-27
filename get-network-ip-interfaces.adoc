@@ -1,0 +1,1609 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-ip-interfaces.html'
+summary: 'Retrieve all IP interface details'
+---
+
+= Retrieve all IP interface details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ip/interfaces`#
+
+*Introduced In:* 9.6
+
+Retrieves the details of all IP interfaces.
+
+== Related ONTAP Commands
+
+* `network interface show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|vip
+|boolean
+|query
+|False
+a|Filter by vip
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|probe_port
+|integer
+|query
+|False
+a|Filter by probe_port
+
+* Introduced in: 9.10
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|ipspace.name
+|string
+|query
+|False
+a|Filter by ipspace.name
+
+
+|ipspace.uuid
+|string
+|query
+|False
+a|Filter by ipspace.uuid
+
+
+|rdma_protocols
+|string
+|query
+|False
+a|Filter by rdma_protocols
+
+* Introduced in: 9.10
+
+
+|service_policy.uuid
+|string
+|query
+|False
+a|Filter by service_policy.uuid
+
+
+|service_policy.name
+|string
+|query
+|False
+a|Filter by service_policy.name
+
+
+|location.auto_revert
+|boolean
+|query
+|False
+a|Filter by location.auto_revert
+
+
+|location.is_home
+|boolean
+|query
+|False
+a|Filter by location.is_home
+
+
+|location.failover
+|string
+|query
+|False
+a|Filter by location.failover
+
+
+|location.port.node.name
+|string
+|query
+|False
+a|Filter by location.port.node.name
+
+
+|location.port.uuid
+|string
+|query
+|False
+a|Filter by location.port.uuid
+
+
+|location.port.name
+|string
+|query
+|False
+a|Filter by location.port.name
+
+
+|location.home_node.name
+|string
+|query
+|False
+a|Filter by location.home_node.name
+
+
+|location.home_node.uuid
+|string
+|query
+|False
+a|Filter by location.home_node.uuid
+
+
+|location.node.name
+|string
+|query
+|False
+a|Filter by location.node.name
+
+
+|location.node.uuid
+|string
+|query
+|False
+a|Filter by location.node.uuid
+
+
+|location.home_port.node.name
+|string
+|query
+|False
+a|Filter by location.home_port.node.name
+
+
+|location.home_port.uuid
+|string
+|query
+|False
+a|Filter by location.home_port.uuid
+
+
+|location.home_port.name
+|string
+|query
+|False
+a|Filter by location.home_port.name
+
+
+|services
+|string
+|query
+|False
+a|Filter by services
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|subnet.name
+|string
+|query
+|False
+a|Filter by subnet.name
+
+* Introduced in: 9.11
+
+
+|subnet.uuid
+|string
+|query
+|False
+a|Filter by subnet.uuid
+
+* Introduced in: 9.11
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.8
+
+
+|statistics.status
+|string
+|query
+|False
+a|Filter by statistics.status
+
+* Introduced in: 9.8
+
+
+|statistics.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.total
+
+* Introduced in: 9.8
+
+
+|ip.family
+|string
+|query
+|False
+a|Filter by ip.family
+
+
+|ip.address
+|string
+|query
+|False
+a|Filter by ip.address
+
+
+|ip.netmask
+|string
+|query
+|False
+a|Filter by ip.netmask
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|ddns_enabled
+|boolean
+|query
+|False
+a|Filter by ddns_enabled
+
+* Introduced in: 9.9
+
+
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.8
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.8
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.8
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.8
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.8
+
+
+|metric.timestamp
+|string
+|query
+|False
+a|Filter by metric.timestamp
+
+* Introduced in: 9.8
+
+
+|dns_zone
+|string
+|query
+|False
+a|Filter by dns_zone
+
+* Introduced in: 9.9
+
+
+|recommend.svm.uuid
+|string
+|query
+|False
+a|The UUID of an existing SVM for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.svm.name
+|string
+|query
+|False
+a|The name of an existing SVM for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.ipspace.uuid
+|string
+|query
+|False
+a|The UUID of an existing IPspace for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.ipspace.name
+|string
+|query
+|False
+a|The name of an existing IPspace for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.service_policy.uuid
+|string
+|query
+|False
+a|The UUID of an IP service policy for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.service_policy.name
+|string
+|query
+|False
+a|The name of an IP service policy for which to recommend IP interfaces.
+
+* Introduced in: 9.17
+
+
+|recommend.ip.family
+|string
+|query
+|False
+a|The name of an IP Address Family for which to recommend IP interfaces. Unless ipv6 is specified, the default value is ipv4.
+
+* Introduced in: 9.16
+* enum: ["ipv4", "ipv6"]
+
+
+|recommend.location.broadcast_domain.uuid
+|string
+|query
+|False
+a|The UUID of an existing broadcast domain for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.location.broadcast_domain.name
+|string
+|query
+|False
+a|The name of an existing broadcast domain for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.subnet.uuid
+|string
+|query
+|False
+a|The UUID of an existing subnet for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.subnet.name
+|string
+|query
+|False
+a|The name of an existing subnet for which to recommend IP interfaces.
+
+* Introduced in: 9.16
+
+
+|recommend.interfaces_per_node
+|integer
+|query
+|False
+a|The number of IP interfaces to recommend per node.
+
+* Introduced in: 9.16
+
+
+|recommend.location.port.rdma_protocol
+|string
+|query
+|False
+a|The RDMA protocol supported on locations for which to recommend IP interfaces.
+
+* Introduced in: 9.17
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|recommend
+|link:#recommend[recommend]
+a|Response properties specific to the LIF recommendation functionality.
+
+
+|records
+|array[link:#ip_interface[ip_interface]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "recommend": {
+    "messages": [
+      {}
+    ]
+  },
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "dns_zone": "storage.company.com",
+      "fail_if_subnet_conflicts": true,
+      "ip": {
+        "address": "10.10.10.7",
+        "family": "string",
+        "netmask": "24"
+      },
+      "ipspace": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "location": {
+        "failover": "string",
+        "home_node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "home_port": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "e1b",
+          "node": {
+            "name": "node1"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "port": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "e1b",
+          "node": {
+            "name": "node1"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      },
+      "metric": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "duration": "PT15S",
+        "status": "ok",
+        "throughput": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "name": "dataLif1",
+      "probe_port": 64001,
+      "rdma_protocols": [
+        "roce"
+      ],
+      "scope": "string",
+      "service_policy": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "default-intercluster",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "services": [
+        "data_nfs"
+      ],
+      "state": "string",
+      "statistics": {
+        "status": "ok",
+        "throughput_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "subnet": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "subnet1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 53282769
+| Not all nodes support enabling the LIF recommendations feature.
+
+| 53282770
+| No matching subnets are configured in IPspace.
+
+| 53282772
+| Not enough available IPs in subnet.
+
+| 53282773
+| Not enough locations available on node for subnet.
+
+| 53282774
+| The specified SVM UUID is invalid.
+
+| 53282775
+| The specified SVM name is invalid.
+
+| 53282776
+| The specified SVM name and UUID do not match.
+
+| 53282777
+| The specified SVM does not exist in the IPspace.
+
+| 53282778
+| The specified SVM does not exist in the IPspace.
+
+| 53282779
+| The specified IPspace UUID is invalid.
+
+| 53282780
+| The specified IPspace name is invalid.
+
+| 53282781
+| The specified IPspace UUID and name do not match.
+
+| 53282782
+| The specified service policy UUID does not exist.
+
+| 53282783
+| THe specified service policy UUID and name do not match.
+
+| 53282784
+| The specified service policy does not exist in the SVM.
+
+| 53282785
+| The specified service policy does not exist in the IPspace.
+
+| 53282786
+| The specified broadcast domain does not exist.
+
+| 53282787
+| The specified broadcast domain UUID and name do not match.
+
+| 53282788
+| The specified broadcast domain UUID does not exist in the IPspace.
+
+| 53282789
+| The specified broadcast domain name does not exist in the IPspace.
+
+| 53282790
+| The specified subnet UUID does not exist.
+
+| 53282791
+| The specified subnet UUID and name do not match.
+
+| 53282792
+| The specified subnet does not exist in the IPspace.
+
+| 53282793
+| The specified subnet does not match the specified broadcast domain.
+
+| 53282794
+| The specified subnet name does not exist in the IPspace.
+
+| 53282795
+| The specified subnet name does not exist in the broadcast domain.
+
+| 53282796
+| The specified SVM has a type that is not supported.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ip_interface_recommend_message]
+[.api-collapsible-fifth-title]
+ip_interface_recommend_message
+[#recommend]
+[.api-collapsible-fifth-title]
+recommend
+
+Response properties specific to the LIF recommendation functionality.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|messages
+|array[link:#ip_interface_recommend_message[ip_interface_recommend_message]]
+a|Messages describing the results of a LIF recommendation request.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ip_info]
+[.api-collapsible-fifth-title]
+ip_info
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|family
+|string
+a|IPv4 or IPv6
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Either the UUID or name must be supplied on POST for cluster-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+Broadcast domain UUID along with a readable name.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#home_node]
+[.api-collapsible-fifth-title]
+home_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#home_port]
+[.api-collapsible-fifth-title]
+home_port
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+Current or home location can be modified. Specifying a port implies a node. Specifying a node allows an appropriate port to be automatically selected. Ports are not valid and not shown for VIP interfaces. For POST, broadcast_domain can be specified alone or with home_node.  For PATCH, set is_home to true to revert a LIF back to its home port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_revert
+|boolean
+a|
+
+|failover
+|string
+a|Policy that defines where an interface is permitted to move on failover. The policy named "`default`" implements the recommended best practice for NAS LIFs on the current platform and cluster, and was known as "`system_defined`" in the CLI.
+
+
+|home_node
+|link:#home_node[home_node]
+a|
+
+|home_port
+|link:#home_port[home_port]
+a|Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+|is_home
+|boolean
+a|
+
+|node
+|link:#node[node]
+a|
+
+|port
+|link:#port[port]
+a|Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+The most recent sample of I/O metrics for the interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the interface.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#service_policy]
+[.api-collapsible-fifth-title]
+service_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the interface. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+The real time I/O statistics for the interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the interface. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#ip_subnet_reference]
+[.api-collapsible-fifth-title]
+ip_subnet_reference
+
+A named subnet. Either UUID or name can be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the subnet. If only the name is provided, the IPspace scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the subnet.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Applies only to SVM-scoped objects. Either the UUID or name must be supplied on POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#ip_interface]
+[.api-collapsible-fifth-title]
+ip_interface
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ddns_enabled
+|boolean
+a|Indicates whether or not dynamic DNS updates are enabled. Defaults to true if the interface supports "data_nfs" or "data_cifs" services, otherwise false.
+
+
+|dns_zone
+|string
+a|Fully qualified DNS zone name
+
+
+|enabled
+|boolean
+a|The administrative state of the interface.
+
+
+|ip
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Either the UUID or name must be supplied on POST for cluster-scoped objects.
+
+
+|location
+|link:#location[location]
+a|Current or home location can be modified. Specifying a port implies a node. Specifying a node allows an appropriate port to be automatically selected. Ports are not valid and not shown for VIP interfaces. For POST, broadcast_domain can be specified alone or with home_node.  For PATCH, set is_home to true to revert a LIF back to its home port.
+
+
+|metric
+|link:#metric[metric]
+a|The most recent sample of I/O metrics for the interface.
+
+
+|name
+|string
+a|Interface name
+
+
+|probe_port
+|integer
+a|Probe port for Cloud load balancer
+
+
+|rdma_protocols
+|array[string]
+a|Supported RDMA offload protocols
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|service_policy
+|link:#service_policy[service_policy]
+a|
+
+|services
+|array[string]
+a|The services associated with the interface.
+
+
+|state
+|string
+a|The operational state of the interface.
+
+
+|statistics
+|link:#statistics[statistics]
+a|The real time I/O statistics for the interface.
+
+
+|subnet
+|link:#ip_subnet_reference[ip_subnet_reference]
+a|A named subnet. Either UUID or name can be supplied on input.
+
+
+|svm
+|link:#svm[svm]
+a|Applies only to SVM-scoped objects. Either the UUID or name must be supplied on POST.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|vip
+|boolean
+a|True for a VIP interface, whose location is announced via BGP.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

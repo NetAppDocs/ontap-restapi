@@ -1,0 +1,1087 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-qtrees.html'
+summary: 'Create a qtree in a FlexVol or FlexGroup volume'
+---
+
+= Create a qtree in a FlexVol or FlexGroup volume
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/qtrees`#
+
+*Introduced In:* 9.6
+
+Creates a qtree in a FlexVol volume or a FlexGroup volume.
+
+After a qtree is created, the new qtree is assigned an identifier. This identifier is obtained using a qtree GET request. This identifier is used in the API path for the qtree PATCH and DELETE operations.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the qtree.
+* `volume.uuid` or `volume.name` - Existing volume in which to create the qtree.
+* `name` - Name for the qtree.
+
+== Recommended optional properties
+
+If not specified in POST, the values are inherited from the volume.
+
+* `security_style` - Security style for the qtree.
+* `unix_permissions` - UNIX permissions for the qtree.
+* `export_policy.name or export_policy.id` - Export policy of the SVM for the qtree.
+
+== Related ONTAP commands
+
+* `qtree create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|export_policy
+|link:#export_policy[export_policy]
+a|Export Policy
+
+
+|ext_performance_monitoring
+|link:#ext_performance_monitoring[ext_performance_monitoring]
+a|
+
+|group
+|link:#group[group]
+a|The user set as owner of the qtree.
+
+
+|id
+|integer
+a|The identifier for the qtree, unique within the qtree's volume.
+
+
+|name
+|string
+a|The name of the qtree. Required in POST; optional in PATCH.
+
+
+|nas
+|link:#nas[nas]
+a|
+
+|path
+|string
+a|Client visible path to the qtree. This field is not available if the volume does not have a junction-path configured. Not valid in POST or PATCH. This field is to be deprecated and replaced with nas.path.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|When "min_throughput_iops", "min_throughput_mbps", "min_throughput", "max_throughput_iops", "max_throughput_mbps" or "max_throughput" attributes are specified, the storage object is assigned to an auto-generated QoS policy group. If the attributes are later modified, the auto-generated QoS policy-group attributes are modified. Attributes can be removed by specifying "0" and policy group by specifying "none". Upon deletion of the storage object or if the attributes are removed, then the QoS policy-group is also removed.
+
+
+|security_style
+|string
+a|Security style. Valid in POST or PATCH.
+
+
+|svm
+|link:#svm[svm]
+a|Required in POST
+
+
+|unix_permissions
+|integer
+a|The UNIX permissions for the qtree. Valid in POST or PATCH.
+
+
+|user
+|link:#user[user]
+a|The user set as owner of the qtree.
+
+
+|volume
+|link:#volume[volume]
+a|Required in POST
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_tags": [
+    "team:csi",
+    "environment:test"
+  ],
+  "export_policy": {
+    "id": 100,
+    "name": "default"
+  },
+  "group": {
+    "id": "20001",
+    "name": "unix_group1"
+  },
+  "id": 1,
+  "name": "string",
+  "nas": {
+    "path": "/volume3/qtree1"
+  },
+  "path": "/volume3/qtree1",
+  "qos_policy": {
+    "max_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "max_throughput_iops": 10000,
+    "max_throughput_mbps": 500,
+    "min_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "min_throughput_iops": 2000,
+    "min_throughput_mbps": 500,
+    "name": "performance",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "security_style": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "unix_permissions": 493,
+  "user": {
+    "id": "10001",
+    "name": "unix_user1"
+  },
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262245
+| Invalid field value.
+
+| 262247
+| Invalid field value.
+
+| 917525
+| The specified volume does not exist in Vserver.
+
+| 917927
+| The specified volume was not found.
+
+| 918232
+| Either `volume.name` or `volume.uuid` must be provided.
+
+| 918236
+| The specified `volume.uuid` and `volume.name` refer to different volumes.
+
+| 1703954
+| Export Policy name specified is invalid.
+
+| 2621462
+| The specified SVM does not exist.
+
+| 2621706
+| The specified `svm.uuid` and `svm.name` do not refer to the same SVM.
+
+| 2621707
+| No SVM was specified. Either `svm.name` or `svm.uuid` must be provided.
+
+| 5242881
+| Cannot create qtree because the volume is read-only.
+
+| 5242886
+| Failed to create qtree.
+
+| 5242894
+| Qtree with empty name "" is not allowed, as that is reserved for the default qtree.
+
+| 5242900
+| Qtree not supported on FlexCache volume
+
+| 5242948
+| Qtree is not supported on FlexCache origin volume.
+
+| 5242951
+| Export Policy supplied does not belong to the specified Export Policy ID.
+
+| 5242952
+| Export Policy ID specified is invalid.
+
+| 5242953
+| Qtree name must be provided.
+
+| 5242967
+| UNIX user or group ID must be 32-bit unsigned integer.
+
+| 5242970
+| FlexCache create is in progress for the volume.
+
+| 5242978
+| The maximum number of qtrees for which extended performance monitoring can be enabled has been reached. Retry the POST request with ext_performance_monitoring.enabled set to false.
+
+| 5242979
+| Qtree creation succeeded but failed to enable extended performance monitoring on the qtree.
+
+| 6622064
+| Security-style NTFS is not supported on a SnapMirror active sync relationship volume.
+
+| 8454348
+| QoS on qtrees is not supported because not all nodes in the cluster can support it.
+
+| 9437324
+| The security style unified is not supported.
+
+| 23724050
+| Failed to resolve user or group name.
+
+| 66846755
+| Failed to determine whether volume is a FlexCache volume or not.
+
+| 66846839
+| Failed to determine the effective cluster version of all the nodes hosting FlexCache volumes connected to FlexCache origin volume.
+
+| 92405926
+| Qtree operation failed on the specified object store volume.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+Export Policy
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#ext_performance_monitoring]
+[.api-collapsible-fifth-title]
+ext_performance_monitoring
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether extended performance monitoring is enabled for the qtree.
+
+
+|===
+
+
+[#group]
+[.api-collapsible-fifth-title]
+group
+
+The user set as owner of the qtree.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|The numeric ID of the group that owns the qtree. Valid in POST or PATCH.
+
+
+|name
+|string
+a|Alphanumeric group name of group that owns the qtree. Valid in POST or PATCH.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS latency and throughput.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#nas]
+[.api-collapsible-fifth-title]
+nas
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|Client visible path to the qtree. This field is not available if the volume does not have a junction-path configured. Not valid in POST or PATCH.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+When "min_throughput_iops", "min_throughput_mbps", "min_throughput", "max_throughput_iops", "max_throughput_mbps" or "max_throughput" attributes are specified, the storage object is assigned to an auto-generated QoS policy group. If the attributes are later modified, the auto-generated QoS policy-group attributes are modified. Attributes can be removed by specifying "0" and policy group by specifying "none". Upon deletion of the storage object or if the attributes are removed, then the QoS policy-group is also removed.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency observed at the storage object, in microseconds. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw IOPS and throughput performance numbers. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency observed at the storage object, in microseconds. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled with the next closest collection and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes does not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Required in POST
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#user]
+[.api-collapsible-fifth-title]
+user
+
+The user set as owner of the qtree.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|The numeric ID of the user who owns the qtree. Valid in POST or PATCH.
+
+
+|name
+|string
+a|Alphanumeric username of user who owns the qtree. Valid in POST or PATCH.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Required in POST
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#qtree]
+[.api-collapsible-fifth-title]
+qtree
+
+A qtree is a directory at the top level of a volume to which a custom export policy (for fine-grained access control) and a quota rule can be applied, if required.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|export_policy
+|link:#export_policy[export_policy]
+a|Export Policy
+
+
+|ext_performance_monitoring
+|link:#ext_performance_monitoring[ext_performance_monitoring]
+a|
+
+|group
+|link:#group[group]
+a|The user set as owner of the qtree.
+
+
+|id
+|integer
+a|The identifier for the qtree, unique within the qtree's volume.
+
+
+|name
+|string
+a|The name of the qtree. Required in POST; optional in PATCH.
+
+
+|nas
+|link:#nas[nas]
+a|
+
+|path
+|string
+a|Client visible path to the qtree. This field is not available if the volume does not have a junction-path configured. Not valid in POST or PATCH. This field is to be deprecated and replaced with nas.path.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|When "min_throughput_iops", "min_throughput_mbps", "min_throughput", "max_throughput_iops", "max_throughput_mbps" or "max_throughput" attributes are specified, the storage object is assigned to an auto-generated QoS policy group. If the attributes are later modified, the auto-generated QoS policy-group attributes are modified. Attributes can be removed by specifying "0" and policy group by specifying "none". Upon deletion of the storage object or if the attributes are removed, then the QoS policy-group is also removed.
+
+
+|security_style
+|string
+a|Security style. Valid in POST or PATCH.
+
+
+|svm
+|link:#svm[svm]
+a|Required in POST
+
+
+|unix_permissions
+|integer
+a|The UNIX permissions for the qtree. Valid in POST or PATCH.
+
+
+|user
+|link:#user[user]
+a|The user set as owner of the qtree.
+
+
+|volume
+|link:#volume[volume]
+a|Required in POST
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

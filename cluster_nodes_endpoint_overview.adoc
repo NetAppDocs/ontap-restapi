@@ -1,0 +1,512 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_nodes_endpoint_overview.html'
+summary: 'Manage cluster nodes'
+---
+
+= Manage cluster nodes
+
+
+
+= Overview
+
+You can use this API to add nodes to a cluster, update node-specific configurations, and retrieve the current node configuration details.
+
+== Adding a node to a cluster
+
+You can add a node to a cluster by issuing a POST /cluster/nodes request to a node currently in the cluster. All nodes must be running the same version of ONTAP to use this API. Mixed version joins are not supported in this release. You can provide properties as fields in the body of the POST request to configure node-specific settings. On a successful request, POST /cluster/nodes returns a status code of 202 and job information in the body of the request. You can use the /cluster/jobs APIs to track the status of the node add job.
+
+=== Fields used for adding a node
+
+Fields used for the /cluster/nodes APIs fall into the following categories:
+
+* Required node fields
+* Optional fields
+* Network interface fields
+* Records field
+
+=== Required node fields
+
+The following field is required for any POST /cluster/nodes request:
+
+* cluster_interface.ip.address
+
+=== Optional fields
+
+All of the following fields are used to set up additional cluster-wide configurations:
+
+* name
+* location
+* records
+
+=== Network interface fields
+
+You can set a node-specific configuration for each node by using the POST /cluster/nodes API. If you provide a field in the body of a node, provide it for all nodes in the POST body.
+You can provide the node management interface for each node if all node management interfaces in the cluster use the same subnet mask. If the node management interfaces use different subnet masks, use the /network/ip/interfaces API to configure the node management interfaces.
+
+=== The records field
+
+To add multiple nodes to the cluster in one request, provide an array named "records" with multiple node entries. Each node entry in "records" must follow the required and optional fields listed previously. When only adding a single node, you do not need a "records" field. See "Examples" for an example of how to use the "records" field.
+
+=== Create recommended aggregates parameter
+
+When you set the "create_recommended_aggregates" parameter to "true", aggregates based on an optimal layout recommended by the system are created on each of the nodes being added to the cluster. The default setting is "false".
+
+'''
+
+== Modifying node configurations
+
+The following fields can be used to modify a node configuration:
+
+* name
+* location
+
+'''
+
+== Modifying service processor configurations
+
+When modifying the "service_processor" properties, the job returns success immediately if valid network information is passed in. The values remain in their old state until the network information changes have taken effect on the service processor. You can poll the modified properties until the values are updated.
+
+'''
+
+== Deleting a node from a cluster
+
+You can delete a node from the cluster. Before deleting a node from the cluster, shut down all of the node's shared resources, such as virtual interfaces to clients. If any of the node's shared resources are still active, the command fails.
+You can use the "force" flag to forcibly remove a node that is down and cannot be brought online to remove its shared resources. This flag is set to "false" by default.
+
+'''
+
+== Node state
+
+The node "state" field in the /cluster/nodes API represents the current operational state of individual nodes.
+Note that the state of a node is a transient value and can change depending on the current condition of the node, especially during reboot, takeover, and giveback.
+Possible values for the node state are:
+
+* _up_ - Node is fully operational and is able to accept and handle management requests. It is connected to a majority of healthy (up) nodes in the cluster through the cluster interconnect and all critical services are online.
+* _booting_ - Node is starting up and is not yet fully functional. It might not yet be accessible through the management interface or cluster interconnect. One or more critical services are offline on the node and the node is not taken over. The HA partner reports the node's firmware state as "SF_BOOTING", "SF_BOOTED", or "SF_CLUSTERWAIT".
+* _down_ - Node is known to be down.  It cannot be reached through the management interface or cluster interconnect. The HA partner can be reached and reports that the node is halted/rebooted without takeover. Or, the HA partner cannot be reached (or no SFO configured) but the node shutdown request has been recorded by the quorum change coordinator. The state is reported by the node's HA partner.
+* _taken_over_ - Node is taken over by its HA partner. The state is reported by the node's HA partner.
+* _waiting_for_giveback_ - Node is taken over by its HA partner and is now ready and waiting for giveback. To bring the node up, either issue the "giveback" command to the HA partner node or wait for auto-giveback, if enabled. The state is reported by the node's HA partner.
+* _degraded_ - Node is known to be up but is not yet fully functional. The node can be reached through the cluster interconnect but one or more critical services are offline. Or, the node is not reachable but the node's HA partner can be reached and reports that the node is up with firmware state "SF_UP".
+* _unknown_ - Node state cannot be determined.
+
+'''
+
+== HA
+
+The "ha" field in the /cluster/nodes API shows the takeover and giveback states of the node along with the current values of the HA fields "enabled" and "auto_giveback".
+You can modify the HA fields "enabled" and "auto_giveback", which will change the HA states of the node.
+
+=== Takeover
+
+The takeover "state" field shows the different takeover states of the node. When the state is "failed", the "code" and "message" fields display.
+Possible values for takeover states are:
+
+* _not_attempted_ - Takeover operation is not started and takeover is possible.
+* _not_possible_ - Takeover operation is not possible. Check the failure message.
+* _in_progress_ - Takeover operation is in progress. The node is taking over its partner.
+* _in_takeover_ - Takeover operation is complete.
+* _failed_ - Takeover operation failed. Check the failure message.
+
+Possible values for takeover failure code and messages are:
+
+* _code_: 852130
+_message_: Failed to initiate takeover. Run the "storage failover show-takeover" command for more information.
+* _code_: 852131
+_message_: Takeover cannot be completed. Reason: disabled.
+
+=== Giveback
+
+The giveback "state" field shows the different giveback states of the node. When the state is "failed", the "code" and "message" fields display.
+Possible values for giveback states are:
+
+* _nothing_to_giveback_ - Node does not have partner aggregates to giveback.
+* _not_attempted_ - Giveback operation is not started.
+* _in_progress_ - Giveback operation is in progress.
+* _failed_ - Giveback operation failed. Check the failure message.
+
+Possible values for giveback failure codes and messages are:
+
+* _code_: 852126
+_message_: Failed to initiate giveback. Run the "storage failover show-giveback" command for more information.
+
+'''
+
+== Performance monitoring
+
+Performance of a node can be monitored by observing the `metric.+*+` and `statistics.+*+` properties. These properties show the performance of a node in terms of cpu utilization. The `metric.+*+` properties denote an average whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+'''
+
+== Examples
+
+The following examples show how to add nodes to a cluster, update node properties, shutdown and reboot a node, and remove a node from the cluster.
+
+=== Adding a single node with a minimal configuration
+
+----
+
+# Body
+add_single_node.txt(body):
+{
+"cluster_interface": {
+  "ip": {
+    "address": "1.1.1.1"
+  }
+}
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster/nodes" -d "@add_single_node.txt"
+----
+
+'''
+
+=== Adding multiple nodes in the same request and creating recommended aggregates
+
+----
+
+# Body
+add_multiple_nodes.txt(body):
+{
+"records": [
+    {
+        "name": "node1",
+        "cluster_interface": {
+          "ip": {
+            "address": "1.1.1.1"
+          }
+        }
+    },
+    {
+        "name": "node2",
+        "cluster_interface": {
+          "ip": {
+            "address": "2.2.2.2"
+          }
+        }
+    }
+]
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster/nodes?create_recommended_aggregates=true" -d "@add_multiple_nodes.txt"
+----
+
+'''
+
+=== Modifying a cluster-wide configuration
+
+----
+
+# Body
+modify_name_and_location.txt(body):
+{
+"name": "renamedNode",
+"location": "newLocation"
+}
+
+# Request
+curl -X PATCH "https://<mgmt-ip>/api/cluster/nodes" -d "@modify_name_and_location.txt"
+----
+
+'''
+
+=== Shutting down a node
+
+----
+curl -X PATCH "https://<mgmt-ip>/api/cluster/nodes/{uuid}?action=shutdown"
+----
+
+=== Powering off a node using SP assistance
+
+----
+curl -X PATCH "https://<mgmt-ip>/api/cluster/nodes/{uuid}?action=power_off"
+----
+
+'''
+
+=== Deleting a node from a cluster
+
+----
+curl -X DELETE "https://<mgmt-ip>/api/cluster/nodes/{uuid}"
+----
+
+=== Force a node deletion from a cluster
+
+----
+curl -X DELETE "https://<mgmt-ip>/api/cluster/nodes/{uuid}?force=true"
+----
+
+'''
+
+=== Retrieving the state of all nodes in a cluster
+
+----
+
+#Request
+curl -siku admin -X GET "https://<mgmt-ip>/api/cluster/nodes?fields=state"
+
+#Response
+{
+"records": [
+  {
+    "uuid": "54440ec3-6127-11e9-a959-005056bb76f9",
+    "name": "node2",
+    "state": "up",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/54440ec3-6127-11e9-a959-005056bb76f9"
+      }
+    }
+  },
+  {
+    "uuid": "e02dbef1-6126-11e9-b8fb-005056bb9ce4",
+    "name": "node1",
+    "state": "up",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/e02dbef1-6126-11e9-b8fb-005056bb9ce4"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/nodes?fields=state"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving nodes that are in the spare low condition in a cluster
+
+----
+
+# Request
+curl -siku admin -X GET "https://<mgmt-ip>/api/cluster/nodes?fields=is_spares_low"
+
+#Response
+{
+"records": [
+  {
+    "uuid": "54440ec3-6127-11e9-a959-005056bb76f9",
+    "name": "node2",
+    "spares_low": true,
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/54440ec3-6127-11e9-a959-005056bb76f9"
+      }
+    }
+  },
+  {
+    "uuid": "e02dbef1-6126-11e9-b8fb-005056bb9ce4",
+    "name": "node1",
+    "spares_low": false,
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/e02dbef1-6126-11e9-b8fb-005056bb9ce4"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/nodes?fields=state"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving statistics and metric for a node
+
+In this example, the API returns the "statistics" and "metric" properties.
+
+----
+
+#Request
+curl -siku admin -X GET "https://<mgmt-ip>/api/cluster/nodes?fields=statistics,metric"
+
+#Response
+{
+    "records": [
+    {
+      "uuid": "6b29327b-21ca-11ea-99aa-005056bb420b",
+      "name": "example_node_name",
+      "metric": {
+        "timestamp": "2019-12-19T15:50:45Z",
+        "duration": "PT15S",
+        "status": "ok",
+        "processor_utilization": 3
+      },
+      "statistics": {
+        "timestamp": "2019-12-19T15:50:48Z",
+        "status": "ok",
+        "processor_utilization_raw": 6409411622,
+        "processor_utilization_base": 74330229886
+      }
+    }
+  ],
+  "num_records": 1
+}
+----
+
+'''
+
+=== Retrieving takeover and giveback failure codes and messages
+
+----
+
+#Request
+curl -siku admin -X GET "https://<mgmt-ip>/api/cluster/nodes?fields=ha"
+
+#Response
+{
+"records": [
+  {
+    "uuid": "54440ec3-6127-11e9-a959-005056bb76f9",
+    "name": "node2",
+    "ha": {
+      "enabled": false,
+      "auto_giveback": false,
+      "partners": [
+        {
+          "uuid": "e02dbef1-6126-11e9-b8fb-005056bb9ce4",
+          "name": "node1"
+        }
+      ],
+      "giveback": {
+            "state": "nothing_to_giveback"
+      },
+      "takeover": {
+        "state": "not_possible",
+        "failure": {
+          "message": "Takeover cannot be completed. Reason: disabled.",
+          "code": 852131
+        }
+      },
+      "ports": [
+        {
+          "name": "e0h"
+        },
+        {
+          "name": "N/A"
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/54440ec3-6127-11e9-a959-005056bb76f9"
+      }
+    }
+  },
+  {
+    "uuid": "e02dbef1-6126-11e9-b8fb-005056bb9ce4",
+    "name": "node1",
+    "ha": {
+      "enabled": false,
+      "auto_giveback": false,
+      "partners": [
+        {
+          "uuid": "54440ec3-6127-11e9-a959-005056bb76f9",
+          "name": "node2"
+        }
+      ],
+      "giveback": {
+            "state": "nothing_to_giveback"
+      },
+      "takeover": {
+        "state": "not_possible",
+        "failure": {
+          "message": "Takeover cannot be completed. Reason: disabled.",
+          "code": 852131
+        }
+      },
+      "ports": [
+        {
+          "name": "e0h"
+        },
+        {
+          "name": "N/A"
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/e02dbef1-6126-11e9-b8fb-005056bb9ce4"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/nodes?fields=state"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving external cache information for a node
+
+In this example, the API returns the external_cache property.
+
+----
+
+#Request
+curl -siku admin -X GET "https://<mgmt-ip>/api/cluster/nodes?fields=external_cache"
+
+#Response
+{
+"records": [
+  {
+    "uuid": "71af8235-bea9-11eb-874a-005056bbab13",
+    "name": "node2",
+    "external_cache": {
+      "is_enabled": false,
+      "is_hya_enabled": true,
+      "is_rewarm_enabled": false,
+      "pcs_size": 256
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/71af8235-bea9-11eb-874a-005056bbab13"
+      }
+    }
+  },
+  {
+    "uuid": "8c4cbf08-bea9-11eb-b8ae-005056bb16aa",
+    "name": "node1",
+    "external_cache": {
+      "is_enabled": false,
+      "is_hya_enabled": true,
+      "is_rewarm_enabled": false,
+      "pcs_size": 256
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/8c4cbf08-bea9-11eb-b8ae-005056bb16aa"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/nodes?fields=external_cache"
+  }
+}
+}
+----
+
+

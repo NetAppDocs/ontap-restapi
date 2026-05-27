@@ -1,0 +1,827 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_quota_rules_endpoint_overview.html'
+summary: 'Manage storage quota policy rules'
+---
+
+= Manage storage quota policy rules
+
+
+
+== Overview
+
+Quotas are defined in quota rules specific to FlexVol volumes or FlexGroup volumes.  Each quota rule has a type. The type can be "user", "group", or "tree".
+
+&ndash; User rules must have the user property and qtree property.
+
+&ndash; Group rules must have the group property and qtree property.
+
+&ndash; Tree rules must have the qtree property and not have the user or group property.
+
+== Quota policy rule APIs
+
+The following APIs can be used to perform create, retrieve, modify, and delete operations related to quota policy rules.
+
+&ndash; POST      /api/storage/quota/rules
+
+&ndash; GET       /api/storage/quota/rules
+
+&ndash; GET       /api/storage/quota/rules/\{rule-uuid}
+
+&ndash; PATCH     /api/storage/quota/rules/\{rule-uuid}
+
+&ndash; DELETE    /api/storage/quota/rules/\{rule-uuid}
+
+== Examples
+
+=== Retrieving all quota policy rules
+
+This API is used to retrieve all quota policy rules.
+
+The following example shows how to retrieve quota policy rules for FlexVol volumes and FlexGroup volumes.
+
+'''
+
+----
+
+# The API:
+GET /api/storage/quota/rules
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/quota/rules' -H 'accept: application/hal+json'
+
+# The response:
+{
+  "records": [
+    {
+      "svm": {
+        "uuid": "038545f8-9ff8-11e8-bce6-005056a73bed",
+        "name": "svm1",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/038545f8-9ff8-11e8-bce6-005056a73bed"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "ab3df793-0f02-43c6-9514-4f142fc8cc92",
+        "name": "vol1",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/ab3df793-0f02-43c6-9514-4f142fc8cc92"
+          }
+        }
+      },
+      "uuid": "66319cbe-b837-11e8-9c5a-005056a7e88c",
+      "_links": {
+        "self": {
+          "href": "/api/storage/quota/rules/66319cbe-b837-11e8-9c5a-005056a7e88c"
+        }
+      }
+    },
+    {
+      "svm": {
+        "uuid": "038545f8-9ff8-11e8-bce6-005056a73bed",
+        "name": "svm1",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/038545f8-9ff8-11e8-bce6-005056a73bed"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "ab3df793-0f02-43c6-9514-4f142fc8cc92",
+        "name": "vol1",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/ab3df793-0f02-43c6-9514-4f142fc8cc92"
+          }
+        }
+      },
+      "uuid": "dbd5b443-b7a4-11e8-bc58-005056a7e88c",
+      "_links": {
+        "self": {
+          "href": "/api/storage/quota/rules/dbd5b443-b7a4-11e8-bc58-005056a7e88c"
+        }
+      }
+    }
+  ],
+  "num_records": 2,
+  "_links": {
+    "self": {
+      "href": "/api/storage/quota/rules"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving a specific quota policy rule
+
+This API is used to retrieve a quota policy rule for a specific qtree.
+
+The following example shows how to retrieve a quota policy user rule for a specific qtree.
+
+'''
+
+----
+
+# The API:
+GET /api/storage/quota/rules/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/quota/rules/264a9e0b-2e03-11e9-a610-005056a7b72d' -H 'accept: application/hal+json'
+
+# Response for a user rule at a qtree level:
+{
+  "svm": {
+    "uuid": "fd5db15a-15b9-11e9-a6ad-005056a760e0",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/fd5db15a-15b9-11e9-a6ad-005056a760e0"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "c1b64eea-ca8b-45ec-9397-ab489830d268",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/c1b64eea-ca8b-45ec-9397-ab489830d268"
+      }
+    }
+  },
+  "uuid": "264a9e0b-2e03-11e9-a610-005056a7b72d",
+  "type": "user",
+  "users": [ {"name" : "fred"} ],
+  "qtree": {
+    "name": "qt1",
+    "id": 1,
+    "_links": {
+      "self": {
+        "href": "/api/storage/qtrees/c1b64eea-ca8b-45ec-9397-ab489830d268/1"
+      }
+    }
+  },
+  "user_mapping": on,
+  "space": {
+    "hard_limit": 1222800,
+    "soft_limit": 51200
+  },
+  "files": {
+    "hard_limit": 100,
+    "soft_limit": 80
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/quota/rules/264a9e0b-2e03-11e9-a610-005056a7b72d"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving a quota policy multi-user rule at the volume level
+
+'''
+
+----
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/quota/rules/0ab84fba-19aa-11e9-a04d-005056a72f42' -H 'accept: application/hal+json'
+
+# Response for a multi-user rule at volume level:
+{
+  "svm": {
+    "uuid": "fd5db15a-15b9-11e9-a6ad-005056a760e0",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/fd5db15a-15b9-11e9-a6ad-005056a760e0"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "c1b64eea-ca8b-45ec-9397-ab489830d268",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/c1b64eea-ca8b-45ec-9397-ab489830d268"
+      }
+    }
+  },
+  "uuid": "0ab84fba-19aa-11e9-a04d-005056a72f42",
+  "type": "user",
+  "users": [
+    {
+      "name": "sam",
+    },
+    {
+      "name": "smith",
+    },
+    {
+      "id": "300010",
+    },
+  ],
+  "space": {
+    "hard_limit": 1222800,
+    "soft_limit": 51200
+  },
+  "files": {
+    "hard_limit": 100,
+    "soft_limit": 80
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/quota/rules/0ab84fba-19aa-11e9-a04d-005056a72f42"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving a quota policy default tree rule
+
+'''
+
+----
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/quota/rules/4a276b8c-1753-11e9-8101-005056a760e0' -H 'accept: application/hal+json'
+
+# Response for a default tree rule:
+{
+  "svm": {
+    "uuid": "fd5db15a-15b9-11e9-a6ad-005056a760e0",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/fd5db15a-15b9-11e9-a6ad-005056a760e0"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "c1b64eea-ca8b-45ec-9397-ab489830d268",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/c1b64eea-ca8b-45ec-9397-ab489830d268"
+      }
+    }
+  },
+  "uuid": "4a276b8c-1753-11e9-8101-005056a760e0",
+  "type": "tree",
+  "qtree": {
+    "name": ""
+  },
+  "space": {
+    "hard_limit": 1034000,
+    "soft_limit": 51200
+  },
+  "files": {
+    "hard_limit": 20,
+    "soft_limit": 10
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/quota/rules/4a276b8c-1753-11e9-8101-005056a760e0"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving a quota policy tree rule for a specific qtree
+
+'''
+
+----
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/quota/rules/49b1134f-19ab-11e9-a04d-005056a72f42' -H 'accept: application/hal+json'
+
+# Response for a tree rule for a specific qtree:
+{
+  "svm": {
+    "uuid": "fd5db15a-15b9-11e9-a6ad-005056a760e0",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/fd5db15a-15b9-11e9-a6ad-005056a760e0"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "c1b64eea-ca8b-45ec-9397-ab489830d268",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/c1b64eea-ca8b-45ec-9397-ab489830d268"
+      }
+    }
+  },
+  "uuid": "49b1134f-19ab-11e9-a04d-005056a72f42",
+  "type": "tree",
+  "qtree": {
+    "name": "qt1",
+    "id": 1,
+    "_links": {
+      "self": {
+        "href": "/api/storage/qtrees/c1b64eea-ca8b-45ec-9397-ab489830d268/1"
+      }
+    }
+  },
+  "space": {
+    "hard_limit": 1048576,
+    "soft_limit": 838861
+  },
+  "files": {
+    "hard_limit": 100,
+    "soft_limit": 40
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/quota/rules/49b1134f-19ab-11e9-a04d-005056a72f42"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving a quota policy group rule for a specific qtree
+
+'''
+
+----
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/quota/rules/b9236852-19ab-11e9-a04d-005056a72f42' -H 'accept: application/hal+json'
+
+# Response for a group rule:
+{
+  "svm": {
+    "uuid": "fd5db15a-15b9-11e9-a6ad-005056a760e0",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/fd5db15a-15b9-11e9-a6ad-005056a760e0"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "c1b64eea-ca8b-45ec-9397-ab489830d268",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/c1b64eea-ca8b-45ec-9397-ab489830d268"
+      }
+    }
+  },
+  "uuid": "b9236852-19ab-11e9-a04d-005056a72f42",
+  "type": "group",
+  "group": {"name" : "group1"},
+  "qtree": {
+    "name": "qt1",
+    "id": 1,
+    "_links": {
+      "self": {
+        "href": "/api/storage/qtrees/c1b64eea-ca8b-45ec-9397-ab489830d268/1"
+      }
+    }
+  },
+  "space": {
+    "hard_limit": 2097152,
+    "soft_limit": 1572864
+  },
+  "files": {
+    "hard_limit": 250,
+    "soft_limit": 200
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/quota/rules/b9236852-19ab-11e9-a04d-005056a72f42"
+    }
+  }
+}
+----
+
+'''
+
+=== Creating a quota policy rule
+
+This API is used to create a new quota policy rule. When an explicit rule or a qtree-scoped rule of a type is created on a volume, a default rule of the same type is automatically added if it does not already exist on the volume.
+
+The following example shows how to create a quota policy user rule using POST.
+
+'''
+
+----
+
+# The API:
+POST /api/storage/quota/rules
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/quota/rules?return_records=true' -H 'accept: application/hal+json' -d @test_quota_post.txt
+test_quota_post.txt(body):
+{
+"svm": {
+  "name": "svm1"
+},
+"volume": {
+  "name": "vol1"
+},
+"type": "user",
+"users": [ {"name" : "example_user"} ],
+"qtree": {
+  "name":"qt1"
+},
+"user_mapping": "on",
+"space": {
+  "hard_limit": 8192,
+  "soft_limit": 1024
+},
+"files": {
+  "hard_limit": 20,
+  "soft_limit": 10
+}
+}
+
+# The response
+{
+  "num_records": 1,
+  "records": [
+    {
+      "svm": {
+        "name": "svm1"
+      },
+      "volume": {
+        "name": "fv"
+      },
+      "uuid": "3220eea6-5049-11e9-bfb7-005056a7f717",
+      "type": "user",
+      "users": [
+        {
+          "name" : "example_user"
+        }
+      ],
+      "qtree": {
+        "name": "qt1"
+      },
+      "user_mapping": "on",
+      "space": {
+        "hard_limit": 8192,
+        "soft_limit": 1024
+      },
+      "files": {
+        "hard_limit": 20,
+        "soft_limit": 10
+      },
+      "_links": {
+        "self": {
+          "href": "/api/storage/quota/rules/3220eea6-5049-11e9-bfb7-005056a7f717"
+        }
+      }
+    }
+  ],
+  "job": {
+    "uuid": "32223924-5049-11e9-bfb7-005056a7f717",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/jobs/32223924-5049-11e9-bfb7-005056a7f717"
+      }
+    }
+  }
+}
+----
+
+'''
+
+=== Creating a quota policy group rule using POST.
+
+'''
+
+----
+
+# The API:
+POST /api/storage/quota/rules
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/quota/rules?return_records=true' -H 'accept: application/hal+json' -d @test_quota_post.txt
+test_quota_post.txt(body):
+{
+"svm": {
+  "name": "svm1"
+},
+"volume": {
+  "name": "vol1"
+},
+"type": "group",
+"group": {
+  "name" : "test_group1"
+},
+"qtree": {
+  "name":"qt1"
+},
+"space": {
+  "hard_limit": 8192,
+  "soft_limit": 1024
+},
+"files": {
+  "hard_limit": 20,
+  "soft_limit": 10
+}
+}
+
+# The response
+{
+  "num_records": 1,
+  "records": [
+    {
+      "svm": {
+        "name": "svm1"
+      },
+      "volume": {
+        "name": "fv"
+      },
+      "uuid": "3b130f7d-504a-11e9-bfb7-005056a7f717",
+      "type": "group",
+      "group": {
+          "name" : "test_group1"
+      },
+      "qtree": {
+        "name": "qt1"
+      },
+      "space": {
+        "hard_limit": 8192,
+        "soft_limit": 1024
+      },
+      "files": {
+        "hard_limit": 20,
+        "soft_limit": 10
+      },
+      "_links": {
+        "self": {
+          "href": "/api/storage/quota/rules/3b130f7d-504a-11e9-bfb7-005056a7f717"
+        }
+      }
+    }
+  ],
+  "job": {
+    "uuid": "32223924-5049-11e9-bfb7-005056a7f717",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/jobs/32223924-5049-11e9-bfb7-005056a7f717"
+      }
+    }
+  }
+}
+----
+
+'''
+
+=== Creating a quota policy tree rule using POST
+
+'''
+
+----
+
+# The API:
+POST /api/storage/quota/rules
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/quota/rules?return_records=true' -H 'accept: application/hal+json' -d @test_quota_post.txt
+test_quota_post.txt(body):
+{
+"svm": {
+  "name": "svm1"
+},
+"volume": {
+  "name": "vol1"
+},
+"type": "tree",
+"qtree": {
+  "name":"qt1"
+},
+"space": {
+  "hard_limit": 8192,
+  "soft_limit": 1024
+},
+"files": {
+  "hard_limit": 20,
+  "soft_limit": 10
+}
+}
+
+# The response
+{
+  "num_records": 1,
+  "records": [
+    {
+      "svm": {
+        "name": "svm1"
+      },
+      "volume": {
+        "name": "fv"
+      },
+      "uuid": "e5eb03be-504a-11e9-bfb7-005056a7f717",
+      "type": "tree",
+      "qtree": {
+        "name": "qt1"
+      },
+      "space": {
+        "hard_limit": 8192,
+        "soft_limit": 1024
+      },
+      "files": {
+        "hard_limit": 20,
+        "soft_limit": 10
+      },
+      "_links": {
+        "self": {
+          "href": "/api/storage/quota/rules/e5eb03be-504a-11e9-bfb7-005056a7f717"
+        }
+      }
+    }
+  ],
+  "job": {
+    "uuid": "32223924-5049-11e9-bfb7-005056a7f717",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/jobs/32223924-5049-11e9-bfb7-005056a7f717"
+      }
+    }
+  }
+}
+----
+
+'''
+
+=== Updating the quota policy rule
+
+This API is used to update a quota policy rule.
+
+The following example shows how to update a quota policy rule.
+
+'''
+
+----
+
+# The API:
+PATCH /storage/quota/rules/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/quota/rules/364d38eb-8e87-11e8-a806-005056a7e73a" -H 'accept: application/hal+json' -d "@test_quota_patch.txt"
+test_quota_patch.txt(body):
+{
+"space": {
+  "hard_limit": 16554,
+  "soft_limit": 8192
+},
+"files": {
+  "hard_limit": 40,
+  "soft_limit": 20
+}
+}
+----
+
+'''
+
+=== Deleting the quota policy rule
+
+This API is used to delete a quota policy rule.
+
+The following example shows how to delete a quota policy rule.
+
+'''
+
+----
+
+# The API:
+DELETE /storage/quota/rules/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/quota/rules/364d38eb-8e87-11e8-a806-005056a7e73a" -H 'accept: application/hal+json'
+----
+
+'''
+
+=== Retrieving a quota policy rule with the property files.hard_limit greater than 5 or null (unlimited) for qtree qt1
+
+'''
+
+----
+
+# The API:
+GET /api/storage/quota/rules
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/quota/rules?rqtree.name=qt1&files.hard_limit=>5&#124;null" -H 'accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "2272378d-eab2-11ed-913b-005056ac10bf",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2272378d-eab2-11ed-913b-005056ac10bf"
+        }
+      }
+    },
+    "volume": {
+      "uuid": "6dc24682-edde-11ed-8b6b-005056acde94",
+      "name": "testVol",
+      "_links": {
+        "self": {
+          "href": "/api/storage/volumes/6dc24682-edde-11ed-8b6b-005056acde94"
+        }
+      }
+    },
+    "uuid": "9abfdd9f-ede7-11ed-8b6b-005056acde94",
+    "files": {
+      "hard_limit": 15
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/quota/rules/9abfdd9f-ede7-11ed-8b6b-005056acde94"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "2272378d-eab2-11ed-913b-005056ac10bf",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2272378d-eab2-11ed-913b-005056ac10bf"
+        }
+      }
+    },
+    "volume": {
+      "uuid": "83c865bd-edde-11ed-8b6b-005056acde94",
+      "name": "testVol2",
+      "_links": {
+        "self": {
+          "href": "/api/storage/volumes/83c865bd-edde-11ed-8b6b-005056acde94"
+        }
+      }
+    },
+    "uuid": "a876601e-ede7-11ed-8b6b-005056acde94",
+    "files": {
+      "hard_limit": 6
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/quota/rules/a876601e-ede7-11ed-8b6b-005056acde94"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "2272378d-eab2-11ed-913b-005056ac10bf",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/2272378d-eab2-11ed-913b-005056ac10bf"
+        }
+      }
+    },
+    "volume": {
+      "uuid": "a44c8f5d-edde-11ed-8b6b-005056acde94",
+      "name": "testVol4",
+      "_links": {
+        "self": {
+          "href": "/api/storage/volumes/a44c8f5d-edde-11ed-8b6b-005056acde94"
+        }
+      }
+    },
+    "uuid": "d66ff5ed-ede7-11ed-8b6b-005056acde94",
+    "_links": {
+      "self": {
+        "href": "/api/storage/quota/rules/d66ff5ed-ede7-11ed-8b6b-005056acde94"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/storage/quota/rules?files.hard_limit=>5&#124;null"
+  }
+}
+}
+----
+
+'''
+
+

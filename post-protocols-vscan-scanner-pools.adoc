@@ -1,0 +1,523 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-vscan-scanner-pools.html'
+summary: 'Create the Vscan scanner-pool configuration for an SVM'
+---
+
+= Create the Vscan scanner-pool configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}/scanner-pools`#
+
+*Introduced In:* 9.6
+
+Creates a Vscan scanner-pool configuration for a specified SVM. You can create a scanner-pool with all fields specified or only mandatory fields specified.
+
+Important notes:
+
+* A scanner-pool must have servers and privileged users specified.
+* If the role or cluster is not specified, the scanner-pool is created on the local cluster with the role set as primary.
+*`Only one of the fields cluster-uuid or cluster-name is required.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the Vscan configuration.
+* `name` - Scanner-pool name.
+* `privileged_users` - List of privileged users.
+* `servers` - List of server IP addresses or FQDNs.
+
+== Recommended optional properties
+
+* `role` - Setting a role for a scanner-pool is recommended.
+* `cluster` - Passing the cluster name or UUID (or both) in a multi-cluster environment is recommended.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `role` - _primary_
+* `cluster.name` - Local cluster name.
+* `cluster.uuid` - Local cluster UUID.
+
+== Related ONTAP commands
+
+* `vserver vscan scanner-pool create`
+* `vserver vscan scanner-pool apply-policy`
+* `vserver vscan scanner-pool privileged-users add`
+* `vserver vscan scanner-pool servers add`
+
+== Learn more
+
+* link:protocols_vscan_svm.uuid_scanner-pools_endpoint_overview.html[DOC /protocols/vscan/{svm.uuid}/scanner-pools]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster_reference[cluster_reference]
+a|
+
+|name
+|string
+a|Specifies the name of the scanner pool. Scanner pool name can be up to 256 characters long and is a string that can only contain any combination of ASCII-range alphanumeric characters a-z, A-Z, 0-9), "_", "-" and ".".
+
+
+|privileged_users
+|array[string]
+a|Specifies a list of privileged users. A valid form of privileged user-name is "domain-name\user-name". Privileged user-names are stored and treated as case-insensitive strings. Virus scanners must use one of the registered privileged users for connecting to clustered Data ONTAP for exchanging virus-scanning protocol messages and to access file for scanning, remedying and quarantining operations.
+
+* example: ["cifs\u1", "cifs\u2"]
+* Introduced in: 9.6
+
+
+|role
+|string
+a|Specifies the role of the scanner pool. The possible values are:
+
+*** primary   - Always active.
+
+*** secondary - Active only when none of the primary external virus-scanning servers are connected.
+
+*** idle      - Always inactive.
+
+
+|servers
+|array[string]
+a|Specifies a list of IP addresses or FQDN for each Vscan server host names which are allowed to connect to clustered ONTAP.
+
+* example: ["1.1.1.1", "10.72.204.27", "vmwin204-27.fsct.nb"]
+* Introduced in: 9.6
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "cluster": {
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "scanner-1",
+  "privileged_users": [
+    "cifs\\u1",
+    "cifs\\u2"
+  ],
+  "role": "string",
+  "servers": [
+    "1.1.1.1",
+    "10.72.204.27",
+    "vmwin204-27.fsct.nb"
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#vscan_scanner_pool[vscan_scanner_pool]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "cluster": {
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "scanner-1",
+      "privileged_users": [
+        "cifs\\u1",
+        "cifs\\u2"
+      ],
+      "role": "string",
+      "servers": [
+        "1.1.1.1",
+        "10.72.204.27",
+        "vmwin204-27.fsct.nb"
+      ],
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|10027076 +
+//end row
+//start row
+|The new scanner-pool cannot be created because the SVM has reached the maximum limit of 20 scanner-pools. Delete an existing scanner-pool in order to create a new scanner-pool
+//end row
+//start row
+|10027086 +
+//end row
+//start row
+|The specified list of servers contains one or more entries that cannot be resolved
+//end row
+//start row
+|10027258 +
+//end row
+//start row
+|The specified cluster_name does not exist
+//end row
+//start row
+|10027256 +
+//end row
+//start row
+|The specified cluster_uuid does not exist
+//end row
+//start row
+|10027257 +
+//end row
+//start row
+|The specified cluster_name and cluster_uuid are valid but belong to different clusters
+//end row
+//start row
+|10027248 +
+//end row
+//start row
+|Scanner-pool created successfully but failed to activate
+//end row
+//start row
+|10027107 +
+//end row
+//start row
+|The list of privileged users or list of servers specified is empty
+//end row
+//start row
+|10027108 +
+//end row
+//start row
+|The list of privileged users specified contains an invalid entry
+//end row
+//start row
+|10027063 +
+//end row
+//start row
+|Attempting to modify a scanner-pool on an SVM owned by the cluster with a data SVM
+//end row
+//start row
+|10027086 +
+//end row
+//start row
+|DNS resolution failed for one or more hostnames
+//end row
+//start row
+|10027119 +
+//end row
+//start row
+|The privileged user contains characters that are not allowed
+//end row
+//start row
+|10027261 +
+//end row
+//start row
+|One of the specified IPv4 addresses in the "-hostnames" is either a multicast, loopback, broadcast, or '0.0.0.0' address.
+//end row
+//start row
+|10027262 +
+//end row
+//start row
+|One of the specified IPv6 addresses in the "-hostnames" is either a link-local, multicast, v4-compatible, v4-mapped, loopback or '::/0' address.
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#cluster_reference]
+[.api-collapsible-fifth-title]
+cluster_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vscan_scanner_pool]
+[.api-collapsible-fifth-title]
+vscan_scanner_pool
+
+Scanner pool is a set of attributes which are used to validate and manage connections between clustered ONTAP and external virus-scanning server, or "Vscan server".
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster_reference[cluster_reference]
+a|
+
+|name
+|string
+a|Specifies the name of the scanner pool. Scanner pool name can be up to 256 characters long and is a string that can only contain any combination of ASCII-range alphanumeric characters a-z, A-Z, 0-9), "_", "-" and ".".
+
+
+|privileged_users
+|array[string]
+a|Specifies a list of privileged users. A valid form of privileged user-name is "domain-name\user-name". Privileged user-names are stored and treated as case-insensitive strings. Virus scanners must use one of the registered privileged users for connecting to clustered Data ONTAP for exchanging virus-scanning protocol messages and to access file for scanning, remedying and quarantining operations.
+
+* example: ["cifs\u1", "cifs\u2"]
+* Introduced in: 9.6
+
+
+|role
+|string
+a|Specifies the role of the scanner pool. The possible values are:
+
+*** primary   - Always active.
+
+*** secondary - Active only when none of the primary external virus-scanning servers are connected.
+
+*** idle      - Always inactive.
+
+
+|servers
+|array[string]
+a|Specifies a list of IP addresses or FQDN for each Vscan server host names which are allowed to connect to clustered ONTAP.
+
+* example: ["1.1.1.1", "10.72.204.27", "vmwin204-27.fsct.nb"]
+* Introduced in: 9.6
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

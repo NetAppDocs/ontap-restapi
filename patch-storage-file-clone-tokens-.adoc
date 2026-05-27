@@ -1,0 +1,268 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-file-clone-tokens-.html'
+summary: 'Update a file clone token'
+---
+
+= Update a file clone token
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/file/clone/tokens/{node.uuid}/{uuid}`#
+
+*Introduced In:* 9.10
+
+Updates a file clone token.
+
+== Related Ontap commands
+
+* `volume file clone token modify`
+
+== Modify clone token
+
+Use the PATCH API to update the expiry time associated with the clone token.<br>
+
+----
+
+# The call:
+curl -X PATCH "https://<mgmt_ip>/api/storage/file/clone/tokens/97255711-a1ad-11eb-92b2-0050568eb2ca/905c42ce-a74b-11eb-bd86-0050568ec7ae" -d '{"expiry_time": {"limit": "5400"} }'
+
+# The response for successful PATCH is empty.
+----
+
+== Learn More
+
+* [`DOC /storage/file/clone`]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+
+|uuid
+|string
+|path
+|True
+a|Token UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|link:#expiry_time[expiry_time]
+a|
+
+|uuid
+|string
+a|Token UUID.
+
+
+|===
+
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 13565958
+| Failed to get information about token `uuid` for node `node.name`.
+
+| 13565960
+| Failed to modify token expiry limit for node `node.name`.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#expiry_time]
+[.api-collapsible-fifth-title]
+expiry_time
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|left
+|string
+a|Specifies the time remaining before the given token expires in ISO-8601 format.
+
+
+|limit
+|string
+a|Specifies when the given token expires in ISO-8601 format.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Node name
+
+
+|uuid
+|string
+a|Node UUID
+
+
+|===
+
+
+[#token]
+[.api-collapsible-fifth-title]
+token
+
+token
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|link:#expiry_time[expiry_time]
+a|
+
+|uuid
+|string
+a|Token UUID.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

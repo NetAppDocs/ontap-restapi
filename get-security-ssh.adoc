@@ -1,0 +1,263 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-ssh.html'
+summary: 'Retrieve cluster SSH server ciphers, MAC algorithms, key exchange algorithms, and connection limits'
+---
+
+= Retrieve cluster SSH server ciphers, MAC algorithms, key exchange algorithms, and connection limits
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/ssh`#
+
+*Introduced In:* 9.7
+
+Retrieves the cluster SSH server ciphers, MAC algorithms, key exchange algorithms, host key algorithms, connection limits, login grace time, and _ssh-rsa_ enabled status for public key algorithms.
+
+== Related ONTAP commands
+
+* `security ssh`
+* `security protocol ssh`
+
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ciphers
+|array[string]
+a|Ciphers for encrypting the data.
+
+
+|connections_per_second
+|integer
+a|Maximum connections allowed per second.
+
+
+|host_key_algorithms
+|array[string]
+a|Host key algorithms. The host key algorithms 'ssh_ed25519' and 'ssh_rsa' can be configured only in non-FIPS mode.
+
+
+|is_rsa_in_publickey_algorithms_enabled
+|boolean
+a|Enables or disables the _ssh-rsa_ signature scheme, which uses the SHA-1 hash algorithm, for RSA keys in public key algorithms. If this flag is _false_, older SSH implementations might fail to authenticate using RSA keys. This flag should be enabled only as a temporary measure until legacy SSH client implementations can be upgraded or reconfigured with another key type, for example: ECDSA.
+
+
+|key_exchange_algorithms
+|array[string]
+a|Key exchange algorithms.
+
+
+|login_grace_time
+|integer
+a|The SSH connection login grace time allowed for the connection.
+
+
+|mac_algorithms
+|array[string]
+a|MAC algorithms.
+
+
+|max_authentication_retry_count
+|integer
+a|Maximum authentication retries allowed before closing the connection.
+
+
+|max_instances
+|integer
+a|Maximum possible simultaneous connections.
+
+
+|per_source_limit
+|integer
+a|Maximum connections from the same client host.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "ciphers": [
+    "aes256_ctr",
+    "aes192_ctr",
+    "aes128_ctr"
+  ],
+  "host_key_algorithms": [
+    "ecdsa_sha2_nistp256",
+    "ssh_rsa",
+    "rsa_sha2_256",
+    "rsa_sha2_512"
+  ],
+  "key_exchange_algorithms": [
+    "diffie_hellman_group_exchange_sha256",
+    "ecdh_sha2_nistp256",
+    "diffie_hellman_group18_sha512"
+  ],
+  "mac_algorithms": [
+    "hmac_sha2_512",
+    "hmac_sha2_512_etm"
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

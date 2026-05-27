@@ -1,0 +1,179 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-qos-qos-options.html'
+summary: 'Update a QoS option'
+---
+
+= Update a QoS option
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/qos/qos-options`#
+
+*Introduced In:* 9.14
+
+Update a specific QoS option.
+This option is available only at diagnostic privilege level and above.
+
+== Related ONTAP commands
+
+* `qos settings cluster-options modify`
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|background_task_reserve
+|integer
+a|Percentage reserve for critical background tasks.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "background_task_reserve": 33
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 8454377
+| This command is not supported on this platform.
+
+| 8454378
+| Unsupported value specified for background-task-reserve. Supported values are 0 to 99.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#qos_option]
+[.api-collapsible-fifth-title]
+qos_option
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|background_task_reserve
+|integer
+a|Percentage reserve for critical background tasks.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

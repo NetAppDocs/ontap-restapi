@@ -1,0 +1,193 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-nfs-connected-client-settings.html'
+summary: 'Update NFS connected-client cache settings properties'
+---
+
+= Update NFS connected-client cache settings properties
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/nfs/connected-client-settings`#
+
+*Introduced In:* 9.12
+
+Updates the properties of the NFS connected-client cache settings.
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_retention_interval
+|string
+a|The lifetime range of the connected-clients cache. Only intervals in multiples of 12 hours or its equivalent in days, minutes or seconds are supported. The minimum is 12 hours and the maximum is 168 hours or 7 days.
+
+
+|enable_nfs_clients_deletion
+|boolean
+a|Specifies whether or not NFS Clients deletion is enabled for the connected-clients cache. When set to "true", connected-clients entries are deleted when a connection is closed.
+
+
+|update_interval
+|string
+a|The time interval between refreshing the connected-clients cache. The minimum is 1 hour and the maximum is 8 hours.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "client_retention_interval": "string",
+  "update_interval": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 3277172
+| The value for "client_retention_interval" must be between 12 and 168 hours or its equivalent in days, minutes or seconds.
+
+| 3277170
+| The "client_retention_interval" must be set to a value which is a multiple of 12 hours or to its equivalent in days, minutes or seconds.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#nfs_clients_cache]
+[.api-collapsible-fifth-title]
+nfs_clients_cache
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_retention_interval
+|string
+a|The lifetime range of the connected-clients cache. Only intervals in multiples of 12 hours or its equivalent in days, minutes or seconds are supported. The minimum is 12 hours and the maximum is 168 hours or 7 days.
+
+
+|enable_nfs_clients_deletion
+|boolean
+a|Specifies whether or not NFS Clients deletion is enabled for the connected-clients cache. When set to "true", connected-clients entries are deleted when a connection is closed.
+
+
+|update_interval
+|string
+a|The time interval between refreshing the connected-clients cache. The minimum is 1 hour and the maximum is 8 hours.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

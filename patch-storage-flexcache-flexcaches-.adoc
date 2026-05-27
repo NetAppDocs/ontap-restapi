@@ -1,0 +1,835 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-flexcache-flexcaches-.html'
+summary: 'Pre-populate a FlexCache volume in the cluster'
+---
+
+= Pre-populate a FlexCache volume in the cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/flexcache/flexcaches/{uuid}`#
+
+*Introduced In:* 9.8
+
+Prepopulates a FlexCache volume in the cluster, or modifies configuration of the FlexCache volume.
+
+== Recommended optional properties
+
+* `uuid` - FlexCache volume UUID.
+* `prepopulate.exclude_dir_paths` - List of directory-paths to be excluded from prepopulation for the FlexCache volume.
+* `prepopulate.dir_paths` - List of directory-paths to be prepopulated for the FlexCache volume.
+* `writeback.enabled` - false. This property specifies whether writeback is enabled for the FlexCache volume.
+* `relative_size.enabled` - This property specifies whether the relative sizing is enabled for the FlexCache volume.
+* `relative_size.percentage` - This property specifies the percent size FlexCache volume should have relative to the total size of the origin volume.
+* `atime_scrub.enabled` - This property specifies whether the atime based scrub is enabled for the FlexCache volume.
+* `atime_scrub.period` - This property specifies the duration in days after which inactive files can be scrubbed from FlexCache volume.
+* `cifs_change_notify.enabled` - This property specifies whether a CIFS change notification is enabled for the FlexCache volume.
+* `nfsv4.enabled` - This property specifies whether NFSv4 is enabled for the FlexCache volume.
+* `cifs.enabled` - This property specifies whether CIFS is enabled for the FlexCache volume.
+* `s3.enabled` - This property specifies whether S3 is enabled for the FlexCache volume.
+
+== Default property values
+
+If not specified in PATCH, the following default property value is assigned:
+
+* `prepopulate.recurse` - Default value is "true".
+
+== Related ONTAP commands
+
+* `volume flexcache prepopulate start`
+* `volume flexcache config modify`
+
+== Learn more
+
+* link:storage_flexcache_flexcaches_endpoint_overview.html[DOC /storage/flexcache/flexcaches]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Unique identifier of the FlexCache volume.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|atime_scrub
+|link:#atime_scrub[atime_scrub]
+a|FlexCache volume atime-based scrub
+
+
+|cifs
+|link:#cifs[cifs]
+a|FlexCache CIFS
+
+
+|cifs_change_notify
+|link:#cifs_change_notify[cifs_change_notify]
+a|Notifies that a change has been made to the FlexCache volume CIFS.
+
+
+|nfsv4
+|link:#nfsv4[nfsv4]
+a|FlexCache NFSv4
+
+
+|prepopulate
+|link:#prepopulate[prepopulate]
+a|FlexCache prepopulate
+
+
+|relative_size
+|link:#relative_size[relative_size]
+a|FlexCache Relative Size
+
+
+|s3
+|link:#s3[s3]
+a|Flexcache S3
+
+
+|uuid
+|string
+a|FlexCache UUID. Unique identifier for the FlexCache.
+
+
+|writeback
+|link:#writeback[writeback]
+a|FlexCache Writeback
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "dr_cache": true,
+  "global_file_locking_enabled": true,
+  "override_encryption": true,
+  "prepopulate": {
+    "dir_paths": [
+      "/dir1"
+    ],
+    "exclude_dir_paths": [
+      "/dir1/dir2"
+    ]
+  },
+  "use_tiered_aggregate": true,
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 66846921
+| Failed to prepopulate. Empty path list
+
+| 66846922
+| FlexCache volume does not exist in the SVM
+
+| 66846923
+| Failed to prepopulate FlexCache volume because the origin volume is not reachable
+
+| 66846924
+| FlexCache volume is offline
+
+| 66846925
+| FlexCache volume is not mounted or the junction-path is not active
+
+| 66846926
+| The junction-path of FlexCache volume is not active
+
+| 66846927
+| FlexCache volume does not have an origin volume
+
+| 66846928
+| FlexCache volume does not exist
+
+| 66846929
+| Using FlexCache prepopulate requires an effective cluster version of 9.8.0 or later
+
+| 66846930
+| Using FlexCache prepopulate in a MetroCluster configuration requires an effective cluster version of 9.8.0 or later on both the local and remote clusters
+
+| 66846931
+| Internal Error. FlexCache prepopulate job queue failed. Wait a few minutes, and then try the operation again
+
+| 66846936
+| Failed to lookup root file handle for origin of FlexCache volume. Wait a few minutes, and then try the operation again
+
+| 66846937
+| Internal error. Failed to initialize thread
+
+| 66846939
+| Internal error. Failed to get the MSID of the origin volume for FlexCache volume
+
+| 66846943
+| Failed to prepopulate because dir_path does not exist
+
+| 66846944
+| Failed to get root constituent for FlexCache volume
+
+| 66846945
+| Origin of FlexCache volume is not mounted or the junction-path is not active
+
+| 66846946
+| The junction-path of origin of FlexCache volume is not active
+
+| 66846947
+| FlexCache prepopulate job for FlexCache volume already exists
+
+| 66846948
+| FlexCache prepopulate job for FlexCache volume could not be queued because the node is offline
+
+| 66846958
+| Exclude path(s) does not exist in origin volume
+
+| 66846988
+| Cannot enable writeback for FlexCache volume because the origin is a data protection volume. Writeback is only supported on FlexCache volumes with origins that are read-write volumes
+
+| 66846995
+| Using FlexCache relative-size requires an effective cluster version of 9.13.1 or later
+
+| 66846997
+| Failed to modify the relative-size-percentage property of the FlexCache volume because the used size of the FlexCache Volume is greater than the newly calculated size based on the value of the relative-size-percentage property
+
+| 66846997
+| Failed to modify the relative-size-percentage property of FlexCache volume because the relative-size-percentage property is not valid
+
+| 66846998
+| Failed to modify the relative-size-percentage property of FlexCache volume because the is-relative-size-enabled property is false
+
+| 66847010
+| Failed to modify the relative-size-percentage property of FlexCache volume because autosize is enabled on the FlexCache volume
+
+| 66847026
+| Failed to enable the atime-scrub-enabled property for the FlexCache volume because the atime-update-property is false
+
+| 66847027
+| Failed to modify atime-scrub-period property of the FlexCache volume because the atime-scrub-enabled property is false
+
+| 66846720
+| Using FlexCache nfsv4 access requires an effective cluster version of 9.10.0 or later
+
+| 66846720
+| Using FlexCache cifs access requires an effective cluster version of 9.8.0 or later
+
+| 66847093
+| Using FlexCache S3 access requires an effective cluster version of 9.18.1 or later
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#atime_scrub]
+[.api-collapsible-fifth-title]
+atime_scrub
+
+FlexCache volume atime-based scrub
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether scrubbing of inactive files based on atime is enabled for the FlexCache volume. When scrubbing is enabled, files whose atime is older than the specified duration are evicted from the cache volume. The scrubber runs once a day and looks for files whose atime has exceeded the provisioned value.
+
+
+|period
+|integer
+a|Specifies the atime duration in days after which a cached file is considered inactive. Inactive files are purged from the FlexCache volumes when the scrubber runs once a day.
+
+
+|===
+
+
+[#cifs]
+[.api-collapsible-fifth-title]
+cifs
+
+FlexCache CIFS
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether CIFS access is enabled on the FlexCache volume.
+
+
+|===
+
+
+[#cifs_change_notify]
+[.api-collapsible-fifth-title]
+cifs_change_notify
+
+Notifies that a change has been made to the FlexCache volume CIFS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether a CIFS change notification is enabled for the FlexCache volume.
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|type
+|string
+a|The type of space guarantee of this volume in the aggregate.
+
+
+|===
+
+
+[#nfsv4]
+[.api-collapsible-fifth-title]
+nfsv4
+
+FlexCache NFSv4
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether NFSv4 access is enabled on the FlexCache volume.
+
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#flexcache_relationship]
+[.api-collapsible-fifth-title]
+flexcache_relationship
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|create_time
+|string
+a|Creation time of the relationship.
+
+
+|ip_address
+|string
+a|Cluster management IP of the remote cluster.
+
+
+|size
+|integer
+a|Size of the remote volume.
+
+
+|state
+|string
+a|Volume state
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#prepopulate]
+[.api-collapsible-fifth-title]
+prepopulate
+
+FlexCache prepopulate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dir_paths
+|array[string]
+a|
+
+|exclude_dir_paths
+|array[string]
+a|
+
+|recurse
+|boolean
+a|Specifies whether or not the prepopulate action should search through the `dir_paths` recursively. If not set, the default value _true_ is used.
+
+
+|===
+
+
+[#relative_size]
+[.api-collapsible-fifth-title]
+relative_size
+
+FlexCache Relative Size
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether the relative sizing is enabled for the FlexCache volume. Relative sizing is introduced as a part of follow the origin feature. When relative sizing is enabled, it blocks any modifications done manually in the absolute size of the FlexCache volume. The size of the FlexCache volume is calculated and entered automatically based on the size of the origin volume.
+
+
+|percentage
+|integer
+a|Specifies the percent size the FlexCache volume should have relative to the total size of the origin volume. This property is only relevant to a FlexCache volume that has the relative size property enabled.
+
+
+|===
+
+
+[#s3]
+[.api-collapsible-fifth-title]
+s3
+
+Flexcache S3
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether S3 access is enabled on the Flexcache volume.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+FlexCache SVM
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#writeback]
+[.api-collapsible-fifth-title]
+writeback
+
+FlexCache Writeback
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not writeback is enabled for the FlexCache volume. Writeback is a storage method where data is first written to the FlexCache volume and then written to the origin of a FlexCache volume.
+
+
+|===
+
+
+[#flexcache]
+[.api-collapsible-fifth-title]
+flexcache
+
+Defines the cache endpoint of FlexCache.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|atime_scrub
+|link:#atime_scrub[atime_scrub]
+a|FlexCache volume atime-based scrub
+
+
+|cifs
+|link:#cifs[cifs]
+a|FlexCache CIFS
+
+
+|cifs_change_notify
+|link:#cifs_change_notify[cifs_change_notify]
+a|Notifies that a change has been made to the FlexCache volume CIFS.
+
+
+|nfsv4
+|link:#nfsv4[nfsv4]
+a|FlexCache NFSv4
+
+
+|prepopulate
+|link:#prepopulate[prepopulate]
+a|FlexCache prepopulate
+
+
+|relative_size
+|link:#relative_size[relative_size]
+a|FlexCache Relative Size
+
+
+|s3
+|link:#s3[s3]
+a|Flexcache S3
+
+
+|uuid
+|string
+a|FlexCache UUID. Unique identifier for the FlexCache.
+
+
+|writeback
+|link:#writeback[writeback]
+a|FlexCache Writeback
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

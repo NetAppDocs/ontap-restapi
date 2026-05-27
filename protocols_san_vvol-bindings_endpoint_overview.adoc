@@ -1,0 +1,176 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_san_vvol-bindings_endpoint_overview.html'
+summary: 'Manage SAN vVol bindings'
+---
+
+= Manage SAN vVol bindings
+
+
+
+== Overview
+
+A VMware virtual volume (vVol) binding is an association between a LUN of class `protocol_endpoint` and a LUN of class `vvol`. Class `protocol_endpoint` LUNs are mapped to igroups and granted access using the same configuration as class `regular` LUNs. When a class `vvol` LUN is bound to a mapped class `protocol_endpoint` LUN, VMware can access the class `vvol` LUN through the class `protocol_endpoint` LUN mapping.
+
+Class `protocol_endpoint` and `vvol` LUNs support many-to-many vVol bindings. A LUN of one class can be bound to zero or more LUNs of the opposite class.
+
+The vVol binding between any two specific LUNs is reference counted. When a REST POST is executed for a vVol binding that already exists, the vVol binding reference count is incremented. When a REST DELETE is executed, the vVol binding reference count is decremented. Only when the vVol binding count reaches zero, or the query parameter `delete_all_references` is supplied, is the vVol binding destroyed.
+
+The vVol binding REST API allows you to create, delete, and discover vVol bindings.
+
+== Examples
+
+=== Creating a vVol binding
+
+----
+
+# The API:
+POST /api/protocols/san/vvol-bindings
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/vvol-bindings' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "protocol_endpoint": { "name": "/vol/vol1/pe1" }, "vvol" : { "name": "/vol/vol1/vvol1" } }'
+----
+
+'''
+
+=== Retrieving all vVol bindings
+
+----
+
+# The API:
+GET /api/protocols/san/vvol-bindings
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/vvol-bindings' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "protocol_endpoint": {
+      "uuid": "2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4",
+      "name": "/vol/vol1/pe1",
+      "_links": {
+        "self": {
+          "href": "/api/storage/luns/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4"
+        }
+      }
+    },
+    "vvol": {
+      "uuid": "28c02623-42fa-4f5f-a984-a02044bfc005",
+      "name": "/vol/vol1/vvol1",
+      "_links": {
+        "self": {
+          "href": "/api/storage/luns/28c02623-42fa-4f5f-a984-a02044bfc005"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/vvol-bindings/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4/28c02623-42fa-4f5f-a984-a02044bfc005"
+      }
+    }
+  },
+  {
+    "protocol_endpoint": {
+      "uuid": "2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4",
+      "name": "/vol/vol1/pe1",
+      "_links": {
+        "self": {
+          "href": "/api/storage/luns/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4"
+        }
+      }
+    },
+    "vvol": {
+      "uuid": "a8d4ba93-918f-40ad-a1e4-4d7b244bdcdf",
+      "name": "/vol/vol1/vvol2",
+      "_links": {
+        "self": {
+          "href": "/api/storage/luns/a8d4ba93-918f-40ad-a1e4-4d7b244bdcdf"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/vvol-bindings/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4/a8d4ba93-918f-40ad-a1e4-4d7b244bdcdf"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/vvol-bindings"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific vVol binding
+
+----
+
+# The API:
+GET /api/protocols/san/vvol-bindings/{protocol_endpoint.uuid}/{vvol.uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/vvol-bindings/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4/28c02623-42fa-4f5f-a984-a02044bfc005' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"protocol_endpoint": {
+  "uuid": "2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4",
+  "name": "/vol/vol1/pe1",
+  "_links": {
+    "self": {
+      "href": "/api/storage/luns/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4"
+    }
+  }
+},
+"vvol": {
+  "uuid": "28c02623-42fa-4f5f-a984-a02044bfc005",
+  "name": "/vol/vol1/vvol1",
+  "_links": {
+    "self": {
+      "href": "/api/storage/luns/28c02623-42fa-4f5f-a984-a02044bfc005"
+    }
+  }
+},
+"svm": {
+  "uuid": "bf295ccc-a6bb-11eb-93e8-005056bb470f",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/bf295ccc-a6bb-11eb-93e8-005056bb470f"
+    }
+  }
+},
+"id": 2411392,
+"is_optimal": true,
+"count": 1,
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/vvol-bindings/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4/28c02623-42fa-4f5f-a984-a02044bfc005"
+  }
+}
+}
+----
+
+'''
+
+=== Deleting a vVol binding
+
+----
+
+# The API:
+DELETE /api/protocols/san/vvol-bindings/{protocol_endpoint.uuid}/{vvol.uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/vvol-bindings/2aab57f3-dc5d-491e-80d2-15c7ed5dd5c4/28c02623-42fa-4f5f-a984-a02044bfc005' -H 'Accept: application/hal+json'
+----
+
+

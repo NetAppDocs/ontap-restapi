@@ -1,0 +1,526 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_dns_endpoint_overview.html'
+summary: 'Manage DNS configurations'
+---
+
+= Manage DNS configurations
+
+
+
+== Overview
+
+Displays DNS information and controls the DNS subsystem. DNS domain name and DNS servers are required parameters.
+
+== Retrieving DNS information
+
+The DNS GET endpoint retrieves all of the DNS configurations for all SVMs.
+DNS configuration for the cluster is retrieved via link:cluster_endpoint_overview.html[/api/cluster] .
+
+== Examples
+
+=== Retrieving all of the fields for all of the DNS configurations
+
+----
+
+# The API:
+/api/name-services/dns
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/dns?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "27eff5d8-22b2-11eb-8038-0050568ed32c",
+      "name": "clust-1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "domains": [
+      "domain.example.com"
+    ],
+    "servers": [
+      "44.44.44.44"
+    ],
+    "timeout":2,
+    "attempts":1,
+    "scope": "cluster",
+    "_links": {
+      "self": {
+        "href": "/api/name-services/dns/27eff5d8-22b2-11eb-8038-0050568ed32c"
+      }
+    }
+  },
+  {
+    "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+    "svm": {
+      "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "domains": [
+      "domainA.example.com"
+    ],
+    "servers": [
+      "10.10.10.10"
+    ],
+    "timeout":2,
+    "attempts":1,
+    "dynamic_dns": {
+      "enabled": false,
+      "use_secure": false,
+      "time_to_live": "PT1H"
+    },
+    "scope": "svm",
+    "_links": {
+      "self": {
+        "href": "/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1"
+      }
+    }
+  },
+  {
+    "uuid": "19076d35-6e27-11e8-b9b8-005056b41bd1",
+    "svm": {
+      "uuid": "19076d35-6e27-11e8-b9b8-005056b41bd1",
+      "name": "vs2",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/19076d35-6e27-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "domains": [
+      "sample.example.com"
+    ],
+    "servers": [
+      "11.11.11.11",
+      "22.22.22.22",
+      "33.33.33.33"
+    ],
+    "timeout":2,
+    "attempts":2,
+    "dynamic_dns": {
+      "enabled": true,
+      "use_secure": false,
+      "time_to_live": "PT3H"
+    },
+    "scope": "svm",
+    "_links": {
+      "self": {
+        "href": "/api/name-services/dns/19076d35-6e27-11e8-b9b8-005056b41bd1"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/name-services/dns?fields=*"
+  }
+}
+}
+----
+
+=== Retrieving all DNS configurations whose domain name starts with _dom*_.
+
+----
+
+# The API:
+/api/name-services/dns
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/dns?domains=dom*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+    "svm": {
+      "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "domains": [
+      "domainA.example.com"
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/name-services/dns?domains=dom*"
+  }
+}
+}
+----
+
+=== Retrieving the DNS configuration for a specific SVM
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"domains": [
+  "domainA.example.com"
+],
+"servers": [
+  "10.10.10.10"
+],
+"timeout":2,
+"attempts":1,
+"tld_query_enabled": true,
+"source_address_match": true,
+"packet_query_match": true,
+"dynamic_dns": {
+  "enabled": false,
+  "use_secure": false,
+  "time_to_live": "P1D"
+},
+"scope": "svm",
+"_links": {
+  "self": {
+    "href": "/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1"
+  }
+}
+}
+----
+
+=== Retrieving the advanced fields "DNS status", "tld_query_enable", "source_address_match", and "packet_query_match" using wildcards **
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1?fileds=**" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"domains": [
+  "domainA.example.com"
+],
+"servers": [
+  "10.10.10.10"
+],
+"timeout":2,
+"attempts":1,
+"tld_query_enabled": true,
+"source_address_match": true,
+"packet_query_match": true,
+"dynamic_dns": {
+  "enabled": false,
+  "use_secure": false,
+  "time_to_live": "P1D"
+},
+"scope": "svm",
+"status": [
+  {
+    "name_server": "10.10.10.10",
+    "state": "up",
+    "message": "Response time (msec): ",
+    "code": 0
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1"
+  }
+}
+}
+----
+
+=== Retrieving the "service_ips" for a specific DNS service name
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1?service.name=_kpasswd._udp.domainA.example.com&fields=**" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+"domains": [
+  "domainA.example.com"
+],
+"servers": [
+  "10.10.10.10"
+],
+"timeout": 2,
+"attempts": 1,
+"tld_query_enabled": true,
+"source_address_match": true,
+"packet_query_match": true,
+"dynamic_dns": {
+  "enabled": false,
+  "use_secure": false,
+  "time_to_live": "P1D"
+},
+"scope": "svm",
+"status": [
+  {
+    "name_server": "10.10.10.10",
+    "state": "up",
+    "message": "Response time (msec): 218",
+    "code": 0
+  }
+],
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs0",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"service_ips": [
+  "10.10.10.10",
+  "2001:db08:a0b:12f0::1"
+],
+"_links": {
+  "self": {
+    "href": "/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1?fields=**"
+  }
+}
+}
+----
+
+=== Retrieving the "service_ips" for a specific DNS service name with a particular address type (can be ipv4, ipv6 or all)
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1?service.name=_kpasswd._udp.domainA.example.com&service.address_type=ipv4&fields=**" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+"domains": [
+  "domainA.example.com"
+],
+"servers": [
+  "10.10.10.10"
+],
+"timeout": 2,
+"attempts": 1,
+"tld_query_enabled": true,
+"source_address_match": true,
+"packet_query_match": true,
+"dynamic_dns": {
+  "enabled": false,
+  "use_secure": false,
+  "time_to_live": "P1D"
+},
+"scope": "svm",
+"status": [
+  {
+    "name_server": "10.10.10.10",
+    "state": "up",
+    "message": "Response time (msec): 218",
+    "code": 0
+  }
+],
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs0",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"service_ips": [
+  "10.10.10.10"
+],
+"_links": {
+  "self": {
+    "href": "/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1?fields=**"
+  }
+}
+}
+----
+
+== Creating a DNS configuration
+
+The DNS POST endpoint creates a DNS configuration for the specified SVM.
+
+== Examples
+
+=== Specifying only the required fields
+
+----
+
+# The API:
+/api/name-services/dns
+
+# The call:
+    curl -X POST "https://<mgmt-ip>/api/name-services/dns" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"uuid\": \"179d3c85-7053-11e8-b9b8-005056b41bd1\" }, \"domains\": [ \"domainA.example.com\" ], \"servers\": [ \"10.10.10.10\" ]}"
+----
+
+=== Specifying the optional fields as well
+
+----
+
+# The API:
+/api/name-services/dns
+
+# The call:
+    curl -X POST "https://<mgmt-ip>/api/name-services/dns" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"uuid\": \"179d3c85-7053-11e8-b9b8-005056b41bd1\" }, \"domains\": [ \"domainA.example.com\" ], \"servers\": [ \"10.10.10.10\" ], \"timeout\":2, \"attempts\":3}"
+----
+
+=== Specifying the scope of the SVM
+
+----
+
+# The API:
+/api/name-services/dns
+
+# The call:
+    curl -X POST "https://<mgmt-ip>/api/name-services/dns" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"uuid\": \"179d3c85-7053-11e8-b9b8-005056b41bd1\" }, \"domains\": [ \"domainA.example.com\" ], \"servers\": [ \"10.10.10.10\" ], \"timeout\":2, \"attempts\":3, \"scope\":\"svm\"}"
+----
+
+=== Specifying the query parameter to run asynchronously.
+
+----
+
+# The API:
+/api/name-services/dns
+
+# The call:
+    curl -X POST "https://<mgmt-ip>/api/name-services/dns?async=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"uuid\": \"179d3c85-7053-11e8-b9b8-005056b41bd1\" }, \"domains\": [ \"domainA.example.com\" ], \"servers\": [ \"10.10.10.10\" ]}"
+----
+
+== Updating a DNS configuration
+
+The DNS PATCH endpoint updates the DNS configuration for the specified SVM.
+
+== Examples
+
+=== Updating both the DNS domains and servers
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"domains\": [ \"domainA.example.com\", \"domainB.example.com\" ], \"servers\": [ \"10.10.10.10\", \"10.10.10.11\" ]}"
+----
+
+=== Updating the DNS servers only
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"servers\": [ \"10.10.10.10\" ]}"
+----
+
+=== Updating the optional fields "timeout", "attempts", and "source_address_match"
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"timeout\":2, \"attempts\":3, \"source_address_match\":true}"
+----
+
+=== Updating the Dynamic DNS related fields
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"timeout\":2, \"attempts\":3, \"dynamic_dns.enabled\":\"true\", \"dynamic_dns.time_to_live\":\"20h\"}"
+----
+
+=== Updating the DNS servers asynchronously.
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1?async=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"servers\": [ \"10.10.10.10\" ]}"
+----
+
+== Deleting a DNS configuration
+
+The DNS DELETE endpoint deletes the DNS configuration for the specified SVM.
+
+== Example
+
+The following example shows a DELETE operation.
+
+----
+
+# The API:
+/api/name-services/dns/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/name-services/dns/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json"
+----
+
+

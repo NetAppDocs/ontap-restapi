@@ -1,0 +1,303 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_pools_endpoint_overview.html'
+summary: 'Manage storage pools'
+---
+
+= Manage storage pools
+
+
+
+== Retrieving storage pool information
+
+The Storage Pools GET API retrieves all shared storage pools in the cluster.
+
+The collection GET returns the storage pool identifiers, UUID and name. The instance GET, by default, returns all of the properties defined in the storage_pool object.
+The "show_spares" query returns a response outside of the records body, which includes the groups of usable spares in the cluster.
+The usable count for each class of spares does not include reserved spare capacity recommended by ONTAP best practices.
+
+== Creating storage pools
+
+Creating a shared storage pool is recommended when distributing flash capacity across the cache tiers of HDD aggregates across an HA pair.
+POST can be used with specific properties to create a storage pool as requested. At a minimum, the
+storage pool name, disk count, and the nodes where it should reside, are required to create a new instance.
+
+When using POST with input properties, three properties are required. These are:
+
+* name - Name of the storage pool.
+* node.name or node.uuid - Node that can use capacity from the storage pool in their cache tiers.
+* capacity.disk_count - Number of disks to be used to create the storage pool.
+
+== Examples
+
+=== Retrieving a list of storage pools from the cluster
+
+The following example shows the response with a list of storage pools in the cluster:
+
+----
+{
+"records": [
+{
+  "uuid": "8255fef7-4737-11ec-bd1b-005056bbb879",
+  "nodes": [
+    {
+      "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+      "name": "node-1",
+    },
+    {
+      "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+      "name": "node-2",
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/api/storage/pools/8255fef7-4737-11ec-bd1b-005056bbb879"
+    }
+  }
+}
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/pools"
+  }
+}
+}
+----
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools?fields=*" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+{
+  "uuid": "8255fef7-4737-11ec-bd1b-005056bbb879",
+  "name": "new_sp",
+  "nodes": [
+    {
+      "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+      "name": "node-1",
+    },
+    {
+      "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+      "name": "node-2",
+    }
+  ],
+  "storage_type": "ssd",
+  "capacity": {
+      "remaining": 1846542336,
+      "total": 7386169344,
+      "spare_allocation_units": [
+      {
+        "node": {
+          "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+          "name": "node-1",
+        },
+        "count": 1,
+        "syncmirror_pool": "pool0",
+        "size": 1846542336,
+        "available_size": 1846542336
+      },
+      {
+        "node": {
+          "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+          "name": "node-2",
+        },
+        "count": 0,
+        "syncmirror_pool": "pool0",
+        "size": 1846542336,
+        "available_size": 0
+      }
+      ],
+      "used_allocation_units": [
+      {
+        "aggregate": {
+          "uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+          "name": "test_a"
+        },
+        "allocated_unit_count": 2,
+        "node": {
+          "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+          "name": "node-1",
+        },
+        "capacity": 2769813504
+      },
+      {
+        "aggregate": {
+          "uuid": "f4cc30d5-b052-493a-a49f-19781425f987",
+          "name": "test_b"
+        },
+        "allocated_unit_count": 1,
+        "node": {
+          "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+          "name": "node-2",
+        },
+        "capacity": 1384906752
+      }
+      ],
+      "disk_count": 4,
+      "disks": [
+        {
+          "disk": {
+            "name": "VMw-1.11"
+          },
+          "usable_size": 1902379008,
+          "total_size": 1908871168,
+        },
+        {
+          "disk": {
+            "name": "VMw-1.12"
+          },
+          "usable_size": 1902379008,
+          "total_size": 1908871168,
+        },
+        {
+          "disk": {
+            "name": "VMw-1.23"
+          },
+          "usable_size": 1902379008,
+          "total_size": 1908871168,
+        },
+        {
+          "disk": {
+            "name": "VMw-1.24"
+          },
+          "usable_size": 1902379008,
+          "total_size": 1908871168,
+        }
+      ]
+    },
+    "health": {
+      "state": "normal",
+      "is_healthy": true
+    },
+}
+],
+"num_records": 1,
+}
+----
+
+=== Retrieving the usable spare information for the cluster
+
+The following example shows the response from retrieving usable spare information according to ONTAP best practices.
+
+----
+
+ # The API:
+/api/storage/pools?show_spares=true
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools?show_spares=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [],
+"num_records": 0,
+"spares": [
+  {
+    "disk_class": "solid_state",
+    "disk_type": "ssd",
+    "size": 3720609792,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "usable": 12,
+    "nodes": [
+      {
+        "uuid": "54af4069-c1f7-11ec-884e-005056bb6e0b",
+        "name": "node-1",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/54af4069-c1f7-11ec-884e-005056bb6e0b"
+          }
+        }
+      },
+      {
+        "uuid": "d50f1acb-c1f6-11ec-9dfd-005056bb8d04",
+        "name": "node-2",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/d50f1acb-c1f6-11ec-9dfd-005056bb8d04"
+          }
+        }
+      }
+    ]
+  }
+],
+"_link": {
+  "self": {
+    "href": "/api/storage/aggregates?show_spares=true"
+  }
+}
+}
+----
+
+=== Simulating the creation of a storage pool
+
+The following example shows the response containing the simulated layout details of a new storage pool in the cluster.
+
+NOTE: Each storage pool UUID provided in this response is not guaranteed to be the same UUID for the storage pool if it is created.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/storage/pools?simulate=true&fields=*" -d "{\"nodes\": [{\"name\": \"node1\"}, {\"name\": \"node2\"}], \"name\": \"storage_pool_1\", \"capacity\": {\"disk_count\": \"4\"}}" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+{
+  "uuid": "cae60cfe-deae-42bd-babb-ef437d118314",
+  "name": "new_sp",
+  "nodes": [
+    {
+      "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+      "name": "node-1",
+    },
+    {
+      "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+      "name": "node-2",
+    }
+  ],
+  "capacity": {
+    "total": 7386169344,
+    "disk_count": 4,
+    "disks": [
+      {
+        "disk": {
+          "name": "VMw-1.11"
+        },
+      },
+      {
+        "disk": {
+          "name": "VMw-1.12"
+        },
+      },
+      {
+        "disk": {
+          "name": "VMw-1.23"
+        },
+      },
+      {
+        "disk": {
+          "name": "VMw-1.24"
+        },
+      }
+    ]
+  }
+}
+]
+}
+----
+
+

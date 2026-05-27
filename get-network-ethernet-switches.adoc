@@ -1,0 +1,540 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-ethernet-switches.html'
+summary: 'Retrieve Ethernet switches attached to a chassis'
+---
+
+= Retrieve Ethernet switches attached to a chassis
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ethernet/switches`#
+
+*Introduced In:* 9.8
+
+Retrieves a collection of Ethernet switches.
+
+== Related ONTAP commands
+
+* `system switch ethernet show`
+
+== Learn more
+
+* link:network_ethernet_switches_endpoint_overview.html[DOC /network/ethernet/switches]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|monitoring.enabled
+|boolean
+|query
+|False
+a|Filter by monitoring.enabled
+
+
+|monitoring.monitored
+|boolean
+|query
+|False
+a|Filter by monitoring.monitored
+
+
+|monitoring.reason
+|string
+|query
+|False
+a|Filter by monitoring.reason
+
+
+|snmp.version
+|string
+|query
+|False
+a|Filter by snmp.version
+
+
+|snmp.user
+|string
+|query
+|False
+a|Filter by snmp.user
+
+
+|role
+|string
+|query
+|False
+a|Filter by role
+
+* Introduced in: 9.17
+
+
+|serial_number
+|string
+|query
+|False
+a|Filter by serial_number
+
+
+|model
+|string
+|query
+|False
+a|Filter by model
+
+
+|address
+|string
+|query
+|False
+a|Filter by address
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|discovered
+|boolean
+|query
+|False
+a|Filter by discovered
+
+
+|network
+|string
+|query
+|False
+a|Filter by network
+
+
+|rcf_version
+|string
+|query
+|False
+a|Filter by rcf_version
+
+* Introduced in: 9.17
+
+
+|version
+|string
+|query
+|False
+a|Filter by version
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of Records
+
+
+|records
+|array[link:#switch[switch]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "address": "string",
+      "model": "string",
+      "monitoring": {
+        "reason": "string"
+      },
+      "name": "string",
+      "network": "string",
+      "rcf_version": "RCF NX9336C-FX2 v1.13 1-CLUSTER",
+      "role": [
+        "cluster+storage"
+      ],
+      "serial_number": "string",
+      "snmp": {
+        "user": "string",
+        "version": "string"
+      },
+      "version": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#monitoring]
+[.api-collapsible-fifth-title]
+monitoring
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Enable Health Monitoring.
+
+
+|monitored
+|boolean
+a|Is Monitored.
+
+
+|reason
+|string
+a|Reason For Not Monitoring.
+
+
+|===
+
+
+[#snmp]
+[.api-collapsible-fifth-title]
+snmp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|user
+|string
+a|Community String or SNMPv3 Username.
+
+
+|version
+|string
+a|SNMP Version.
+
+
+|===
+
+
+[#switch]
+[.api-collapsible-fifth-title]
+switch
+
+Ethernet Switch REST API
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|address
+|string
+a|IP Address.
+
+
+|discovered
+|boolean
+a|Discovered By ONTAP CDP/LLDP
+
+* readOnly: 1
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|model
+|string
+a|Model Number.
+
+
+|monitoring
+|link:#monitoring[monitoring]
+a|
+
+|name
+|string
+a|Name.
+
+
+|network
+|string
+a|Switch Network.
+
+
+|rcf_version
+|string
+a|The switch reference configuration file (RCF) version.
+
+
+|role
+|string
+a|Switch role based on the interface configurations. Using '+' to combine multiple roles.
+Available role types are: cluster, multicluster, storage, multistorage, metrocluster.
+
+
+|serial_number
+|string
+a|Serial Number.
+
+
+|snmp
+|link:#snmp[snmp]
+a|
+
+|version
+|string
+a|Software Version.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

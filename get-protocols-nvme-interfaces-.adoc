@@ -1,0 +1,638 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nvme-interfaces-.html'
+summary: 'Retrieve an NVMe interface'
+---
+
+= Retrieve an NVMe interface
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nvme/interfaces/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves an NVMe interface.
+
+== Related ONTAP commands
+
+* `vserver nvme show-interface`
+
+== Learn more
+
+* link:protocols_nvme_interfaces_endpoint_overview.html[DOC /protocols/nvme/interfaces]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the NVMe interface.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|enabled
+|boolean
+a|The administrative state of the NVMe interface.
+
+
+|fc_interface
+|link:#fc_interface[fc_interface]
+a|The attributes specific to a Fibre Channel-based NVMe interface.
+
+This is populated when `interface_type` is _fc_interface_.
+
+
+|interface_type
+|string
+a|The underlying interface type of the NVMe interface. This property identifies which of _fc_interface_ and _ip_interface_ will be further populated.
+
+
+|ip_interface
+|link:#ip_interface[ip_interface]
+a|The attributes specific to an IP-based NVMe interface.
+
+This is populated when `interface_type` is _ip_interface_.
+
+
+|name
+|string
+a|The name of the NVMe interface.
+
+
+|node
+|link:#node[node]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|transport_address
+|string
+a|The transport address of the NVMe interface.
+
+
+|transport_protocols
+|array[string]
+a|The transport protocols supported by the NVMe interface.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe interface.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "fc_interface": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "port": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "0a",
+      "node": {
+        "name": "node1"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "wwnn": "20:00:00:50:56:b4:13:a9",
+    "wwpn": "20:00:00:50:56:b4:13:a8"
+  },
+  "interface_type": "string",
+  "ip_interface": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "ip": {
+      "address": "10.10.10.7"
+    },
+    "location": {
+      "port": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "e1b",
+        "node": {
+          "name": "node1"
+        },
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  },
+  "name": "lif1",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "transport_address": "nn-0x200a00a0989062da:pn-0x200100a0989062da",
+  "transport_protocols": [
+    "string"
+  ],
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2621462
+| The supplied SVM does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node on which the FC port is located.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the node on which the FC port is located.
+
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC port.
+
+
+|node
+|link:#node[node]
+a|The node on which the FC port is located.
+
+
+|uuid
+|string
+a|The unique identifier of the FC port.
+
+
+|===
+
+
+[#fc_interface]
+[.api-collapsible-fifth-title]
+fc_interface
+
+The attributes specific to a Fibre Channel-based NVMe interface.
+
+This is populated when `interface_type` is _fc_interface_.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|port
+|link:#port[port]
+a|An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+|wwnn
+|string
+a|The WWNN (world wide node name) of the Fibre Channel NVMe interface.
+
+
+|wwpn
+|string
+a|The WWPN (world wide port name) of the Fibre Channel NVMe interface.
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#port_reference]
+[.api-collapsible-fifth-title]
+port_reference
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|port
+|link:#port_reference[port_reference]
+a|Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+|===
+
+
+[#ip_interface]
+[.api-collapsible-fifth-title]
+ip_interface
+
+The attributes specific to an IP-based NVMe interface.
+
+This is populated when `interface_type` is _ip_interface_.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|ip
+|link:#ip[ip]
+a|
+
+|location
+|link:#location[location]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,103 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_approval-groups_owner.uuid_name_endpoint_overview.html'
+summary: 'Manage multi-admin-verify approval groups'
+---
+
+= Manage multi-admin-verify approval groups
+
+
+
+== Overview
+
+These APIs provide information about a specific multi-admin verification approval-group.
+A group of users can be defined in a cluster server context.
+Approval groups can be associated with a rule or global setting from which the associated request can retrieve approvals.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving a multi-admin-verify approval group
+
+Displays information about a specific approval group and the users that are registered within that group.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/approval-groups/{owner.uuid}/{name}
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify/approval-groups/52b75787-7011-11ec-a23d-005056a78fd5/group1"
+
+# The response:
+{
+"owner": {
+  "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+  "name": "cluster1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+    }
+  }
+},
+"name": "group1",
+"approvers": [
+  "admin"
+],
+"email": [
+  "group1.approvers@email.com"
+],
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify/approval-groups/52b75787-7011-11ec-a23d-005056a78fd5/group1"
+  }
+}
+}
+----
+
+'''
+
+=== Updating a multi-admin-verify approval group
+
+Modifies attributes of an approval group.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/approval-groups/{owner.uuid}/{name}
+
+# The call:
+curl -X PATCH "https://<cluster-ip>/api/security/multi-admin-verify/approval-groups/52b75787-7011-11ec-a23d-005056a78fd5/group1" -d '{"approvers": ["admin1"], "email": ["group1.approvers.new@email.com"]}'
+----
+
+'''
+
+=== Deleting a multi-admin-verify approval group
+
+Deletes the specified approval group.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/approval-groups/{owner.uuid}/{name}
+
+# The call:
+curl -X DELETE "https://<cluster-ip>/api/security/multi-admin-verify/approval-groups/52b75787-7011-11ec-a23d-005056a78fd5/group1"
+----
+
+'''
+
+

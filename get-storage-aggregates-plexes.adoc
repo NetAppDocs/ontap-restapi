@@ -1,0 +1,804 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-aggregates-plexes.html'
+summary: 'Retrieve a collection of plexes for an aggregate'
+---
+
+= Retrieve a collection of plexes for an aggregate
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/aggregates/{aggregate.uuid}/plexes`#
+
+*Introduced In:* 9.6
+
+Retrieves the collection of plexes for the specified aggregate.
+
+== Related ONTAP commands
+
+* `storage aggregate plex show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|aggregate.uuid
+|string
+|path
+|True
+a|Aggregate UUID
+
+
+|online
+|boolean
+|query
+|False
+a|Filter by online
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|resync.percent
+|integer
+|query
+|False
+a|Filter by resync.percent
+
+
+|resync.active
+|boolean
+|query
+|False
+a|Filter by resync.active
+
+
+|resync.level
+|string
+|query
+|False
+a|Filter by resync.level
+
+
+|pool
+|string
+|query
+|False
+a|Filter by pool
+
+
+|raid_groups.raid_type
+|string
+|query
+|False
+a|Filter by raid_groups.raid_type
+
+* Introduced in: 9.9
+
+
+|raid_groups.reconstruct.active
+|boolean
+|query
+|False
+a|Filter by raid_groups.reconstruct.active
+
+* Introduced in: 9.7
+
+
+|raid_groups.reconstruct.percent
+|integer
+|query
+|False
+a|Filter by raid_groups.reconstruct.percent
+
+* Introduced in: 9.7
+
+
+|raid_groups.disks.disk.name
+|string
+|query
+|False
+a|Filter by raid_groups.disks.disk.name
+
+* Introduced in: 9.7
+
+
+|raid_groups.disks.usable_size
+|integer
+|query
+|False
+a|Filter by raid_groups.disks.usable_size
+
+* Introduced in: 9.7
+
+
+|raid_groups.disks.type
+|string
+|query
+|False
+a|Filter by raid_groups.disks.type
+
+* Introduced in: 9.7
+
+
+|raid_groups.disks.state
+|string
+|query
+|False
+a|Filter by raid_groups.disks.state
+
+* Introduced in: 9.7
+
+
+|raid_groups.disks.position
+|string
+|query
+|False
+a|Filter by raid_groups.disks.position
+
+* Introduced in: 9.7
+
+
+|raid_groups.cache_tier
+|boolean
+|query
+|False
+a|Filter by raid_groups.cache_tier
+
+* Introduced in: 9.7
+
+
+|raid_groups.recomputing_parity.percent
+|integer
+|query
+|False
+a|Filter by raid_groups.recomputing_parity.percent
+
+* Introduced in: 9.7
+
+
+|raid_groups.recomputing_parity.active
+|boolean
+|query
+|False
+a|Filter by raid_groups.recomputing_parity.active
+
+* Introduced in: 9.7
+
+
+|raid_groups.name
+|string
+|query
+|False
+a|Filter by raid_groups.name
+
+* Introduced in: 9.7
+
+
+|raid_groups.degraded
+|boolean
+|query
+|False
+a|Filter by raid_groups.degraded
+
+* Introduced in: 9.7
+
+
+|aggregate.name
+|string
+|query
+|False
+a|Filter by aggregate.name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|error
+|link:#error[error]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#plex[plex]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "aggregate": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "aggr1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "plex0",
+      "pool": "string",
+      "raid_groups": [
+        {
+          "disks": [
+            {
+              "disk": {
+                "_links": {
+                  "self": {
+                    "href": "/api/resourcelink"
+                  }
+                },
+                "name": "1.0.1"
+              },
+              "position": "string",
+              "state": "string",
+              "type": "ssd",
+              "usable_size": 947912704
+            }
+          ],
+          "name": "rg0",
+          "raid_type": "raid_dp",
+          "recomputing_parity": {
+            "percent": 10
+          },
+          "reconstruct": {
+            "percent": 10
+          }
+        }
+      ],
+      "resync": {
+        "level": "string",
+        "percent": 10
+      },
+      "state": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#disk]
+[.api-collapsible-fifth-title]
+disk
+
+Disk
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#raid_group_disk]
+[.api-collapsible-fifth-title]
+raid_group_disk
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk
+|link:#disk[disk]
+a|Disk
+
+
+|position
+|string
+a|The position of the disk within the RAID group.
+
+
+|state
+|string
+a|The state of the disk within the RAID group.
+
+
+|type
+|string
+a|Disk interface type
+
+
+|usable_size
+|integer
+a|Size in bytes that is usable by the aggregate.
+
+
+|===
+
+
+[#recomputing_parity]
+[.api-collapsible-fifth-title]
+recomputing_parity
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|active
+|boolean
+a|RAID group is recomputing parity
+
+
+|percent
+|integer
+a|Recomputing parity percentage
+
+
+|===
+
+
+[#reconstruct]
+[.api-collapsible-fifth-title]
+reconstruct
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|active
+|boolean
+a|One or more disks in this RAID group are being reconstructed.
+
+
+|percent
+|integer
+a|Reconstruct percentage
+
+
+|===
+
+
+[#raid_group]
+[.api-collapsible-fifth-title]
+raid_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cache_tier
+|boolean
+a|RAID group is a cache tier
+
+
+|degraded
+|boolean
+a|RAID group is degraded. A RAID group is degraded when at least one disk from that group has failed or is offline.
+
+
+|disks
+|array[link:#raid_group_disk[raid_group_disk]]
+a|
+
+|name
+|string
+a|RAID group name
+
+
+|raid_type
+|string
+a|RAID type of the raid group.
+
+
+|recomputing_parity
+|link:#recomputing_parity[recomputing_parity]
+a|
+
+|reconstruct
+|link:#reconstruct[reconstruct]
+a|
+
+|===
+
+
+[#resync]
+[.api-collapsible-fifth-title]
+resync
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|active
+|boolean
+a|Plex is being resynchronized to its mirrored plex
+
+
+|level
+|string
+a|Plex resyncing level
+
+
+|percent
+|integer
+a|Plex resyncing percentage
+
+
+|===
+
+
+[#plex]
+[.api-collapsible-fifth-title]
+plex
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|Aggregate
+
+
+|name
+|string
+a|Plex name
+
+
+|online
+|boolean
+a|Plex is online
+
+
+|pool
+|string
+a|SyncMirror pool assignment
+
+
+|raid_groups
+|array[link:#raid_group[raid_group]]
+a|
+
+|resync
+|link:#resync[resync]
+a|
+
+|state
+|string
+a|Plex state
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

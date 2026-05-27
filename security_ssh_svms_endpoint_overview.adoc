@@ -1,0 +1,127 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_ssh_svms_endpoint_overview.html'
+summary: 'View SSH SVMs'
+---
+
+= View SSH SVMs
+
+
+
+=== Overview
+
+This endpoint is used to retrieve the SSH security configuration for all data SVMs. The configuration consists of SSH security parameters. The security algorithms include SSH key exchange algorithms, ciphers for payload encryption, MAC algorithms, host key algorithms, maximum authentication retry attempts allowed before closing the connection, SSH connection login grace time, and _ssh-rsa_ enabled status for public key algorithms. The SSH configuration for a newly created SVM is the same as the SSH configuration at cluster level. When the cluster SSH configuration is updated using _/security/ssh_ endpoint, the SSH configuration of existing SVMs is not impacted. To customize the SSH security parameters for a particular data SVM, perform a PATCH operation on the _api/security/ssh/svms/{svm.uuid}_ endpoint.
+
+== Example
+
+=== Retrieving the SSH security configuration of all SVMs.
+
+Retrieves the SSH security configurations associated with the owners or filtered list (for a specific data SVM and so on).
+
+----
+
+# The API:
+GET "/api/security/ssh/svms"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/ssh/svms?fields=*"
+
+# The response
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "739e5da5-1a50-11ee-9cb0-005056bb97dc",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/739e5da5-1a50-11ee-9cb0-005056bb97dc"
+        }
+      }
+     },
+     "ciphers": [
+       "aes256_ctr",
+       "aes192_ctr",
+       "aes128_ctr",
+       "aes128_gcm",
+       "aes256_gcm"
+     ],
+     "key_exchange_algorithms": [
+       "diffie_hellman_group_exchange_sha256",
+       "ecdh_sha2_nistp256",
+       "ecdh_sha2_nistp384",
+       "ecdh_sha2_nistp521",
+       "curve25519_sha256",
+       "diffie_hellman_group16_sha512",
+       "diffie_hellman_group18_sha512"
+     ],
+     "mac_algorithms": [
+       "hmac_sha2_256",
+       "hmac_sha2_512",
+       "hmac_sha2_256_etm",
+       "hmac_sha2_512_etm",
+       "umac_64",
+       "umac_128",
+       "umac_64_etm",
+       "umac_128_etm"
+     ],
+     "host_key_algorithms": [
+       "ecdsa_sha2_nistp256",
+       "ssh_rsa",
+       "ssh_ed25519",
+       "rsa_sha2_256",
+       "rsa_sha2_512"
+     ],
+     "is_rsa_in_publickey_algorithms_enabled": true,
+     "login_grace_time": 30,
+     "max_authentication_retry_count": 6,
+     "_links": {
+       "self": {
+         "href": "/api/security/ssh/svms/739e5da5-1a50-11ee-9cb0-005056bb97dc"
+       }
+     }
+   }
+ ],
+ "num_records": 1,
+   "_links": {
+     "self": {
+       "href": "/api/security/ssh/svms?fields=*"
+    }
+  }
+}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/ssh/svms"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02c9e252-41be-11e9-81d5-00a0986138f7"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/ssh/svms/02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  }
+],
+"num_records": 1,
+  "_links": {
+    "self": {
+      "href": "/api/security/ssh/svms"
+    }
+  }
+}
+----
+
+

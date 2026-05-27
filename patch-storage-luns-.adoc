@@ -1,0 +1,2231 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-luns-.html'
+summary: 'Update an existing LUN'
+---
+
+= Update an existing LUN
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/luns/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates an existing LUN in one of several ways:
+
+* Updates the properties of a LUN.
+* Writes data to a LUN. LUN data write requests are distinguished by the header entry `Content-Type: multipart/form-data`. When this header entry is provided, query parameter `data.offset` is required and used to specify the location within the LUN at which to write the data; no other query parameters are allowed. The request body must be `multipart/form-data` content with exactly one form entry containing the data to write. The content type entry of the form data is ignored and always treated as `application/octet-stream`. Writes are limited to one megabyte (1MB) per request.
+* Overwrites the contents of a LUN as a clone of another.
+* Begins the movement of a LUN between volumes. PATCH can also pause and resume the movement of a LUN between volumes that is already in active.
+
+== Related ONTAP commands
+
+* `lun copy modify`
+* `lun copy pause`
+* `lun copy resume`
+* `lun modify`
+* `lun move-in-volume`
+* `lun move modify`
+* `lun move pause`
+* `lun move resume`
+* `lun move start`
+* `lun resize`
+* `volume file clone autodelete`
+
+== Learn more
+
+* link:storage_luns_endpoint_overview.html[DOC /storage/luns]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the LUN to retrieve.
+
+
+|data.offset
+|integer
+|query
+|False
+a|The offset, in bytes, at which to begin writing LUN data.
+
+LUN data write requests are distinguished by the header entry `Content-Type: multipart/form-data`. When this header entry is provided, query parameter `data.offset` is required and used to specify the location within the LUN at which to write the data; no other query parameters are allowed. The request body must be `multipart/form-data` content with exactly one form entry containing the data to write. The content type entry of the form data is ignored and always treated as `application/octet-stream`. Writes are limited to one megabyte (1MB) per request.
+
+* format: int64
+* Min value: 0
+* Introduced in: 9.11
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Min value: 0
+* Default value: 0
+* Max value: 120
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_delete
+|boolean
+a|This property marks the LUN for auto deletion when the volume containing the LUN runs out of space. This is most commonly set on LUN clones.
+
+When set to _true_, the LUN becomes eligible for automatic deletion when the volume runs out of space. Auto deletion only occurs when the volume containing the LUN is also configured for auto deletion and free space in the volume decreases below a particular threshold.
+
+This property is optional in POST and PATCH. The default value for a new LUN is _false_.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new LUN as a clone of an existing LUN, or PATCH to overwrite an existing LUN as a clone of another. Setting a property in this sub-object indicates that a LUN clone is desired. Consider the following other properties when cloning a LUN: `auto_delete`, `qos_policy`, `space.guarantee.requested` and `space.scsi_thin_provisioning_support_enabled`.
+
+When used in a PATCH, the patched LUN's data is over-written as a clone of the source and the following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `serial_number`, `status.state`, and `uuid`.
+
+Persistent reservations for the patched LUN are also preserved.
+
+
+|comment
+|string
+a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The LUN's consistency group. This property is populated for LUNs that are members of a consistency group. If the LUN is a member of a child consistency group, the parent consistency group is reported.
+A LUN's consistency group is the consistency group of its containing volume.
+
+
+|copy
+|link:#copy[copy]
+a|This sub-object applies to LUN copy operations. A LUN can be copied with a POST request that supplies `copy.source` properties.
+
+Copying a LUN is an asynchronous activity begun by a POST request that specifies the source of the copy in the `copy.source` properties. The data for the LUN is then asynchronously copied from the source to the destination. The time required to complete the copy depends on the size of the LUN and the load on the cluster. The `copy` sub-object is populated while a LUN copy is in progress and for two (2) minutes following completion of a copy.
+
+While LUNs are being copied, the status of the LUN copy operations can be obtained using a GET of the source or destination LUN that requests the `copy` properties. If the LUN is the source LUN for one or more copy operations, the `copy.destinations` array is populated in GET. If the containing LUN is the destination LUN for a copy operation, the `copy.source` sub-object is populated in GET. The LUN copy operation can be further modified using a PATCH on the properties on the `copy.source` sub-object of the copy destination LUN.
+
+There is an added computational cost to retrieving property values for `copy`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|create_time
+|string
+a|The time the LUN was created.
+
+
+|enabled
+|boolean
+a|The enabled state of the LUN. LUNs can be disabled to prevent access to the LUN. Certain error conditions also cause the LUN to become disabled. If the LUN is disabled, check the `status.state` property to determine if the LUN is administratively disabled (_offline_) or has become disabled as a result of an error. A LUN in an error condition can be brought online by setting the `enabled` property to _true_ or brought administratively offline by setting the `enabled` property to _false_. Upon creation, a LUN is enabled by default. Valid in PATCH.
+
+
+|location
+|link:#location[location]
+a|The location of the LUN within the ONTAP cluster.
+LUNs support rename and move between volumes. Valid in POST and PATCH.
+
+* Introduced in: 9.6
+
+
+|movement
+|link:#movement[movement]
+a|This sub-object applies to LUN movement between volumes. A LUN can be moved to a new volume with a PATCH request that changes either the volume portion of property `name`, `location.volume.uuid`, or `location.volume.name`. If the volume is changed using more than one of these properties, the supplied properties used must refer to the same volume.
+
+Moving a LUN between volumes is an asynchronous activity begun by a PATCH request. The data for the LUN is then asynchronously copied from the source volume to the destination volume. The time required to complete the move depends on the size of the LUN and the load on the cluster. The `movement` sub-object is populated while a LUN movement is in progress and for two (2) minutes following completion of a movement.
+
+While the LUN is being moved, the status of the LUN movement operation can be obtained using a GET for the LUN that requests the `movement` properties. The LUN movement operation can be further modified using a PATCH on the properties on the `movement` sub-object.
+
+There is an added computational cost to retrieving property values for `movement`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|name
+|string
+a|The name of the LUN. Valid in POST and PATCH.
+
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<lun>" where the qtree name is optional.
+
+A PATCH that modifies the qtree and/or base name portion of the LUN path is considered a rename operation.
+
+A PATCH that modifies the volume portion of the LUN path begins an asynchronous LUN movement operation.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|The QoS policy for the LUN. Both traditional and adaptive QoS policies are supported. If both property `qos_policy.uuid` and `qos_policy.name` are specified in the same request, they must refer to the same QoS policy. To remove the QoS policy from a LUN, leaving it with no QoS policy, set the property `qos_policy.name` to an empty string ("") in a PATCH request. Valid in POST and PATCH.
+
+
+|serial_number
+|string
+a|The LUN serial number. The serial number is generated by ONTAP when the LUN is created.
+
+* maxLength: 12
+* minLength: 12
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|serial_number_hex
+|string
+a|The LUN serial number encoded in hexadecimal format. The serial number is generated by ONTAP when the LUN is created.
+
+* readOnly: 1
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|space
+|link:#space[space]
+a|The storage space related properties of the LUN.
+
+
+|status
+|link:#status[status]
+a|Status information about the LUN.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN. The UUID is generated by ONTAP when the LUN is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|vvol
+|link:#vvol[vvol]
+a|A VMware virtual volume (vVol) binding is an association between a LUN of class `protocol_endpoint` and a LUN of class `vvol`. Class `protocol_endpoint` LUNs are mapped to igroups and granted access using the same configuration as class `regular` LUNs. When a class `vvol` LUN is bound to a mapped class `protocol_endpoint` LUN, VMware can access the class `vvol` LUN through the class `protocol_endpoint` LUN mapping.
+
+See link:post-protocols-san-vvol-bindings(#-san-vvol-binding-create)tolearnmoreaboutcreatingvvolbindingsanddelete-protocols-san-vvol-bindings.html<</SAN/vvol_binding_create,POST /protocols/san/vvol-bindings>> to learn more about creating vVol bindings and [DELETE /protocols/san/vvol-bindings]  to learn more about deleting vVol bindings.
+
+There is an added computational cost to retrieving property values for `vvol`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "clone": {
+    "source": {
+      "name": "/vol/volume1/lun1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  },
+  "comment": "string",
+  "consistency_group": {
+    "name": "cg1",
+    "uuid": "4abc2317-4332-9d37-93a0-20bd29c22df0"
+  },
+  "copy": {
+    "destinations": [
+      {
+        "max_throughput": 0,
+        "name": "/vol/vol1/lun1",
+        "peer": {
+          "name": "peer1",
+          "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+        },
+        "progress": {
+          "elapsed": 0,
+          "percent_complete": 0,
+          "state": "string"
+        },
+        "uuid": "1bc327d5-4654-5284-a116-f182282240b4"
+      }
+    ],
+    "source": {
+      "peer": {
+        "name": "peer1",
+        "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+      },
+      "progress": {
+        "elapsed": 0,
+        "percent_complete": 0,
+        "state": "string"
+      }
+    }
+  },
+  "create_time": "2018-06-04 19:00:00 +0000",
+  "location": {
+    "logical_unit": "lun1",
+    "node": {
+      "name": "node1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "qtree": {
+      "id": 1,
+      "name": "qt1"
+    },
+    "volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "movement": {
+    "paths": {
+      "destination": "/vol/vol1/lun1",
+      "source": "/vol/vol2/lun2"
+    },
+    "progress": {
+      "elapsed": 0,
+      "percent_complete": 0,
+      "state": "string"
+    }
+  },
+  "name": "/vol/volume1/qtree1/lun1",
+  "qos_policy": {
+    "name": "qos1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "serial_number": "string",
+  "serial_number_hex": "string",
+  "space": {
+    "efficiency_ratio": 2.5,
+    "physical_used": 1073741824,
+    "physical_used_by_snapshots": 1073741824,
+    "size": 1073741824,
+    "used": 0
+  },
+  "status": {
+    "container_state": "string",
+    "state": "online"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "vvol": {
+    "bindings": [
+      {
+        "id": 1,
+        "partner": {
+          "name": "/vol/vol1/lun1",
+          "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+        },
+        "secondary_id": "0000D20000010000h"
+      }
+    ]
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917927
+| The specified volume was not found.
+
+| 918235
+| A volume with the specified UUID was not found.
+
+| 918236
+| The specified `location.volume.uuid` and `location.volume.name` do not refer to the same volume.
+
+| 1254196
+| A LUN already exists at the specified path.
+
+| 1254226
+| Cannot patch a LUN's size to its current size.
+
+| 5242927
+| The specified qtree was not found.
+
+| 5242950
+| The specified `location.qtree.id` and `location.qtree.name` do not refer to the same qtree.
+
+| 5374124
+| The specified LUN size is too small.
+
+| 5374125
+| The specified LUN size is too large.
+
+| 5374127
+| The specified LUN name is invalid.
+
+| 5374130
+| An invalid size value was provided.
+
+| 5374241
+| A size value with invalid units was provided.
+
+| 5374480
+| Modifying the LUN is not allowed because it is in a foreign LUN import relationship.
+
+| 5374858
+| The volume specified by `name` is not the same as that specified by `location.volume`.
+
+| 5374860
+| The qtree specified by `name` is not the same as that specified by `location.qtree`.
+
+| 5374861
+| The LUN base name specified by `name` is not the same as that specified by `location.logical_unit`.
+
+| 5374864
+| An error occurred after successfully overwriting data for the LUN as a clone. Some properties were not modified.
+
+| 5374865
+| The LUN's aggregate is offline. The aggregate must be online to modify or remove the LUN.
+
+| 5374866
+| The LUN's volume is offline. The volume must be online to modify or remove the LUN.
+
+| 5374874
+| The specified `clone.source.uuid` and `clone.source.name` do not refer to the same LUN.
+
+| 5374875
+| The specified LUN was not found. This can apply to `clone.source` or the target LUN. The `target` property of the error object identifies the property.
+
+| 5374876
+| The specified LUN was not found. This can apply to `clone.source` or the target LUN. The `target` property of the error object identifies the property.
+
+| 5374885
+| An error occurred after successfully modifying some of the properties of the LUN. Some properties were not modified.
+
+| 5374889
+| An invalid value was specified for `movement.progress.state`. Active LUN movement operations can be PATCHed to only _paused_ or _replicating_.
+
+| 5374892
+| An attempt was made to reduce the size of a LUN.
+
+| 5374904
+| The destination volume is not online.
+
+| 5375059
+| An unsuitable QoS policy was specified.
+
+| 5376461
+| The specified LUN name is invalid.
+
+| 5376462
+| The specified LUN name is too long.
+
+| 5376463
+| The snapshot portion of the specified LUN name is too long.
+
+| 5376466
+| An attempt was made to rename a LUN to a snapshot name.
+
+| 5376467
+| An attempt was made to rename a primary LUN to a secondary name.
+
+| 5376468
+| An attempt was made to rename a LUN to a reserved name.
+
+| 5376470
+| The property cannot be set during the LUN modify operation on this platform.
+
+| 7018877
+| Maximum combined total (50) of file and LUN copy and move operations reached. When one or more of the operations has completed, try the command again.
+
+| 7018919
+| A copy or move job exists with the same destination LUN.
+
+| 8454243
+| The specified QoS policy does not exist while modifying a LUN.
+
+| 13565952
+| The LUN clone request failed.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#attributes]
+[.api-collapsible-fifth-title]
+attributes
+
+A name/value pair optionally stored with the LUN. Attributes are available to callers to persist small amounts of application-specific metadata. They are in no way interpreted by ONTAP.
+
+Attribute names and values must be at least one byte and no more than 4091 bytes in length. The sum of the name and value lengths must be no more than 4092 bytes.
+
+Optional in POST.
+
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+The source LUN for a LUN clone operation. This can be specified using property `clone.source.uuid` or `clone.source.name`. If both properties are supplied, they must refer to the same LUN.
+
+Valid in POST to create a new LUN as a clone of the source.
+
+Valid in PATCH to overwrite an existing LUN's data as a clone of another.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the clone source LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+Valid in POST and PATCH.
+
+
+|uuid
+|string
+a|The unique identifier of the clone source LUN.
+Valid in POST and PATCH.
+
+
+|===
+
+
+[#clone]
+[.api-collapsible-fifth-title]
+clone
+
+This sub-object is used in POST to create a new LUN as a clone of an existing LUN, or PATCH to overwrite an existing LUN as a clone of another. Setting a property in this sub-object indicates that a LUN clone is desired. Consider the following other properties when cloning a LUN: `auto_delete`, `qos_policy`, `space.guarantee.requested` and `space.scsi_thin_provisioning_support_enabled`.
+
+When used in a PATCH, the patched LUN's data is over-written as a clone of the source and the following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `serial_number`, `status.state`, and `uuid`.
+
+Persistent reservations for the patched LUN are also preserved.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|source
+|link:#source[source]
+a|The source LUN for a LUN clone operation. This can be specified using property `clone.source.uuid` or `clone.source.name`. If both properties are supplied, they must refer to the same LUN.
+
+Valid in POST to create a new LUN as a clone of the source.
+
+Valid in PATCH to overwrite an existing LUN's data as a clone of another.
+
+
+|===
+
+
+[#consistency_group]
+[.api-collapsible-fifth-title]
+consistency_group
+
+The LUN's consistency group. This property is populated for LUNs that are members of a consistency group. If the LUN is a member of a child consistency group, the parent consistency group is reported.
+A LUN's consistency group is the consistency group of its containing volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group.
+
+
+|===
+
+
+[#namespace]
+[.api-collapsible-fifth-title]
+namespace
+
+The source namespace for convert operation. This can be specified using property `convert.namespace.uuid` or `convert.namespace.name`. If both properties are supplied, they must refer to the same NVMe namespace.
+
+Valid in POST. A convert request from NVMe namespace to LUN cannot be combined with setting any other LUN properties. All other properties of the converted LUN come from the source NVMe namespace.
+
+[#convert]
+[.api-collapsible-fifth-title]
+convert
+
+This sub-object is used in POST to convert a valid in-place NVMe namespace to a LUN. Setting a property in this sub-object indicates that a conversion from the specified NVMe namespace to LUN is desired.
+
+[#peer]
+[.api-collapsible-fifth-title]
+peer
+
+The SVM peer relationship object for an inter-SVM LUN copy operation. The peer SVM in the relationship is the source SVM and the local SVM is the destination SVM.
+
+This is only populated by GET when the LUN copy is inter-SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Error information provided if the asynchronous LUN copy operation fails.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#progress]
+[.api-collapsible-fifth-title]
+progress
+
+Properties related to the progress of an active or recently completed LUN copy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elapsed
+|integer
+a|The amount of time that has elapsed since the start of the LUN copy, in seconds.
+
+
+|percent_complete
+|integer
+a|The percentage completed of the LUN copy.
+
+
+|state
+|string
+a|The state of the LUN copy.
+
+
+|volume_snapshot_blocked
+|boolean
+a|This property reports if volume snapshots are blocked by the LUN copy. This property can be polled to identify when volume snapshots can be resumed after beginning a LUN copy.
+
+
+|===
+
+
+[#destinations]
+[.api-collapsible-fifth-title]
+destinations
+
+A LUN copy operation in which the containing LUN is the source of the copy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|integer
+a|The maximum data throughput, in bytes per second, that should be utilized in support of the LUN copy. See property `copy.source.max_throughput` for further details.
+
+
+|name
+|string
+a|The fully qualified path of the LUN copy destination composed of a "/vol" prefix, the volume name, the optional qtree name, and base name of the LUN.
+
+
+|peer
+|link:#peer[peer]
+a|The SVM peer relationship object for an inter-SVM LUN copy operation. The peer SVM in the relationship is the source SVM and the local SVM is the destination SVM.
+
+This is only populated by GET when the LUN copy is inter-SVM.
+
+
+|progress
+|link:#progress[progress]
+a|Properties related to the progress of an active or recently completed LUN copy.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN copy destination.
+
+
+|===
+
+
+[#peer]
+[.api-collapsible-fifth-title]
+peer
+
+The SVM peer relationship object for an inter-SVM LUN copy operation. The peer SVM in the relationship is the source SVM and the local SVM is the destination SVM.
+
+Set this in POST to specify the source SVM for an inter-SVM LUN copy. Only populated by GET when the LUN copy is inter-SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#progress]
+[.api-collapsible-fifth-title]
+progress
+
+Properties related to the progress of an active or recently completed LUN copy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elapsed
+|integer
+a|The amount of time that has elapsed since the start of the LUN copy, in seconds.
+
+
+|percent_complete
+|integer
+a|The percentage completed of the LUN copy.
+
+
+|state
+|string
+a|The state of the LUN copy.
+
+Valid in PATCH when an LUN copy is active. Set to _paused_ to pause a LUN copy. Set to _replicating_ to resume a paused LUN copy.
+
+
+|volume_snapshot_blocked
+|boolean
+a|This property reports if volume snapshots are blocked by the LUN copy. This property can be polled to identify when volume snapshots can be resumed after beginning a LUN copy.
+
+
+|===
+
+
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+The source LUN of a LUN copy operation in which the containing LUN is the destination of the copy.
+
+Valid in POST except when creating a LUN clone. A LUN copy request cannot be combined with setting any other LUN properties except the destination location. All other properties of the destination LUN come from the source LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|integer
+a|The maximum data throughput, in bytes per second, that should be utilized in support of the LUN copy. This property can be used to throttle a transfer and limit its impact on the performance of the source and destination nodes. The specified value will be rounded up to the nearest megabyte.
+
+If this property is not specified in a POST that begins a LUN copy, throttling is not applied to the data transfer.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+Valid only in a POST that begins a LUN copy or a PATCH when a LUN copy is already in process.
+
+* format: int64
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|peer
+|link:#peer[peer]
+a|The SVM peer relationship object for an inter-SVM LUN copy operation. The peer SVM in the relationship is the source SVM and the local SVM is the destination SVM.
+
+Set this in POST to specify the source SVM for an inter-SVM LUN copy. Only populated by GET when the LUN copy is inter-SVM.
+
+
+|progress
+|link:#progress[progress]
+a|Properties related to the progress of an active or recently completed LUN copy.
+
+
+|===
+
+
+[#copy]
+[.api-collapsible-fifth-title]
+copy
+
+This sub-object applies to LUN copy operations. A LUN can be copied with a POST request that supplies `copy.source` properties.
+
+Copying a LUN is an asynchronous activity begun by a POST request that specifies the source of the copy in the `copy.source` properties. The data for the LUN is then asynchronously copied from the source to the destination. The time required to complete the copy depends on the size of the LUN and the load on the cluster. The `copy` sub-object is populated while a LUN copy is in progress and for two (2) minutes following completion of a copy.
+
+While LUNs are being copied, the status of the LUN copy operations can be obtained using a GET of the source or destination LUN that requests the `copy` properties. If the LUN is the source LUN for one or more copy operations, the `copy.destinations` array is populated in GET. If the containing LUN is the destination LUN for a copy operation, the `copy.source` sub-object is populated in GET. The LUN copy operation can be further modified using a PATCH on the properties on the `copy.source` sub-object of the copy destination LUN.
+
+There is an added computational cost to retrieving property values for `copy`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destinations
+|array[link:#destinations[destinations]]
+a|An array of destination LUNs of LUN copy operations in which the containing LUN is the source of the copy.
+
+
+|source
+|link:#source[source]
+a|The source LUN of a LUN copy operation in which the containing LUN is the destination of the copy.
+
+Valid in POST except when creating a LUN clone. A LUN copy request cannot be combined with setting any other LUN properties except the destination location. All other properties of the destination LUN come from the source LUN.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The cluster node that hosts the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#qtree]
+[.api-collapsible-fifth-title]
+qtree
+
+The qtree in which the LUN is optionally located. Valid in POST and PATCH.
+
+If properties `name` and `location.qtree.name` and/or `location.qtree.id` are specified in the same request, they must refer to the same qtree.
+
+A PATCH that modifies the qtree of the LUN is considered a rename operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|The identifier for the qtree, unique within the qtree's volume.
+
+
+|name
+|string
+a|The name of the qtree.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+The volume in which the LUN is located. Valid in POST and PATCH.
+
+If properties `name` and `location.volume.name` and/or `location.volume.uuid` are specified in the same request, they must refer to the same volume.
+
+A PATCH that modifies the volume of the LUN begins an asynchronous LUN movement operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+The location of the LUN within the ONTAP cluster.
+LUNs support rename and move between volumes. Valid in POST and PATCH.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logical_unit
+|string
+a|The base name component of the LUN. Valid in POST and PATCH.
+
+If properties `name` and `location.logical_unit` are specified in the same request, they must refer to the base name.
+
+A PATCH that modifies the base name of the LUN is considered a rename operation.
+
+
+|node
+|link:#node[node]
+a|The cluster node that hosts the LUN.
+
+
+|qtree
+|link:#qtree[qtree]
+a|The qtree in which the LUN is optionally located. Valid in POST and PATCH.
+
+If properties `name` and `location.qtree.name` and/or `location.qtree.id` are specified in the same request, they must refer to the same qtree.
+
+A PATCH that modifies the qtree of the LUN is considered a rename operation.
+
+
+|volume
+|link:#volume[volume]
+a|The volume in which the LUN is located. Valid in POST and PATCH.
+
+If properties `name` and `location.volume.name` and/or `location.volume.uuid` are specified in the same request, they must refer to the same volume.
+
+A PATCH that modifies the volume of the LUN begins an asynchronous LUN movement operation.
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#initiators]
+[.api-collapsible-fifth-title]
+initiators
+
+The initiators that are members of the initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|name
+|string
+a|Name of initiator that is a member of the initiator group.
+
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group to which the LUN is mapped.
+
+[#lun_maps]
+[.api-collapsible-fifth-title]
+lun_maps
+
+A LUN map is an association between a LUN and an initiator group.
+
+When a LUN is mapped to an initiator group, the initiator group's initiators are granted access to the LUN. The relationship between a LUN and an initiator group is many LUNs to many initiator groups.
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS latency and throughput.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#paths]
+[.api-collapsible-fifth-title]
+paths
+
+The fully qualified LUN path names involved in the LUN movement.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|string
+a|The fully qualified path of the LUN movement destination composed of a "/vol" prefix, the volume name, the optional qtree name, and base name of the LUN.
+
+
+|source
+|string
+a|The fully qualified path of the LUN movement source composed of a "/vol" prefix, the volume name, the optional qtree name, and base name of the LUN.
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Error information provided if the asynchronous LUN movement operation fails.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#progress]
+[.api-collapsible-fifth-title]
+progress
+
+Properties related to the progress of an active or recently completed LUN movement.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elapsed
+|integer
+a|The amount of time that has elapsed since the start of the LUN movement, in seconds.
+
+
+|percent_complete
+|integer
+a|The percentage completed of the LUN movement.
+
+
+|state
+|string
+a|The state of the LUN movement.
+
+Valid in PATCH when an LUN movement is active. Set to _paused_ to pause a LUN movement. Set to _replicating_ to resume a paused LUN movement.
+
+
+|volume_snapshot_blocked
+|boolean
+a|This property reports if volume snapshots are blocked by the LUN movement. This property can be polled to identify when volume snapshots can be resumed after beginning a LUN movement.
+
+
+|===
+
+
+[#movement]
+[.api-collapsible-fifth-title]
+movement
+
+This sub-object applies to LUN movement between volumes. A LUN can be moved to a new volume with a PATCH request that changes either the volume portion of property `name`, `location.volume.uuid`, or `location.volume.name`. If the volume is changed using more than one of these properties, the supplied properties used must refer to the same volume.
+
+Moving a LUN between volumes is an asynchronous activity begun by a PATCH request. The data for the LUN is then asynchronously copied from the source volume to the destination volume. The time required to complete the move depends on the size of the LUN and the load on the cluster. The `movement` sub-object is populated while a LUN movement is in progress and for two (2) minutes following completion of a movement.
+
+While the LUN is being moved, the status of the LUN movement operation can be obtained using a GET for the LUN that requests the `movement` properties. The LUN movement operation can be further modified using a PATCH on the properties on the `movement` sub-object.
+
+There is an added computational cost to retrieving property values for `movement`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|integer
+a|The maximum data throughput, in bytes per second, that should be utilized in support of the LUN movement. This property can be used to throttle a transfer and limit its impact on the performance of the source and destination nodes. The specified value will be rounded up to the nearest megabyte.
+
+If this property is not specified in a POST that begins a LUN movement, throttling is not applied to the data transfer.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+This property is valid only in a POST that begins a LUN movement or a PATCH when a LUN movement is already in process.
+
+* format: int64
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|paths
+|link:#paths[paths]
+a|The fully qualified LUN path names involved in the LUN movement.
+
+
+|progress
+|link:#progress[progress]
+a|Properties related to the progress of an active or recently completed LUN movement.
+
+
+|===
+
+
+[#exclude_aggregates]
+[.api-collapsible-fifth-title]
+exclude_aggregates
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The aggregate name.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+The QoS policy for the volume provisioned to host the LUN. This property is only supported when the request provisions a new volume. This property is mutually exclusive with the LUN granular `qos_policy`. If no `qos_policy` is provided at LUN or volume granularity, a volume granular policy is set based on the `storage_service.name`, which defaults to the most performant service available.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#snapshot_policy_reference]
+[.api-collapsible-fifth-title]
+snapshot_policy_reference
+
+This is a reference to the snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+Determines the placement of the LUN based on the value specified. This property is only supported for regular and vvol LUNs. Valid in POST.
+
+[#object_stores]
+[.api-collapsible-fifth-title]
+object_stores
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the object store to use. Used for placement.
+
+
+|===
+
+
+[#tiering]
+[.api-collapsible-fifth-title]
+tiering
+
+The tiering placement and policy definitions for the volume provisioned to host the LUN. This property is only supported when the request provisions a new volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|control
+|string
+a|Storage tiering placement rules for the object.
+
+
+|object_stores
+|array[link:#object_stores[object_stores]]
+a|Object stores to use. Used for placement.
+
+
+|===
+
+
+[#provisioning_options]
+[.api-collapsible-fifth-title]
+provisioning_options
+
+Options that are applied to the operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|exclude_aggregates
+|array[link:#exclude_aggregates[exclude_aggregates]]
+a|A list of aggregates to exclude when determining the placement of the volume.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|Determines the placement of the LUN based on the value specified. This property is only supported for regular and vvol LUNs. Valid in POST.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+The QoS policy for the LUN. Both traditional and adaptive QoS policies are supported. If both property `qos_policy.uuid` and `qos_policy.name` are specified in the same request, they must refer to the same QoS policy. To remove the QoS policy from a LUN, leaving it with no QoS policy, set the property `qos_policy.name` to an empty string ("") in a PATCH request. Valid in POST and PATCH.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the QoS policy. To remove the QoS policy from a LUN, leaving it with no QoS policy, set this property to an empty string ("") in a PATCH request. Valid in POST and PATCH.
+
+
+|uuid
+|string
+a|The unique identifier of the QoS policy. Valid in POST and PATCH.
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+Properties that request and report the space guarantee for the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|requested
+|boolean
+a|The requested space reservation policy for the LUN. If _true_, a space reservation is requested for the LUN; if _false_, the LUN is thin provisioned. Guaranteeing a space reservation request for a LUN requires that the volume in which the LUN resides is also space reserved and that the fractional reserve for the volume is 100%. Valid in POST and PATCH.
+This property is caller settable as described above.
+
+
+|reserved
+|boolean
+a|Reports if the LUN is space guaranteed.
+
+If _true_, a space guarantee is requested and the containing volume and aggregate support the request. If _false_, a space guarantee is not requested or a space guarantee is requested and either the containing volume or aggregate do not support the request.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+The storage space related properties of the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|efficiency_ratio
+|number
+a|The storage efficiency ratio of the LUN without snapshots. (Logical Used / Used)
+This property is not available on the LUN object in the REST API and is not reported for GET requests. See the containing volume object for this information.
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|Properties that request and report the space guarantee for the LUN.
+
+
+|physical_used
+|integer
+a|The number of bytes consumed on the disk by the LUN, excluding snapshots.
+This property is not available on the LUN object in the REST API and is not reported for GET requests. See the containing volume object for this information.
+
+
+|physical_used_by_snapshots
+|integer
+a|The number of bytes consumed on the disk by the LUN's snapshots.
+This property has been replaced by `space.snapshot.used`.
+This property is not available on the LUN object in the REST API and is not reported for GET requests. See the containing volume object for this information.
+
+
+|scsi_thin_provisioning_support_enabled
+|boolean
+a|To leverage the benefits of SCSI thin provisioning, it must be supported by your host. SCSI thin provisioning uses the Logical Block Provisioning feature as defined in the SCSI SBC-3 standard. Only hosts that support this standard can use SCSI thin provisioning in ONTAP.
+
+When you disable SCSI thin provisioning support in ONTAP, you turn off the following SCSI thin provisioning features:
+
+* Unmapping and reporting space usage for space reclamation
+* Reporting resource exhaustion errors
+
+The value of this property is not propagated to the destination when a LUN is cloned as a new LUN or copied; it is reset to false. The value of this property is maintained from the destination LUN when a LUN is overwritten as a clone.
+
+Valid in POST and PATCH.
+
+* Default value: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|size
+|integer
+a|The total provisioned size of the LUN. The LUN size can be increased but not decreased using the REST interface.
+
+The maximum and minimum sizes listed here are the absolute maximum and absolute minimum sizes, in bytes. The actual minimum and maximum sizes vary depending on the ONTAP version, ONTAP platform and the available space in the containing volume and aggregate.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* example: 1073741824
+* format: int64
+* Max value: 140737488355328
+* Min value: 4096
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|used
+|integer
+a|The amount of space consumed by the main data stream of the LUN.
+
+This value is the total space consumed in the volume by the LUN, including filesystem overhead, but excluding prefix and suffix streams. Due to internal filesystem overhead and the many ways SAN filesystems and applications utilize blocks within a LUN, this value does not necessarily reflect actual consumption/availability from the perspective of the filesystem or application. Without specific knowledge of how the LUN blocks are utilized outside of ONTAP, this property should not be used as an indicator for an out-of-space condition.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* format: int64
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance numbers, such as IOPS latency and throughput. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Status information about the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|container_state
+|string
+a|The state of the volume and aggregate that contain the LUN. LUNs are only available when their containers are available.
+
+
+|mapped
+|boolean
+a|Reports if the LUN is mapped to one or more initiator groups.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|read_only
+|boolean
+a|Reports if the LUN allows only read access.
+
+
+|state
+|string
+a|The state of the LUN. Normal states for a LUN are _online_ and _offline_. Other states indicate errors.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+The SVM in which the LUN is located.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#partner]
+[.api-collapsible-fifth-title]
+partner
+
+The LUN partner that this LUN is bound to. If this LUN is a `vvol` class LUN, the partner is a `protocol_endpoint` class LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the partner LUN.
+
+
+|uuid
+|string
+a|The unique identifier of the partner LUN.
+
+
+|===
+
+
+[#bindings]
+[.api-collapsible-fifth-title]
+bindings
+
+A vVol binding with which the LUN is associated.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|The ONTAP internal identifier assigned to the vVol binding. The bind identifier is unique amongst all class `vvol` LUNs bound to the same class `protocol_endpoint` LUN.
+
+This property was included in early releases of the REST API for vVols and is maintained for backward compatibility. See the `secondary_id` property, which replaces `id`.
+
+* example: 1
+* readOnly: 1
+* x-ntap-deprecated: 9.13.1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|partner
+|link:#partner[partner]
+a|The LUN partner that this LUN is bound to. If this LUN is a `vvol` class LUN, the partner is a `protocol_endpoint` class LUN.
+
+
+|secondary_id
+|string
+a|The identifier assigned to the vVol binding, known as the secondary LUN ID. The identifier is unique amongst all class `vvol` LUNs bound to the same class `protocol_endpoint` LUN.
+
+The format for a secondary LUN ID is 16 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|===
+
+
+[#vvol]
+[.api-collapsible-fifth-title]
+vvol
+
+A VMware virtual volume (vVol) binding is an association between a LUN of class `protocol_endpoint` and a LUN of class `vvol`. Class `protocol_endpoint` LUNs are mapped to igroups and granted access using the same configuration as class `regular` LUNs. When a class `vvol` LUN is bound to a mapped class `protocol_endpoint` LUN, VMware can access the class `vvol` LUN through the class `protocol_endpoint` LUN mapping.
+
+See link:post-protocols-san-vvol-bindings(#-san-vvol-binding-create)tolearnmoreaboutcreatingvvolbindingsanddelete-protocols-san-vvol-bindings.html<</SAN/vvol_binding_create,POST /protocols/san/vvol-bindings>> to learn more about creating vVol bindings and [DELETE /protocols/san/vvol-bindings]  to learn more about deleting vVol bindings.
+
+There is an added computational cost to retrieving property values for `vvol`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bindings
+|array[link:#bindings[bindings]]
+a|Bindings between the LUN, which must be of class `protocol_endpoint` or `vvol`, and LUNs of the opposite class.
+
+A class `vvol` LUN must be bound to a class `protocol_endpoint` LUN in order to be accessed. Class `protocol_endpoint` and `vvol` LUNs allow many-to-many bindings. A LUN of one class is allowed to be bound to zero or more LUNs of the opposite class. The binding between any two specific LUNs is reference counted. When a binding is created that already exists, the binding count is incremented. When a binding is deleted, the binding count is decremented, but the LUNs remain bound if the resultant reference count is greater than zero. When the binding count reaches zero, the binding is destroyed.
+
+The bindings array contains LUNs of the opposite class of the containing LUN object.
+
+There is an added computational cost to retrieving property values for `vvol.bindings`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|is_bound
+|boolean
+a|Reports if the LUN is part of a VMware virtual volume (vVol) bind relationship. This is `true` if the LUN is of class `protocol_endpoint` or `vvol` and has one or more bindings to a LUN of the opposite class. This is false if the LUN is of class `regular` or unbound.
+
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+A LUN is the logical representation of storage in a storage area network (SAN).
+
+A LUN must be mapped to an initiator group to grant access to the initiator group's initiators (client hosts). Initiators can then access the LUN and perform I/O over a Fibre Channel (FC) fabric using the FC Protocol or a TCP/IP network using iSCSI.
+
+See the LUN object model to learn more about each of the properties supported by the LUN REST API.
+
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<lun>" where the qtree name is optional.
+
+A LUN can be created to a specified size using thin or thick provisioning. A LUN can then be renamed, resized, cloned, moved to a different volume and copied. LUNs support the assignment of a QoS policy for performance management or a QoS policy can be assigned to a volume containing one or more LUNs.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_delete
+|boolean
+a|This property marks the LUN for auto deletion when the volume containing the LUN runs out of space. This is most commonly set on LUN clones.
+
+When set to _true_, the LUN becomes eligible for automatic deletion when the volume runs out of space. Auto deletion only occurs when the volume containing the LUN is also configured for auto deletion and free space in the volume decreases below a particular threshold.
+
+This property is optional in POST and PATCH. The default value for a new LUN is _false_.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new LUN as a clone of an existing LUN, or PATCH to overwrite an existing LUN as a clone of another. Setting a property in this sub-object indicates that a LUN clone is desired. Consider the following other properties when cloning a LUN: `auto_delete`, `qos_policy`, `space.guarantee.requested` and `space.scsi_thin_provisioning_support_enabled`.
+
+When used in a PATCH, the patched LUN's data is over-written as a clone of the source and the following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `serial_number`, `status.state`, and `uuid`.
+
+Persistent reservations for the patched LUN are also preserved.
+
+
+|comment
+|string
+a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The LUN's consistency group. This property is populated for LUNs that are members of a consistency group. If the LUN is a member of a child consistency group, the parent consistency group is reported.
+A LUN's consistency group is the consistency group of its containing volume.
+
+
+|copy
+|link:#copy[copy]
+a|This sub-object applies to LUN copy operations. A LUN can be copied with a POST request that supplies `copy.source` properties.
+
+Copying a LUN is an asynchronous activity begun by a POST request that specifies the source of the copy in the `copy.source` properties. The data for the LUN is then asynchronously copied from the source to the destination. The time required to complete the copy depends on the size of the LUN and the load on the cluster. The `copy` sub-object is populated while a LUN copy is in progress and for two (2) minutes following completion of a copy.
+
+While LUNs are being copied, the status of the LUN copy operations can be obtained using a GET of the source or destination LUN that requests the `copy` properties. If the LUN is the source LUN for one or more copy operations, the `copy.destinations` array is populated in GET. If the containing LUN is the destination LUN for a copy operation, the `copy.source` sub-object is populated in GET. The LUN copy operation can be further modified using a PATCH on the properties on the `copy.source` sub-object of the copy destination LUN.
+
+There is an added computational cost to retrieving property values for `copy`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|create_time
+|string
+a|The time the LUN was created.
+
+
+|enabled
+|boolean
+a|The enabled state of the LUN. LUNs can be disabled to prevent access to the LUN. Certain error conditions also cause the LUN to become disabled. If the LUN is disabled, check the `status.state` property to determine if the LUN is administratively disabled (_offline_) or has become disabled as a result of an error. A LUN in an error condition can be brought online by setting the `enabled` property to _true_ or brought administratively offline by setting the `enabled` property to _false_. Upon creation, a LUN is enabled by default. Valid in PATCH.
+
+
+|location
+|link:#location[location]
+a|The location of the LUN within the ONTAP cluster.
+LUNs support rename and move between volumes. Valid in POST and PATCH.
+
+* Introduced in: 9.6
+
+
+|movement
+|link:#movement[movement]
+a|This sub-object applies to LUN movement between volumes. A LUN can be moved to a new volume with a PATCH request that changes either the volume portion of property `name`, `location.volume.uuid`, or `location.volume.name`. If the volume is changed using more than one of these properties, the supplied properties used must refer to the same volume.
+
+Moving a LUN between volumes is an asynchronous activity begun by a PATCH request. The data for the LUN is then asynchronously copied from the source volume to the destination volume. The time required to complete the move depends on the size of the LUN and the load on the cluster. The `movement` sub-object is populated while a LUN movement is in progress and for two (2) minutes following completion of a movement.
+
+While the LUN is being moved, the status of the LUN movement operation can be obtained using a GET for the LUN that requests the `movement` properties. The LUN movement operation can be further modified using a PATCH on the properties on the `movement` sub-object.
+
+There is an added computational cost to retrieving property values for `movement`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|name
+|string
+a|The name of the LUN. Valid in POST and PATCH.
+
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<lun>" where the qtree name is optional.
+
+A PATCH that modifies the qtree and/or base name portion of the LUN path is considered a rename operation.
+
+A PATCH that modifies the volume portion of the LUN path begins an asynchronous LUN movement operation.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|The QoS policy for the LUN. Both traditional and adaptive QoS policies are supported. If both property `qos_policy.uuid` and `qos_policy.name` are specified in the same request, they must refer to the same QoS policy. To remove the QoS policy from a LUN, leaving it with no QoS policy, set the property `qos_policy.name` to an empty string ("") in a PATCH request. Valid in POST and PATCH.
+
+
+|serial_number
+|string
+a|The LUN serial number. The serial number is generated by ONTAP when the LUN is created.
+
+* maxLength: 12
+* minLength: 12
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|serial_number_hex
+|string
+a|The LUN serial number encoded in hexadecimal format. The serial number is generated by ONTAP when the LUN is created.
+
+* readOnly: 1
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|space
+|link:#space[space]
+a|The storage space related properties of the LUN.
+
+
+|status
+|link:#status[status]
+a|Status information about the LUN.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN. The UUID is generated by ONTAP when the LUN is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|vvol
+|link:#vvol[vvol]
+a|A VMware virtual volume (vVol) binding is an association between a LUN of class `protocol_endpoint` and a LUN of class `vvol`. Class `protocol_endpoint` LUNs are mapped to igroups and granted access using the same configuration as class `regular` LUNs. When a class `vvol` LUN is bound to a mapped class `protocol_endpoint` LUN, VMware can access the class `vvol` LUN through the class `protocol_endpoint` LUN mapping.
+
+See link:post-protocols-san-vvol-bindings(#-san-vvol-binding-create)tolearnmoreaboutcreatingvvolbindingsanddelete-protocols-san-vvol-bindings.html<</SAN/vvol_binding_create,POST /protocols/san/vvol-bindings>> to learn more about creating vVol bindings and [DELETE /protocols/san/vvol-bindings]  to learn more about deleting vVol bindings.
+
+There is an added computational cost to retrieving property values for `vvol`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

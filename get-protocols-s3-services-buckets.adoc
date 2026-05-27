@@ -1,0 +1,2046 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-s3-services-buckets.html'
+summary: 'Retrieve the S3 bucket configurations for an SVM'
+---
+
+= Retrieve the S3 bucket configurations for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/buckets`#
+
+*Introduced In:* 9.7
+
+Retrieves the S3 bucket's configuration of an SVM. Note that in order to retrieve S3 bucket policy conditions, the 'fields' option should be set to '**'.
+
+== Related ONTAP commands
+
+* `vserver object-store-server bucket show`
+* `vserver object-store-server bucket policy statement show`
+* `vserver object-store-server bucket policy-statement-condition show`
+* `vserver object-store-server bucket lifecycle-management-rule show`
+* `vserver object-store-server bucket snapshot restore show`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_buckets_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/buckets]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|snapshot_policy.name
+|string
+|query
+|False
+a|Filter by snapshot_policy.name
+
+* Introduced in: 9.16
+
+
+|snapshot_policy.uuid
+|string
+|query
+|False
+a|Filter by snapshot_policy.uuid
+
+* Introduced in: 9.16
+
+
+|cors.rules.allowed_headers
+|string
+|query
+|False
+a|Filter by cors.rules.allowed_headers
+
+* Introduced in: 9.16
+
+
+|cors.rules.id
+|string
+|query
+|False
+a|Filter by cors.rules.id
+
+* Introduced in: 9.16
+* maxLength: 256
+* minLength: 0
+
+
+|cors.rules.max_age_seconds
+|integer
+|query
+|False
+a|Filter by cors.rules.max_age_seconds
+
+* Introduced in: 9.16
+
+
+|cors.rules.allowed_origins
+|string
+|query
+|False
+a|Filter by cors.rules.allowed_origins
+
+* Introduced in: 9.16
+
+
+|cors.rules.expose_headers
+|string
+|query
+|False
+a|Filter by cors.rules.expose_headers
+
+* Introduced in: 9.16
+
+
+|cors.rules.allowed_methods
+|string
+|query
+|False
+a|Filter by cors.rules.allowed_methods
+
+* Introduced in: 9.16
+
+
+|snapshot_restore.state
+|string
+|query
+|False
+a|Filter by snapshot_restore.state
+
+* Introduced in: 9.18
+
+
+|snapshot_restore.objects_remaining
+|integer
+|query
+|False
+a|Filter by snapshot_restore.objects_remaining
+
+* Introduced in: 9.18
+
+
+|snapshot_restore.progress
+|integer
+|query
+|False
+a|Filter by snapshot_restore.progress
+
+* Introduced in: 9.18
+
+
+|snapshot_restore.snapshot
+|string
+|query
+|False
+a|Filter by snapshot_restore.snapshot
+
+* Introduced in: 9.18
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 63
+* minLength: 3
+
+
+|policy.statements.principals
+|string
+|query
+|False
+a|Filter by policy.statements.principals
+
+* Introduced in: 9.8
+
+
+|policy.statements.sid
+|string
+|query
+|False
+a|Filter by policy.statements.sid
+
+* Introduced in: 9.8
+* maxLength: 256
+* minLength: 0
+
+
+|policy.statements.resources
+|string
+|query
+|False
+a|Filter by policy.statements.resources
+
+* Introduced in: 9.8
+
+
+|policy.statements.effect
+|string
+|query
+|False
+a|Filter by policy.statements.effect
+
+* Introduced in: 9.8
+
+
+|policy.statements.actions
+|string
+|query
+|False
+a|Filter by policy.statements.actions
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.operator
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.operator
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.delimiters
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.delimiters
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.prefixes
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.prefixes
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.usernames
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.usernames
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.source_ips
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.source_ips
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.max_keys
+|integer
+|query
+|False
+a|Filter by policy.statements.conditions.max_keys
+
+* Introduced in: 9.8
+
+
+|lifecycle_management.rules.bucket_name
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.bucket_name
+
+* Introduced in: 9.14
+* maxLength: 63
+* minLength: 3
+
+
+|lifecycle_management.rules.non_current_version_expiration.non_current_days
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.non_current_version_expiration.non_current_days
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.non_current_version_expiration.new_non_current_versions
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.non_current_version_expiration.new_non_current_versions
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.uuid
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.uuid
+
+* Introduced in: 9.14
+
+
+|lifecycle_management.rules.expiration.expired_object_delete_marker
+|boolean
+|query
+|False
+a|Filter by lifecycle_management.rules.expiration.expired_object_delete_marker
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.expiration.object_expiry_date
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.expiration.object_expiry_date
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.expiration.object_age_days
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.expiration.object_age_days
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.name
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.name
+
+* Introduced in: 9.13
+* maxLength: 256
+* minLength: 0
+
+
+|lifecycle_management.rules.svm.name
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.svm.name
+
+* Introduced in: 9.14
+
+
+|lifecycle_management.rules.svm.uuid
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.svm.uuid
+
+* Introduced in: 9.14
+
+
+|lifecycle_management.rules.object_filter.prefix
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.prefix
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.size_greater_than
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.size_greater_than
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.size_less_than
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.size_less_than
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.tags
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.tags
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.enabled
+|boolean
+|query
+|False
+a|Filter by lifecycle_management.rules.enabled
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.abort_incomplete_multipart_upload.after_initiation_days
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.abort_incomplete_multipart_upload.after_initiation_days
+
+* Introduced in: 9.13
+
+
+|audit_event_selector.permission
+|string
+|query
+|False
+a|Filter by audit_event_selector.permission
+
+* Introduced in: 9.10
+
+
+|audit_event_selector.access
+|string
+|query
+|False
+a|Filter by audit_event_selector.access
+
+* Introduced in: 9.10
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+* Introduced in: 9.12
+
+
+|versioning_state
+|string
+|query
+|False
+a|Filter by versioning_state
+
+* Introduced in: 9.11
+
+
+|is_consistent_etag
+|boolean
+|query
+|False
+a|Filter by is_consistent_etag
+
+* Introduced in: 9.17
+
+
+|qos_policy.min_throughput_mbps
+|integer
+|query
+|False
+a|Filter by qos_policy.min_throughput_mbps
+
+* Introduced in: 9.8
+* Max value: 4194303
+* Min value: 0
+
+
+|qos_policy.max_throughput_iops
+|integer
+|query
+|False
+a|Filter by qos_policy.max_throughput_iops
+
+* Introduced in: 9.8
+* Max value: 2147483647
+* Min value: 0
+
+
+|qos_policy.max_throughput_mbps
+|integer
+|query
+|False
+a|Filter by qos_policy.max_throughput_mbps
+
+* Introduced in: 9.8
+* Max value: 4194303
+* Min value: 0
+
+
+|qos_policy.name
+|string
+|query
+|False
+a|Filter by qos_policy.name
+
+* Introduced in: 9.8
+
+
+|qos_policy.min_throughput_iops
+|integer
+|query
+|False
+a|Filter by qos_policy.min_throughput_iops
+
+* Introduced in: 9.8
+* Max value: 2147483647
+* Min value: 0
+
+
+|qos_policy.uuid
+|string
+|query
+|False
+a|Filter by qos_policy.uuid
+
+* Introduced in: 9.8
+
+
+|qos_policy.max_throughput
+|string
+|query
+|False
+a|Filter by qos_policy.max_throughput
+
+* Introduced in: 9.17
+
+
+|qos_policy.min_throughput
+|string
+|query
+|False
+a|Filter by qos_policy.min_throughput
+
+* Introduced in: 9.17
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
+|volume.uuid
+|string
+|query
+|False
+a|Filter by volume.uuid
+
+
+|logical_used_size
+|integer
+|query
+|False
+a|Filter by logical_used_size
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|size
+|integer
+|query
+|False
+a|Filter by size
+
+* Max value: 62672162783232000
+* Min value: 199229440
+
+
+|role
+|string
+|query
+|False
+a|Filter by role
+
+* Introduced in: 9.10
+
+
+|retention.default_period
+|string
+|query
+|False
+a|Filter by retention.default_period
+
+* Introduced in: 9.14
+
+
+|retention.mode
+|string
+|query
+|False
+a|Filter by retention.mode
+
+* Introduced in: 9.14
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|protection_status.destination.is_cloud
+|boolean
+|query
+|False
+a|Filter by protection_status.destination.is_cloud
+
+* Introduced in: 9.10
+
+
+|protection_status.destination.is_ontap
+|boolean
+|query
+|False
+a|Filter by protection_status.destination.is_ontap
+
+* Introduced in: 9.10
+
+
+|protection_status.destination.is_external_cloud
+|boolean
+|query
+|False
+a|Filter by protection_status.destination.is_external_cloud
+
+* Introduced in: 9.12
+
+
+|protection_status.is_protected
+|boolean
+|query
+|False
+a|Filter by protection_status.is_protected
+
+* Introduced in: 9.10
+
+
+|encryption.enabled
+|boolean
+|query
+|False
+a|Filter by encryption.enabled
+
+
+|nas_path
+|string
+|query
+|False
+a|Filter by nas_path
+
+* Introduced in: 9.12
+
+
+|is_nas_path_mutable
+|boolean
+|query
+|False
+a|Filter by is_nas_path_mutable
+
+* Introduced in: 9.17
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#s3_bucket_svm[s3_bucket_svm]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "audit_event_selector": {
+        "access": "string",
+        "permission": "string"
+      },
+      "comment": "S3 bucket.",
+      "cors": {
+        "rules": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "allowed_headers": [
+              "x-amz-request-id"
+            ],
+            "allowed_methods": [
+              "PUT",
+              "DELETE"
+            ],
+            "allowed_origins": [
+              "http://www.example.com"
+            ],
+            "expose_headers": [
+              "x-amz-date"
+            ],
+            "id": "string",
+            "max_age_seconds": 1024
+          }
+        ]
+      },
+      "lifecycle_management": {
+        "rules": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "abort_incomplete_multipart_upload": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              }
+            },
+            "bucket_name": "bucket1",
+            "expiration": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "object_age_days": 100,
+              "object_expiry_date": "2039-09-23 00:00:00 +0000"
+            },
+            "name": "string",
+            "non_current_version_expiration": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              }
+            },
+            "object_filter": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "prefix": "/logs",
+              "size_greater_than": 10240,
+              "size_less_than": 10485760,
+              "tags": [
+                "project1=projA",
+                "project2=projB"
+              ]
+            },
+            "svm": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "svm1",
+              "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+            },
+            "uuid": "414b29a1-3b26-11e9-bd58-0050568ea055"
+          }
+        ]
+      },
+      "logical_used_size": 0,
+      "name": "bucket1",
+      "nas_path": "/",
+      "policy": {
+        "statements": [
+          {
+            "actions": [
+              "GetObject",
+              "PutObject",
+              "DeleteObject",
+              "ListBucket"
+            ],
+            "conditions": [
+              {
+                "delimiters": [
+                  "/"
+                ],
+                "max_keys": [
+                  1000
+                ],
+                "operator": "ip_address",
+                "prefixes": [
+                  "pref"
+                ],
+                "source_ips": [
+                  "1.1.1.1",
+                  "1.2.2.0/24"
+                ],
+                "usernames": [
+                  "user1"
+                ]
+              }
+            ],
+            "effect": "allow",
+            "principals": [
+              "user1",
+              "group/grp1",
+              "nasgroup/group1"
+            ],
+            "resources": [
+              "bucket1",
+              "bucket1/*"
+            ],
+            "sid": "Full_Access_To_User1!"
+          }
+        ]
+      },
+      "qos_policy": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "max_throughput": [
+          "900KB/s",
+          "500MB/s",
+          "120GB/s",
+          "5000IOPS",
+          "5000IOPS,500KB/s",
+          "2500IOPS,100MB/s",
+          "1000IOPS,25MB/s"
+        ],
+        "max_throughput_iops": 10000,
+        "max_throughput_mbps": 500,
+        "min_throughput": [
+          "900KB/s",
+          "500MB/s",
+          "120GB/s",
+          "5000IOPS",
+          "5000IOPS,500KB/s",
+          "2500IOPS,100MB/s",
+          "1000IOPS,25MB/s"
+        ],
+        "min_throughput_iops": 2000,
+        "min_throughput_mbps": 500,
+        "name": "performance",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "retention": {
+        "default_period": "P10Y",
+        "mode": "governance"
+      },
+      "role": "string",
+      "size": 819200000,
+      "snapshot_policy": {
+        "name": "default-1weekly",
+        "uuid": "3675af31-431c-12fa-114a-20675afebc12"
+      },
+      "snapshot_restore": {
+        "snapshot": "string",
+        "state": "string"
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "s3",
+      "uuid": "string",
+      "versioning_state": "enabled",
+      "volume": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "volume1",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#audit_event_selector]
+[.api-collapsible-fifth-title]
+audit_event_selector
+
+Event selector allows you to specify access and permission types to audit.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Specifies read and write access types.
+
+
+|permission
+|string
+a|Specifies allow and deny permission types.
+
+
+|===
+
+
+[#rules]
+[.api-collapsible-fifth-title]
+rules
+
+Information about the CORS rule of an S3 bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allowed_headers
+|array[string]
+a|An array of HTTP headers allowed in the cross-origin requests.
+
+
+|allowed_methods
+|array[string]
+a|An array of HTTP methods allowed in the cross-origin requests.
+
+
+|allowed_origins
+|array[string]
+a|List of origins from where a cross-origin request is allowed to originate from for the S3 bucket.
+
+
+|expose_headers
+|array[string]
+a|List of extra headers sent in the response that customers can access from their applications.
+
+
+|id
+|string
+a|Bucket CORS rule identifier. The length of the name can range from 0 to 256 characters.
+
+
+|max_age_seconds
+|integer
+a|The time in seconds for your browser to cache the preflight response for the specified resource.
+
+
+|===
+
+
+[#cors]
+[.api-collapsible-fifth-title]
+cors
+
+Cross-origin resource sharing (CORS) specifies an object associated with a bucket. The CORS configuration enables the bucket to service the cross-origin requests. A request might typically come from an origin with a domain that is different to that of the bucket. By configuring a CORS rule, you can define a combination of allowed origins, HTTP headers and methods that a bucket can use to filter out the cross-origin requests that it can service successfully.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|rules
+|array[link:#rules[rules]]
+a|Specifies an object store bucket CORS rule.
+
+
+|===
+
+
+[#encryption]
+[.api-collapsible-fifth-title]
+encryption
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether encryption is enabled on the bucket. By default, encryption is disabled on a bucket. This field cannot be set in a POST or PATCH method.
+
+
+|===
+
+
+[#abort_incomplete_multipart_upload]
+[.api-collapsible-fifth-title]
+abort_incomplete_multipart_upload
+
+Specifies a way to perform abort_incomplete_multipart_upload action on filtered objects within a bucket. It cannot be specified with tags.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|after_initiation_days
+|integer
+a|Number of days of initiation after which uploads can be aborted.
+
+
+|===
+
+
+[#expiration]
+[.api-collapsible-fifth-title]
+expiration
+
+Specifies a way to perform expiration action on filtered objects within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|expired_object_delete_marker
+|boolean
+a|Cleanup object delete markers.
+
+
+|object_age_days
+|integer
+a|Number of days since creation after which objects can be deleted. This cannot be used along with object_expiry_date.
+
+
+|object_expiry_date
+|string
+a|Specific date from when objects can expire. This cannot be used with object_age_days.
+
+
+|===
+
+
+[#non_current_version_expiration]
+[.api-collapsible-fifth-title]
+non_current_version_expiration
+
+Specifies a way to perform non_current_version_expiration action on filtered objects within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|new_non_current_versions
+|integer
+a|Number of latest non-current versions to be retained.
+
+
+|non_current_days
+|integer
+a|Number of days after which non-current versions can be deleted.
+
+
+|===
+
+
+[#object_filter]
+[.api-collapsible-fifth-title]
+object_filter
+
+Specifies a way to filter objects within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|prefix
+|string
+a|A prefix that is matched against object-names within a bucket.
+
+
+|size_greater_than
+|integer
+a|Size of the object greater than specified for which the corresponding lifecycle rule is to be applied.
+
+
+|size_less_than
+|integer
+a|Size of the object smaller than specified for which the corresponding lifecycle rule is to be applied.
+
+
+|tags
+|array[string]
+a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Specifies the name of the SVM where this bucket exists.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#rules]
+[.api-collapsible-fifth-title]
+rules
+
+Information about the lifecycle management rule of a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|abort_incomplete_multipart_upload
+|link:#abort_incomplete_multipart_upload[abort_incomplete_multipart_upload]
+a|Specifies a way to perform abort_incomplete_multipart_upload action on filtered objects within a bucket. It cannot be specified with tags.
+
+
+|bucket_name
+|string
+a|Specifies the name of the bucket. Bucket name is a string that can only contain the following combination of ASCII-range alphanumeric characters 0-9, a-z, ".", and "-".
+
+
+|enabled
+|boolean
+a|Specifies whether or not the associated rule is enabled.
+
+
+|expiration
+|link:#expiration[expiration]
+a|Specifies a way to perform expiration action on filtered objects within a bucket.
+
+
+|name
+|string
+a|Bucket lifecycle management rule identifier. The length of the name can range from 0 to 256 characters.
+
+
+|non_current_version_expiration
+|link:#non_current_version_expiration[non_current_version_expiration]
+a|Specifies a way to perform non_current_version_expiration action on filtered objects within a bucket.
+
+
+|object_filter
+|link:#object_filter[object_filter]
+a|Specifies a way to filter objects within a bucket.
+
+
+|svm
+|link:#svm[svm]
+a|Specifies the name of the SVM where this bucket exists.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the bucket.
+
+
+|===
+
+
+[#lifecycle_management]
+[.api-collapsible-fifth-title]
+lifecycle_management
+
+Lifecycle management is implemented as an object associated with a bucket. It defines rules to be applied against objects within a bucket. These rules are applied in the background and can delete objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|rules
+|array[link:#rules[rules]]
+a|Specifies an object store lifecycle management policy. This field cannot be set using the PATCH method.
+
+
+|===
+
+
+[#s3_bucket_policy_condition]
+[.api-collapsible-fifth-title]
+s3_bucket_policy_condition
+
+Information about policy conditions based on various condition operators and condition keys.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|delimiters
+|array[string]
+a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
+
+
+|max_keys
+|array[integer]
+a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|operator
+|string
+a|Condition operator that is applied to the specified condition key.
+
+
+|prefixes
+|array[string]
+a|An array of prefixes that are compared with the input prefix value specified at the time of execution of an S3-based command, using the condition operator specified.
+
+
+|source_ips
+|array[string]
+a|An array of IP address ranges that are compared with the IP address of a source command at the time of execution of an S3-based command, using the condition operator specified.
+
+
+|usernames
+|array[string]
+a|An array of usernames that a current user in the context is evaluated against using the condition operators.
+
+
+|===
+
+
+[#s3_bucket_policy_statement]
+[.api-collapsible-fifth-title]
+s3_bucket_policy_statement
+
+Specifies information about a single access permission.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|actions
+|array[string]
+a|
+
+|conditions
+|array[link:#s3_bucket_policy_condition[s3_bucket_policy_condition]]
+a|Specifies bucket policy conditions.
+
+
+|effect
+|string
+a|Specifies whether access is allowed or denied when a user requests the specific action. If access (to allow) is not granted explicitly to a resource, access is implicitly denied. Access can also be denied explicitly to a resource, in order to make sure that a user cannot access it, even if a different policy grants access.
+
+
+|principals
+|array[string]
+a|
+
+|resources
+|array[string]
+a|
+
+|sid
+|string
+a|Specifies the statement identifier used to differentiate between statements. The SID length can range from 1 to 256 characters.
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+A policy is an object associated with a bucket. It defines resource (bucket, folder, or object) permissions. These policies get evaluated when an S3 user makes a request by executing a specific command. The user must be part of the principal (user or group) specified in the policy. Permissions in the policies determine whether the request is allowed or denied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|statements
+|array[link:#s3_bucket_policy_statement[s3_bucket_policy_statement]]
+a|Specifies bucket access policy statement.
+
+
+|===
+
+
+[#destination]
+[.api-collapsible-fifth-title]
+destination
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_cloud
+|boolean
+a|Specifies whether a bucket is protected within the Cloud.
+
+
+|is_external_cloud
+|boolean
+a|Specifies whether a bucket is protected on external Cloud providers.
+
+
+|is_ontap
+|boolean
+a|Specifies whether a bucket is protected within ONTAP.
+
+* Default value:
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|===
+
+
+[#protection_status]
+[.api-collapsible-fifth-title]
+protection_status
+
+Specifies attributes of bucket protection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#destination[destination]
+a|
+
+|is_protected
+|boolean
+a|Specifies whether a bucket is a source and if it is protected within ONTAP and/or an external cloud. This field cannot be set in a POST method.
+
+* Default value:
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+Specifies "qos_policy.max_throughput_iops" and/or "qos_policy.max_throughput_mbps" or "qos_policy.min_throughput_iops" and/or "qos_policy.min_throughput_mbps". Specifying "min_throughput_iops" or "min_throughput_mbps" is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying "qos_policy.name" or "qos_policy.uuid" properties. Setting or assigning a QoS policy to a bucket is not supported if its containing volume or SVM already has a QoS policy attached.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#retention]
+[.api-collapsible-fifth-title]
+retention
+
+Specifies the retention mode and default retention period configured on the bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_period
+|string
+a|Specifies the default retention period that is applied to objects while committing them to the WORM state without an associated retention period. The retention period can be in years, or days. The retention period value represents a duration and must be specified in the ISO-8601 duration format.  A period specified for years and days is represented in the ISO-8601 format as "P+++<num>+++Y" and "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. The period string must contain only a single time element that is, either years, or days. A duration which combines different periods is not supported, for example "P1Y10D" is not supported.+++</num>++++++</num>+++
+
+
+|mode
+|string
+a|The lock mode of the bucket.
+compliance &dash; A SnapLock Compliance (SLC) bucket provides the highest level of WORM protection and an administrator cannot destroy a compliance bucket if it contains unexpired WORM objects.
+ governance &dash; An administrator can delete a Governance bucket.
+ no_lock &dash; Indicates the bucket does not support object locking.
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+Specifies the bucket snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Specifies the name of the snapshot policy.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the snapshot policy.
+
+
+|===
+
+
+[#snapshot_restore]
+[.api-collapsible-fifth-title]
+snapshot_restore
+
+Specifies information regarding a snapshot restore operation on the bucket
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|objects_remaining
+|integer
+a|Remaining objects to be restored for the bucket
+
+
+|progress
+|integer
+a|Snapshot restore progress in percent
+
+
+|snapshot
+|string
+a|Name of the snapshot being restored for the bucket
+
+
+|state
+|string
+a|Snapshot restore state of the bucket
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Specifies the FlexGroup volume name and UUID where the bucket is hosted. This field cannot be set in a POST method.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#s3_bucket_svm]
+[.api-collapsible-fifth-title]
+s3_bucket_svm
+
+A bucket is a container of objects. Each bucket defines an object namespace. S3 requests specify objects using a bucket-name and object-name pair. An object resides within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|audit_event_selector
+|link:#audit_event_selector[audit_event_selector]
+a|Event selector allows you to specify access and permission types to audit.
+
+
+|comment
+|string
+a|Can contain any additional information about the bucket being created or modified.
+
+
+|cors
+|link:#cors[cors]
+a|Cross-origin resource sharing (CORS) specifies an object associated with a bucket. The CORS configuration enables the bucket to service the cross-origin requests. A request might typically come from an origin with a domain that is different to that of the bucket. By configuring a CORS rule, you can define a combination of allowed origins, HTTP headers and methods that a bucket can use to filter out the cross-origin requests that it can service successfully.
+
+
+|encryption
+|link:#encryption[encryption]
+a|
+
+|is_consistent_etag
+|boolean
+a|Specifies whether the NAS bucket returns a consistent ETag across different S3 requests.
+
+
+|is_nas_path_mutable
+|boolean
+a|Specifies whether the NAS bucket mapping or association with a NAS volume can change according to the changes in the NAS volume junction-path due to volume operations like mount and unmount and therefore the NAS bucket will have access to any path in a NAS volume that matches the specified nas-path. Or is immutable and therefore the NAS bucket will always have access to the same nas-path that was specified during bucket creation even if the volume junction-path has undergone changes after the bucket creation.
+
+
+|lifecycle_management
+|link:#lifecycle_management[lifecycle_management]
+a|Lifecycle management is implemented as an object associated with a bucket. It defines rules to be applied against objects within a bucket. These rules are applied in the background and can delete objects.
+
+
+|logical_used_size
+|integer
+a|Specifies the bucket logical used size up to this point. This field cannot be set using the PATCH method.
+
+
+|name
+|string
+a|Specifies the name of the bucket. Bucket name is a string that can only contain the following combination of ASCII-range alphanumeric characters 0-9, a-z, ".", and "-".
+
+
+|nas_path
+|string
+a|Specifies the NAS path to which the nas bucket corresponds to.
+
+
+|policy
+|link:#policy[policy]
+a|A policy is an object associated with a bucket. It defines resource (bucket, folder, or object) permissions. These policies get evaluated when an S3 user makes a request by executing a specific command. The user must be part of the principal (user or group) specified in the policy. Permissions in the policies determine whether the request is allowed or denied.
+
+
+|protection_status
+|link:#protection_status[protection_status]
+a|Specifies attributes of bucket protection.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|Specifies "qos_policy.max_throughput_iops" and/or "qos_policy.max_throughput_mbps" or "qos_policy.min_throughput_iops" and/or "qos_policy.min_throughput_mbps". Specifying "min_throughput_iops" or "min_throughput_mbps" is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying "qos_policy.name" or "qos_policy.uuid" properties. Setting or assigning a QoS policy to a bucket is not supported if its containing volume or SVM already has a QoS policy attached.
+
+
+|retention
+|link:#retention[retention]
+a|Specifies the retention mode and default retention period configured on the bucket.
+
+
+|role
+|string
+a|Specifies the role of the bucket. This field cannot be set in a POST method.
+
+
+|size
+|integer
+a|Specifies the bucket size in bytes; ranges from 190MB to 62PB.
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|Specifies the bucket snapshot policy.
+
+
+|snapshot_restore
+|link:#snapshot_restore[snapshot_restore]
+a|Specifies information regarding a snapshot restore operation on the bucket
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Specifies the bucket type. Valid values are "s3"and "nas". This field cannot be set using the PATCH method.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the bucket. This field cannot be specified in a POST or PATCH method.
+
+
+|versioning_state
+|string
+a|Specifies the versioning state of the bucket. Valid values are "disabled", "enabled" or "suspended". Note that the versioning state cannot be modified to 'disabled' from any other state.
+
+
+|volume
+|link:#volume[volume]
+a|Specifies the FlexGroup volume name and UUID where the bucket is hosted. This field cannot be set in a POST method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

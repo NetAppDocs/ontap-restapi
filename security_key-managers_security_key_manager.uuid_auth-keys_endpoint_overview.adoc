@@ -1,0 +1,108 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_key-managers_security_key_manager.uuid_auth-keys_endpoint_overview.html'
+summary: 'Manage authentication keys'
+---
+
+= Manage authentication keys
+
+
+
+:doctype: book
+
+== Overview
+
+Used to create and list authentication keys (NSE-AK).
+
+== Example
+
+=== Creates an authentication key.
+
+NOTE: an external key  manager must be configured on the admin SVM, as the authentication key will be associated with the admin SVM.
+The following example shows how to create an authentication key.
+
+----
+
+# The API:
+POST /api/security/key-managers/{security_key_manager.uuid}/auth-keys
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers/5fb1701a-d922-11e8-bfe8-005056bb017d/auth-keys?return_timeout=15&return_records=true' -H 'accept: application/hal+json'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "key_id": "00000000000000000200000000000100531d8cdc38437c2627b6b1726dd2675c0000000000000000",
+    "key_tag": "vsim1"
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving a list of all of the authentication keys associated with the admin SVM.
+
+The following example shows how to retrieve a list of all of the authentication keys associated with the admin SVM.
+
+----
+
+# The API:
+GET /api/security/key-managers/{security_key_manager.uuid}/auth-keys
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers/5fb1701a-d922-11e8-bfe8-005056bb017d/auth-keys?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"num_records": 2,
+"records": [
+  {
+    "security_key_manager": {
+      "uuid": "d36a654d-14b4-11ed-b82e-005056bb8f59"
+    },
+    "key_id": "00000000000000000200000000000100052ab79fc51a430dbb16f1c0d2054cfe0000000000000000",
+    "key_tag": "vsim1"
+  },
+  {
+    "security_key_manager": {
+      "uuid": "d36a654d-14b4-11ed-b82e-005056bb8f59"
+    },
+    "key_id": "000000000000000002000000000001003f32ce2dc55d2764c07da74e722c179b0000000000000000",
+    "key_tag": "vsim1"
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving a specific authentication key associated with the admin SVM.
+
+The following example shows how to a specific authentication key associated with the admin SVM and return the key-tag.
+
+```
+
+= The API:
+
+GET /api/security/key-managers/{security_key_manager.uuid}/auth-keys/\{key-id}
+
+= The call:
+
+curl -X GET 'https://+++<mgmt-ip>+++/api/security/key-managers/5fb1701a-d922-11e8-bfe8-005056bb017d/auth-keys/0000000000000000020000000000010041a2dda969b0d179db8f1c78d629d0f10000000000000000?fields=key_tag' -H 'accept: application/hal+json'+++</mgmt-ip>+++
+
+= The response:
+
+{
+"security_key_manager": {
+  "uuid": "d36a654d-14b4-11ed-b82e-005056bb8f59"
+},
+"key_id": "0000000000000000020000000000010041a2dda969b0d179db8f1c78d629d0f10000000000000000",
+"key_tag": "vsim1"
+}
+
+

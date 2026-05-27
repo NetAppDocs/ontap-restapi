@@ -1,0 +1,446 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-authentication-cluster-oauth2-clients-.html'
+summary: 'Retrieve an OAuth 2.0 configuration with the specified name'
+---
+
+= Retrieve an OAuth 2.0 configuration with the specified name
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/authentication/cluster/oauth2/clients/{name}`#
+
+*Introduced In:* 9.14
+
+Retrieves the OAuth 2.0 configuration with the specified name.
+
+== Related ONTAP commands
+
+* `security oauth2 client show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|OAuth 2.0 configuration name.
+
+
+|issuer
+|string
+|query
+|False
+a|Filter by issuer
+
+
+|remote_user_claim
+|string
+|query
+|False
+a|Filter by remote_user_claim
+
+
+|use_local_roles_if_present
+|boolean
+|query
+|False
+a|Filter by use_local_roles_if_present
+
+
+|introspection.endpoint_uri
+|string
+|query
+|False
+a|Filter by introspection.endpoint_uri
+
+
+|introspection.interval
+|string
+|query
+|False
+a|Filter by introspection.interval
+
+
+|client_id
+|string
+|query
+|False
+a|Filter by client_id
+
+
+|use_mutual_tls
+|string
+|query
+|False
+a|Filter by use_mutual_tls
+
+
+|provider
+|string
+|query
+|False
+a|Filter by provider
+
+* Introduced in: 9.16
+
+
+|application
+|string
+|query
+|False
+a|Filter by application
+
+
+|audience
+|string
+|query
+|False
+a|Filter by audience
+
+
+|jwks.provider_uri
+|string
+|query
+|False
+a|Filter by jwks.provider_uri
+
+
+|jwks.refresh_interval
+|string
+|query
+|False
+a|Filter by jwks.refresh_interval
+
+
+|hashed_client_secret
+|string
+|query
+|False
+a|Filter by hashed_client_secret
+
+
+|outgoing_proxy
+|string
+|query
+|False
+a|Filter by outgoing_proxy
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application
+|string
+a|The name of the application using OAuth 2.0. Required for POST operations.
+
+
+|audience
+|string
+a|The OAuth 2.0 Audience.
+
+
+|client_id
+|string
+a|The OAuth 2.0 client ID. Required in POST operations for remote introspection.
+
+
+|hashed_client_secret
+|string
+a|The OAuth 2.0 client secret as a SHA256 HMAC hashed value created with the cluster UUID as its HMAC secret key.
+
+
+|introspection
+|link:#introspection[introspection]
+a|
+
+|issuer
+|string
+a|The OAuth 2.0 Issuer.
+
+
+|jwks
+|link:#jwks[jwks]
+a|
+
+|name
+|string
+a|The configuration name. Required for POST operations.
+
+
+|outgoing_proxy
+|string
+a|Outgoing proxy to access external identity providers (IdPs). If not specified, no proxy is configured.
+
+
+|provider
+|string
+a|The Identity Provider type.
+
+
+|remote_user_claim
+|string
+a|The remote user claim.
+
+
+|use_local_roles_if_present
+|boolean
+a|Indicates whether or not to use locally configured roles, if present. Default value is false.
+
+
+|use_mutual_tls
+|string
+a|OAuth 2.0 mutual TLS authentication setting. Set this value to "none" to disable mutual TLS authentication. Set this value to "required" to enforce mutual TLS authentication for all access tokens and reject any token that does not have x5t#S256 property in the cnf section. The default value is "request" which means mutual TLS authentication is enforced only if the x5t#S256 property is present in the cnf section of the access token.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "application": "string",
+  "audience": "string",
+  "client_id": "string",
+  "hashed_client_secret": "string",
+  "introspection": {
+    "endpoint_uri": "https://examplelab.customer.com/token/introspect",
+    "interval": "PT1H"
+  },
+  "issuer": "https://examplelab.customer.com",
+  "jwks": {
+    "provider_uri": "https://examplelab.customer.com/pf/JWKS",
+    "refresh_interval": "PT2H"
+  },
+  "name": "auth0",
+  "outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080",
+  "provider": "entra",
+  "remote_user_claim": "string",
+  "skip_uri_validation": true,
+  "use_mutual_tls": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#introspection]
+[.api-collapsible-fifth-title]
+introspection
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|endpoint_uri
+|string
+a|The token introspection endpoint URI.
+
+
+|interval
+|string
+a|The refresh interval for caching tokens, in ISO-8601 format. This can be set to the value "disabled" to disable caching of tokens. When set to 0, tokens are cached according to the expiry period in them. Otherwise, it can be set to a value from 1 second to 2147483647 seconds.
+
+
+|===
+
+
+[#jwks]
+[.api-collapsible-fifth-title]
+jwks
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|provider_uri
+|string
+a|The URI on which the JSON Web Key Set (JWKS) are hosted.
+
+
+|refresh_interval
+|string
+a|The refresh interval for the JSON Web Key Set (JWKS), in ISO-8601 format. This can be set to a value from 300 seconds to 2147483647 seconds.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

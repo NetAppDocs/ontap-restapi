@@ -1,0 +1,601 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-metrocluster-interconnects.html'
+summary: 'Retrieve interconnect adapter information for nodes in MetroCluster'
+---
+
+= Retrieve interconnect adapter information for nodes in MetroCluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/metrocluster/interconnects`#
+
+*Introduced In:* 9.8
+
+Retrieves a list of interconnect adapter information for nodes in the MetroCluster.
+
+== Related ONTAP Commands
+
+* `metrocluster interconnect show`
+
+== Learn more
+
+* link:cluster_metrocluster_interconnects_endpoint_overview.html[DOC /cluster/metrocluster/interconnects]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|adapter
+|string
+|query
+|False
+a|Filter by adapter
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|multipath_policy
+|string
+|query
+|False
+a|Filter by multipath_policy
+
+* Introduced in: 9.11
+
+
+|vlan_id
+|integer
+|query
+|False
+a|Filter by vlan_id
+
+* Introduced in: 9.9
+* Max value: 4095
+* Min value: 1
+
+
+|interfaces.netmask
+|string
+|query
+|False
+a|Filter by interfaces.netmask
+
+* Introduced in: 9.9
+
+
+|interfaces.address
+|string
+|query
+|False
+a|Filter by interfaces.address
+
+* Introduced in: 9.9
+
+
+|interfaces.gateway
+|string
+|query
+|False
+a|Filter by interfaces.gateway
+
+* Introduced in: 9.9
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|partner_type
+|string
+|query
+|False
+a|Filter by partner_type
+
+
+|mirror.enabled
+|boolean
+|query
+|False
+a|Filter by mirror.enabled
+
+* Introduced in: 9.11
+
+
+|mirror.state
+|string
+|query
+|False
+a|Filter by mirror.state
+
+* Introduced in: 9.11
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of Records
+
+
+|records
+|array[link:#metrocluster_interconnect[metrocluster_interconnect]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "adapter": "string",
+      "interfaces": [
+        {
+          "address": "10.10.10.7",
+          "gateway": "10.1.1.1",
+          "netmask": "24"
+        }
+      ],
+      "mirror": {
+        "state": "string"
+      },
+      "multipath_policy": "string",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "partner_type": "string",
+      "state": "string",
+      "type": "string",
+      "vlan_id": 0
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2424994
+| MetroCluster is not supported when HAOSC is not set to "mcc", "mcc-2n" or "mccip". Run the "ha-config modify chassis" and "ha-config modify controller" commands in maintenance mode to change the HAOSC settings on node "node" in cluster "cluster".
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+
+| 2427132
+| MetroCluster is not configured on this cluster.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#interfaces]
+[.api-collapsible-fifth-title]
+interfaces
+
+Object to setup an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|gateway
+|string
+a|The IPv4 or IPv6 address of the default router.
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#mirror]
+[.api-collapsible-fifth-title]
+mirror
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies the administrative state of the NVRAM mirror between partner nodes.
+
+
+|state
+|string
+a|Specifies the operational state of the NVRAM mirror between partner nodes.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#metrocluster_interconnect]
+[.api-collapsible-fifth-title]
+metrocluster_interconnect
+
+Data for a MetroCluster interconnect. REST: /api/cluster/metrocluster/interconnects
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|adapter
+|string
+a|Adapter
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|List of objects which contain interface information such as its IP address, netmask and gateway.
+
+
+|mirror
+|link:#mirror[mirror]
+a|
+
+|multipath_policy
+|string
+a|Displays the NVRAM mirror multipath policy for the nodes configured in a MetroCluster.
+
+
+|node
+|link:#node[node]
+a|
+
+|partner_type
+|string
+a|Partner type
+
+
+|state
+|string
+a|Adapter status
+
+
+|type
+|string
+a|Adapter type
+
+
+|vlan_id
+|integer
+a|VLAN ID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

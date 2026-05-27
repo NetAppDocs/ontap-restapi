@@ -1,0 +1,293 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-snaplock-litigations-operations-.html'
+summary: 'Retrieve the status of legal-hold for an operation ID'
+---
+
+= Retrieve the status of legal-hold for an operation ID
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/snaplock/litigations/{litigation.id}/operations/{id}`#
+
+*Introduced In:* 9.7
+
+Retrieves the status of legal-hold for the specified operation ID.
+
+== Related ONTAP commands
+
+* `snaplock legal-hold show`
+
+== Learn more
+
+* link:storage_snaplock_litigations_litigation.id_operations_endpoint_overview.html[DOC /storage/snaplock/litigations/{litigation.id}/operations]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|litigation.id
+|string
+|path
+|True
+a|Litigation ID
+
+
+|id
+|string
+|path
+|True
+a|Operation ID.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|id
+|integer
+a|Operation ID.
+
+
+|num_files_failed
+|string
+a|Specifies the number of files on which legal-hold operation failed.
+
+
+|num_files_processed
+|string
+a|Specifies the number of files on which legal-hold operation was successful.
+
+
+|num_files_skipped
+|string
+a|Specifies the number of files on which legal-hold begin operation was skipped. The legal-hold begin operation is skipped on a file if it is already under hold for a given litigation.
+
+
+|num_inodes_ignored
+|string
+a|Specifies the number of inodes on which the legal-hold operation was not attempted because they were not regular files.
+
+
+|path
+|string
+a|Specifies the path on which legal-hold operation is applied.
+
+
+|state
+|string
+a|Specifies the status of legal-hold operation.
+
+
+|type
+|string
+a|Specifies the type of legal-hold operation.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "id": 16842759,
+  "num_files_failed": 0,
+  "num_files_processed": 30,
+  "num_files_skipped": 10,
+  "num_inodes_ignored": 10,
+  "path": "/dir1",
+  "state": "completed",
+  "type": "begin"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13763280
+| Only a user with security login role "vsadmin-snaplock" is allowed to perform this operation.
+
+| 14090343
+| Invalid Field
+
+| 14090346
+| Internal Error. Wait a few minutes, then try the command again
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

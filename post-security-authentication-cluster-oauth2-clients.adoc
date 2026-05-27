@@ -1,0 +1,553 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-authentication-cluster-oauth2-clients.html'
+summary: 'Create the OAuth 2.0 configuration'
+---
+
+= Create the OAuth 2.0 configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/authentication/cluster/oauth2/clients`#
+
+*Introduced In:* 9.14
+
+Creates the OAuth 2.0 configuration.
+
+== Required properties
+
+* `name`
+* `application`
+* `issuer`
+
+== Optional properties
+
+* `audience`
+* `client_id`
+* `client_secret`
+* `introspection.endpoint_uri`
+* `introspection.interval`
+* `remote_user_claim`
+* `jwks.provider_uri`
+* `jwks.refresh_interval`
+* `outgoing_proxy`
+* `use_local_roles_if_present`
+* `skip_uri_validation`
+* `use_mutual_tls`
+* `provider`
+
+== Related ONTAP commands
+
+* `security oauth2 client create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application
+|string
+a|The name of the application using OAuth 2.0. Required for POST operations.
+
+
+|audience
+|string
+a|The OAuth 2.0 Audience.
+
+
+|client_id
+|string
+a|The OAuth 2.0 client ID. Required in POST operations for remote introspection.
+
+
+|client_secret
+|string
+a|The OAuth 2.0 client secret. Required in POST operations for remote introspection.
+
+
+|hashed_client_secret
+|string
+a|The OAuth 2.0 client secret as a SHA256 HMAC hashed value created with the cluster UUID as its HMAC secret key.
+
+
+|introspection
+|link:#introspection[introspection]
+a|
+
+|issuer
+|string
+a|The OAuth 2.0 Issuer.
+
+
+|jwks
+|link:#jwks[jwks]
+a|
+
+|name
+|string
+a|The configuration name. Required for POST operations.
+
+
+|outgoing_proxy
+|string
+a|Outgoing proxy to access external identity providers (IdPs). If not specified, no proxy is configured.
+
+
+|provider
+|string
+a|The Identity Provider type.
+
+
+|remote_user_claim
+|string
+a|The remote user claim.
+
+
+|skip_uri_validation
+|boolean
+a|Indicates whether or not to validate the input URIs. Default value is false.
+
+
+|use_local_roles_if_present
+|boolean
+a|Indicates whether or not to use locally configured roles, if present. Default value is false.
+
+
+|use_mutual_tls
+|string
+a|OAuth 2.0 mutual TLS authentication setting. Set this value to "none" to disable mutual TLS authentication. Set this value to "required" to enforce mutual TLS authentication for all access tokens and reject any token that does not have x5t#S256 property in the cnf section. The default value is "request" which means mutual TLS authentication is enforced only if the x5t#S256 property is present in the cnf section of the access token.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "application": "string",
+  "audience": "string",
+  "client_id": "string",
+  "client_secret": "string",
+  "hashed_client_secret": "string",
+  "introspection": {
+    "endpoint_uri": "https://examplelab.customer.com/token/introspect",
+    "interval": "PT1H"
+  },
+  "issuer": "https://examplelab.customer.com",
+  "jwks": {
+    "provider_uri": "https://examplelab.customer.com/pf/JWKS",
+    "refresh_interval": "PT2H"
+  },
+  "name": "auth0",
+  "outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080",
+  "provider": "entra",
+  "remote_user_claim": "string",
+  "use_mutual_tls": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 203817010
+| Client ID is required for remote introspection.
+
+| 203817011
+| Client secret is required for remote introspection.
+
+| 203817012
+| Client ID and client secret required for remote introspection.
+
+| 203817013
+| JWKS URI should not be configured for remote introspection.
+
+| 203817014
+| JWKS refresh interval should not be specified for remote introspection.
+
+| 203817015
+| The token introspection endpoint is required for remote introspection.
+
+| 203817016
+| JWKS refresh interval provided without providing JWKS URI.
+
+| 203817017
+| Minimum supported value of JWKS refresh interval is 300 seconds.
+
+| 203817018
+| Required parameters for either local validation or remote introspection are missing. Provide either the JWKS URI for local validation, or metadata configuration URI or token introspection endpoint with client ID and secret for remote introspection.
+
+| 203817019
+| Failed to add new IDP client because number of maximum supported IDP clients is already reached.
+
+| 203817020
+| Internal error. Failed to validate provider URI.
+
+| 203817021
+| OAuth 2.0 Provider URI validation failed with error.
+
+| 203817022
+| OAuth 2.0 Provider JWKS URI validation failed. Received empty response message from the JWKS URI.
+
+| 203817023
+| OAuth 2.0 Provider JWKS URI validation failed. No keys were found in response message received from the JWKS URI.
+
+| 203817024
+| Internal error. Unable to allocate memory for CURL response.
+
+| 203817025
+| Maximum value of JWKS refresh interval is 2147483647 seconds.
+
+| 203817033
+| OAuth 2.0 Provider Introspection endpoint validation failed. Received empty response message from the Introspection endpoint.
+
+| 203817034
+| OAuth 2.0 Provider Introspection endpoint validation failed. Received invalid response message for Introspection request.
+
+| 203817037
+| An entry cannot be created as another entry with the same configuration name has the same issuer and audience.
+
+| 203817042
+| Maximum value of introspection interval is 2147483647 seconds.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#introspection]
+[.api-collapsible-fifth-title]
+introspection
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|endpoint_uri
+|string
+a|The token introspection endpoint URI.
+
+
+|interval
+|string
+a|The refresh interval for caching tokens, in ISO-8601 format. This can be set to the value "disabled" to disable caching of tokens. When set to 0, tokens are cached according to the expiry period in them. Otherwise, it can be set to a value from 1 second to 2147483647 seconds.
+
+
+|===
+
+
+[#jwks]
+[.api-collapsible-fifth-title]
+jwks
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|provider_uri
+|string
+a|The URI on which the JSON Web Key Set (JWKS) are hosted.
+
+
+|refresh_interval
+|string
+a|The refresh interval for the JSON Web Key Set (JWKS), in ISO-8601 format. This can be set to a value from 300 seconds to 2147483647 seconds.
+
+
+|===
+
+
+[#security_oauth2]
+[.api-collapsible-fifth-title]
+security_oauth2
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application
+|string
+a|The name of the application using OAuth 2.0. Required for POST operations.
+
+
+|audience
+|string
+a|The OAuth 2.0 Audience.
+
+
+|client_id
+|string
+a|The OAuth 2.0 client ID. Required in POST operations for remote introspection.
+
+
+|client_secret
+|string
+a|The OAuth 2.0 client secret. Required in POST operations for remote introspection.
+
+
+|hashed_client_secret
+|string
+a|The OAuth 2.0 client secret as a SHA256 HMAC hashed value created with the cluster UUID as its HMAC secret key.
+
+
+|introspection
+|link:#introspection[introspection]
+a|
+
+|issuer
+|string
+a|The OAuth 2.0 Issuer.
+
+
+|jwks
+|link:#jwks[jwks]
+a|
+
+|name
+|string
+a|The configuration name. Required for POST operations.
+
+
+|outgoing_proxy
+|string
+a|Outgoing proxy to access external identity providers (IdPs). If not specified, no proxy is configured.
+
+
+|provider
+|string
+a|The Identity Provider type.
+
+
+|remote_user_claim
+|string
+a|The remote user claim.
+
+
+|skip_uri_validation
+|boolean
+a|Indicates whether or not to validate the input URIs. Default value is false.
+
+
+|use_local_roles_if_present
+|boolean
+a|Indicates whether or not to use locally configured roles, if present. Default value is false.
+
+
+|use_mutual_tls
+|string
+a|OAuth 2.0 mutual TLS authentication setting. Set this value to "none" to disable mutual TLS authentication. Set this value to "required" to enforce mutual TLS authentication for all access tokens and reject any token that does not have x5t#S256 property in the cnf section. The default value is "request" which means mutual TLS authentication is enforced only if the x5t#S256 property is present in the cnf section of the access token.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

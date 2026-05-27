@@ -1,0 +1,319 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-counter-tables-.html'
+summary: 'Retrieve counter table details'
+---
+
+= Retrieve counter table details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/counter/tables/{name}`#
+
+*Introduced In:* 9.11
+
+Returns the information about a single counter table.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Counter table name.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|counter_schemas
+|array[link:#counter_schema[counter_schema]]
+a|Array of counter schema definitions.
+
+
+|description
+|string
+a|Description of the table.
+
+
+|name
+|string
+a|Table name.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "counter_schemas": [
+    {
+      "denominator": {
+        "name": "string"
+      },
+      "description": "string",
+      "name": "string",
+      "type": "string",
+      "unit": "string"
+    }
+  ],
+  "description": "string",
+  "name": "string"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 8585320
+| Table requested is not found
+
+| 8585368
+| The system has not completed it's initialization
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#counter_denominator]
+[.api-collapsible-fifth-title]
+counter_denominator
+
+Counter used as the denominator in calculating the resulting value of averages and percentages.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Counter name.
+
+
+|===
+
+
+[#counter_schema]
+[.api-collapsible-fifth-title]
+counter_schema
+
+Schema definition of a single counter or property.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|denominator
+|link:#counter_denominator[counter_denominator]
+a|Counter used as the denominator in calculating the resulting value of averages and percentages.
+
+
+|description
+|string
+a|Counter or property description.
+
+
+|name
+|string
+a|Counter or property name.
+
+
+|type
+|string
+a|Type of counter or property. Properties will always set this field to 'string'.
+
+
+|unit
+|string
+a|Counter unit.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

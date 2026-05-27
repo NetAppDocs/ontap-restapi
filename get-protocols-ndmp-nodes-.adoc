@@ -1,0 +1,301 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-ndmp-nodes-.html'
+summary: 'Retrieve the NDMP node configuration for a node'
+---
+
+= Retrieve the NDMP node configuration for a node
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/ndmp/nodes/{node.uuid}`#
+
+*Introduced In:* 9.7
+
+Retrieves an NDMP node configuration for a specific node.
+
+== Related ONTAP commands
+
+* `system services ndmp show`
+
+== Learn more
+
+* link:protocols_ndmp_nodes_endpoint_overview.html[DOC /protocols/ndmp/nodes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authentication_types
+|array[string]
+a|NDMP authentication types.
+
+
+|enabled
+|boolean
+a|Is the NDMP service enabled?
+
+
+|node
+|link:#node[node]
+a|Storage system node
+
+
+|user
+|string
+a|NDMP user ID
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "authentication_types": [
+    "plaintext",
+    "challenge"
+  ],
+  "enabled": 1,
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "user": "ndmp_user"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 68812801
+| Node-scoped operations are not allowed in an SVM-scope.
+
+| 68812802
+| The UUID is not valid.
+
+| 68812804
+| Failed to get the node name from the specified node UUID.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Storage system node
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

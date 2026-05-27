@@ -1,0 +1,675 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-key-managers-.html'
+summary: 'Update key managers'
+---
+
+= Update key managers
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/key-managers/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates a key manager.
+*Note:* When validate_certificates is set, the API returns a 202 status code for successful creation of the job, otherwise an error is returned.
+
+== Required properties (when patching the Onboard Key Manager)
+
+* `onboard.existing_passphrase` - Cluster-wide passphrase. Required only when synchronizing the passphrase of the Onboard Key Manager.
+* `synchronize` - Synchronizes missing Onboard Key Manager keys on any node in the cluster. Required only when synchronizing the Onboard Key Manager keys in a local cluster.
+
+== Required properties (when patching an external key manager)
+
+* `external.client_certificate` or `external.server_ca_certificates` - Client certificate or Server CA certificate. Required when modifying an external key manager.
+
+== Optional parameters (when patching an external key manager):
+
+* `validate_certificates` - Validate certificates by testing the connection to the KMIP server using them. This flag is set to "false" by default.
+
+== Related ONTAP commands
+
+* `security key-manager external modify`
+* `security key-manager onboard sync`
+* `security key-manager onboard update-passphrase`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Key manager UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether the configuration is enabled.
+
+
+|external
+|link:#external[external]
+a|Configures external key management
+
+
+|is_default_data_at_rest_encryption_disabled
+|boolean
+a|Indicates whether default data-at-rest encryption is disabled in the cluster. This field is deprecated in ONTAP 9.8 and later. Use the "software_data_encryption.disabled_by_default" of /api/security endpoint.
+
+* Default value: 1
+* Introduced in: 9.7
+* x-ntap-readModify: true
+* x-nullable: true
+
+
+|onboard
+|link:#onboard[onboard]
+a|Configures onboard key management. After configuring onboard key management, save the encrypted configuration data in a safe location so that you can use it if you need to perform a manual recovery operation.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "external": {
+    "client_certificate": {
+      "name": "string",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "server_ca_certificates": [
+      {
+        "name": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    ]
+  },
+  "onboard": {
+    "existing_passphrase": "The cluster password of length 32-256 ASCII characters.",
+    "key_backup": "'--------------------------BEGIN BACKUP-------------------------- TmV0QXBwIEtleSBCbG9iAAEAAAAEAAAAcAEAAAAAAAAxBFWWAAAAACEAAAAAAAAA QAAAAAAAAABzDyyVAAAAALI5Jsjvy6gUxnT78KoDKXHYb6sSeraM00quOULY6BeV n6dMFxuErCD1lbERaOQZSuaYy1p8oQHtTEfGMLZM4TYiAAAAAAAAACgAAAAAAAAA 3WTh7gAAAAAAAAAAAAAAAAIAAAAAAAgAZJEIWvdeHr5RCAvHGclo+wAAAAAAAAAA IgAAAAAAAAAoAAAAAAAAAEOTcR0AAAAAAAAAAAAAAAACAAAAAAAJAGr3tJA/LRzU QRHwv+1aWvAAAAAAAAAAACQAAAAAAAAAgAAAAAAAAADV1Vd/AAAAAMFM9Q229Bhp mDaTSdqku5DCd8wG+fOZSr4bx4JT5WHvV/r5gJnXDQQAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABOZXRBcHAgS2V5IEJsb2IA AQAAAAMAAAAYAQAAAAAAALgePkcAAAAAIgAAAAAAAAAoAAAAAAAAAEOTcR0AAAAA AAAAAAAAAAACAAAAAAAJAGr3tJA/LRzUQRHwv+1aWvAAAAAAAAAAACIAAAAAAAAA KAAAAAAAAACIlCHZAAAAAAAAAAAAAAAAAgAAAAAAAQCafcabsxRXMM7gxhLRrzxh AAAAAAAAAAAkAAAAAAAAAIAAAAAAAAAA2JjQBQAAAACt4IqXcNpVggahl0axLsN4 yQjnNVKWY7mANB29O42hI7b70DTGCTaVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAE5ldEFwcCBLZXkgQmxvYgABAAAAAwAAABgBAAAAAAAA 7sbaoQAAAAAiAAAAAAAAACgAAAAAAAAAQ5NxHQAAAAAAAAAAAAAAAAIAAAAAAAkA ave0kD8tHNRBEfC/7Vpa8AAAAAAAAAAAIgAAAAAAAAAoAAAAAAAAALOHfWkAAAAA AAAAAAAAAAACAAAAAAABAMoI9UxrHOGthQm/CB+EHdAAAAAAAAAAACQAAAAAAAAA gAAAAAAAAACnMmUtAAAAAGVk8AtPzENFgsGdsFvnmucmYrlQCsFew0HDSFKaZqK6 W8IEVzBAhPoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ---------------------------END BACKUP---------------------------'",
+    "passphrase": "The cluster password of length 32-256 ASCII characters."
+  },
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536139
+| The existing passphrase value provided does not match the configured passphrase.
+
+| 65536150
+| The new passphrase is same as old passphrase.
+
+| 65536404
+| The passphrase does not match the accepted length.
+
+| 65536406
+| The change of passphrase failed.
+
+| 65536407
+| The passphrase update failed on some nodes.
+
+| 65536802
+| The passphrase does not match the accepted length in common criteria mode.
+
+| 65536821
+| The certificate is not installed.
+
+| 65536828
+| External key management is not enabled for the SVM.
+
+| 65536850
+| New client certificate public or private keys are different from the existing client certificate.
+
+| 65536852
+| Failed to query supported KMIP protocol versions.
+
+| 65536917
+| Updating an onboard passphrase requires both new and existing cluster passphrase.
+
+| 65537242
+| The Onboard Key Manager existing_passphrase must be provided when performing a PATCH/synchronize operation.
+
+| 65537243
+| The Onboard Key Manager passphrase must not be provided when performing a PATCH/synchronize operation.
+
+| 65538120
+| The key manager policy is not supported on the admin SVM.
+
+| 65539586
+| Cannot modify an inactive key manager configuration.
+
+| 66060338
+| Failed to establish secure connection for a key management server due to incorrect server_ca certificates.
+
+| 66060339
+| Failed to establish secure connection for a key management server due to incorrect client certificates.
+
+| 66060340
+| Failed to establish secure connection for a key management server due to Cryptsoft error.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#configuration]
+[.api-collapsible-fifth-title]
+configuration
+
+Security keystore object reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the configuration.
+
+
+|uuid
+|string
+a|Keystore UUID.
+
+
+|===
+
+
+[#client_certificate]
+[.api-collapsible-fifth-title]
+client_certificate
+
+Client certificate (name and UUID)
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#server_ca_certificates]
+[.api-collapsible-fifth-title]
+server_ca_certificates
+
+Security certificate object reference
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#key_server_state]
+[.api-collapsible-fifth-title]
+key_server_state
+
+The connectivity state of the key server for a specific node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|
+
+|state
+|string
+a|Key server connectivity state
+
+
+|===
+
+
+[#connectivity]
+[.api-collapsible-fifth-title]
+connectivity
+
+This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_availability
+|boolean
+a|Set to true when key server connectivity state is available on all nodes of the cluster.
+
+
+|node_states
+|array[link:#key_server_state[key_server_state]]
+a|An array of key server connectivity states for each node.
+
+
+|===
+
+
+[#key_server_readcreate]
+[.api-collapsible-fifth-title]
+key_server_readcreate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|secondary_key_servers
+|string
+a|A comma delimited string of the secondary key servers associated with the primary key server.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+
+
+|username
+|string
+a|Username credentials for connecting with the key server.
+
+
+|===
+
+
+[#external]
+[.api-collapsible-fifth-title]
+external
+
+Configures external key management
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_certificate
+|link:#client_certificate[client_certificate]
+a|Client certificate (name and UUID)
+
+
+|server_ca_certificates
+|array[link:#server_ca_certificates[server_ca_certificates]]
+a|The array of certificates that are common for all the keyservers per SVM.
+
+
+|===
+
+
+[#onboard]
+[.api-collapsible-fifth-title]
+onboard
+
+Configures onboard key management. After configuring onboard key management, save the encrypted configuration data in a safe location so that you can use it if you need to perform a manual recovery operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Is the onboard key manager enabled?
+
+
+|existing_passphrase
+|string
+a|The cluster-wide passphrase. This is not audited.
+
+
+|key_backup
+|string
+a|Backup of the onboard key manager's key hierarchy. It is required to save this backup after configuring the onboard key manager to help in the recovery of the cluster in case of catastrophic failures.
+
+
+|passphrase
+|string
+a|The cluster-wide passphrase. This is not audited.
+
+
+|synchronize
+|boolean
+a|Synchronizes missing onboard keys on any node in the cluster. If a node is added to a cluster that has onboard key management configured, the synchronize operation needs to be performed in a PATCH operation. In a MetroCluster configuration, if onboard key management is enabled on one site, then the synchronize operation needs to be run as a POST operation on the remote site providing the same passphrase.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Optional status information on the current state of the key manager indicating if it is fully setup or requires more action.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message. Returns 0 if the setup is complete. This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|message
+|string
+a|Current state of the key manager indicating any additional steps to perform to finish the setup. This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume_encryption]
+[.api-collapsible-fifth-title]
+volume_encryption
+
+Indicates whether volume encryption is supported in the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message. Returns a 0 if volume encryption is supported in all nodes of the cluster.
+
+
+|message
+|string
+a|Reason for not supporting volume encryption.
+
+
+|supported
+|boolean
+a|Set to true when volume encryption support is available on all nodes of the cluster.
+
+
+|===
+
+
+[#security_key_manager]
+[.api-collapsible-fifth-title]
+security_key_manager
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether the configuration is enabled.
+
+
+|external
+|link:#external[external]
+a|Configures external key management
+
+
+|is_default_data_at_rest_encryption_disabled
+|boolean
+a|Indicates whether default data-at-rest encryption is disabled in the cluster. This field is deprecated in ONTAP 9.8 and later. Use the "software_data_encryption.disabled_by_default" of /api/security endpoint.
+
+* Default value: 1
+* Introduced in: 9.7
+* x-ntap-readModify: true
+* x-nullable: true
+
+
+|onboard
+|link:#onboard[onboard]
+a|Configures onboard key management. After configuring onboard key management, save the encrypted configuration data in a safe location so that you can use it if you need to perform a manual recovery operation.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

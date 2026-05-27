@@ -1,0 +1,583 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-ems-filters.html'
+summary: 'Retrieve event filters'
+---
+
+= Retrieve event filters
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/ems/filters`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of event filters.
+
+== Related ONTAP commands
+
+* `event filter show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|system_defined
+|boolean
+|query
+|False
+a|Filter by system_defined
+
+* Introduced in: 9.10
+
+
+|access_control_role.name
+|string
+|query
+|False
+a|Filter by access_control_role.name
+
+* Introduced in: 9.13
+
+
+|rules.message_criteria.snmp_trap_types
+|string
+|query
+|False
+a|Filter by rules.message_criteria.snmp_trap_types
+
+
+|rules.message_criteria.severities
+|string
+|query
+|False
+a|Filter by rules.message_criteria.severities
+
+
+|rules.message_criteria.name_pattern
+|string
+|query
+|False
+a|Filter by rules.message_criteria.name_pattern
+
+
+|rules.parameter_criteria.name_pattern
+|string
+|query
+|False
+a|Filter by rules.parameter_criteria.name_pattern
+
+* Introduced in: 9.13
+
+
+|rules.parameter_criteria.value_pattern
+|string
+|query
+|False
+a|Filter by rules.parameter_criteria.value_pattern
+
+* Introduced in: 9.13
+
+
+|rules.type
+|string
+|query
+|False
+a|Filter by rules.type
+
+
+|rules.index
+|integer
+|query
+|False
+a|Filter by rules.index
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "access_control_role": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "admin"
+      },
+      "name": "wafl-critical-events",
+      "rules": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "index": 1,
+          "message_criteria": {
+            "_links": {
+              "related": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name_pattern": "wafl.*",
+            "severities": "emergency,alert,error",
+            "snmp_trap_types": "standard,built_in"
+          },
+          "parameter_criteria": [
+            {
+              "name_pattern": "vol",
+              "value_pattern": "cloud*"
+            }
+          ],
+          "type": "include"
+        }
+      ],
+      "system_defined": 1
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#access_control_role]
+[.api-collapsible-fifth-title]
+access_control_role
+
+Indicates the access control role that created the event filter and is used to control access to the filter based on role-based access control (RBAC) rules. If created by the 'admin' user, the field is unset.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|related
+|link:#href[href]
+a|
+
+|===
+
+
+[#message_criteria]
+[.api-collapsible-fifth-title]
+message_criteria
+
+Matching message definitions for the filter. A property must be specified.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name_pattern
+|string
+a|Message name filter on which to match. Supports wildcards. Defaults to * if not specified.
+
+
+|severities
+|string
+a|A comma-separated list of severities or a wildcard.
+
+
+|snmp_trap_types
+|string
+a|A comma separated list of snmp_trap_types or a wildcard.
+
+
+|===
+
+
+[#parameter_criteria]
+[.api-collapsible-fifth-title]
+parameter_criteria
+
+Criterion used for parameter based filtering
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name_pattern
+|string
+a|Parameter name pattern. Wildcard character '*' is supported.
+
+
+|value_pattern
+|string
+a|Parameter value pattern. Wildcard character '*' is supported.
+
+
+|===
+
+
+[#rules]
+[.api-collapsible-fifth-title]
+rules
+
+Rule for an event filter
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|index
+|integer
+a|Rule index. Rules are evaluated in ascending order. If a rule's index order is not specified during creation, the rule is appended to the end of the list.
+
+
+|message_criteria
+|link:#message_criteria[message_criteria]
+a|Matching message definitions for the filter. A property must be specified.
+
+
+|parameter_criteria
+|array[link:#parameter_criteria[parameter_criteria]]
+a|Parameter criteria used to match against events' parameters. Each parameter consists of a name and a value. When multiple parameter criteria are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard '*' characters.
+
+
+|type
+|string
+a|Rule type
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_control_role
+|link:#access_control_role[access_control_role]
+a|Indicates the access control role that created the event filter and is used to control access to the filter based on role-based access control (RBAC) rules. If created by the 'admin' user, the field is unset.
+
+
+|name
+|string
+a|Filter name
+
+
+|rules
+|array[link:#rules[rules]]
+a|Array of event filter rules on which to match.
+
+
+|system_defined
+|boolean
+a|Flag indicating system-defined filters.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

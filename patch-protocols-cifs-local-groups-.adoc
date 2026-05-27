@@ -1,0 +1,295 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-local-groups-.html'
+summary: 'Update local group information for a group in an SVM'
+---
+
+= Update local group information for a group in an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/local-groups/{svm.uuid}/{sid}`#
+
+*Introduced In:* 9.10
+
+Updates the local group information of the specified group in the specified SVM. This API can also be used to rename a local group.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups local-group modify`
+* `vserver cifs users-and-groups local-group rename`
+
+== Learn more
+
+* link:protocols_cifs_local-groups_endpoint_overview.html[DOC /protocols/cifs/local-groups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|sid
+|string
+|path
+|True
+a|Local group SID
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|Description for the local group.
+
+
+|members
+|array[link:#members[members]]
+a|
+
+|name
+|string
+a|Local group name. The maximum supported length of a group name is 256 characters.
+
+
+|sid
+|string
+a|The security ID of the local group which uniquely identifies the group. The group SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "description": "This is a local group",
+  "members": [
+    {}
+  ],
+  "name": "SMB_SERVER01\\group",
+  "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655661
+| The group name and description should not exceed 256 characters.
+
+| 655668
+| The specified group name contains illegal characters.
+
+| 655675
+| The local domain name specified in the group name does not exist.
+
+| 655682
+| The group name cannot be blank.
+
+| 655712
+| To rename an existing group, the local domain specified in name must match the local domain of the group to be renamed.
+
+| 655713
+| Failed to rename a group. The error code returned details the failure along with the reason for the failure. Take corrective actions as per the specified reason.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#members]
+[.api-collapsible-fifth-title]
+members
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_cifs_group]
+[.api-collapsible-fifth-title]
+local_cifs_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|Description for the local group.
+
+
+|members
+|array[link:#members[members]]
+a|
+
+|name
+|string
+a|Local group name. The maximum supported length of a group name is 256 characters.
+
+
+|sid
+|string
+a|The security ID of the local group which uniquely identifies the group. The group SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

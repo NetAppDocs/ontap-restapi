@@ -1,0 +1,214 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-multi-admin-verify.html'
+summary: 'Modify a multi-admin-verify configuration'
+---
+
+= Modify a multi-admin-verify configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/multi-admin-verify`#
+
+*Introduced In:* 9.11
+
+Modifies the multi-admin-verify configuration.
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approval_expiry
+|string
+a|Default time for requests to be approved, in ISO-8601 duration format.
+
+
+|approval_groups
+|array[string]
+a|List of approval groups that are allowed to approve requests for rules that don't have approval groups.
+
+
+|enabled
+|boolean
+a|
+
+|execution_expiry
+|string
+a|Default time for requests to be executed once approved, in ISO-8601 duration format.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "approval_expiry": "string",
+  "approval_groups": [
+    "string"
+  ],
+  "execution_expiry": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262309
+| The feature must be enabled first.
+
+| 262311
+| Value must be greater than zero.
+
+| 262312
+| Number of required approvers must be less than the total number of unique approvers in the approval-groups.
+
+| 262313
+| Number of unique approvers in the approval-groups must be greater than the number of required approvers.
+
+| 262314
+| One or more approval groups added do not exist.
+
+| 262315
+| Approval-groups must be specified when enabling this feature.
+
+| 262316
+| Value must be in the range two minutes to two weeks.
+
+| 262318
+| multi-admin-verify requires an effective cluster version of ONTAP 9.11.1 or later.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#multi_admin_verify_config]
+[.api-collapsible-fifth-title]
+multi_admin_verify_config
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approval_expiry
+|string
+a|Default time for requests to be approved, in ISO-8601 duration format.
+
+
+|approval_groups
+|array[string]
+a|List of approval groups that are allowed to approve requests for rules that don't have approval groups.
+
+
+|enabled
+|boolean
+a|
+
+|execution_expiry
+|string
+a|Default time for requests to be executed once approved, in ISO-8601 duration format.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

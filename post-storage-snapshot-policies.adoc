@@ -1,0 +1,437 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-snapshot-policies.html'
+summary: 'Create a snapshot policy'
+---
+
+= Create a snapshot policy
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/snapshot-policies`#
+
+*Introduced In:* 9.6
+
+Creates a snapshot policy.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Specifies an SVM for policy creation. If not specified, the snapshot policy will be created on the cluster admin SVM.
+* `name` - Name for the snapshot policy.
+* `copies.schedule` - Schedule name at which snapshots are captured on the volume.
+* `copies.count` - Number of snapshots to maintain for this schedule.
+
+== Recommended optional properties
+
+* `copies.prefix` - Prefix to use when creating snapshots at regular intervals.
+* `copies.snapmirror_label` - Label for SnapMirror operations.
+* `copies.retention_period` - Retention period for snapshot locking enabled volumes.The duration must be specified in ISO format or "infinite".
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `svm.uuid` or `svm.name` - If not specified, the snapshot policy will be created on the cluster admin SVM.
+* `enabled` - _true_
+* `copies.prefix` - Value of `schedule.name`
+
+== Related ONTAP commands
+
+* `snapshot policy create`
+
+== Learn more
+
+* link:storage_snapshot-policies_endpoint_overview.html[DOC /storage/snapshot-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment associated with the snapshot policy.
+
+
+|copies
+|array[link:#copies[copies]]
+a|
+
+|enabled
+|boolean
+a|Is the snapshot policy enabled?
+
+
+|name
+|string
+a|Name of the snapshot policy.
+
+
+|scope
+|string
+a|Set to "svm" when the request is on a data SVM, otherwise set to "cluster".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "copies": [
+    {
+      "prefix": "string",
+      "retention_period": "string",
+      "schedule": {
+        "name": "weekly",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "snapmirror_label": "string"
+    }
+  ],
+  "enabled": 1,
+  "name": "default",
+  "scope": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1638407
+| When adding schedule to a snapshot policy, the count for that schedule must be specified.
+
+| 1638408
+| When adding schedule to a snapshot policy, the schedule name must be specified.
+
+| 1638413
+| Schedule not found.
+
+| 1638417
+| Specified policy name is invalid.
+
+| 1638451
+| This operation would result in total snapshot count for the policy to exceed maximum supported count.
+
+| 1638506
+| Schedule already has a prefix. Cannot associate another prefix to the same schedule.
+
+| 1638508
+| Another schedule has the same prefix within this policy.
+
+| 1638526
+| This operation is not supported on a node Vserver.
+
+| 1638527
+| Policy name already exists.
+
+| 1638528
+| This operation is not supported in a mixed-version cluster.
+
+| 1638531
+| This operation is not supported because specified policy is owned by the cluster admin.
+
+| 2621706
+| The specified SVM UUID and SVM name refer to different SVMs.
+
+| 918253
+| Incorrect format for the retention period, duration must be in the ISO-8601 format.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#copies]
+[.api-collapsible-fifth-title]
+copies
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of snapshots to maintain for this schedule.
+
+
+|prefix
+|string
+a|The prefix to use while creating snapshots at regular intervals.
+
+
+|retention_period
+|string
+a|The retention period of snapshots for this schedule. The retention period value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A period specified for years, months, and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. A duration in hours and minutes is represented by "PT+++<num>+++H" and "PT+++<num>+++M" respectively. The period string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example "P1Y10M" is not supported.+++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|schedule
+|link:#schedule[schedule]
+a|
+
+|snapmirror_label
+|string
+a|Label for SnapMirror operations
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+The snapshot policy object is associated with a read-write volume used to create and delete snapshots at regular intervals.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment associated with the snapshot policy.
+
+
+|copies
+|array[link:#copies[copies]]
+a|
+
+|enabled
+|boolean
+a|Is the snapshot policy enabled?
+
+
+|name
+|string
+a|Name of the snapshot policy.
+
+
+|scope
+|string
+a|Set to "svm" when the request is on a data SVM, otherwise set to "cluster".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

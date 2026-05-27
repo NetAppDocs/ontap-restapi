@@ -1,0 +1,319 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-authentication-cluster-saml-sp.html'
+summary: 'Retrieve an SAML service provider configuration'
+---
+
+= Retrieve an SAML service provider configuration
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/authentication/cluster/saml-sp`#
+
+*Introduced In:* 9.6
+
+Retrieves a SAML service provider configuration.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|host
+|string
+|query
+|False
+a|Filter by host
+
+* Introduced in: 9.7
+
+
+|certificate.ca
+|string
+|query
+|False
+a|Filter by certificate.ca
+
+* Introduced in: 9.7
+* maxLength: 256
+* minLength: 1
+
+
+|certificate.serial_number
+|string
+|query
+|False
+a|Filter by certificate.serial_number
+
+* Introduced in: 9.7
+* maxLength: 40
+* minLength: 1
+
+
+|certificate.common_name
+|string
+|query
+|False
+a|Filter by certificate.common_name
+
+* Introduced in: 9.7
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+* Introduced in: 9.7
+
+
+|idp_uri
+|string
+|query
+|False
+a|Filter by idp_uri
+
+* Introduced in: 9.7
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|certificate
+|link:#certificate[certificate]
+a|
+
+|enabled
+|boolean
+a|The SAML service provider is enabled.  Valid for PATCH and GET operations only.
+
+
+|host
+|string
+a|The SAML service provider host.
+
+
+|idp_uri
+|string
+a|The identity provider (IdP) metadata location. Required for POST operations.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "certificate": {
+    "ca": "string",
+    "common_name": "cluster1",
+    "serial_number": "1506B24A94F566BA"
+  },
+  "host": "string",
+  "idp_uri": "https://idp.example.com/FederationMetadata/2007-06/FederationMetadata.xml"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ca
+|string
+a|Server certificate issuing certificate authority (CA).  This cannot be used with the server certificate common name.
+
+
+|common_name
+|string
+a|Server certificate common name.  This cannot be used with the certificate authority (CA) or serial_number.
+
+
+|serial_number
+|string
+a|Server certificate serial number.  This cannot be used with the server certificate common name.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

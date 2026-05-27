@@ -1,0 +1,87 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_login_totps_owner.uuid_account.name_endpoint_overview.html'
+summary: 'Manage TOTP profiles'
+---
+
+= Manage TOTP profiles
+
+
+
+== Overview
+
+This API configures the TOTP profile for user accounts.
+Specify the owner UUID and the account user name. The owner UUID corresponds to the UUID of the SVM containing the user account associated with the TOTP profile and can be obtained from the response body of the GET request performed on the API "`/api/svm/svms".
+
+== Examples
+
+=== Retrieving the specific configured TOTP profile for user accounts
+
+----
+
+# The API:
+GET "/api/security/login/totps/{owner.uuid}/{account.name}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/login/totps/513a78c7-8c13-11e9-8f78-005056bbf6ac/pubuser4
+
+# the response:
+{
+"owner": {
+    "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+    "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/b009a9e7-4081-b576-7575-ada21efcaf16"
+    }
+  }
+},
+"account": {
+  "name": "pubuser2",
+  "_links": {
+    "self": {
+      "href": "/api/security/accounts/b009a9e7-4081-b576-7575-ada21efcaf16/pubuser2"
+    }
+  }
+},
+"sha_fingerprint": "21364f5417600e3d9d6a7ac6c05dd244aed9f15dce6786a2c89399a41ff0fdb0",
+"scope": "cluster",
+"_links": {
+  "self": {
+    "href": "/api/security/login/totps/b009a9e7-4081-b576-7575-ada21efcaf16/pubuser2"
+  }
+}
+}
+----
+
+=== Modifying the TOTP profile for a user account
+
+----
+
+# The API:
+PATCH "/api/security/login/totps/{owner.uuid}/{account.name}"
+
+# The call:
+curl -k "https://<mgmt-ip>/api/security/login/totps/6865196a-8b59-11ed-874c-0050568e36ed/ysadmin" --request PATCH --data "{  \"comment\": \"Testing\",  \"enabled\": false}"
+
+# the response:
+{}
+----
+
+=== Deleting the TOTP profile for user accounts
+
+----
+
+# The API:
+DELETE "/api/security/login/totps/{owner.uuid}/{account.name}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/login/totps/d49de271-8c11-11e9-8f78-005056bbf6ac/pubuser1 --request DELETE
+
+# the response:
+{}
+----
+
+

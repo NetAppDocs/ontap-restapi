@@ -1,0 +1,474 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-groups.html'
+summary: 'Retrieve all group entries'
+---
+
+= Retrieve all group entries
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/groups`#
+
+*Introduced In:* 9.16
+
+Retrieves all group entries.
+
+== Related ONTAP commands
+
+* `security login group show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|id
+|integer
+|query
+|False
+a|Filter by id
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 64
+* minLength: 1
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#security_group[security_group]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "Azure Group",
+      "create_time": "string",
+      "id": 0,
+      "name": "AzureGroup1",
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "scope": "string",
+      "type": "entra",
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Group owner. Used to identify a cluster or an SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#security_group]
+[.api-collapsible-fifth-title]
+security_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|comment
+|string
+a|Any comment regarding this group entry.
+
+
+|create_time
+|string
+a|Date and time indicating when this group entry was created.
+
+
+|id
+|integer
+a|Group ID which is unique per group across the system. It is a read-only field and it automatically assigns the next available unique number.
+
+
+|name
+|string
+a|Group name.
+
+
+|owner
+|link:#owner[owner]
+a|Group owner. Used to identify a cluster or an SVM.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|type
+|string
+a|Group type.
+
+
+|uuid
+|string
+a|Group UUID from external Active Directory.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

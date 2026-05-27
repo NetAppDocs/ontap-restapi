@@ -1,0 +1,189 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_coredump_coredumps_endpoint_overview.html'
+summary: 'Manage core dumps'
+---
+
+= Manage core dumps
+
+
+
+== Overview
+
+The core dump GET API retrieves all of the core dumps on the cluster or a node.  The core dump DELETE API deletes a specified core dump.
+Some fields are only populated for core dump type "kernel".  Refer to the model for further information.  Fields will not be displayed if they are not populated.
+A core can be deleted even if the core is in the process of being saved.
+
+== Examples
+
+=== 1) Retrieving a list of core dumps from the cluster
+
+The following example returns a list of core dumps on the cluster:
+
+'''
+
+----
+
+# The API:
+/api/support/coredump/coredumps
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/coredump/coredumps" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "227683c1-e9c7-11eb-b995-005056bbbfb3",
+      "name": "node2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/227683c1-e9c7-11eb-b995-005056bbbfb3"
+        }
+      }
+    },
+    "type": "kernel",
+    "name": "core.4136886422.2021-07-21.20_20_53.nz",
+    "_links": {
+      "self": {
+        "href": "/api/support/coredump/coredumps/227683c1-e9c7-11eb-b995-005056bbbfb3/core.4136886422.2021-07-21.20_20_53.nz"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "227683c1-e9c7-11eb-b995-005056bbbfb3",
+      "name": "node2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/227683c1-e9c7-11eb-b995-005056bbbfb3"
+        }
+      }
+    },
+    "type": "application",
+    "name": "mlogd.968.4136886422.2021-07-22.01_10_01.ucore.bz2",
+    "_links": {
+      "self": {
+        "href": "/api/support/coredump/coredumps/227683c1-e9c7-11eb-b995-005056bbbfb3/mlogd.968.4136886422.2021-07-22.01_10_01.ucore.bz2"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "d583d44e-e9c6-11eb-a270-005056bb47f9",
+      "name": "node1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/d583d44e-e9c6-11eb-a270-005056bb47f9"
+        }
+      }
+    },
+    "type": "kernel",
+    "name": "core.4136886421.2021-07-21.17_57_02.nz",
+    "_links": {
+      "self": {
+        "href": "/api/support/coredump/coredumps/d583d44e-e9c6-11eb-a270-005056bb47f9/core.4136886421.2021-07-21.17_57_02.nz"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "d583d44e-e9c6-11eb-a270-005056bb47f9",
+      "name": "node1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/d583d44e-e9c6-11eb-a270-005056bb47f9"
+        }
+      }
+    },
+    "type": "application",
+    "name": "mlogd.979.4136886421.2021-07-22.01_11_37.ucore.bz2",
+    "_links": {
+      "self": {
+        "href": "/api/support/coredump/coredumps/d583d44e-e9c6-11eb-a270-005056bb47f9/mlogd.979.4136886421.2021-07-22.01_11_37.ucore.bz2"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/support/coredump/coredumps"
+  }
+}
+}
+----
+
+'''
+
+=== 2) Retrieving a specific core dump
+
+The following example returns the requested core dump. If there is no core dump with the requested node UUID and name, an error is returned.
+
+'''
+
+----
+
+# The API:
+/api/support/coredump/coredumps/{node.uuid}/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/coredump/coredumps/d583d44e-e9c6-11eb-a270-005056bb47f9/core.4136886421.2021-07-21.17_57_02.nz" -H "accept: application/hal+json"
+
+# The response:
+{
+"node": {
+  "uuid": "d583d44e-e9c6-11eb-a270-005056bb47f9",
+  "name": "node1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/d583d44e-e9c6-11eb-a270-005056bb47f9"
+    }
+  }
+},
+"type": "kernel",
+"name": "core.4136886421.2021-07-21.17_57_02.nz",
+"panic_time": "2021-07-21T13:57:02-04:00",
+"size": 945111148,
+"md5_data_chksum": "611a6fa50d230a1af402f3724ab320af",
+"is_saved": true,
+"_links": {
+  "self": {
+    "href": "/api/support/coredump/coredumps/d583d44e-e9c6-11eb-a270-005056bb47f9/core.4136886421.2021-07-21.17_57_02.nz"
+  }
+}
+}
+----
+
+'''
+
+=== 3) Deleting a core dump
+
+The following example deletes the requested core dump. If there is no core dump with the requested node UUID and name to delete, an error is returned.
+
+'''
+
+----
+
+# The API:
+/api/support/coredump/coredumps/{node.uuid}/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/support/coredump/coredumps/d583d44e-e9c6-11eb-a270-005056bb47f9/mlogd.979.4136886421.2021-07-22.01_11_37.ucore.bz2" -H "accept: application/hal+json"
+
+# The response header:
+HTTP/1.1 200 OK
+Date: Thu, 22 Jul 2021 01:32:24 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 3
+Content-Type: application/hal+json
+----
+
+'''
+
+

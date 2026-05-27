@@ -1,0 +1,734 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-sessions.html'
+summary: 'Retrieve CIFS session information for all SVMs'
+---
+
+= Retrieve CIFS session information for all SVMs
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/sessions`#
+
+*Introduced In:* 9.8
+
+Retrieves the CIFS sessions information for all SVMs.
+
+== Related ONTAP commands
+
+*** `vserver cifs session show -active-volumes`
+
+== Learn more
+
+* link:protocols_cifs_sessions_endpoint_overview.html[DOC /protocols/cifs/sessions]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|smb_signing
+|boolean
+|query
+|False
+a|Filter by smb_signing
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|mapped_unix_user
+|string
+|query
+|False
+a|Filter by mapped_unix_user
+
+
+|open_shares
+|integer
+|query
+|False
+a|Filter by open_shares
+
+
+|continuous_availability
+|string
+|query
+|False
+a|Filter by continuous_availability
+
+
+|open_other
+|integer
+|query
+|False
+a|Filter by open_other
+
+
+|protocol
+|string
+|query
+|False
+a|Filter by protocol
+
+
+|open_files
+|integer
+|query
+|False
+a|Filter by open_files
+
+
+|user
+|string
+|query
+|False
+a|Filter by user
+
+
+|identifier
+|integer
+|query
+|False
+a|Filter by identifier
+
+
+|large_mtu
+|boolean
+|query
+|False
+a|Filter by large_mtu
+
+
+|server_ip
+|string
+|query
+|False
+a|Filter by server_ip
+
+
+|connected_duration
+|string
+|query
+|False
+a|Filter by connected_duration
+
+
+|authentication
+|string
+|query
+|False
+a|Filter by authentication
+
+
+|idle_duration
+|string
+|query
+|False
+a|Filter by idle_duration
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|smb_encryption
+|string
+|query
+|False
+a|Filter by smb_encryption
+
+
+|client_ip
+|string
+|query
+|False
+a|Filter by client_ip
+
+
+|connection_id
+|integer
+|query
+|False
+a|Filter by connection_id
+
+
+|connection_count
+|integer
+|query
+|False
+a|Filter by connection_count
+
+
+|volumes.name
+|string
+|query
+|False
+a|Filter by volumes.name
+
+
+|volumes.uuid
+|string
+|query
+|False
+a|Filter by volumes.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cifs_session[cifs_session]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "authentication": "ntlmv2",
+      "client_ip": "10.74.7.182",
+      "connected_duration": "P4DT84H30M5S",
+      "connection_count": 0,
+      "connection_id": 22802,
+      "continuous_availability": "unavailable",
+      "identifier": 4622663542519103507,
+      "idle_duration": "P4DT84H30M5S",
+      "large_mtu": true,
+      "mapped_unix_user": "root",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "open_files": 0,
+      "open_other": 0,
+      "open_shares": 0,
+      "protocol": "smb3_1",
+      "server_ip": "10.140.78.248",
+      "smb_encryption": "unencrypted",
+      "smb_signing": "",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "user": "NBCIFSQA2\\administrator",
+      "volumes": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "volume1",
+          "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+        }
+      ]
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volumes]
+[.api-collapsible-fifth-title]
+volumes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|===
+
+
+[#cifs_session]
+[.api-collapsible-fifth-title]
+cifs_session
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authentication
+|string
+a|SMB authentication over which the client accesses the share. The following values are supported:
+
+* none - No authentication
+* ntlmv1 - Ntlm version 1 mechanism
+* ntlmv2 - Ntlm version 2 mechanism
+* kerberos - Kerberos authentication
+* anonymous - Anonymous mechanism
+
+
+|client_ip
+|string
+a|Specifies IP address of the client.
+
+
+|connected_duration
+|string
+a|Specifies an ISO-8601 format of date and time used to retrieve the connected time duration in hours, minutes, and seconds format.
+
+
+|connection_count
+|integer
+a|A counter used to track requests that are sent to the volumes to the node.
+
+
+|connection_id
+|integer
+a|A unique 32-bit unsigned number used to represent each SMB session's connection ID.
+
+
+|continuous_availability
+|string
+a|The level of continuous availability protection provided to the SMB sessions and/or files.
+
+* unavailable - Open file is not continuously available. For sessions, it contains one or more open files but none of them are continuously available.
+* available - open file is continuously available. For sessions, it contains one or more open files and all of them are continuously available.
+* partial - Sessions only. Contains at least one continuously available open file with other files open but not continuously available.
+
+
+|identifier
+|integer
+a|A unique 64-bit unsigned number used to represent each SMB session's identifier.
+
+
+|idle_duration
+|string
+a|Specifies an ISO-8601 format of date and time used to retrieve the idle time duration in hours, minutes, and seconds format.
+
+
+|large_mtu
+|boolean
+a|Specifies whether the large MTU is enabled or not for an SMB session.
+
+
+|mapped_unix_user
+|string
+a|Indicated that a mapped UNIX user has logged in.
+
+
+|node
+|link:#node[node]
+a|
+
+|open_files
+|integer
+a|Number of files the SMB session has opened.
+
+
+|open_other
+|integer
+a|Number of other files the SMB session has opened.
+
+
+|open_shares
+|integer
+a|Number of shares the SMB session has opened.
+
+
+|protocol
+|string
+a|The SMB protocol version over which the client accesses the volumes. The following values are supported:
+
+* smb1 - SMB version 1
+* smb2 - SMB version 2
+* smb2_1 - SMB version 2 minor version 1
+* smb3 - SMB version 3
+* smb3_1 - SMB version 3 minor version 1
+
+
+|server_ip
+|string
+a|Specifies the IP address of the SVM.
+
+
+|smb_encryption
+|string
+a|Indicates an SMB encryption state. The following values are supported:
+
+* unencrypted - SMB session is not encrypted
+* encrypted - SMB session is fully encrypted. SVM level encryption is enabled and encryption occurs for the entire session.
+* partially_encrypted - SMB session is partially encrypted. Share level encryption is enabled and encryption is initiated when the tree-connect occurs.
+
+
+|smb_signing
+|boolean
+a|Specifies whether or not SMB signing is enabled.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|user
+|string
+a|Indicates that a Windows user has logged in.
+
+
+|volumes
+|array[link:#volumes[volumes]]
+a|A group of volumes, the client is accessing.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

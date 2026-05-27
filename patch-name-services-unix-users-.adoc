@@ -1,0 +1,251 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-name-services-unix-users-.html'
+summary: 'Update UNIX user information for a user and SVM'
+---
+
+= Update UNIX user information for a user and SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/name-services/unix-users/{svm.uuid}/{name}`#
+
+*Introduced In:* 9.9
+
+Updates UNIX user information for the specified user and SVM.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|UNIX user name
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|full_name
+|string
+a|User's full name.
+
+
+|id
+|integer
+a|UNIX user ID of the specified user.
+
+
+|primary_gid
+|integer
+a|Primary group ID to which the user belongs.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "full_name": "Full User Name for user1",
+  "skip_name_validation": true
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 23724128
+| The specified Unix user full-name contains invalid character ':'
+
+| 23724089
+| The specified UNIX user full-name is too long. Maximum supported length is 256 characters.
+
+| 23724055
+| Internal error. Failed to modify the UNIX user for the SVM. Verify that the cluster is healthy, then try the command again.
+
+| 23724090
+| Configuring individual entries is not supported because file-only configuration is enabled.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#unix_user]
+[.api-collapsible-fifth-title]
+unix_user
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|full_name
+|string
+a|User's full name.
+
+
+|id
+|integer
+a|UNIX user ID of the specified user.
+
+
+|primary_gid
+|integer
+a|Primary group ID to which the user belongs.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

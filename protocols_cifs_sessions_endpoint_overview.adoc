@@ -1,0 +1,225 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_sessions_endpoint_overview.html'
+summary: 'View CIFS active sessions'
+---
+
+= View CIFS active sessions
+
+
+
+== Overview
+
+ONTAP CIFS sessions `show` functionality is used to provide a list of currently established CIFS sessions with SMB Clients.
+
+=== Information on the CIFS session
+
+* List all the SMB sessions for SVM and the clients along with volume information on which the clients are using.
+
+== Example
+
+=== Retrieves established sessions information
+
+To retrieve the list of CIFS sessions, use the following API. Note that _return_records=true_.
+
+'''
+
+----
+
+# The API:
+GET /protocols/cifs/sessions
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/cifs/sessions?fields=*&return_timeout=15&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "a5f65ec0-3550-11ee-93c5-005056ae78de",
+      "name": "sti220-vsim-sr050u"
+    },
+    "svm": {
+      "name": "vs0",
+      "uuid": "80e795f4-3553-11ee-9f97-005056ae78de"
+    },
+    "identifier": 10878444899913433000,
+    "connection_id": 103985,
+    "server_ip": "172.29.212.166",
+    "client_ip": "10.249.30.206",
+    "authentication": "ntlmv2",
+    "user": "example_user",
+    "mapped_unix_user": "example_user",
+    "open_shares": 1,
+    "open_files": 5,
+    "open_other": 0,
+    "connected_duration": "PT37M53S",
+    "idle_duration": "PT3M15S",
+    "protocol": "smb3_1",
+    "continuous_availability": "unavailable",
+    "smb_signing": true,
+    "smb_encryption": "unencrypted",
+    "connection_count": 1,
+    "large_mtu": true,
+    "volumes": [
+      {
+        "name": "root_vs0",
+        "uuid": "5015c99b-3554-11ee-9f97-005056ae78de"
+      },
+      {
+        "name": "vol_test",
+        "uuid": "84b94bb8-3553-11ee-a3c3-005056ae0dd5"
+      }
+    ]
+  },
+  {
+    "node": {
+      "uuid": "a5f65ec0-3550-11ee-93c5-005056ae78de",
+      "name": "sti220-vsim-sr050u"
+    },
+    "svm": {
+      "name": "vs0",
+      "uuid": "80e795f4-3553-11ee-9f97-005056ae78de"
+    },
+    "identifier": 10878444899913433000,
+    "connection_id": 103986,
+    "server_ip": "172.29.212.166",
+    "client_ip": "10.234.157.109",
+    "authentication": "ntlmv2",
+    "user": "example_user",
+    "mapped_unix_user": "example_user",
+    "open_shares": 1,
+    "open_files": 1,
+    "open_other": 0,
+    "connected_duration": "PT15S",
+    "idle_duration": "PT5S",
+    "protocol": "smb3_1",
+    "continuous_availability": "unavailable",
+    "smb_signing": false,
+    "smb_encryption": "unencrypted",
+    "connection_count": 1,
+    "large_mtu": true,
+    "volumes": [
+      {
+        "name": "root_vs0",
+        "uuid": "84b94bb8-3553-11ee-a3c3-005056ae0dd5"
+      }
+    ]
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving CIFS server configuration details for a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /protocols/cifs/sessions/{node.uuid}/{svm.uuid}/{identifier}/{connection_id}
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/cifs/sessions/a5f65ec0-3550-11ee-93c5-005056ae78de/80e795f4-3553-11ee-9f97-005056ae78de/10878444899913433090/103985" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"node": {
+  "uuid": "a5f65ec0-3550-11ee-93c5-005056ae78de",
+  "name": "sti220-vsim-sr050u"
+},
+"svm": {
+  "uuid": "80e795f4-3553-11ee-9f97-005056ae78de",
+  "name": "vs0"
+},
+"identifier": 10878444899913433000,
+"connection_id": 103985,
+"server_ip": "172.29.212.166",
+"client_ip": "10.249.30.206",
+"authentication": "ntlmv2",
+"user": "example_user",
+"mapped_unix_user": "example_user",
+"open_shares": 1,
+"open_files": 5,
+"open_other": 0,
+"connected_duration": "PT50M20S",
+"idle_duration": "PT5M41S",
+"protocol": "smb3_1",
+"continuous_availability": "unavailable",
+"smb_signing": true,
+"smb_encryption": "unencrypted",
+"connection_count": 1,
+"large_mtu": true,
+"volumes": [
+  {
+    "name": "root_vs0",
+    "uuid": "5015c99b-3554-11ee-9f97-005056ae78de"
+  },
+  {
+    "name": "vol_test",
+    "uuid": "84b94bb8-3553-11ee-a3c3-005056ae0dd5"
+  }
+]
+}
+----
+
+'''
+
+=== Removing all existing CIFS sessions for a specific node on a specific SVM
+
+To delete all the existing CIFS session, pass the identifier and connection ID as zero (0) in the following API. This will delete all of the CIFS sessions for the given SVM on the node.
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/cifs/sessions/{node.uuid}/{svm.uuid}/{identifier}/{connection_id}
+
+# The call:
+curl -X DELETE "https://<cluster-mgmt-ip>/api/protocols/cifs/sessions/a5f65ec0-3550-11ee-93c5-005056ae78de/80e795f4-3553-11ee-9f97-005056ae78de/0/0" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+----
+
+'''
+
+=== Removing all CIFS sessions for a specific connection on a specific node on a specific SVM
+
+To delete a CIFS session, use the following API. This will delete the CIFS sessions for a given SVM on the node.
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/cifs/sessions/{node.uuid}/{svm.uuid}/{identifier}/{connection_id}
+
+# The call:
+curl -X DELETE "https://<cluster-mgmt-ip>/api/protocols/cifs/sessions/a5f65ec0-3550-11ee-93c5-005056ae78de/80e795f4-3553-11ee-9f97-005056ae78de/0/103985" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+----
+
+'''
+
+=== Removing a specific CIFS session for a specific Node on a specific SVM
+
+To delete a specific CIFS session, use the following API. This will delete the specific CIFS session for the given SVM on the node.
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/cifs/sessions/{node.uuid}/{svm.uuid}/{identifier}/{connection_id}
+
+# The call:
+curl -X DELETE "https://<cluster-mgmt-ip>/api/protocols/cifs/sessions/a5f65ec0-3550-11ee-93c5-005056ae78de/80e795f4-3553-11ee-9f97-005056ae78de/10878444899913433090/103985" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+----
+
+'''
+
+

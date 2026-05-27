@@ -1,0 +1,356 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-local-users-.html'
+summary: 'Update the local user information for a user and SVM'
+---
+
+= Update the local user information for a user and SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/local-users/{svm.uuid}/{sid}`#
+
+*Introduced In:* 9.10
+
+Updates local user information for the specified user and SVM. The PATCH endpoint is also used to rename a user and to set the password for the user.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups local-user modify`
+* `vserver cifs users-and-groups local-user rename`
+* `vserver cifs users-and-groups local-user set-password`
+
+== Learn more
+
+* link:protocols_cifs_local-users_endpoint_overview.html[DOC /protocols/cifs/local-users]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|sid
+|string
+|path
+|True
+a|Local user SID
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account_disabled
+|boolean
+a|Indicates whether the user account is enabled or disabled.
+
+
+|description
+|string
+a|Description for the local user.
+
+
+|full_name
+|string
+a|User's full name.
+
+
+|membership
+|array[link:#membership[membership]]
+a|Specifies local groups of which this local user is a member.
+
+
+|name
+|string
+a|Local user name. The maximum supported length of an user name is 20 characters.
+
+
+|password
+|string
+a|Password for the local user.
+
+
+|sid
+|string
+a|The security ID of the local user which uniquely identifies the user. The user SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "description": "This is local user.",
+  "full_name": "user name",
+  "membership": [
+    {
+      "name": "SMB_SERVER01\\group",
+      "sid": "S-1-5-21-256008430-3394229847-3930036330-1001"
+    }
+  ],
+  "name": "SMB_SERVER01\\user",
+  "password": "string",
+  "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655661
+| The user name should not exceed 20 characters. Also full_name and description should not exceed 256 characters.
+
+| 655668
+| The specified user name contains illegal characters.
+
+| 655675
+| The local domain name specified in the user name does not exist.
+
+| 655682
+| The user name cannot be blank.
+
+| 655732
+| Failed to rename a user. The error code returned details the failure along with the reason for the failure. Take corrective actions as per the specified reason.
+
+| 655733
+| The specified password does not meet the password complexity requirements.
+
+| 655737
+| To rename an existing user, the local domain specified in name must match the local domain of the user to be renamed.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#membership]
+[.api-collapsible-fifth-title]
+membership
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Local group name. The maximum supported length of a group name is 256 characters.
+
+
+|sid
+|string
+a|The security ID of the local group which uniquely identifies the group. The group SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_cifs_user]
+[.api-collapsible-fifth-title]
+local_cifs_user
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account_disabled
+|boolean
+a|Indicates whether the user account is enabled or disabled.
+
+
+|description
+|string
+a|Description for the local user.
+
+
+|full_name
+|string
+a|User's full name.
+
+
+|membership
+|array[link:#membership[membership]]
+a|Specifies local groups of which this local user is a member.
+
+
+|name
+|string
+a|Local user name. The maximum supported length of an user name is 20 characters.
+
+
+|password
+|string
+a|Password for the local user.
+
+
+|sid
+|string
+a|The security ID of the local user which uniquely identifies the user. The user SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

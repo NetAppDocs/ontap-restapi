@@ -1,0 +1,891 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-ipsec-policies.html'
+summary: 'Create an IPsec policy'
+---
+
+= Create an IPsec policy
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/ipsec/policies`#
+
+*Introduced In:* 9.8
+
+Creates an IPsec policy.
+
+== Related ONTAP commands
+
+* `security ipsec policy create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Action for the IPsec policy.
+
+
+|authentication_method
+|string
+a|Authentication method for the IPsec policy.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate for the IPsec policy.
+
+
+|certificate_modify_keepsa
+|boolean
+a|Indicates whether old security associations are kept upon certificate modification.
+
+
+|enabled
+|boolean
+a|Indicates whether or not the policy is enabled.
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+|local_endpoint
+|link:#local_endpoint[local_endpoint]
+a|Local endpoint for the IPsec policy.
+
+
+|local_identity
+|string
+a|Local Identity
+
+
+|name
+|string
+a|IPsec policy name.
+
+
+|ppk
+|link:#ppk[ppk]
+a|Post-quantum pre-shared key information.
+
+
+|protocol
+|string
+a|Lower layer protocol to be covered by the IPsec policy.
+
+
+|remote_endpoint
+|link:#remote_endpoint[remote_endpoint]
+a|Remote endpoint for the IPsec policy.
+
+
+|remote_identity
+|string
+a|Remote Identity
+
+
+|secret_key
+|string
+a|Pre-shared key for IKE negotiation.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|Unique identifier of the IPsec policy.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "action": "string",
+  "authentication_method": "string",
+  "certificate": {
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "ipspace": {
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "local_endpoint": {
+    "address": "10.10.10.7",
+    "netmask": "24",
+    "port": "23"
+  },
+  "local_identity": "string",
+  "name": "string",
+  "ppk": {
+    "identity": "string",
+    "shared_key": "string"
+  },
+  "protocol": "17",
+  "remote_endpoint": {
+    "address": "10.10.10.7",
+    "netmask": "24",
+    "port": "23"
+  },
+  "remote_identity": "string",
+  "secret_key": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "action": "string",
+      "authentication_method": "string",
+      "certificate": {
+        "name": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "ipspace": {
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "local_endpoint": {
+        "address": "10.10.10.7",
+        "netmask": "24",
+        "port": "23"
+      },
+      "local_identity": "string",
+      "name": "string",
+      "ppk": {
+        "identity": "string",
+        "shared_key": "string"
+      },
+      "protocol": "17",
+      "remote_endpoint": {
+        "address": "10.10.10.7",
+        "netmask": "24",
+        "port": "23"
+      },
+      "remote_identity": "string",
+      "secret_key": "string",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 66257099
+| Only one protocol can be specified.
+
+| 66257100
+| Only one local port can be specified.
+
+| 66257101
+| Only one remote port can be specified.
+
+| 66257102
+| Internet Key Exchange version 1 (IKEv1) is not supported.
+
+| 66257104
+| IPsec policy with same name already exists in this SVM.
+
+| 66257107
+| The specified pre-shared key is not a valid hexadecimal string.
+
+| 66257109
+| The specified pre-shared key is not a valid Base64 encoded binary string.
+
+| 66257110
+| Failed to a create policy sequencing value.
+
+| 66257112
+| The IPsec policy with the action specified does not provide packet protection and the authentication method provided for the policy will be ignored.
+
+| 66257113
+| Only one local IP subnet can be specified.
+
+| 66257114
+| Only one remote IP subnet can be specified.
+
+| 66257115
+| Port ranges containing more than one port are not supported.
+
+| 66257117
+| IPsec is not supported on the SVM specified in the policy, IPsec is supported on data SVMs only.
+
+| 66257120
+| The subnet selector must be a host address (An IPv4 address with a 32-bit netmask or an IPv6 address with a 128-bit netmask).
+
+| 66257121
+| The maximum limit of IPsec policies has been reached for the specified SVM.
+
+| 66257125
+| The local_endpoint.address must be specified with local_endpoint.netmask.
+
+| 66257126
+| The remote_endpoint.address must be specified with remote_endpoint.netmask.
+
+| 66257127
+| The local subnet must be configured as a non-zero subnet.
+
+| 66257128
+| Invalid ANY wildcard subnet.
+
+| 66257129
+| A specific local or remote port number is required when the remote subnet is configured as an ANY wildcard subnet.
+
+| 66257130
+| The maximum limit of IPsec policies has been reached for the cluster.
+
+| 66257131
+| ESP in UDPv6 Encapsulation is not supported.
+
+| 66257132
+| Invalid value for port field. Value should be in range <0-65535>.
+
+| 66257133
+| A pre-shared key is needed for the PSK authentication method. Use the secret_key option to specify a key.
+
+| 66257134
+| An end-entity certificate is needed for the PKI authentication method. Use the certificate.uuid option to specify an end-entity certificate.
+
+| 66257135
+| The specified certificate is not found on the SVM.
+
+| 66257136
+| A certificate is not needed for the PSK authentication method.
+
+| 66257137
+| A pre-shared key is not needed for the PKI authentication method.
+
+| 66257138
+| Remote identity is required when using certificate verification.
+
+| 66257139
+| Certificate with the specified UUID was not found.
+
+| 66257140
+| Only certificates with a client or server type are supported.
+
+| 66257142
+| Failed to create IPsec policy because the specified SVM is being migrated.
+
+| 66257143
+| Invalid IPsec policy provided. The subnet must be non-empty.
+
+| 66257144
+| The IPsec policy actions ESP TRANSPORT and ESP UDP each provide packet protection and requires a secret key or certificate for authentication.
+
+| 66257148
+| The policy name does not meet required ASCII-range characters length.
+
+| 66257153
+| The policy requires a post-quantum pre-shared key because ppk-identity is specified for this policy.
+
+| 66257154
+| The policy requires a post-quantum pre-shared identity because ppk-shared-key is specified for this policy.
+
+| 66257199
+| Not all of the nodes in the cluster are running a version that supports the IPsec feature.
+
+| 66257200
+| The shared key does not meet required ASCII-range characters length.
+
+| 66257201
+| Support for the feature available with effective cluster version or later.
+
+| 66257202
+| The specified SVM name is invalid.
+
+| 66257203
+| The specified SVM UUID is invalid.
+
+| 66257204
+| The specified IPspace UUID and IPspace name refer to different IPspaces.
+
+| 66257205
+| The specified SVM must exist in the specified IPspace.
+
+| 66257305
+| The certificate UUID does not match the provided certificate name.
+
+| 66257396
+| IPsec is not supported for the admin SVM in a MetroCluster configuration.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Certificate for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#local_endpoint]
+[.api-collapsible-fifth-title]
+local_endpoint
+
+Local endpoint for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|port
+|string
+a|Application port to be covered by the IPsec policy
+
+
+|===
+
+
+[#ppk]
+[.api-collapsible-fifth-title]
+ppk
+
+Post-quantum pre-shared key information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|identity
+|string
+a|Post-quantum pre-shared key identity.
+
+
+|shared_key
+|string
+a|Post-quantum pre-shared key.
+
+
+|===
+
+
+[#remote_endpoint]
+[.api-collapsible-fifth-title]
+remote_endpoint
+
+Remote endpoint for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|port
+|string
+a|Application port to be covered by the IPsec policy
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#ipsec_policy]
+[.api-collapsible-fifth-title]
+ipsec_policy
+
+IPsec policy object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Action for the IPsec policy.
+
+
+|authentication_method
+|string
+a|Authentication method for the IPsec policy.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate for the IPsec policy.
+
+
+|certificate_modify_keepsa
+|boolean
+a|Indicates whether old security associations are kept upon certificate modification.
+
+
+|enabled
+|boolean
+a|Indicates whether or not the policy is enabled.
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+|local_endpoint
+|link:#local_endpoint[local_endpoint]
+a|Local endpoint for the IPsec policy.
+
+
+|local_identity
+|string
+a|Local Identity
+
+
+|name
+|string
+a|IPsec policy name.
+
+
+|ppk
+|link:#ppk[ppk]
+a|Post-quantum pre-shared key information.
+
+
+|protocol
+|string
+a|Lower layer protocol to be covered by the IPsec policy.
+
+
+|remote_endpoint
+|link:#remote_endpoint[remote_endpoint]
+a|Remote endpoint for the IPsec policy.
+
+
+|remote_identity
+|string
+a|Remote Identity
+
+
+|secret_key
+|string
+a|Pre-shared key for IKE negotiation.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|Unique identifier of the IPsec policy.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+IPsec policy object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Action for the IPsec policy.
+
+
+|authentication_method
+|string
+a|Authentication method for the IPsec policy.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate for the IPsec policy.
+
+
+|certificate_modify_keepsa
+|boolean
+a|Indicates whether old security associations are kept upon certificate modification.
+
+
+|enabled
+|boolean
+a|Indicates whether or not the policy is enabled.
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+|local_endpoint
+|link:#local_endpoint[local_endpoint]
+a|Local endpoint for the IPsec policy.
+
+
+|local_identity
+|string
+a|Local Identity
+
+
+|name
+|string
+a|IPsec policy name.
+
+
+|ppk
+|link:#ppk[ppk]
+a|Post-quantum pre-shared key information.
+
+
+|protocol
+|string
+a|Lower layer protocol to be covered by the IPsec policy.
+
+
+|remote_endpoint
+|link:#remote_endpoint[remote_endpoint]
+a|Remote endpoint for the IPsec policy.
+
+
+|remote_identity
+|string
+a|Remote Identity
+
+
+|secret_key
+|string
+a|Pre-shared key for IKE negotiation.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|Unique identifier of the IPsec policy.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

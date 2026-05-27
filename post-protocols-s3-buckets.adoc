@@ -1,0 +1,1593 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-s3-buckets.html'
+summary: 'Create the S3 bucket configuration for an SVM'
+---
+
+= Create the S3 bucket configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/s3/buckets`#
+
+*Introduced In:* 9.8
+
+Creates the S3 bucket configuration of an SVM.
+
+== Important notes
+
+* Each SVM can have one or more bucket configurations.
+* Aggregate lists should be specified explicitly. If not specified, then the bucket is auto-provisioned as a FlexGroup volume.
+* Constituents per aggregate specifies the number of components (or FlexVol volumes) per aggregate. Is specified only when an aggregate list is explicitly defined.
+* An access policy can be created along with a bucket create. If creating an access policy fails, bucket configurations are saved and the access policy can be created using the PATCH endpoint.
+* "qos_policy" can be specified if a bucket needs to be attached to a QoS group policy during creation time.
+* "audit_event_selector" can be specified if a bucket needs to be specify access and permission type for auditing.
+* A CORS configuration can be specified along with bucket creation.
+
+== Required properties
+
+* `svm.uuid or svm.name` - Existing SVM in which to create the bucket configuration.
+* `name` - Bucket name that is to be created.
+
+== Recommended optional properties
+
+* `aggregates` - List of aggregates for the FlexGroup volume on which the bucket is hosted on.
+* `constituents_per_aggregate` - Number of constituents per aggregate.
+* `size` - Specifying the bucket size is recommended.
+* `policy` - Specifying a policy enables users to perform operations on buckets; specifying the resource permissions is recommended.
+* `qos_policy` - A QoS policy for buckets.
+* `audit_event_selector` - Audit policy for buckets.
+* `versioning_state` - Versioning state for buckets.
+* `type` - Type of bucket.
+* `nas_path` - NAS path to which the bucket corresponds to.
+* `use_mirrored_aggregates` - Specifies whether mirrored aggregates are selected when provisioning a FlexGroup volume.
+* `lifecycle_management` - Object store server lifecycle management policy.
+* `retention.mode` - Object lock mode supported on the bucket.
+* `retention.default_period` - Specifies the duration of default-retention applicable for objects on the object store bucket.
+* `cors` - Specifying CORS rules enables the bucket to service the cross-origin requests.
+* `snapshot_policy` - Snapshot policy for the bucket.
+* `is_nas_path_mutable` - Specifies whether the NAS bucket mapping with a NAS volume can change according to the changes in the NAS volume junction-path due to volume operations like mount and unmount.
+
+== Default property values
+
+* `size` - 800MB
+* `comment` - ""
+* `aggregates` - No default value.
+* `constituents_per_aggregate` - _4_ , if an aggregates list is specified. Otherwise, no default value.
+* `policy.statements.actions` - GetObject, PutObject, DeleteObject, ListBucket, ListBucketMultipartUploads, ListMultipartUploadParts, GetObjectTagging, PutObjectTagging, DeleteObjectTagging, GetBucketVersioning, PutBucketVersioning.
+* `policy.statements.principals` - all S3 users and groups in the SVM or the NAS groups.
+* `policy.statements.resources` - all objects in the bucket.
+* `policy.statements.conditions` - list of bucket policy conditions.
+* `versioning_state` - disabled.
+* `use_mirrored_aggregates` - _true_ for a MetroCluster configuration and _false_ for a non-MetroCluster configuration.
+* `type` - S3
+* `retention.mode` - no_lock
+
+== Related ONTAP commands
+
+* `vserver object-store-server bucket create`
+* `vserver object-store-server bucket policy statement create`
+* `vserver object-store-server bucket lifecycle-management-rule create`
+* `vserver object-store-server bucket cors-rule create`
+
+== Learn more
+
+* link:protocols_s3_buckets_endpoint_overview.html[DOC /protocols/s3/buckets]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|A list of aggregates for FlexGroup volume constituents where the bucket is hosted. If this option is not specified, the bucket is auto-provisioned as a FlexGroup volume.
+
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the S3 service. If it is false, only the cluster administrator can manage the service. This field cannot be specified in a POST method.
+
+
+|audit_event_selector
+|link:#audit_event_selector[audit_event_selector]
+a|Audit event selector allows you to specify access and permission types to audit.
+
+
+|comment
+|string
+a|Can contain any additional information about the bucket being created or modified.
+
+
+|constituents_per_aggregate
+|integer
+a|Specifies the number of constituents or FlexVol volumes per aggregate. A FlexGroup volume consisting of all such constituents across all specified aggregates is created. This option is used along with the aggregates option and cannot be used independently.
+
+
+|cors
+|link:#cors[cors]
+a|Cross-origin resource sharing (CORS) specifies an object associated with a bucket. The CORS configuration enables the bucket to service the cross-origin requests. A request might typically come from an origin with a domain that is different to that of the bucket. By configuring a CORS rule, you can define a combination of allowed origins, HTTP headers and methods that a bucket can use to filter out the cross-origin requests that it can service successfully.
+
+
+|encryption
+|link:#encryption[encryption]
+a|
+
+|is_consistent_etag
+|boolean
+a|Specifies whether the NAS bucket returns a consistent ETag across different S3 requests.
+
+
+|is_nas_path_mutable
+|boolean
+a|Specifies whether the NAS bucket mapping or association with a NAS volume can change according to the changes in the NAS volume junction-path due to volume operations like mount and unmount and therefore the NAS bucket will have access to any path in a NAS volume that matches the specified nas-path. Or is immutable and therefore the NAS bucket will always have access to the same nas-path that was specified during bucket creation even if the volume junction-path has undergone changes after the bucket creation.
+
+
+|lifecycle_management
+|link:#lifecycle_management[lifecycle_management]
+a|Lifecycle management is implemented as an object associated with a bucket. It defines rules to be applied against objects within a bucket. These rules are applied in the background and can delete objects.
+
+
+|logical_used_size
+|integer
+a|Specifies the bucket logical used size up to this point. This field cannot be specified using a POST or PATCH method.
+
+
+|name
+|string
+a|Specifies the name of the bucket. Bucket name is a string that can only contain the following combination of ASCII-range alphanumeric characters 0-9, a-z, ".", and "-".
+
+
+|nas_path
+|string
+a|Specifies the NAS path to which the nas bucket corresponds to.
+
+
+|policy
+|link:#policy[policy]
+a|A policy is an object associated with a bucket. It defines resource (bucket, folder, or object) permissions. These policies get evaluated when an S3 user makes a request by executing a specific command. The user must be part of the principal (user or group) specified in the policy. Permissions in the policies determine whether the request is allowed or denied.
+
+
+|protection_status
+|link:#protection_status[protection_status]
+a|Specifies attributes of bucket protection.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|Specifies "qos_policy.max_throughput_iops" and/or "qos_policy.max_throughput_mbps" or "qos_policy.min_throughput_iops" and/or "qos_policy.min_throughput_mbps". Specifying "min_throughput_iops" or "min_throughput_mbps" is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying "qos_policy.name" or "qos_policy.uuid" properties. Setting or assigning a QoS policy to a bucket is not supported if its containing volume or SVM already has a QoS policy attached.
+
+
+|retention
+|link:#retention[retention]
+a|Specifies the retention mode and default retention period configured on the bucket.
+
+
+|role
+|string
+a|Specifies the role of the bucket. This field cannot be specified using a POST method.
+
+
+|size
+|integer
+a|Specifies the bucket size in bytes; ranges from 100GB to 60PB.
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|Specifies the bucket snapshot policy.
+
+
+|snapshot_restore
+|link:#snapshot_restore[snapshot_restore]
+a|Specifies information regarding a snapshot restore operation on the bucket
+
+
+|storage_service_level
+|string
+a|Specifies the storage service level of the FlexGroup volume on which the bucket should be created. Valid values are "value", "performance" or "extreme".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Specifies the bucket type. Valid values are "s3"and "nas".
+
+
+|use_mirrored_aggregates
+|boolean
+a|Specifies whether mirrored aggregates are selected when provisioning a FlexGroup. Only mirrored aggregates are used if this parameter is set to "true" and only unmirrored aggregates are used if this parameter is set to "false". The default value is "true" for a MetroCluster configuration and is "false" for a non-MetroCluster configuration.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the bucket.
+
+
+|versioning_state
+|string
+a|Specifies the versioning state of the bucket. Valid values are "disabled", "enabled" or "suspended". Note that the versioning state cannot be modified to 'disabled' from any other state.
+
+
+|volume
+|link:#volume[volume]
+a|Specifies the FlexGroup volume name and UUID where the bucket is hosted.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "aggregates": [
+    {
+      "name": "aggr1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "audit_event_selector": {
+    "access": "string",
+    "permission": "string"
+  },
+  "comment": "S3 bucket.",
+  "constituents_per_aggregate": 4,
+  "cors": {
+    "rules": [
+      {
+        "allowed_headers": [
+          "x-amz-request-id"
+        ],
+        "allowed_methods": [
+          "PUT",
+          "DELETE"
+        ],
+        "allowed_origins": [
+          "http://www.example.com"
+        ],
+        "expose_headers": [
+          "x-amz-date"
+        ],
+        "id": "string",
+        "max_age_seconds": 1024
+      }
+    ]
+  },
+  "lifecycle_management": {
+    "rules": [
+      {
+        "bucket_name": "bucket1",
+        "expiration": {
+          "object_age_days": 100,
+          "object_expiry_date": "2039-09-23 00:00:00 +0000"
+        },
+        "name": "string",
+        "object_filter": {
+          "prefix": "/logs",
+          "size_greater_than": 10240,
+          "size_less_than": 10485760,
+          "tags": [
+            "project1=projA",
+            "project2=projB"
+          ]
+        },
+        "svm": {
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        },
+        "uuid": "414b29a1-3b26-11e9-bd58-0050568ea055"
+      }
+    ]
+  },
+  "logical_used_size": 0,
+  "name": "bucket1",
+  "nas_path": "/",
+  "policy": {
+    "statements": [
+      {
+        "actions": [
+          "GetObject",
+          "PutObject",
+          "DeleteObject",
+          "ListBucket"
+        ],
+        "conditions": [
+          {
+            "delimiters": [
+              "/"
+            ],
+            "max_keys": [
+              1000
+            ],
+            "operator": "ip_address",
+            "prefixes": [
+              "pref"
+            ],
+            "source_ips": [
+              "1.1.1.1",
+              "1.2.2.0/24"
+            ],
+            "usernames": [
+              "user1"
+            ]
+          }
+        ],
+        "effect": "allow",
+        "principals": [
+          "user1",
+          "group/grp1",
+          "nasgroup/group1"
+        ],
+        "resources": [
+          "bucket1",
+          "bucket1/*"
+        ],
+        "sid": "Full_Access_To_User1!"
+      }
+    ]
+  },
+  "qos_policy": {
+    "max_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "max_throughput_iops": 10000,
+    "max_throughput_mbps": 500,
+    "min_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "min_throughput_iops": 2000,
+    "min_throughput_mbps": 500,
+    "name": "performance",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "retention": {
+    "default_period": "P10Y",
+    "mode": "governance"
+  },
+  "role": "string",
+  "size": 214748364800,
+  "snapshot_policy": {
+    "name": "default-1weekly",
+    "uuid": "3675af31-431c-12fa-114a-20675afebc12"
+  },
+  "snapshot_restore": {
+    "snapshot": "string",
+    "state": "string"
+  },
+  "storage_service_level": "value",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "s3",
+  "uuid": "414b29a1-3b26-11e9-bd58-0050568ea055",
+  "versioning_state": "enabled",
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error code | Message
+//end header
+//end row
+//start row
+|92405777 +
+//end row
+//start row
+|"Failed to create bucket "{bucket name}" for SVM "{svm.name}". Reason: {Reason of failure}. ";
+//end row
+//start row
+|92405785 +
+//end row
+//start row
+|"Bucket name "{bucket name}" contains invalid characters or invalid character combinations. Valid characters for a bucket name are 0-9, a-z, ".", and "-". Invalid character combinations are ".-", "-.", and "..". ";
+//end row
+//start row
+|92405786 +
+//end row
+//start row
+|"Bucket name "{bucket name}" is not valid. Bucket names must have between 3 and 63 characters. ";
+//end row
+//start row
+|92405811 +
+//end row
+//start row
+|"Failed to create bucket "{bucket name}" for SVM "{svm.name}". Wait a few minutes and try the operation again.";
+//end row
+//start row
+|92405812 +
+//end row
+//start row
+|"Failed to create the object store volume. Reason: {Reason for failure}.";
+//end row
+//start row
+|92405819 +
+//end row
+//start row
+|"Cannot provision an object store server volume for bucket "{bucket name}" in SVM "{svm.name}" on the following aggregates because they are SnapLock aggregates: {List of aggregates.name}.";
+//end row
+//start row
+|92405820 +
+//end row
+//start row
+|"Failed to check whether the aggregate "{aggregates.name}" is a FabricPool. Reason: {Reason for failure}.";
+//end row
+//start row
+|92405821 +
+//end row
+//start row
+|"Cannot provision an object store server volume for bucket "{bucket name}" in SVM "{svm.name}" on the following aggregates because they are FabricPool: {List of aggregates.name}.";
+//end row
+//start row
+|92405827 +
+//end row
+//start row
+|"Internal Error. Unable to generate object store volume name.";
+//end row
+//start row
+|92405857 +
+//end row
+//start row
+|"One or more aggregates must be specified if "constituents_per_aggregate" is specified.";
+//end row
+//start row
+|92405858 +
+//end row
+//start row
+|"Failed to "create" the "bucket" because the operation is only supported on data SVMs.";
+//end row
+//start row
+|92405859 +
+//end row
+//start row
+|"The specified "aggregates.uuid" "{aggregates.uuid}" does not exist.";
+//end row
+//start row
+|92405860 +
+//end row
+//start row
+|"The specified "aggregates.name" "{aggregates.name}" and "aggregates.uuid" "{aggregates.uuid}" refer to different aggregates.";
+//end row
+//start row
+|92405861 +
+//end row
+//start row
+|"The specified SVM UUID or bucket UUID does not exist.";
+//end row
+//start row
+|92405863 +
+//end row
+//start row
+|"An error occurs when creating an access policy. The reason for failure is detailed in the error message.";
+//end row
+//start row
+|92405863 +
+//end row
+//start row
+|"Failed to create lifecycle management rules for bucket "s3bucket1". Reason: {Reason of failure}. ";
+//end row
+//start row
+|92405891 +
+//end row
+//start row
+|The resources specified in the access policy are not valid. Valid ways to specify a resource are *, <bucket-name>, <bucket-name>/.../.... Valid characters for a resource are 0-9, A-Z, a-z, _, +, comma, ;, :, =, ., &, @,?, (, ), single quote, *, !, - and $.
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#audit_event_selector]
+[.api-collapsible-fifth-title]
+audit_event_selector
+
+Audit event selector allows you to specify access and permission types to audit.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Specifies read and write access types.
+
+
+|permission
+|string
+a|Specifies allow and deny permission types.
+
+
+|===
+
+
+[#rules]
+[.api-collapsible-fifth-title]
+rules
+
+Information about the CORS rule of an S3 bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allowed_headers
+|array[string]
+a|An array of HTTP headers allowed in the cross-origin requests.
+
+
+|allowed_methods
+|array[string]
+a|An array of HTTP methods allowed in the cross-origin requests.
+
+
+|allowed_origins
+|array[string]
+a|List of origins from where a cross-origin request is allowed to originate from for the S3 bucket.
+
+
+|expose_headers
+|array[string]
+a|List of extra headers sent in the response that customers can access from their applications.
+
+
+|id
+|string
+a|Bucket CORS rule identifier. The length of the name can range from 0 to 256 characters.
+
+
+|max_age_seconds
+|integer
+a|The time in seconds for your browser to cache the preflight response for the specified resource.
+
+
+|===
+
+
+[#cors]
+[.api-collapsible-fifth-title]
+cors
+
+Cross-origin resource sharing (CORS) specifies an object associated with a bucket. The CORS configuration enables the bucket to service the cross-origin requests. A request might typically come from an origin with a domain that is different to that of the bucket. By configuring a CORS rule, you can define a combination of allowed origins, HTTP headers and methods that a bucket can use to filter out the cross-origin requests that it can service successfully.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|rules
+|array[link:#rules[rules]]
+a|Specifies an object store bucket CORS rule.
+
+
+|===
+
+
+[#encryption]
+[.api-collapsible-fifth-title]
+encryption
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether encryption is enabled on the bucket. By default, encryption is disabled on a bucket. This field cannot be specified in a POST method.
+
+
+|===
+
+
+[#abort_incomplete_multipart_upload]
+[.api-collapsible-fifth-title]
+abort_incomplete_multipart_upload
+
+Specifies a way to perform abort_incomplete_multipart_upload action on filtered objects within a bucket. It cannot be specified with tags.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|after_initiation_days
+|integer
+a|Number of days of initiation after which uploads can be aborted.
+
+
+|===
+
+
+[#expiration]
+[.api-collapsible-fifth-title]
+expiration
+
+Specifies a way to perform expiration action on filtered objects within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expired_object_delete_marker
+|boolean
+a|Cleanup object delete markers.
+
+
+|object_age_days
+|integer
+a|Number of days since creation after which objects can be deleted. This cannot be used along with object_expiry_date.
+
+
+|object_expiry_date
+|string
+a|Specific date from when objects can expire. This cannot be used with object_age_days.
+
+
+|===
+
+
+[#non_current_version_expiration]
+[.api-collapsible-fifth-title]
+non_current_version_expiration
+
+Specifies a way to perform non_current_version_expiration action on filtered objects within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|new_non_current_versions
+|integer
+a|Number of latest non-current versions to be retained.
+
+
+|non_current_days
+|integer
+a|Number of days after which non-current versions can be deleted.
+
+
+|===
+
+
+[#object_filter]
+[.api-collapsible-fifth-title]
+object_filter
+
+Specifies a way to filter objects within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|prefix
+|string
+a|A prefix that is matched against object-names within a bucket.
+
+
+|size_greater_than
+|integer
+a|Size of the object greater than specified for which the corresponding lifecycle rule is to be applied.
+
+
+|size_less_than
+|integer
+a|Size of the object smaller than specified for which the corresponding lifecycle rule is to be applied.
+
+
+|tags
+|array[string]
+a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Specifies the name of the SVM where this bucket exists.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#rules]
+[.api-collapsible-fifth-title]
+rules
+
+Information about the lifecycle management rule of a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|abort_incomplete_multipart_upload
+|link:#abort_incomplete_multipart_upload[abort_incomplete_multipart_upload]
+a|Specifies a way to perform abort_incomplete_multipart_upload action on filtered objects within a bucket. It cannot be specified with tags.
+
+
+|bucket_name
+|string
+a|Specifies the name of the bucket. Bucket name is a string that can only contain the following combination of ASCII-range alphanumeric characters 0-9, a-z, ".", and "-".
+
+
+|enabled
+|boolean
+a|Specifies whether or not the associated rule is enabled.
+
+
+|expiration
+|link:#expiration[expiration]
+a|Specifies a way to perform expiration action on filtered objects within a bucket.
+
+
+|name
+|string
+a|Bucket lifecycle management rule identifier. The length of the name can range from 0 to 256 characters.
+
+
+|non_current_version_expiration
+|link:#non_current_version_expiration[non_current_version_expiration]
+a|Specifies a way to perform non_current_version_expiration action on filtered objects within a bucket.
+
+
+|object_filter
+|link:#object_filter[object_filter]
+a|Specifies a way to filter objects within a bucket.
+
+
+|svm
+|link:#svm[svm]
+a|Specifies the name of the SVM where this bucket exists.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the bucket.
+
+
+|===
+
+
+[#lifecycle_management]
+[.api-collapsible-fifth-title]
+lifecycle_management
+
+Lifecycle management is implemented as an object associated with a bucket. It defines rules to be applied against objects within a bucket. These rules are applied in the background and can delete objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|rules
+|array[link:#rules[rules]]
+a|Specifies an object store lifecycle management policy.
+
+
+|===
+
+
+[#s3_bucket_policy_condition]
+[.api-collapsible-fifth-title]
+s3_bucket_policy_condition
+
+Information about policy conditions based on various condition operators and condition keys.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|delimiters
+|array[string]
+a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
+
+
+|max_keys
+|array[integer]
+a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|operator
+|string
+a|Condition operator that is applied to the specified condition key.
+
+
+|prefixes
+|array[string]
+a|An array of prefixes that are compared with the input prefix value specified at the time of execution of an S3-based command, using the condition operator specified.
+
+
+|source_ips
+|array[string]
+a|An array of IP address ranges that are compared with the IP address of a source command at the time of execution of an S3-based command, using the condition operator specified.
+
+
+|usernames
+|array[string]
+a|An array of usernames that a current user in the context is evaluated against using the condition operators.
+
+
+|===
+
+
+[#s3_bucket_policy_statement]
+[.api-collapsible-fifth-title]
+s3_bucket_policy_statement
+
+Specifies information about a single access permission.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|actions
+|array[string]
+a|
+
+|conditions
+|array[link:#s3_bucket_policy_condition[s3_bucket_policy_condition]]
+a|Specifies bucket policy conditions.
+
+
+|effect
+|string
+a|Specifies whether access is allowed or denied when a user requests the specific action. If access (to allow) is not granted explicitly to a resource, access is implicitly denied. Access can also be denied explicitly to a resource, in order to make sure that a user cannot access it, even if a different policy grants access.
+
+
+|principals
+|array[string]
+a|
+
+|resources
+|array[string]
+a|
+
+|sid
+|string
+a|Specifies the statement identifier used to differentiate between statements. The SID length can range from 1 to 256 characters.
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+A policy is an object associated with a bucket. It defines resource (bucket, folder, or object) permissions. These policies get evaluated when an S3 user makes a request by executing a specific command. The user must be part of the principal (user or group) specified in the policy. Permissions in the policies determine whether the request is allowed or denied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|statements
+|array[link:#s3_bucket_policy_statement[s3_bucket_policy_statement]]
+a|Specifies bucket access policy statement.
+
+
+|===
+
+
+[#destination]
+[.api-collapsible-fifth-title]
+destination
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_cloud
+|boolean
+a|Specifies whether a bucket is protected within the Cloud. This field cannot be specified using a POST method.
+
+
+|is_external_cloud
+|boolean
+a|Specifies whether a bucket is protected on external Cloud providers. This field cannot be specified using a POST method.
+
+
+|is_ontap
+|boolean
+a|Specifies whether a bucket is protected within ONTAP. This field cannot be specified using a POST method.
+
+* Default value: 1
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|===
+
+
+[#protection_status]
+[.api-collapsible-fifth-title]
+protection_status
+
+Specifies attributes of bucket protection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#destination[destination]
+a|
+
+|is_protected
+|boolean
+a|Specifies whether a bucket is a source and if it is protected within ONTAP and/or an external cloud. This field cannot be specified using a POST method.
+
+* Default value: 1
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+Specifies "qos_policy.max_throughput_iops" and/or "qos_policy.max_throughput_mbps" or "qos_policy.min_throughput_iops" and/or "qos_policy.min_throughput_mbps". Specifying "min_throughput_iops" or "min_throughput_mbps" is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying "qos_policy.name" or "qos_policy.uuid" properties. Setting or assigning a QoS policy to a bucket is not supported if its containing volume or SVM already has a QoS policy attached.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#retention]
+[.api-collapsible-fifth-title]
+retention
+
+Specifies the retention mode and default retention period configured on the bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_period
+|string
+a|Specifies the default retention period that is applied to objects while committing them to the WORM state without an associated retention period. The retention period can be in years, or days. The retention period value represents a duration and must be specified in the ISO-8601 duration format.  A period specified for years and days is represented in the ISO-8601 format as "P+++<num>+++Y" and "P+++<num>+++D" respectively, for example "P10Y" represents a duration of 10 years. The period string must contain only a single time element that is, either years, or days. A duration which combines different periods is not supported, for example "P1Y10D" is not supported.+++</num>++++++</num>+++
+
+
+|mode
+|string
+a|The lock mode of the bucket.
+compliance &dash; A SnapLock Compliance (SLC) bucket provides the highest level of WORM protection and an administrator cannot destroy a compliance bucket if it contains unexpired WORM objects.
+ governance &dash; An administrator can delete a Governance bucket.
+ no_lock &dash; Indicates the bucket does not support object locking.
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+Specifies the bucket snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Specifies the name of the snapshot policy.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the snapshot policy.
+
+
+|===
+
+
+[#snapshot_restore]
+[.api-collapsible-fifth-title]
+snapshot_restore
+
+Specifies information regarding a snapshot restore operation on the bucket
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|objects_remaining
+|integer
+a|Remaining objects to be restored for the bucket
+
+
+|progress
+|integer
+a|Snapshot restore progress in percent
+
+
+|snapshot
+|string
+a|Name of the snapshot being restored for the bucket
+
+
+|state
+|string
+a|Snapshot restore state of the bucket
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Specifies the FlexGroup volume name and UUID where the bucket is hosted.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#s3_bucket]
+[.api-collapsible-fifth-title]
+s3_bucket
+
+A bucket is a container of objects. Each bucket defines an object namespace. S3 requests specify objects using a bucket-name and object-name pair. An object resides within a bucket.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|A list of aggregates for FlexGroup volume constituents where the bucket is hosted. If this option is not specified, the bucket is auto-provisioned as a FlexGroup volume.
+
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the S3 service. If it is false, only the cluster administrator can manage the service. This field cannot be specified in a POST method.
+
+
+|audit_event_selector
+|link:#audit_event_selector[audit_event_selector]
+a|Audit event selector allows you to specify access and permission types to audit.
+
+
+|comment
+|string
+a|Can contain any additional information about the bucket being created or modified.
+
+
+|constituents_per_aggregate
+|integer
+a|Specifies the number of constituents or FlexVol volumes per aggregate. A FlexGroup volume consisting of all such constituents across all specified aggregates is created. This option is used along with the aggregates option and cannot be used independently.
+
+
+|cors
+|link:#cors[cors]
+a|Cross-origin resource sharing (CORS) specifies an object associated with a bucket. The CORS configuration enables the bucket to service the cross-origin requests. A request might typically come from an origin with a domain that is different to that of the bucket. By configuring a CORS rule, you can define a combination of allowed origins, HTTP headers and methods that a bucket can use to filter out the cross-origin requests that it can service successfully.
+
+
+|encryption
+|link:#encryption[encryption]
+a|
+
+|is_consistent_etag
+|boolean
+a|Specifies whether the NAS bucket returns a consistent ETag across different S3 requests.
+
+
+|is_nas_path_mutable
+|boolean
+a|Specifies whether the NAS bucket mapping or association with a NAS volume can change according to the changes in the NAS volume junction-path due to volume operations like mount and unmount and therefore the NAS bucket will have access to any path in a NAS volume that matches the specified nas-path. Or is immutable and therefore the NAS bucket will always have access to the same nas-path that was specified during bucket creation even if the volume junction-path has undergone changes after the bucket creation.
+
+
+|lifecycle_management
+|link:#lifecycle_management[lifecycle_management]
+a|Lifecycle management is implemented as an object associated with a bucket. It defines rules to be applied against objects within a bucket. These rules are applied in the background and can delete objects.
+
+
+|logical_used_size
+|integer
+a|Specifies the bucket logical used size up to this point. This field cannot be specified using a POST or PATCH method.
+
+
+|name
+|string
+a|Specifies the name of the bucket. Bucket name is a string that can only contain the following combination of ASCII-range alphanumeric characters 0-9, a-z, ".", and "-".
+
+
+|nas_path
+|string
+a|Specifies the NAS path to which the nas bucket corresponds to.
+
+
+|policy
+|link:#policy[policy]
+a|A policy is an object associated with a bucket. It defines resource (bucket, folder, or object) permissions. These policies get evaluated when an S3 user makes a request by executing a specific command. The user must be part of the principal (user or group) specified in the policy. Permissions in the policies determine whether the request is allowed or denied.
+
+
+|protection_status
+|link:#protection_status[protection_status]
+a|Specifies attributes of bucket protection.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|Specifies "qos_policy.max_throughput_iops" and/or "qos_policy.max_throughput_mbps" or "qos_policy.min_throughput_iops" and/or "qos_policy.min_throughput_mbps". Specifying "min_throughput_iops" or "min_throughput_mbps" is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying "qos_policy.name" or "qos_policy.uuid" properties. Setting or assigning a QoS policy to a bucket is not supported if its containing volume or SVM already has a QoS policy attached.
+
+
+|retention
+|link:#retention[retention]
+a|Specifies the retention mode and default retention period configured on the bucket.
+
+
+|role
+|string
+a|Specifies the role of the bucket. This field cannot be specified using a POST method.
+
+
+|size
+|integer
+a|Specifies the bucket size in bytes; ranges from 100GB to 60PB.
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|Specifies the bucket snapshot policy.
+
+
+|snapshot_restore
+|link:#snapshot_restore[snapshot_restore]
+a|Specifies information regarding a snapshot restore operation on the bucket
+
+
+|storage_service_level
+|string
+a|Specifies the storage service level of the FlexGroup volume on which the bucket should be created. Valid values are "value", "performance" or "extreme".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Specifies the bucket type. Valid values are "s3"and "nas".
+
+
+|use_mirrored_aggregates
+|boolean
+a|Specifies whether mirrored aggregates are selected when provisioning a FlexGroup. Only mirrored aggregates are used if this parameter is set to "true" and only unmirrored aggregates are used if this parameter is set to "false". The default value is "true" for a MetroCluster configuration and is "false" for a non-MetroCluster configuration.
+
+
+|uuid
+|string
+a|Specifies the unique identifier of the bucket.
+
+
+|versioning_state
+|string
+a|Specifies the versioning state of the bucket. Valid values are "disabled", "enabled" or "suspended". Note that the versioning state cannot be modified to 'disabled' from any other state.
+
+
+|volume
+|link:#volume[volume]
+a|Specifies the FlexGroup volume name and UUID where the bucket is hosted.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

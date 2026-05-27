@@ -1,0 +1,239 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-anti-ransomware.html'
+summary: 'Retrieve the anti-ransomware version of the nodes in the cluster'
+---
+
+= Retrieve the anti-ransomware version of the nodes in the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/anti-ransomware`#
+
+*Introduced In:* 9.16
+
+Retrieves the anti-ransomware package version of the nodes in the cluster.
+
+== Related ONTAP commands
+
+* `security anti-ransomware show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|nodes
+|array[link:#anti_ransomware_node[anti_ransomware_node]]
+a|
+
+|uri
+|string
+a|URI of the anti-ransomware package through a server
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "nodes": [
+    {
+      "name": "node1",
+      "version": "1.0"
+    }
+  ],
+  "uri": "http://server/package"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917775
+| Operation is not supported on offline volumes.
+
+| 203161606
+| Failed to check the "anti-ransomware-state" of the volume.
+
+| 203162108
+| Operation is not supported on volumes that contain LUNs or namespaces.
+
+| 203162109
+| Operation is not supported on an anti-ransomware disable-in-progress volume.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#anti_ransomware_node]
+[.api-collapsible-fifth-title]
+anti_ransomware_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the node.
+
+
+|version
+|string
+a|Anti-ransomware version.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

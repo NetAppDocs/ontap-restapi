@@ -1,0 +1,75 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_licensing_license-managers_endpoint_overview.html'
+summary: 'Manage cluster license managers'
+---
+
+= Manage cluster license managers
+
+
+
+== Overview
+
+This API is used to manage information about the license manager instance associated with the cluster.
+
+When an ONTAP cluster is initially created to use the capacity pools licensing model, information about the license manager instance that the cluster should use is pre-configured. Generally, this configuration does not need to be updated unless the license manager instance changes its IP address.
+
+The license manager is currently bundled with the ONTAP Select Deploy utility and runs on the same VM as ONTAP Select Deploy. Use this API to update the license manager IP address when the Deploy VM changes its IP address.
+
+'''
+
+== Examples
+
+=== Retrieving information about the license manager instance associated with the cluster
+
+[,json]
+----
+
+# API
+curl -X GET "https://<mgmt-ip>/api/cluster/licensing/license-managers"
+
+# Response
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "uuid":"4ea7a442-86d1-11e0-ae1c-112233445566",
+    "uri": {
+      "host":"10.1.1.1",
+    },
+    "default":true
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/cluster/licensing/license-managers"
+  }
+}
+}
+----
+
+=== Updating an existing license manager instance
+
+[,json]
+----
+
+# API
+curl -X PATCH "https://<mgmt-ip>/api/cluster/licensing/license-managers/4ea7a442-86d1-11e0-ae1c-112233445566"
+
+# JSON Body
+{
+"uri": {
+  "host":"10.1.1.3"
+}
+}
+
+# Response
+202 Accepted
+----
+
+

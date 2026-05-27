@@ -1,0 +1,474 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-key-manager-configs.html'
+summary: 'Retrieve key manager configurations'
+---
+
+= Retrieve key manager configurations
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/key-manager-configs`#
+
+*Introduced In:* 9.10
+
+Retrieves key manager configurations.
+Retrieves the key manager health monitor policy (fields=health_monitor_policy).
+
+== Related ONTAP commands
+
+* `security key-manager config show`
+* `security key-manager health policy show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|cc_mode_enabled
+|boolean
+a|Indicates whether the Common Criteria Mode configuration is enabled.
+
+
+|cloud_kms_retry_count
+|integer
+a|Cloud key manager connection retry count. Supported value range of 0-10.
+
+
+|health_monitor_policy
+|link:#health_monitor_policy[health_monitor_policy]
+a|Manages the keystore configurations.
+
+
+|health_monitor_polling_interval
+|integer
+a|Health Monitor Polling Period, in minutes. Supported value range of 15-30 minutes.
+
+
+|passphrase
+|string
+a|Current cluster-wide passphrase. This is a required field when setting the cc_mode_enabled field value to true. This is not audited.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "cloud_kms_retry_count": 3,
+  "health_monitor_polling_interval": 20,
+  "passphrase": "The cluster passphrase of length 64-256 ASCII characters."
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#akv]
+[.api-collapsible-fifth-title]
+akv
+
+Azure Key Vault Key Management Service policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#aws]
+[.api-collapsible-fifth-title]
+aws
+
+Amazon Web Services Key Management Service policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#barbican]
+[.api-collapsible-fifth-title]
+barbican
+
+Barbican Key Management Service policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#gcp]
+[.api-collapsible-fifth-title]
+gcp
+
+Google Cloud Key Management Service policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#ikp]
+[.api-collapsible-fifth-title]
+ikp
+
+IBM Key Protect Key Management Service policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#kmip]
+[.api-collapsible-fifth-title]
+kmip
+
+External Key Manager policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#okm]
+[.api-collapsible-fifth-title]
+okm
+
+Onboard Key Manager policy options
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether health monitor is enabled.
+
+
+|manage_volume_offline
+|boolean
+a|Indicates whether the health monitor manages the volume offline operation.
+
+
+|===
+
+
+[#health_monitor_policy]
+[.api-collapsible-fifth-title]
+health_monitor_policy
+
+Manages the keystore configurations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|akv
+|link:#akv[akv]
+a|Azure Key Vault Key Management Service policy options
+
+
+|aws
+|link:#aws[aws]
+a|Amazon Web Services Key Management Service policy options
+
+
+|barbican
+|link:#barbican[barbican]
+a|Barbican Key Management Service policy options
+
+
+|gcp
+|link:#gcp[gcp]
+a|Google Cloud Key Management Service policy options
+
+
+|ikp
+|link:#ikp[ikp]
+a|IBM Key Protect Key Management Service policy options
+
+
+|kmip
+|link:#kmip[kmip]
+a|External Key Manager policy options
+
+
+|okm
+|link:#okm[okm]
+a|Onboard Key Manager policy options
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

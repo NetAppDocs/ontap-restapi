@@ -1,0 +1,546 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-snapmirror-policies-.html'
+summary: 'Retrieve a specific SnapMirror policy'
+---
+
+= Retrieve a specific SnapMirror policy
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/snapmirror/policies/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves a specific SnapMirror policy.
+
+== Example
+
+----
+GET "/api/snapmirror/policies/567aaac0-f863-11e8-a666-0050568e12c2"
+----
+
+== Learn more
+
+* link:snapmirror_policies_endpoint_overview.html[DOC /snapmirror/policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|SnapMirror policy UUID.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|Comment associated with the policy.
+
+
+|copy_all_source_snapshots
+|boolean
+a|Specifies that all the source snapshots (including the one created by SnapMirror before the transfer begins) should be copied to the destination on a transfer. "Retention" properties cannot be specified along with this property. This is applicable only to async policies. Property can only be set to 'true'.
+
+
+|copy_latest_source_snapshot
+|boolean
+a|Specifies that the latest source snapshot (created by SnapMirror before the transfer begins) should be copied to the destination on a transfer. "Retention" properties cannot be specified along with this property. This is applicable only to async policies. Property can only be set to 'true'.
+
+
+|create_snapshot_on_source
+|boolean
+a|Specifies whether a new snapshot should be created on the source at the beginning of an update or resync operation. This is applicable only to async policies. Property can only be set to 'false'.
+
+
+|identity_preservation
+|string
+a|Specifies which configuration of the source SVM is replicated to the destination SVM. This property is applicable only for SVM data protection with "async" policy type.
+
+
+|name
+|string
+a|Name of the policy.
+
+
+|network_compression_enabled
+|boolean
+a|Specifies whether network compression is enabled for transfers. This is applicable only to the policies of type "async".
+
+
+|retention
+|array[link:#snapmirror_policy_rule[snapmirror_policy_rule]]
+a|Rules for snapshot retention.
+
+
+|rpo
+|integer
+a|Specifies the duration of time for which a change to be propagated to a mirror should be delayed, in seconds. This is an intentional propagation delay between mirrors and is configurable down to zero, which means an immediate propagation. This is supported for policies of type 'continuous'.
+
+
+|scope
+|string
+a|Set to "svm" for policies owned by an SVM, otherwise set to "cluster".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|sync_common_snapshot_schedule
+|link:#sync_common_snapshot_schedule[sync_common_snapshot_schedule]
+a|Schedule used to create common snapshots for synchronous relationships.
+
+
+|sync_type
+|string
+a|
+
+|throttle
+|integer
+a|Throttle in KB/s. Default to unlimited.
+
+
+|transfer_schedule
+|link:#transfer_schedule[transfer_schedule]
+a|The schedule used to update asynchronous relationships. Only cron schedules are supported for SnapMirror.
+
+
+|type
+|string
+a|
+
+|uuid
+|string
+a|Unique identifier of the SnapMirror policy.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "comment": "string",
+  "copy_all_source_snapshots": 1,
+  "copy_latest_source_snapshot": 1,
+  "create_snapshot_on_source": "",
+  "identity_preservation": "string",
+  "name": "Asynchronous",
+  "retention": [
+    {
+      "count": 7,
+      "creation_schedule": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "weekly",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "label": "hourly",
+      "period": "P30D",
+      "prefix": "string",
+      "preserve": 1,
+      "warn": 4
+    }
+  ],
+  "rpo": 0,
+  "scope": "string",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "sync_common_snapshot_schedule": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "weekly",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "sync_type": "string",
+  "throttle": 0,
+  "transfer_schedule": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "weekly",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "type": "string",
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13303842
+| SnapMirror policy is not supported.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#creation_schedule]
+[.api-collapsible-fifth-title]
+creation_schedule
+
+Schedule used to create snapshots on the destination for long term retention. Only cron schedules are supported for SnapMirror.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#snapmirror_policy_rule]
+[.api-collapsible-fifth-title]
+snapmirror_policy_rule
+
+SnapMirror policy rule for retention.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of snapshots to be kept for retention. Maximum value will differ based on type of relationship and scaling factor.
+
+
+|creation_schedule
+|link:#creation_schedule[creation_schedule]
+a|Schedule used to create snapshots on the destination for long term retention. Only cron schedules are supported for SnapMirror.
+
+
+|label
+|string
+a|Snapshot label
+
+
+|period
+|string
+a|Specifies the duration for which the snapshots are locked. The retention period value represents a duration and must be in the ISO-8601 duration format. Years, months, days, hours, minutes, and seconds are represented as "P+++<num>+++Y","P+++<num>+++M","P+++<num>+++D","PT+++<num>+++H","PT+++<num>+++M" and "PT+++<num>+++S". Value "infinite" is also a valid input for Flexvol volumes and FlexGroup volumes. A duration which combines different periods is not supported, for example "P1Y10M" is not supported. The range of supported retention period values is between 1 second to infinite.+++</num>++++++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|prefix
+|string
+a|Specifies the prefix for the snapshot name to be created as per the schedule. If no value is specified, then the label is used as the prefix.
+
+
+|preserve
+|boolean
+a|Specifies the behavior when the snapshot retention count is reached on the SnapMirror destination for the rule. The default value is false, which means that the oldest snapshot is deleted to make room for new ones but only if the number of snapshots has exceeded the retention count specified in the 'count' property. When set to true and where the snapshots have reached the retention count, an incremental SnapMirror transfer will fail or if the rule has a schedule, snapshots will be no longer be created on the SnapMirror destination.
+
+
+|warn
+|integer
+a|Specifies the warning threshold count for the rule. The default value is zero. When set to a value greater than zero, an event is generated after the number of snapshots (for the particular rule) retained on a SnapMirror destination reaches the specified warning limit. The preserve property for the rule must be true in order to set the warn property to a value greater than zero.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#sync_common_snapshot_schedule]
+[.api-collapsible-fifth-title]
+sync_common_snapshot_schedule
+
+Schedule used to create common snapshots for synchronous relationships.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#transfer_schedule]
+[.api-collapsible-fifth-title]
+transfer_schedule
+
+The schedule used to update asynchronous relationships. Only cron schedules are supported for SnapMirror.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

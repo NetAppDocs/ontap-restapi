@@ -1,0 +1,181 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-name-services-cache-setting.html'
+summary: 'Update a global name service cache setting'
+---
+
+= Update a global name service cache setting
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/name-services/cache/setting`#
+
+*Introduced In:* 9.11
+
+Updates a global nameservice cache setting.
+
+== Important notes
+
+* Both the cache eviction time and remote fetch option can be modified.
+
+== Related ONTAP commands
+
+* `vserver services name-service cache settings modify`
+
+== Learn more
+
+* link:name-services_cache_setting_endpoint_overview.html[DOC /name-services/cache/setting]
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|eviction_time_interval
+|string
+a|Specifies the time interval, in ISO 8601 format after which a periodic cache eviction happens. Default is 4 hours.
+
+
+|remote_fetch_enabled
+|boolean
+a|Indicates whether or not a node is allowed to fetch the data from a remote node.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "eviction_time_interval": "PT2H"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#global_cache_setting]
+[.api-collapsible-fifth-title]
+global_cache_setting
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|eviction_time_interval
+|string
+a|Specifies the time interval, in ISO 8601 format after which a periodic cache eviction happens. Default is 4 hours.
+
+
+|remote_fetch_enabled
+|boolean
+a|Indicates whether or not a node is allowed to fetch the data from a remote node.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

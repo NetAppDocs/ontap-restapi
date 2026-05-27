@@ -1,0 +1,259 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_flexcache_origins_endpoint_overview.html'
+summary: 'Manage storage FlexCache origin volumes'
+---
+
+= Manage storage FlexCache origin volumes
+
+
+
+== Overview
+
+FlexCache is a persistent cache of an origin volume. An origin volume can only be a FlexVol while a FlexCache is always a FlexGroup.
+
+The following relationship configurations are supported:
+
+&ndash; Intra-Vserver where FlexCache and the corresponding origin volume reside in the same Vserver.
+
+&ndash; Cross-Vserver but intra-cluster where FlexCache and the origin volume reside in the same cluster but belong to different Vservers.
+
+&ndash; Cross-cluster where FlexCache and the origin volume reside in different clusters.
+
+FlexCache supports fan-out and more than one FlexCache can be created from one origin volume.
+This API retrieves the origin of FlexCache configurations in the origin cluster.
+
+== FlexCache APIs
+
+The following APIs can be used to perform operations related to the origin of a FlexCache:
+
+&ndash; GET       /api/storage/flexcache/origins
+
+&ndash; GET       /api/storage/flexcache/origins/\{uuid}
+
+&ndash; PATCH     /api/storage/flexcache/origins/\{uuid}
+
+== Examples
+
+=== Retrieving origins of FlexCache attributes
+
+The GET request is used to retrieve the origins of FlexCache attributes.
+
+----
+
+# The API:
+/api/storage/flexcache/origins
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/flexcache/origins?" -H  "accept: application/json"
+
+# The response:
+{
+  "records": [
+    {
+      "uuid": "2bc957dd-2617-4afb-8d2f-66ac6070d313",
+      "name": "vol_o1",
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/origins/2bc957dd-2617-4afb-8d2f-66ac6070d313"
+        }
+      }
+    },
+    {
+      "uuid": "80fcaee4-0dc2-488b-afb8-86d28a34cda8",
+      "name": "vol_1",
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/origins/80fcaee4-0dc2-488b-afb8-86d28a34cda8"
+        }
+      }
+    }
+  ],
+  "num_records": 2,
+  "_links": {
+    "self": {
+      "href": "/api/storage/flexcache/origins?"
+    }
+  }
+}
+----
+
+=== Retrieving the attributes of an origin volume
+
+The GET request is used to retrieve the attributes of an origin volume.
+
+----
+
+# The API:
+/api/storage/flexcache/origins/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/flexcache/origins/80fcaee4-0dc2-488b-afb8-86d28a34cda8" -H  "accept: application/json"
+
+# The response:
+{
+  "uuid": "80fcaee4-0dc2-488b-afb8-86d28a34cda8",
+  "name": "vol_1",
+  "svm": {
+    "name": "vs_3",
+    "uuid": "8aa2cd28-0e92-11e9-b391-0050568e4115"
+  },
+  "block_level_invalidation": "false",
+  "global_file_locking_enabled": "true",
+  "flexcaches": [
+    {
+      "ip_address": "10.140.103.183",
+      "create_time": "2019-01-02T19:27:22+05:30",
+      "volume": {
+        "name": "fc_42",
+        "uuid": "4e7f9d49-0e96-11e9-aed0-0050568eddbe"
+      },
+      "svm": {
+        "name": "vs_1_4",
+        "uuid": "36f68322-0e93-11e9-aed0-0050568eddbe"
+      },
+      "cluster": {
+        "name": "node4",
+        "uuid": "c32f16b8-0e90-11e9-aed0-0050568eddbe"
+      }
+    },
+    {
+      "ip_address": "10.140.103.183",
+      "create_time": "2019-01-02T21:08:34+05:30",
+      "volume": {
+        "name": "fc_421",
+        "uuid": "71ee8f36-0ea4-11e9-aed0-0050568eddbe"
+      },
+      "svm": {
+        "name": "vs_1_4",
+        "uuid": "36f68322-0e93-11e9-aed0-0050568eddbe"
+      },
+      "cluster": {
+        "name": "node4",
+        "uuid": "c32f16b8-0e90-11e9-aed0-0050568eddbe"
+      }
+    },
+    {
+      "ip_address": "10.140.103.183",
+      "create_time": "2019-01-03T11:14:38+05:30",
+      "volume": {
+        "name": "fc_422"
+      },
+      "svm": {
+        "name": "vs_1_4",
+        "uuid": "36f68322-0e93-11e9-aed0-0050568eddbe"
+      },
+      "cluster": {
+        "name": "node4",
+        "uuid": "c32f16b8-0e90-11e9-aed0-0050568eddbe"
+      }
+    },
+    {
+      "ip_address": "10.140.103.179",
+      "size": 4294967296,
+      "create_time": "2019-01-02T19:24:14+05:30",
+      "state": "online",
+      "volume": {
+        "name": "fc_32",
+        "uuid": "ddb42bbc-0e95-11e9-8180-0050568e0b79"
+      },
+      "svm": {
+        "name": "vs_1",
+        "uuid": "e708fbe2-0e92-11e9-8180-0050568e0b79"
+      },
+      "cluster": {
+        "name": "node3",
+        "uuid": "8eb21b3b-0e90-11e9-8180-0050568e0b79"
+      }
+    },
+    {
+      "ip_address": "10.140.103.179",
+      "size": 4294967296,
+      "create_time": "2019-01-02T21:07:23+05:30",
+      "state": "online",
+      "volume": {
+        "name": "fc_321",
+        "uuid": "47902654-0ea4-11e9-8180-0050568e0b79"
+      },
+      "svm": {
+        "name": "vs_1",
+        "uuid": "e708fbe2-0e92-11e9-8180-0050568e0b79"
+      },
+      "cluster": {
+        "name": "node3",
+        "uuid": "8eb21b3b-0e90-11e9-8180-0050568e0b79"
+      }
+    },
+    {
+      "ip_address": "10.140.103.179",
+      "size": 4294967296,
+      "create_time": "2019-01-03T00:11:38+05:30",
+      "state": "online",
+      "volume": {
+        "name": "fc_322",
+        "uuid": "04d5e07b-0ebe-11e9-8180-0050568e0b79"
+      },
+      "svm": {
+        "name": "vs_1",
+        "uuid": "e708fbe2-0e92-11e9-8180-0050568e0b79"
+      },
+      "cluster": {
+        "name": "node3",
+        "uuid": "8eb21b3b-0e90-11e9-8180-0050568e0b79"
+      }
+    },
+    {
+      "ip_address": "10.140.103.179",
+      "size": 4294967296,
+      "create_time": "2019-01-03T00:14:52+05:30",
+      "state": "online",
+      "volume": {
+        "name": "fc_323",
+        "uuid": "77e911ff-0ebe-11e9-8180-0050568e0b79"
+      },
+      "svm": {
+        "name": "vs_1",
+        "uuid": "e708fbe2-0e92-11e9-8180-0050568e0b79"
+      },
+      "cluster": {
+        "name": "node3",
+        "uuid": "8eb21b3b-0e90-11e9-8180-0050568e0b79"
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/api/storage/flexcache/origins/80fcaee4-0dc2-488b-afb8-86d28a34cda8"
+    }
+  }
+}
+----
+
+=== Modifying origin options of an origin volume
+
+Use the PATCH request to update options of an origin volume.
+
+----
+
+# The API:
+/api/storage/flexcache/origins/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/flexcache/origins/1fbc0ebb-2440-11eb-a86c-005056ac8ca0"  -H  "accept: application/json" -H  "Content-Type: application/json" -d "{ \"block_level_invalidation\": \"true\" } "
+
+# The response:
+{
+"job": {
+  "uuid": "e751dd5d-0f3c-11e9-8b2b-0050568e0b79",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/e751dd5d-0f3c-11e9-8b2b-0050568e0b79"
+    }
+  }
+}
+}
+----
+
+

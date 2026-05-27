@@ -1,0 +1,479 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-snaplock-audit-logs.html'
+summary: 'Create a SnapLock log configuration for an SVM'
+---
+
+= Create a SnapLock log configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/snaplock/audit-logs`#
+
+*Introduced In:* 9.7
+
+Creates a SnapLock log configuration for an SVM. A SnapLock log configuration consists of a volume to store the log, the maximum size of the log file, and the default period of time for which the log file should be retained. The volume must be a Read-Write SnapLock volume of type Enterprise or Compliance. The input parameter retention_period expects the duration in ISO 8601 format.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Name or UUID of the SVM.
+* `log_volume.volume.name` or `log_volume.volume.uuid` - Name or UUID of audit log volume.
+
+== Recommended optional properties
+
+* `log_volume.max_log_size` - Max log file size.
+* `log_volume.volume.retention_period` - Retention period of log file.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `log_volume.retention_period` - _P6M_
+* `log_volume.max_log_size` - _10MB_
+
+== Related ONTAP commands
+
+* `snaplock log create`
+
+== Learn more
+
+* link:storage_snaplock_audit-logs_endpoint_overview.html[DOC /storage/snaplock/audit-logs]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|log_files
+|array[link:#snaplock_log_file[snaplock_log_file]]
+a|
+
+|log_volume
+|link:#snaplock_log_volume[snaplock_log_volume]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "log_files": [
+    {
+      "base_name": "string",
+      "expiry_time": "2058-06-04 19:00:00 +0000",
+      "path": "/snaplock_log/system_logs/20180822_005947_GMT-present",
+      "size": 20000
+    }
+  ],
+  "log_volume": {
+    "max_log_size": 20971520,
+    "retention_period": "P30M",
+    "volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 918236
+| The specified volume name and UUID refer to different volumes
+
+| 918253
+| Incorrect format for the retention period, duration must be in the ISO-8601 format
+
+| 13763161
+| Audit logging is already configured for the SVM
+
+| 14090340
+| \{field} is a required field
+
+| 14090343
+| Invalid Field
+
+| 14090346
+| Internal Error. Wait a few minutes, then try the command again
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#log_archive]
+[.api-collapsible-fifth-title]
+log_archive
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive
+|boolean
+a|Archive the specified SnapLock log file for the given base_name, and create a new log file. If base_name is not mentioned, archive all log files.
+
+
+|base_name
+|string
+a|Base name of log archive
+
+
+|===
+
+
+[#snaplock_log_file]
+[.api-collapsible-fifth-title]
+snaplock_log_file
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|base_name
+|string
+a|Base name of log file
+
+
+|expiry_time
+|string
+a|Expiry time of the log file in date-time format. Value '9999-12-31T00:00:00Z' indicates infinite expiry time.
+
+
+|path
+|string
+a|Absolute path of the log file in the volume
+
+
+|size
+|integer
+a|Size of the log file in bytes
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#snaplock_log_volume]
+[.api-collapsible-fifth-title]
+snaplock_log_volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_log_size
+|integer
+a|Maximum size of log file in bytes
+
+
+|retention_period
+|string
+a|Specifies the default log record retention period. The retention period value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, minutes and seconds. A period specified for years, months and days is represented in the ISO-8601 format as "P+++<num>+++Y", "P+++<num>+++M", "P+++<num>+++D" respectively. For example "P10Y" represents a duration of 10 years. A duration in hours, minutes and seconds is represented by "PT+++<num>+++H", "PT+++<num>+++M", and "PT+++<num>+++S" respectively. The period string must contain only a single time element i.e. either years, months, days, hours, minutes or seconds. A duration which combines different periods is not supported, example "P1Y10M" is not supported. Apart from the duration specified in the ISO-8601 format, the retention period field also accepts the string "infinite".+++</num>++++++</num>++++++</num>++++++</num>++++++</num>++++++</num>+++
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#snaplock_log]
+[.api-collapsible-fifth-title]
+snaplock_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|log_files
+|array[link:#snaplock_log_file[snaplock_log_file]]
+a|
+
+|log_volume
+|link:#snaplock_log_volume[snaplock_log_volume]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

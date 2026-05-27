@@ -1,0 +1,3685 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-aggregates.html'
+summary: 'Retrieve a collection of aggregates for an entire cluster'
+---
+
+= Retrieve a collection of aggregates for an entire cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/aggregates`#
+
+*Introduced In:* 9.6
+
+Retrieves the collection of aggregates for the entire cluster.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `metric.+*+`
+* `space.block_storage.inactive_user_data`
+* `space.block_storage.inactive_user_data_percent`
+* `space.footprint`
+* `is_spare_low`
+* `statistics.+*+`
+
+== Related ONTAP commands
+
+* `storage aggregate show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|recommend
+|boolean
+|query
+|False
+a|If set to 'true', it queries the system for the recommended optimal layout for creating new aggregates. The default setting is 'false'.
+
+
+|show_spares
+|boolean
+|query
+|False
+a|If set to 'true', the spares object is returned instead of records to show the spare groups in the cluster. The default setting is 'false'.
+
+
+|flash_pool_eligible
+|boolean
+|query
+|False
+a|If set to 'true' along with show_spares, the spares object is restricted to return spare groups that are compatible with whole disk based flash pool creation. The default setting is 'false'.
+
+* Introduced in: 9.12
+
+
+|snapshot.files_total
+|integer
+|query
+|False
+a|Filter by snapshot.files_total
+
+* Introduced in: 9.10
+
+
+|snapshot.max_files_used
+|integer
+|query
+|False
+a|Filter by snapshot.max_files_used
+
+* Introduced in: 9.10
+
+
+|snapshot.files_used
+|integer
+|query
+|False
+a|Filter by snapshot.files_used
+
+* Introduced in: 9.10
+
+
+|snapshot.max_files_available
+|integer
+|query
+|False
+a|Filter by snapshot.max_files_available
+
+* Introduced in: 9.10
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|space.snapshot.total
+|integer
+|query
+|False
+a|Filter by space.snapshot.total
+
+* Introduced in: 9.10
+
+
+|space.snapshot.used_percent
+|integer
+|query
+|False
+a|Filter by space.snapshot.used_percent
+
+* Introduced in: 9.10
+
+
+|space.snapshot.reserve_percent
+|integer
+|query
+|False
+a|Filter by space.snapshot.reserve_percent
+
+* Introduced in: 9.10
+
+
+|space.snapshot.used
+|integer
+|query
+|False
+a|Filter by space.snapshot.used
+
+* Introduced in: 9.10
+
+
+|space.snapshot.available
+|integer
+|query
+|False
+a|Filter by space.snapshot.available
+
+* Introduced in: 9.10
+
+
+|space.efficiency_without_snapshots_flexclones.savings
+|integer
+|query
+|False
+a|Filter by space.efficiency_without_snapshots_flexclones.savings
+
+* Introduced in: 9.9
+
+
+|space.efficiency_without_snapshots_flexclones.logical_used
+|integer
+|query
+|False
+a|Filter by space.efficiency_without_snapshots_flexclones.logical_used
+
+* Introduced in: 9.9
+
+
+|space.efficiency_without_snapshots_flexclones.ratio
+|number
+|query
+|False
+a|Filter by space.efficiency_without_snapshots_flexclones.ratio
+
+* Introduced in: 9.9
+
+
+|space.total_provisioned_space
+|integer
+|query
+|False
+a|Filter by space.total_provisioned_space
+
+* Introduced in: 9.18
+
+
+|space.block_storage.physical_used
+|integer
+|query
+|False
+a|Filter by space.block_storage.physical_used
+
+* Introduced in: 9.9
+
+
+|space.block_storage.used_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.used_percent
+
+* Introduced in: 9.13
+
+
+|space.block_storage.volume_deduplication_shared_count
+|integer
+|query
+|False
+a|Filter by space.block_storage.volume_deduplication_shared_count
+
+* Introduced in: 9.10
+
+
+|space.block_storage.aggregate_metadata
+|integer
+|query
+|False
+a|Filter by space.block_storage.aggregate_metadata
+
+* Introduced in: 9.10
+
+
+|space.block_storage.used_including_snapshot_reserve_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.used_including_snapshot_reserve_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.volume_footprints_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.volume_footprints_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.inactive_user_data
+|integer
+|query
+|False
+a|Filter by space.block_storage.inactive_user_data
+
+
+|space.block_storage.used
+|integer
+|query
+|False
+a|Filter by space.block_storage.used
+
+
+|space.block_storage.volume_deduplication_space_saved
+|integer
+|query
+|False
+a|Filter by space.block_storage.volume_deduplication_space_saved
+
+* Introduced in: 9.10
+
+
+|space.block_storage.data_compacted_count
+|integer
+|query
+|False
+a|Filter by space.block_storage.data_compacted_count
+
+* Introduced in: 9.10
+
+
+|space.block_storage.size
+|integer
+|query
+|False
+a|Filter by space.block_storage.size
+
+
+|space.block_storage.available
+|integer
+|query
+|False
+a|Filter by space.block_storage.available
+
+
+|space.block_storage.aggregate_metadata_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.aggregate_metadata_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.inactive_user_data_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.inactive_user_data_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.data_compaction_space_saved
+|integer
+|query
+|False
+a|Filter by space.block_storage.data_compaction_space_saved
+
+* Introduced in: 9.10
+
+
+|space.block_storage.data_compaction_space_saved_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.data_compaction_space_saved_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.physical_used_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.physical_used_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.used_including_snapshot_reserve
+|integer
+|query
+|False
+a|Filter by space.block_storage.used_including_snapshot_reserve
+
+* Introduced in: 9.10
+
+
+|space.block_storage.volume_deduplication_space_saved_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.volume_deduplication_space_saved_percent
+
+* Introduced in: 9.10
+
+
+|space.block_storage.full_threshold_percent
+|integer
+|query
+|False
+a|Filter by space.block_storage.full_threshold_percent
+
+
+|space.efficiency.cross_volume_inline_dedupe
+|boolean
+|query
+|False
+a|Filter by space.efficiency.cross_volume_inline_dedupe
+
+* Introduced in: 9.12
+
+
+|space.efficiency.ratio
+|number
+|query
+|False
+a|Filter by space.efficiency.ratio
+
+
+|space.efficiency.enable_workload_informed_tsse
+|boolean
+|query
+|False
+a|Filter by space.efficiency.enable_workload_informed_tsse
+
+* Introduced in: 9.13
+
+
+|space.efficiency.wise_tsse_min_used_capacity_pct
+|integer
+|query
+|False
+a|Filter by space.efficiency.wise_tsse_min_used_capacity_pct
+
+* Introduced in: 9.13
+
+
+|space.efficiency.auto_adaptive_compression_savings
+|boolean
+|query
+|False
+a|Filter by space.efficiency.auto_adaptive_compression_savings
+
+* Introduced in: 9.12
+
+
+|space.efficiency.savings
+|integer
+|query
+|False
+a|Filter by space.efficiency.savings
+
+
+|space.efficiency.cross_volume_background_dedupe
+|boolean
+|query
+|False
+a|Filter by space.efficiency.cross_volume_background_dedupe
+
+* Introduced in: 9.12
+
+
+|space.efficiency.cross_volume_dedupe_savings
+|boolean
+|query
+|False
+a|Filter by space.efficiency.cross_volume_dedupe_savings
+
+* Introduced in: 9.12
+
+
+|space.efficiency.logical_used
+|integer
+|query
+|False
+a|Filter by space.efficiency.logical_used
+
+
+|space.efficiency_without_snapshots.savings
+|integer
+|query
+|False
+a|Filter by space.efficiency_without_snapshots.savings
+
+
+|space.efficiency_without_snapshots.logical_used
+|integer
+|query
+|False
+a|Filter by space.efficiency_without_snapshots.logical_used
+
+
+|space.efficiency_without_snapshots.ratio
+|number
+|query
+|False
+a|Filter by space.efficiency_without_snapshots.ratio
+
+
+|space.cloud_storage.used
+|integer
+|query
+|False
+a|Filter by space.cloud_storage.used
+
+
+|space.footprint
+|integer
+|query
+|False
+a|Filter by space.footprint
+
+
+|home_node.name
+|string
+|query
+|False
+a|Filter by home_node.name
+
+
+|home_node.uuid
+|string
+|query
+|False
+a|Filter by home_node.uuid
+
+
+|inactive_data_reporting.start_time
+|string
+|query
+|False
+a|Filter by inactive_data_reporting.start_time
+
+* Introduced in: 9.8
+
+
+|inactive_data_reporting.enabled
+|boolean
+|query
+|False
+a|Filter by inactive_data_reporting.enabled
+
+* Introduced in: 9.8
+
+
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.7
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.7
+
+
+|metric.latency.other
+|integer
+|query
+|False
+a|Filter by metric.latency.other
+
+* Introduced in: 9.7
+
+
+|metric.latency.total
+|integer
+|query
+|False
+a|Filter by metric.latency.total
+
+* Introduced in: 9.7
+
+
+|metric.latency.write
+|integer
+|query
+|False
+a|Filter by metric.latency.write
+
+* Introduced in: 9.7
+
+
+|metric.latency.read
+|integer
+|query
+|False
+a|Filter by metric.latency.read
+
+* Introduced in: 9.7
+
+
+|metric.iops.other
+|integer
+|query
+|False
+a|Filter by metric.iops.other
+
+* Introduced in: 9.7
+
+
+|metric.iops.total
+|integer
+|query
+|False
+a|Filter by metric.iops.total
+
+* Introduced in: 9.7
+
+
+|metric.iops.write
+|integer
+|query
+|False
+a|Filter by metric.iops.write
+
+* Introduced in: 9.7
+
+
+|metric.iops.read
+|integer
+|query
+|False
+a|Filter by metric.iops.read
+
+* Introduced in: 9.7
+
+
+|metric.timestamp
+|string
+|query
+|False
+a|Filter by metric.timestamp
+
+* Introduced in: 9.7
+
+
+|metric.throughput.other
+|integer
+|query
+|False
+a|Filter by metric.throughput.other
+
+* Introduced in: 9.7
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.7
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.7
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.7
+
+
+|inode_attributes.used_percent
+|integer
+|query
+|False
+a|Filter by inode_attributes.used_percent
+
+* Introduced in: 9.11
+* Max value: 100
+* Min value: 0
+
+
+|inode_attributes.file_private_capacity
+|integer
+|query
+|False
+a|Filter by inode_attributes.file_private_capacity
+
+* Introduced in: 9.11
+
+
+|inode_attributes.version
+|integer
+|query
+|False
+a|Filter by inode_attributes.version
+
+* Introduced in: 9.11
+
+
+|inode_attributes.files_used
+|integer
+|query
+|False
+a|Filter by inode_attributes.files_used
+
+* Introduced in: 9.11
+
+
+|inode_attributes.files_private_used
+|integer
+|query
+|False
+a|Filter by inode_attributes.files_private_used
+
+* Introduced in: 9.11
+
+
+|inode_attributes.max_files_available
+|integer
+|query
+|False
+a|Filter by inode_attributes.max_files_available
+
+* Introduced in: 9.11
+
+
+|inode_attributes.file_public_capacity
+|integer
+|query
+|False
+a|Filter by inode_attributes.file_public_capacity
+
+* Introduced in: 9.11
+
+
+|inode_attributes.files_total
+|integer
+|query
+|False
+a|Filter by inode_attributes.files_total
+
+* Introduced in: 9.11
+
+
+|inode_attributes.max_files_used
+|integer
+|query
+|False
+a|Filter by inode_attributes.max_files_used
+
+* Introduced in: 9.11
+
+
+|inode_attributes.max_files_possible
+|integer
+|query
+|False
+a|Filter by inode_attributes.max_files_possible
+
+* Introduced in: 9.11
+
+
+|cloud_storage.attach_eligible
+|boolean
+|query
+|False
+a|Filter by cloud_storage.attach_eligible
+
+* Introduced in: 9.14
+
+
+|cloud_storage.stores.used
+|integer
+|query
+|False
+a|Filter by cloud_storage.stores.used
+
+* Introduced in: 9.14
+
+
+|cloud_storage.stores.cloud_store.uuid
+|string
+|query
+|False
+a|Filter by cloud_storage.stores.cloud_store.uuid
+
+* Introduced in: 9.14
+
+
+|cloud_storage.stores.cloud_store.name
+|string
+|query
+|False
+a|Filter by cloud_storage.stores.cloud_store.name
+
+* Introduced in: 9.14
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|dr_home_node.name
+|string
+|query
+|False
+a|Filter by dr_home_node.name
+
+
+|dr_home_node.uuid
+|string
+|query
+|False
+a|Filter by dr_home_node.uuid
+
+
+|snaplock_type
+|string
+|query
+|False
+a|Filter by snaplock_type
+
+
+|sidl_enabled
+|boolean
+|query
+|False
+a|Filter by sidl_enabled
+
+* Introduced in: 9.11
+
+
+|statistics.status
+|string
+|query
+|False
+a|Filter by statistics.status
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.7
+
+
+|volume-count
+|integer
+|query
+|False
+a|Filter by volume-count
+
+* Introduced in: 9.11
+
+
+|data_encryption.software_encryption_enabled
+|boolean
+|query
+|False
+a|Filter by data_encryption.software_encryption_enabled
+
+
+|data_encryption.drive_protection_enabled
+|boolean
+|query
+|False
+a|Filter by data_encryption.drive_protection_enabled
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|block_storage.hybrid_cache.storage_pools.allocation_units_count
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.storage_pools.allocation_units_count
+
+* Introduced in: 9.11
+
+
+|block_storage.hybrid_cache.storage_pools.storage_pool.name
+|string
+|query
+|False
+a|Filter by block_storage.hybrid_cache.storage_pools.storage_pool.name
+
+* Introduced in: 9.11
+
+
+|block_storage.hybrid_cache.storage_pools.storage_pool.uuid
+|string
+|query
+|False
+a|Filter by block_storage.hybrid_cache.storage_pools.storage_pool.uuid
+
+* Introduced in: 9.11
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.usable_size
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.usable_size
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.added_parity_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.added_parity_disk_count
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.name
+|string
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.name
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.added_data_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.added_data_disk_count
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.is_partition
+|boolean
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.is_partition
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.existing_data_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.existing_data_disk_count
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.simulated_raid_groups.existing_parity_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.simulated_raid_groups.existing_parity_disk_count
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.enabled
+|boolean
+|query
+|False
+a|Filter by block_storage.hybrid_cache.enabled
+
+
+|block_storage.hybrid_cache.raid_size
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.raid_size
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.disk_count
+
+
+|block_storage.hybrid_cache.used
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.used
+
+
+|block_storage.hybrid_cache.disk_type
+|string
+|query
+|False
+a|Filter by block_storage.hybrid_cache.disk_type
+
+* Introduced in: 9.12
+
+
+|block_storage.hybrid_cache.size
+|integer
+|query
+|False
+a|Filter by block_storage.hybrid_cache.size
+
+
+|block_storage.hybrid_cache.raid_type
+|string
+|query
+|False
+a|Filter by block_storage.hybrid_cache.raid_type
+
+
+|block_storage.storage_type
+|string
+|query
+|False
+a|Filter by block_storage.storage_type
+
+* Introduced in: 9.11
+
+
+|block_storage.mirror.state
+|string
+|query
+|False
+a|Filter by block_storage.mirror.state
+
+
+|block_storage.mirror.enabled
+|boolean
+|query
+|False
+a|Filter by block_storage.mirror.enabled
+
+
+|block_storage.primary.checksum_style
+|string
+|query
+|False
+a|Filter by block_storage.primary.checksum_style
+
+
+|block_storage.primary.disk_class
+|string
+|query
+|False
+a|Filter by block_storage.primary.disk_class
+
+
+|block_storage.primary.disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.disk_count
+
+
+|block_storage.primary.raid_type
+|string
+|query
+|False
+a|Filter by block_storage.primary.raid_type
+
+
+|block_storage.primary.raid_size
+|integer
+|query
+|False
+a|Filter by block_storage.primary.raid_size
+
+
+|block_storage.primary.simulated_raid_groups.name
+|string
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.name
+
+* Introduced in: 9.10
+
+
+|block_storage.primary.simulated_raid_groups.existing_parity_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.existing_parity_disk_count
+
+* Introduced in: 9.11
+
+
+|block_storage.primary.simulated_raid_groups.added_parity_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.added_parity_disk_count
+
+* Introduced in: 9.11
+
+
+|block_storage.primary.simulated_raid_groups.parity_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.parity_disk_count
+
+* Introduced in: 9.10
+
+
+|block_storage.primary.simulated_raid_groups.added_data_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.added_data_disk_count
+
+* Introduced in: 9.11
+
+
+|block_storage.primary.simulated_raid_groups.is_partition
+|boolean
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.is_partition
+
+* Introduced in: 9.10
+
+
+|block_storage.primary.simulated_raid_groups.existing_data_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.existing_data_disk_count
+
+* Introduced in: 9.11
+
+
+|block_storage.primary.simulated_raid_groups.raid_type
+|string
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.raid_type
+
+* Introduced in: 9.10
+
+
+|block_storage.primary.simulated_raid_groups.usable_size
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.usable_size
+
+* Introduced in: 9.10
+
+
+|block_storage.primary.simulated_raid_groups.data_disk_count
+|integer
+|query
+|False
+a|Filter by block_storage.primary.simulated_raid_groups.data_disk_count
+
+* Introduced in: 9.10
+
+
+|block_storage.primary.disk_type
+|string
+|query
+|False
+a|Filter by block_storage.primary.disk_type
+
+* Introduced in: 9.7
+
+
+|block_storage.uses_partitions
+|boolean
+|query
+|False
+a|Filter by block_storage.uses_partitions
+
+* Introduced in: 9.11
+
+
+|block_storage.plexes.name
+|string
+|query
+|False
+a|Filter by block_storage.plexes.name
+
+
+|_tags
+|string
+|query
+|False
+a|Filter by _tags
+
+* Introduced in: 9.13
+
+
+|is_spare_low
+|boolean
+|query
+|False
+a|Filter by is_spare_low
+
+* Introduced in: 9.11
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|error
+|link:#error[error]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|recommendation_spares
+|array[link:#aggregate_spare[aggregate_spare]]
+a|Information on the aggregate's remaining hot spare disks.
+
+
+|records
+|array[link:#aggregate[aggregate]]
+a|
+
+|spares
+|array[link:#aggregate_spare[aggregate_spare]]
+a|
+
+|warnings
+|array[link:#aggregate_warning[aggregate_warning]]
+a|List of warnings and remediation advice for the aggregate recommendation.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "num_records": 1,
+  "recommendation_spares": [
+    {
+      "checksum_style": "string",
+      "disk_class": "solid_state",
+      "disk_type": "string",
+      "is_partition": 1,
+      "layout_requirements": [
+        {
+          "aggregate_min_disks": 6,
+          "raid_group": {
+            "default": 16,
+            "max": 28,
+            "min": 5
+          },
+          "raid_type": "string"
+        }
+      ],
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "size": 10156769280,
+      "syncmirror_pool": "string",
+      "total": 10,
+      "usable": 9
+    }
+  ],
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "_tags": [
+        "team:csi",
+        "environment:test"
+      ],
+      "block_storage": {
+        "hybrid_cache": {
+          "disk_count": 6,
+          "disk_type": "string",
+          "raid_size": 24,
+          "raid_type": "string",
+          "simulated_raid_groups": [
+            {
+              "name": "string"
+            }
+          ],
+          "size": 1612709888,
+          "storage_pools": [
+            {
+              "storage_pool": {
+                "_links": {
+                  "self": {
+                    "href": "/api/resourcelink"
+                  }
+                },
+                "name": "storage_pool_1",
+                "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+              }
+            }
+          ],
+          "used": 26501122
+        },
+        "mirror": {
+          "enabled": "",
+          "state": "string"
+        },
+        "plexes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "plex0"
+          }
+        ],
+        "primary": {
+          "checksum_style": "string",
+          "disk_class": "performance",
+          "disk_count": 8,
+          "disk_type": "string",
+          "raid_size": 16,
+          "raid_type": "string",
+          "simulated_raid_groups": [
+            {
+              "name": "string",
+              "raid_type": "string"
+            }
+          ]
+        },
+        "storage_type": "string"
+      },
+      "cloud_storage": {
+        "stores": [
+          {
+            "cloud_store": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "store1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            },
+            "used": 0
+          }
+        ]
+      },
+      "create_time": "2018-01-01 12:00:00 -0400",
+      "dr_home_node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "home_node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "inactive_data_reporting": {
+        "start_time": "2019-12-12 12:00:00 -0400"
+      },
+      "inode_attributes": {
+        "file_private_capacity": 31136,
+        "file_public_capacity": 31136,
+        "files_private_used": 502,
+        "files_total": 31136,
+        "files_used": 97,
+        "max_files_available": 31136,
+        "max_files_possible": 2844525,
+        "max_files_used": 97,
+        "used_percent": 5,
+        "version": 4
+      },
+      "is_spare_low": "",
+      "metric": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "duration": "PT15S",
+        "iops": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "status": "ok",
+        "throughput": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "name": "node1_aggr_1",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "snaplock_type": "string",
+      "snapshot": {
+        "files_total": 10,
+        "files_used": 3,
+        "max_files_available": 5,
+        "max_files_used": 50
+      },
+      "space": {
+        "block_storage": {
+          "aggregate_metadata": 2655,
+          "aggregate_metadata_percent": 8,
+          "available": 10156560384,
+          "data_compacted_count": 1990000,
+          "data_compaction_space_saved": 1996000,
+          "data_compaction_space_saved_percent": 27,
+          "full_threshold_percent": 0,
+          "inactive_user_data": 304448,
+          "inactive_user_data_percent": 0,
+          "physical_used": 2461696,
+          "physical_used_percent": 50,
+          "size": 10156769280,
+          "used": 2088960,
+          "used_including_snapshot_reserve": 674685,
+          "used_including_snapshot_reserve_percent": 35,
+          "used_percent": 50,
+          "volume_deduplication_shared_count": 1990000,
+          "volume_deduplication_space_saved": 1996000,
+          "volume_deduplication_space_saved_percent": 27,
+          "volume_footprints_percent": 14
+        },
+        "cloud_storage": {
+          "used": 402743264
+        },
+        "efficiency": {
+          "logical_used": 0,
+          "ratio": 0,
+          "savings": 0,
+          "wise_tsse_min_used_capacity_pct": 0
+        },
+        "efficiency_without_snapshots": {
+          "logical_used": 0,
+          "ratio": 0,
+          "savings": 0
+        },
+        "efficiency_without_snapshots_flexclones": {
+          "logical_used": 0,
+          "ratio": 0,
+          "savings": 0
+        },
+        "footprint": 608896,
+        "snapshot": {
+          "available": 2000,
+          "reserve_percent": 20,
+          "total": 5000,
+          "used": 3000,
+          "used_percent": 45
+        },
+        "total_provisioned_space": 20971520
+      },
+      "state": "string",
+      "statistics": {
+        "iops_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "status": "ok",
+        "throughput_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "uuid": "string",
+      "volume-count": 0
+    }
+  ],
+  "spares": [
+    {
+      "checksum_style": "string",
+      "disk_class": "solid_state",
+      "disk_type": "string",
+      "is_partition": 1,
+      "layout_requirements": [
+        {
+          "aggregate_min_disks": 6,
+          "raid_group": {
+            "default": 16,
+            "max": 28,
+            "min": 5
+          },
+          "raid_type": "string"
+        }
+      ],
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "size": 10156769280,
+      "syncmirror_pool": "string",
+      "total": 10,
+      "usable": 9
+    }
+  ],
+  "warnings": [
+    {
+      "action": {
+        "arguments": [
+          "string"
+        ],
+        "message": "string"
+      },
+      "name": "string",
+      "warning": {
+        "arguments": [
+          "string"
+        ],
+        "message": "string"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 787092
+| The target field cannot be specified for this operation.
+
+| 918138
+| Internal error. Failed to get encryption operation status.
+
+| 8586225
+| Encountered unexpected error in retrieving metrics and statistics for an aggregate.
+
+| 19726341
+| Not enough eligible spare disks are available on the node.
+
+| 19726344
+| No recommendation can be made for this cluster.
+
+| 19726357
+| Aggregate recommendations are not supported on MetroCluster with Fibre Channel (FC).
+
+| 19726358
+| Aggregate recommendations are not supported on ONTAP Cloud.
+
+| 19726382
+| Another provisioning operation is in progress on this cluster. Wait a few minutes, and try the operation again.
+
+| 19726386
+| Encountered an error when retrieving licensing information on this cluster.
+
+| 19726387
+| No recommendation can be provided for this cluster within the license capacity.
+
+| 19726401
+| Aggregate recommendations are not supported when the DR group is not in the "normal" state.
+
+| 19726402
+| Internal error. Unable to determine the MetroCluster configuration state.
+
+| 19726403
+| Aggregate recommendation is not supported when there are no healthy target connections to remote storage.
+
+| 19726404
+| The recommended mirrored aggregate couldn't use all the attached capacity in one of the SyncMirror pools. Make sure that the remote and local storage is symmetrically wired.
+
+| 19726405
+| Not all local and remote disks attached to the node have been auto-partitioned.
+
+| 19726406
+| Aggregate recommendations are not supported on this node because remote and local storage is not symmetrically wired.
+
+| 19726540
+| The next tag is not supported for recommended aggregates. Retry the operation with a higher "return_timeout" value.
+
+| 196608055
+| Aggregate recommendation is not supported on this node because it does not support NetApp Aggregate Encryption (NAE).
+
+| 196608206
+| Internal error. Failed to get encryption operation status.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#raid_group]
+[.api-collapsible-fifth-title]
+raid_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default
+|integer
+a|Default number of disks in a RAID group.
+
+
+|max
+|integer
+a|Maximum number of disks allowed in a RAID group.
+
+
+|min
+|integer
+a|Minimum number of disks allowed in a RAID group.
+
+
+|===
+
+
+[#layout_requirement]
+[.api-collapsible-fifth-title]
+layout_requirement
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate_min_disks
+|integer
+a|Minimum number of disks to create an aggregate.
+
+
+|default
+|boolean
+a|Indicates if this RAID type is the default.
+
+
+|raid_group
+|link:#raid_group[raid_group]
+a|
+
+|raid_type
+|string
+a|RAID type.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node where the spares are assigned.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#aggregate_spare]
+[.api-collapsible-fifth-title]
+aggregate_spare
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|checksum_style
+|string
+a|The checksum type that has been assigned to the spares.
+
+
+|disk_class
+|string
+a|Disk class of spares.
+
+
+|disk_type
+|string
+a|Type of disk.
+
+
+|is_partition
+|boolean
+a|Indicates whether a disk is partitioned (true) or whole (false)
+
+
+|layout_requirements
+|array[link:#layout_requirement[layout_requirement]]
+a|Available RAID protections and their restrictions.
+
+
+|node
+|link:#node[node]
+a|Node where the spares are assigned.
+
+
+|size
+|integer
+a|Usable size of each spare, in bytes.
+
+
+|syncmirror_pool
+|string
+a|SyncMirror spare pool.
+
+
+|total
+|integer
+a|Total number of spares in the bucket. The total spare count for each class of spares also includes reserved spare capacity recommended by ONTAP best practices.
+
+* example: 10
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|usable
+|integer
+a|Total number of usable spares in the bucket. The usable count for each class of spares does not include reserved spare capacity recommended by ONTAP best practices.
+
+* example: 9
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#simulated_raid_groups]
+[.api-collapsible-fifth-title]
+simulated_raid_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|added_data_disk_count
+|integer
+a|Number of added data disks in RAID group.
+
+
+|added_parity_disk_count
+|integer
+a|Number of added parity disks in RAID group.
+
+
+|existing_data_disk_count
+|integer
+a|Number of existing data disks in the RAID group.
+
+
+|existing_parity_disk_count
+|integer
+a|Number of existing parity disks in the RAID group.
+
+
+|is_partition
+|boolean
+a|Indicates whether the disk is partitioned (true) or whole (false).
+
+
+|name
+|string
+a|Name of the raid group.
+
+
+|usable_size
+|integer
+a|Usable size of each disk, in bytes.
+
+
+|===
+
+
+[#storage_pool_reference]
+[.api-collapsible-fifth-title]
+storage_pool_reference
+
+Shared Storage Pool
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pools]
+[.api-collapsible-fifth-title]
+storage_pools
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allocation_units_count
+|integer
+a|Allocation count of storage pool.
+
+
+|storage_pool
+|link:#storage_pool_reference[storage_pool_reference]
+a|Shared Storage Pool
+
+
+|===
+
+
+[#hybrid_cache]
+[.api-collapsible-fifth-title]
+hybrid_cache
+
+Contains the configuration for the hybrid cache. The hybrid cache is made up of either whole SSDs or storage pool SSDs.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk_count
+|integer
+a|Number of disks used in the cache tier of the aggregate. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|disk_type
+|string
+a|Type of disk being used by the aggregate's cache tier.
+
+
+|enabled
+|boolean
+a|Specifies whether the aggregate uses HDDs with SSDs as a cache.
+
+
+|raid_size
+|integer
+a|Option to specify the maximum number of disks that can be included in a RAID group.
+
+
+|raid_type
+|string
+a|RAID type for SSD cache of the aggregate. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|simulated_raid_groups
+|array[link:#simulated_raid_groups[simulated_raid_groups]]
+a|
+
+|size
+|integer
+a|Total usable space in bytes of SSD cache. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|storage_pools
+|array[link:#storage_pools[storage_pools]]
+a|List of storage pool properties and allocation_units_count for aggregate.
+
+
+|used
+|integer
+a|Space used in bytes of SSD cache. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|===
+
+
+[#mirror]
+[.api-collapsible-fifth-title]
+mirror
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Aggregate is SyncMirror protected
+
+
+|state
+|string
+a|
+
+|===
+
+
+[#plex_reference]
+[.api-collapsible-fifth-title]
+plex_reference
+
+Plex
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#simulated_raid_groups]
+[.api-collapsible-fifth-title]
+simulated_raid_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|added_data_disk_count
+|integer
+a|Number of added data disks in RAID group.
+
+
+|added_parity_disk_count
+|integer
+a|Number of added parity disks in RAID group.
+
+
+|data_disk_count
+|integer
+a|Number of data disks in RAID group.
+
+
+|existing_data_disk_count
+|integer
+a|Number of existing data disks in the RAID group.
+
+
+|existing_parity_disk_count
+|integer
+a|Number of existing parity disks in the RAID group.
+
+
+|is_partition
+|boolean
+a|Indicates whether the disk is partitioned (true) or whole (false).
+
+
+|name
+|string
+a|Name of the raid group.
+
+
+|parity_disk_count
+|integer
+a|Number of parity disks in RAID group.
+
+
+|raid_type
+|string
+a|RAID type of the aggregate.
+
+
+|usable_size
+|integer
+a|Usable size of each disk, in bytes.
+
+
+|===
+
+
+[#primary]
+[.api-collapsible-fifth-title]
+primary
+
+Configuration information for the primary storage portion of the aggregate. This excludes the hybrid cache details.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|checksum_style
+|string
+a|The checksum style used by the aggregate.
+
+
+|disk_class
+|string
+a|The class of disks being used by the aggregate.
+
+
+|disk_count
+|integer
+a|Number of disks used in the aggregate. This includes parity disks, but excludes disks in the hybrid cache.
+
+
+|disk_type
+|string
+a|The type of disk being used by the aggregate.
+
+
+|raid_size
+|integer
+a|Option to specify the maximum number of disks that can be included in a RAID group.
+
+
+|raid_type
+|string
+a|RAID type of the aggregate.
+
+
+|simulated_raid_groups
+|array[link:#simulated_raid_groups[simulated_raid_groups]]
+a|
+
+|===
+
+
+[#block_storage]
+[.api-collapsible-fifth-title]
+block_storage
+
+Configuration information for the locally attached portion of the aggregate. When a cloud store is also used by this aggregate, this is referred to as the performance tier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hybrid_cache
+|link:#hybrid_cache[hybrid_cache]
+a|Contains the configuration for the hybrid cache. The hybrid cache is made up of either whole SSDs or storage pool SSDs.
+
+
+|mirror
+|link:#mirror[mirror]
+a|
+
+|plexes
+|array[link:#plex_reference[plex_reference]]
+a|Plex reference for each plex in the aggregate.
+
+
+|primary
+|link:#primary[primary]
+a|Configuration information for the primary storage portion of the aggregate. This excludes the hybrid cache details.
+
+
+|storage_type
+|string
+a|Type of aggregate.
+
+
+|uses_partitions
+|boolean
+a|If true, aggregate is using shared disks.
+
+
+|===
+
+
+[#cloud_store]
+[.api-collapsible-fifth-title]
+cloud_store
+
+Cloud store
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#cloud_storage_tier]
+[.api-collapsible-fifth-title]
+cloud_storage_tier
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cloud_store
+|link:#cloud_store[cloud_store]
+a|Cloud store
+
+
+|used
+|integer
+a|Capacity used in bytes in the cloud store by this aggregate. This is a cached value calculated every 5 minutes.
+
+
+|===
+
+
+[#cloud_storage]
+[.api-collapsible-fifth-title]
+cloud_storage
+
+Configuration information for the cloud storage portion of the aggregate. This is referred to as the capacity tier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attach_eligible
+|boolean
+a|Specifies whether the aggregate is eligible for a cloud store to be attached.
+
+
+|migrate_threshold
+|integer
+a|Specifies the minimum percentage of performance tier free space that must exist in order for migration of data from the capacity tier to performance tier to be allowed. Only valid for PATCH operations.
+
+
+|stores
+|array[link:#cloud_storage_tier[cloud_storage_tier]]
+a|Configuration information for each cloud storage portion of the aggregate.
+
+
+|tiering_fullness_threshold
+|integer
+a|The percentage of space in the performance tier that must be used before data is tiered out to the cloud store. Only valid for PATCH operations.
+
+
+|===
+
+
+[#data_encryption]
+[.api-collapsible-fifth-title]
+data_encryption
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|drive_protection_enabled
+|boolean
+a|Specifies whether the aggregate uses self-encrypting drives with data protection enabled.
+
+
+|software_encryption_enabled
+|boolean
+a|Specifies whether NetApp aggregate encryption is enabled. All data in the aggregate is encrypted.
+
+
+|===
+
+
+[#dr_home_node]
+[.api-collapsible-fifth-title]
+dr_home_node
+
+Node where the aggregate resides after disaster recovery. The value for this field might differ from the 'node' field during switchover.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#home_node]
+[.api-collapsible-fifth-title]
+home_node
+
+Node where the aggregate resides after giveback. The value for this field might differ from the value of the 'node' field during takeover.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#inactive_data_reporting]
+[.api-collapsible-fifth-title]
+inactive_data_reporting
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether or not inactive data reporting is enabled on the aggregate.
+
+
+|start_time
+|string
+a|Timestamp at which inactive data reporting was enabled on the aggregate.
+
+
+|===
+
+
+[#inode_attributes]
+[.api-collapsible-fifth-title]
+inode_attributes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_private_capacity
+|integer
+a|Number of files that can currently be stored on disk for system metadata files. This number will dynamically increase as more system files are created.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|file_public_capacity
+|integer
+a|Number of files that can currently be stored on disk for user-visible files.  This number will dynamically increase as more user-visible files are created.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|files_private_used
+|integer
+a|Number of system metadata files used. If the referenced file system is restricted or offline, a value of 0 is returned.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|files_total
+|integer
+a|Maximum number of user-visible files that this referenced file system can currently hold. If the referenced file system is restricted or offline, a value of 0 is returned.
+
+
+|files_used
+|integer
+a|Number of user-visible files used in the referenced file system. If the referenced file system is restricted or offline, a value of 0 is returned.
+
+
+|max_files_available
+|integer
+a|The count of the maximum number of user-visible files currently allowable on the referenced file system.
+
+
+|max_files_possible
+|integer
+a|The largest value to which the maxfiles-available parameter can be increased by reconfiguration, on the referenced file system.
+
+
+|max_files_used
+|integer
+a|The number of user-visible files currently in use on the referenced file system.
+
+
+|used_percent
+|integer
+a|The percentage of disk space currently in use based on user-visible file count on the referenced file system.
+
+
+|version
+|integer
+a|The inofile-version of the aggregate. If the referenced file system is restricted or offline, a value of 0 is returned.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+The most recent sample of I/O metrics for the aggregate.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node where the aggregate currently resides.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|files_total
+|integer
+a|Total files allowed in snapshots
+
+
+|files_used
+|integer
+a|Total files created in snapshots
+
+
+|max_files_available
+|integer
+a|Maximum files available for snapshots
+
+
+|max_files_used
+|integer
+a|Files in use by snapshots
+
+
+|===
+
+
+[#block_storage]
+[.api-collapsible-fifth-title]
+block_storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate_metadata
+|integer
+a|Space used by different metafiles and internal operations inside the aggregate, in bytes.
+
+
+|aggregate_metadata_percent
+|integer
+a|Aggregate metadata as a percentage.
+
+
+|available
+|integer
+a|Space available in bytes.
+
+
+|data_compacted_count
+|integer
+a|Amount of compacted data in bytes.
+
+
+|data_compaction_space_saved
+|integer
+a|Space saved in bytes by compacting the data.
+
+
+|data_compaction_space_saved_percent
+|integer
+a|Percentage saved by compacting the data.
+
+
+|full_threshold_percent
+|integer
+a|The aggregate used percentage at which 'monitor.volume.full' EMS is generated.
+
+
+|inactive_user_data
+|integer
+a|The size that is physically used in the block storage and has a cold temperature, in bytes. This property is only supported if the aggregate is either attached to a cloud store or can be attached to a cloud store.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either block_storage.inactive_user_data or **.
+
+
+|inactive_user_data_percent
+|integer
+a|The percentage of inactive user data in the block storage. This property is only supported if the aggregate is either attached to a cloud store or can be attached to a cloud store.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either block_storage.inactive_user_data_percent or **.
+
+
+|physical_used
+|integer
+a|Total physical used size of an aggregate in bytes.
+
+
+|physical_used_percent
+|integer
+a|Physical used percentage.
+
+
+|size
+|integer
+a|Total usable space in bytes, not including WAFL reserve and aggregate snapshot reserve.
+
+
+|used
+|integer
+a|Space used or reserved in bytes. Includes volume guarantees and aggregate metadata.
+
+
+|used_including_snapshot_reserve
+|integer
+a|Total used including the snapshot reserve, in bytes.
+
+
+|used_including_snapshot_reserve_percent
+|integer
+a|Total used including the Snapshot reserve as a percentage.
+
+
+|used_percent
+|integer
+a|Aggregate used percentage.
+
+
+|volume_deduplication_shared_count
+|integer
+a|Amount of shared bytes counted by storage efficiency.
+
+
+|volume_deduplication_space_saved
+|integer
+a|Amount of space saved in bytes by storage efficiency.
+
+
+|volume_deduplication_space_saved_percent
+|integer
+a|Percentage of space saved by storage efficiency.
+
+
+|volume_footprints_percent
+|integer
+a|A summation of volume footprints inside the aggregate, as a percentage. A volume's footprint is the amount of space being used for the volume in the aggregate.
+
+
+|===
+
+
+[#cloud_storage]
+[.api-collapsible-fifth-title]
+cloud_storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|used
+|integer
+a|Used space in bytes in the cloud store. Only applicable for aggregates with a cloud store tier.
+
+
+|===
+
+
+[#efficiency]
+[.api-collapsible-fifth-title]
+efficiency
+
+Storage efficiency.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_adaptive_compression_savings
+|boolean
+a|Indicates whether or not aggregate has auto adaptive compression savings.
+
+
+|cross_volume_background_dedupe
+|boolean
+a|Indicates whether or not cross volume background deduplication is enabled.
+
+
+|cross_volume_dedupe_savings
+|boolean
+a|Indicates whether or not aggregate has cross volume deduplication savings.
+
+
+|cross_volume_inline_dedupe
+|boolean
+a|Indicates whether or not cross volume inline deduplication is enabled.
+
+
+|enable_workload_informed_tsse
+|boolean
+a|Indicates whether Workload Informed TSSE is enabled on the system.
+
+
+|logical_used
+|integer
+a|Logical used
+
+
+|ratio
+|number
+a|Data reduction ratio (logical_used / used)
+
+
+|savings
+|integer
+a|Space saved by storage efficiencies (logical_used - used)
+
+
+|wise_tsse_min_used_capacity_pct
+|integer
+a|Minimum amount of used data in aggregate required to trigger cold compression on TSSE volumes.
+
+
+|===
+
+
+[#efficiency_without_snapshots]
+[.api-collapsible-fifth-title]
+efficiency_without_snapshots
+
+Storage efficiency that does not include the savings provided by snapshots.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logical_used
+|integer
+a|Logical used
+
+
+|ratio
+|number
+a|Data reduction ratio (logical_used / used)
+
+
+|savings
+|integer
+a|Space saved by storage efficiencies (logical_used - used)
+
+
+|===
+
+
+[#efficiency_without_snapshots_flexclones]
+[.api-collapsible-fifth-title]
+efficiency_without_snapshots_flexclones
+
+Storage efficiency that does not include the savings provided by snapshots and Flexclone volumes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logical_used
+|integer
+a|Logical used
+
+
+|ratio
+|number
+a|Data reduction ratio (logical_used / used)
+
+
+|savings
+|integer
+a|Space saved by storage efficiencies (logical_used - used)
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|Available space for snapshots in bytes
+
+
+|reserve_percent
+|integer
+a|Percentage of space reserved for snapshots
+
+
+|total
+|integer
+a|Total space for snapshots in bytes
+
+
+|used
+|integer
+a|Space used by snapshots in bytes
+
+
+|used_percent
+|integer
+a|Percentage of disk space used by snapshots
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|block_storage
+|link:#block_storage[block_storage]
+a|
+
+|cloud_storage
+|link:#cloud_storage[cloud_storage]
+a|
+
+|efficiency
+|link:#efficiency[efficiency]
+a|Storage efficiency.
+
+
+|efficiency_without_snapshots
+|link:#efficiency_without_snapshots[efficiency_without_snapshots]
+a|Storage efficiency that does not include the savings provided by snapshots.
+
+
+|efficiency_without_snapshots_flexclones
+|link:#efficiency_without_snapshots_flexclones[efficiency_without_snapshots_flexclones]
+a|Storage efficiency that does not include the savings provided by snapshots and Flexclone volumes.
+
+
+|footprint
+|integer
+a|A summation of volume footprints (including volume guarantees), in bytes. This includes all of the volume footprints in the block_storage tier and the cloud_storage tier.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|total_provisioned_space
+|integer
+a|A summation of volume size, in bytes. This includes all of the volumes inside the aggregate.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either total_provisioned_space or **.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+The real time I/O statistics for the aggregate.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|block_storage
+|link:#block_storage[block_storage]
+a|Configuration information for the locally attached portion of the aggregate. When a cloud store is also used by this aggregate, this is referred to as the performance tier.
+
+
+|cloud_storage
+|link:#cloud_storage[cloud_storage]
+a|Configuration information for the cloud storage portion of the aggregate. This is referred to as the capacity tier.
+
+
+|create_time
+|string
+a|Timestamp of aggregate creation.
+
+
+|data_encryption
+|link:#data_encryption[data_encryption]
+a|
+
+|dr_home_node
+|link:#dr_home_node[dr_home_node]
+a|Node where the aggregate resides after disaster recovery. The value for this field might differ from the 'node' field during switchover.
+
+
+|home_node
+|link:#home_node[home_node]
+a|Node where the aggregate resides after giveback. The value for this field might differ from the value of the 'node' field during takeover.
+
+
+|inactive_data_reporting
+|link:#inactive_data_reporting[inactive_data_reporting]
+a|
+
+|inode_attributes
+|link:#inode_attributes[inode_attributes]
+a|
+
+|is_spare_low
+|boolean
+a|Specifies whether the aggregate is in a spares low condition on any of the RAID groups.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|metric
+|link:#metric[metric]
+a|The most recent sample of I/O metrics for the aggregate.
+
+
+|name
+|string
+a|Aggregate name.
+
+
+|node
+|link:#node[node]
+a|Node where the aggregate currently resides.
+
+
+|sidl_enabled
+|boolean
+a|Specifies whether or not SIDL is enabled on the aggregate.
+
+
+|snaplock_type
+|string
+a|SnapLock type.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|state
+|string
+a|Operational state of the aggregate.
+
+
+|statistics
+|link:#statistics[statistics]
+a|The real time I/O statistics for the aggregate.
+
+
+|uuid
+|string
+a|Aggregate UUID.
+
+
+|volume-count
+|integer
+a|Number of volumes in the aggregate.
+
+
+|===
+
+
+[#action]
+[.api-collapsible-fifth-title]
+action
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[string]
+a|Arguments present in the specified action message.
+
+
+|code
+|integer
+a|Corrective action code of the specified action.
+
+
+|message
+|string
+a|Specifies the corrective action to be taken to resolve the issue.
+
+
+|===
+
+
+[#warning]
+[.api-collapsible-fifth-title]
+warning
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[string]
+a|Arguments present in the warning message encountered.
+
+
+|code
+|integer
+a|Warning code of the warning encountered.
+
+
+|message
+|string
+a|Details of the warning encountered by the aggregate simulate query.
+
+
+|===
+
+
+[#aggregate_warning]
+[.api-collapsible-fifth-title]
+aggregate_warning
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|link:#action[action]
+a|
+
+|name
+|string
+a|Name of the entity that returns the warning.
+
+
+|warning
+|link:#warning[warning]
+a|
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

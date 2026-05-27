@@ -1,0 +1,341 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-ems-filters-rules-.html'
+summary: 'Retrieve an event filter rule'
+---
+
+= Retrieve an event filter rule
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/ems/filters/{name}/rules/{index}`#
+
+*Introduced In:* 9.6
+
+Retrieves an event filter rule.
+
+== Related ONTAP commands
+
+* `event filter show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Filter name
+
+
+|index
+|string
+|path
+|True
+a|Filter rule index
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|index
+|integer
+a|Rule index. Rules are evaluated in ascending order. If a rule's index order is not specified during creation, the rule is appended to the end of the list.
+
+
+|message_criteria
+|link:#message_criteria[message_criteria]
+a|Matching message definitions for the filter. A property must be specified.
+
+
+|parameter_criteria
+|array[link:#parameter_criteria[parameter_criteria]]
+a|Parameter criteria used to match against events' parameters. Each parameter consists of a name and a value. When multiple parameter criteria are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard '*' characters.
+
+
+|type
+|string
+a|Rule type
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "index": 1,
+  "message_criteria": {
+    "_links": {
+      "related": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name_pattern": "wafl.*",
+    "severities": "emergency,alert,error",
+    "snmp_trap_types": "standard,built_in"
+  },
+  "parameter_criteria": [
+    {
+      "name_pattern": "vol",
+      "value_pattern": "cloud*"
+    }
+  ],
+  "type": "include"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|related
+|link:#href[href]
+a|
+
+|===
+
+
+[#message_criteria]
+[.api-collapsible-fifth-title]
+message_criteria
+
+Matching message definitions for the filter. A property must be specified.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name_pattern
+|string
+a|Message name filter on which to match. Supports wildcards. Defaults to * if not specified.
+
+
+|severities
+|string
+a|A comma-separated list of severities or a wildcard.
+
+
+|snmp_trap_types
+|string
+a|A comma separated list of snmp_trap_types or a wildcard.
+
+
+|===
+
+
+[#parameter_criteria]
+[.api-collapsible-fifth-title]
+parameter_criteria
+
+Criterion used for parameter based filtering
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name_pattern
+|string
+a|Parameter name pattern. Wildcard character '*' is supported.
+
+
+|value_pattern
+|string
+a|Parameter value pattern. Wildcard character '*' is supported.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

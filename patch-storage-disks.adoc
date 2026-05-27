@@ -1,0 +1,1200 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-disks.html'
+summary: 'Update disk ownership, change authentication keys, or sanitize disks'
+---
+
+= Update disk ownership, change authentication keys, or sanitize disks
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/disks`#
+
+*Introduced In:* 9.7
+
+Updates disk ownership, changes authentication keys, sanitizes encrypting disks, or sanitizes non-encrypting spare disks.
+
+== Related ONTAP commands
+
+* `storage disk assign`
+* `storage disk removeowner`
+* `storage encryption disk modify -data-key-id`
+* `storage encryption disk sanitize`
+* `security key-manager key query -key-type NSE-AK`
+* `storage disk unfail`
+* `storage disk sanitize-spare`
+
+== Learn more
+
+* link:storage_disks_endpoint_overview.html[DOC /storage/disks]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|query
+|False
+a|Disk name
+
+
+|node
+|string
+|query
+|False
+a|Node to assign disk. This property is not supported on the ASA r2 platform.
+
+* Introduced in: 9.8
+
+
+|pool
+|string
+|query
+|False
+a|Pool to assign disk to
+
+* Introduced in: 9.11
+
+
+|encryption_operation
+|string
+|query
+|False
+a|Name of the operation to apply to encrypting disks.
+
+* rekey_data_default changes the data authentication key (AK) to the drive-unique Manufacture Secure ID (MSID) value. Allows the drive to be attached to other clusters. Disables data-at-rest protection without erasing the data.
+* rekey_data_auto_id changes the data authentication key (AK) to an AK the cluster selects automatically. Enables data-at-rest protection.
+* sanitize_disk cryptographically erases all user data from a spare or broken drive by altering the data encryption key. Resets the data AK to the drive-unique MSID value and disables data-at-rest protection. Used when a drive is being repurposed or returned.
+* enum: ["rekey_data_default", "rekey_data_auto_id", "sanitize_disk"]
+
+
+|sanitize_spare
+|boolean
+|query
+|False
+a|Confirms spare disk sanitization (non-cryptographically).
+
+* Introduced in: 9.16
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|List of aggregates sharing this disk
+
+
+|bay
+|integer
+a|Disk shelf bay
+
+
+|bytes_per_sector
+|integer
+a|Bytes per sector.
+
+
+|class
+|string
+a|Disk class
+
+
+|compliance_standard
+|string
+a|Security standard that the device is certified to.
+
+
+|container_type
+|string
+a|Type of overlying disk container
+
+
+|control_standard
+|string
+a|Standard that the device supports for encryption control.
+
+
+|dr_node
+|link:#dr_node[dr_node]
+a|
+
+|drawer
+|link:#drawer[drawer]
+a|
+
+|effective_type
+|string
+a|Effective Disk type
+
+
+|encryption_operation
+|string
+a|This field should only be set as a query parameter in a PATCH operation. It is input only and won't be returned by a subsequent GET.
+
+
+|error
+|array[link:#disk_error_info[disk_error_info]]
+a|List of disk errors information.
+
+
+|fips_certified
+|boolean
+a|
+
+|firmware_version
+|string
+a|
+
+|home_node
+|link:#home_node[home_node]
+a|
+
+|key_id
+|link:#key_id[key_id]
+a|
+
+|local
+|boolean
+a|Indicates if a disk is locally attached versus being remotely attached.
+A locally attached disk resides in the same proximity as the host
+cluster versus been attached to the remote cluster.
+
+
+|location
+|string
+a|Physical location of the disk
+
+
+|model
+|string
+a|
+
+|name
+|string
+a|Cluster-wide disk name
+
+
+|node
+|link:#node[node]
+a|
+
+|outage
+|link:#outage[outage]
+a|Indicates if a disk has an entry in the failed disk registry, along with the reason for the failure.
+
+
+|overall_security
+|string
+a|Overall Security rating, for FIPS-certified devices.
+
+
+|paths
+|array[link:#disk_path_info[disk_path_info]]
+a|List of paths to a disk
+
+
+|physical_size
+|integer
+a|Physical size, in units of bytes
+
+
+|pool
+|string
+a|Pool to which disk is assigned
+
+
+|protection_mode
+|string
+a|Mode of drive data protection and FIPS compliance. Possible values are:
+
+* _open_ - Data is unprotected
+* _data_ - Data protection only, without FIPS compliance
+* _part_ - Data is unprotected; other FIPS compliance settings present
+* _full_ - Full data and FIPS compliance protection
+* _miss_ - Protection mode information is not available
+
+
+|rated_life_used_percent
+|integer
+a|Percentage of rated life used
+
+
+|right_size_sector_count
+|integer
+a|Number of usable disk sectors that remain after subtracting the right-size adjustment for this disk.
+
+
+|rpm
+|integer
+a|Revolutions per minute
+
+
+|sanitize_spare
+|boolean
+a|Confirms spare disk sanitization (non-cryptographically).
+
+
+|sector_count
+|integer
+a|Number of sectors on the disk.
+
+
+|self_encrypting
+|boolean
+a|
+
+|serial_number
+|string
+a|
+
+|shelf
+|link:#shelf[shelf]
+a|Shelf
+
+
+|state
+|string
+a|State
+
+
+|stats
+|link:#stats[stats]
+a|
+
+|storage_pool
+|link:#storage_pool[storage_pool]
+a|Shared Storage Pool
+
+
+|type
+|string
+a|Disk interface type
+
+
+|uid
+|string
+a|The unique identifier for a disk
+
+
+|usable_size
+|integer
+a|
+
+|vendor
+|string
+a|
+
+|virtual
+|link:#virtual[virtual]
+a|Information about backing storage for disks on cloud platforms.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "aggregates": [
+    {
+      "name": "aggr1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "bay": 1,
+  "bytes_per_sector": 520,
+  "class": "solid_state",
+  "compliance_standard": "FIPS 140-2",
+  "container_type": "spare",
+  "control_standard": "TCG Enterprise",
+  "dr_node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "effective_type": "vmdisk",
+  "encryption_operation": "string",
+  "error": [
+    {
+      "type": "notallflashdisk"
+    }
+  ],
+  "firmware_version": "NA51",
+  "home_node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "key_id": {
+    "data": "string",
+    "fips": "string"
+  },
+  "location": "node-01",
+  "model": "X421_HCOBE450A10",
+  "name": "1.0.1",
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "overall_security": "Level 2",
+  "paths": [
+    {
+      "disk_path_name": "vsim4:3a.10",
+      "initiator": "3a",
+      "node.name": "vsim4",
+      "node.uuid": "cf7fe057-526d-11ec-af4e-0050568e9df0",
+      "port_name": "A",
+      "port_type": "sas",
+      "vmdisk_hypervisor_file_name": "xvds vol0a0567ae156ca59f6",
+      "wwnn": "5000c2971c1b2b8c",
+      "wwpn": "5000c2971c1b2b8d"
+    }
+  ],
+  "physical_size": 228930,
+  "pool": "pool0",
+  "protection_mode": "data",
+  "rated_life_used_percent": 10,
+  "right_size_sector_count": 1172123568,
+  "rpm": 15000,
+  "sector_count": 1172123568,
+  "serial_number": "KHG2VX8R",
+  "shelf": {
+    "uid": "7777841915827391056"
+  },
+  "state": "present",
+  "stats": {
+    "average_latency": 3,
+    "iops_total": 12854,
+    "path_error_count": 0,
+    "power_on_hours": 21016,
+    "throughput": 1957888
+  },
+  "storage_pool": {
+    "name": "storage_pool_1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "type": "ssd",
+  "uid": "002538E5:71B00B2F:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+  "usable_size": 959934889984,
+  "vendor": "NETAPP",
+  "virtual": {
+    "container": "nviet12122018113936-rg",
+    "object": "f1fu63se",
+    "storage_account": "nviet12122018113936ps",
+    "target_address": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 720951
+| Unable to unfail the disk.
+
+| 720968
+| Quiet mode is applicable only when disk unfail is sparing the drive.
+
+| 721029
+| Failed to assign disks to a pool.
+
+| 721066
+| Node is outside the list of controllers for disk.
+
+| 721067
+| The specified node does not exist in the cluster.
+
+| 721084
+| An invalid pool name was specified.
+
+| 721085
+| The node name was not specified.
+
+| 721093
+| Operation not supported on this platform.
+
+| 721095
+| Failed to sanitize the spare disk (non-cryptographically).
+
+| 721096
+| Invalid disk state. This state is not supported for a PATCH operation.
+
+| 1441795
+| Setting the data key ID to the manufacture secure ID is not allowed when in FIPS-compliance mode.
+
+| 1441825
+| The system does not support maintenance of the controls of encrypting disks.
+
+| 14155777
+| The operation failed on one or more disks.
+
+| 14155778
+| No self-encrypting disks were specified.
+
+| 14155779
+| Status from a node shows that a conflicting operation has occurred. Some disk controls might have changed.
+
+| 14155780
+| Could not retrieve the required key ID from the key manager.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_node]
+[.api-collapsible-fifth-title]
+dr_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#drawer]
+[.api-collapsible-fifth-title]
+drawer
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|
+
+|slot
+|integer
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+The message and code detailing the error state of this disk.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#disk_error_info]
+[.api-collapsible-fifth-title]
+disk_error_info
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|type
+|string
+a|Disk error type.
+
+
+|===
+
+
+[#home_node]
+[.api-collapsible-fifth-title]
+home_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#key_id]
+[.api-collapsible-fifth-title]
+key_id
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|data
+|string
+a|Key ID of the data authentication key
+
+
+|fips
+|string
+a|Key ID of the FIPS authentication key
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+This error message and code explaining the disk failure.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#outage]
+[.api-collapsible-fifth-title]
+outage
+
+Indicates if a disk has an entry in the failed disk registry, along with the reason for the failure.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|persistently_failed
+|boolean
+a|Indicates whether RAID maintains the state of this disk as failed across reboots.
+
+
+|===
+
+
+[#disk_path_info]
+[.api-collapsible-fifth-title]
+disk_path_info
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk_path_name
+|string
+a|Path-based disk name.
+
+
+|initiator
+|string
+a|Initiator port.
+
+
+|node.name
+|string
+a|Controller with the initiator port for this path.
+
+
+|node.uuid
+|string
+a|Controller UUID, to identify node for this path.
+
+
+|port_name
+|string
+a|Name of the disk port.
+
+
+|port_type
+|string
+a|Disk port type.
+
+
+|vmdisk_hypervisor_file_name
+|string
+a|Virtual disk hypervisor file name.
+
+
+|wwnn
+|string
+a|Target device's World Wide Node Name.
+
+
+|wwpn
+|string
+a|Target device's World Wide Port Name.
+
+
+|===
+
+
+[#shelf]
+[.api-collapsible-fifth-title]
+shelf
+
+Shelf
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uid
+|string
+a|
+
+|===
+
+
+[#stats]
+[.api-collapsible-fifth-title]
+stats
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|average_latency
+|integer
+a|Average I/O latency across all active paths, in milliseconds.
+
+
+|iops_total
+|integer
+a|Total I/O operations per second read and written to this disk across all active paths.
+
+
+|path_error_count
+|integer
+a|Disk path error count; failed I/O operations.
+
+
+|power_on_hours
+|integer
+a|Hours powered on.
+
+
+|throughput
+|integer
+a|Total disk throughput per second across all active paths, in bytes.
+
+
+|===
+
+
+[#storage_pool]
+[.api-collapsible-fifth-title]
+storage_pool
+
+Shared Storage Pool
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#virtual]
+[.api-collapsible-fifth-title]
+virtual
+
+Information about backing storage for disks on cloud platforms.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|container
+|string
+a|Container name of the virtual disk.
+
+
+|object
+|string
+a|Object name of the virtual disk.
+
+
+|storage_account
+|string
+a|Storage account name of the virtual disk.
+
+
+|target_address
+|string
+a|Target address of the virtual disk.
+
+
+|===
+
+
+[#disk]
+[.api-collapsible-fifth-title]
+disk
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|List of aggregates sharing this disk
+
+
+|bay
+|integer
+a|Disk shelf bay
+
+
+|bytes_per_sector
+|integer
+a|Bytes per sector.
+
+
+|class
+|string
+a|Disk class
+
+
+|compliance_standard
+|string
+a|Security standard that the device is certified to.
+
+
+|container_type
+|string
+a|Type of overlying disk container
+
+
+|control_standard
+|string
+a|Standard that the device supports for encryption control.
+
+
+|dr_node
+|link:#dr_node[dr_node]
+a|
+
+|drawer
+|link:#drawer[drawer]
+a|
+
+|effective_type
+|string
+a|Effective Disk type
+
+
+|encryption_operation
+|string
+a|This field should only be set as a query parameter in a PATCH operation. It is input only and won't be returned by a subsequent GET.
+
+
+|error
+|array[link:#disk_error_info[disk_error_info]]
+a|List of disk errors information.
+
+
+|fips_certified
+|boolean
+a|
+
+|firmware_version
+|string
+a|
+
+|home_node
+|link:#home_node[home_node]
+a|
+
+|key_id
+|link:#key_id[key_id]
+a|
+
+|local
+|boolean
+a|Indicates if a disk is locally attached versus being remotely attached.
+A locally attached disk resides in the same proximity as the host
+cluster versus been attached to the remote cluster.
+
+
+|location
+|string
+a|Physical location of the disk
+
+
+|model
+|string
+a|
+
+|name
+|string
+a|Cluster-wide disk name
+
+
+|node
+|link:#node[node]
+a|
+
+|outage
+|link:#outage[outage]
+a|Indicates if a disk has an entry in the failed disk registry, along with the reason for the failure.
+
+
+|overall_security
+|string
+a|Overall Security rating, for FIPS-certified devices.
+
+
+|paths
+|array[link:#disk_path_info[disk_path_info]]
+a|List of paths to a disk
+
+
+|physical_size
+|integer
+a|Physical size, in units of bytes
+
+
+|pool
+|string
+a|Pool to which disk is assigned
+
+
+|protection_mode
+|string
+a|Mode of drive data protection and FIPS compliance. Possible values are:
+
+* _open_ - Data is unprotected
+* _data_ - Data protection only, without FIPS compliance
+* _part_ - Data is unprotected; other FIPS compliance settings present
+* _full_ - Full data and FIPS compliance protection
+* _miss_ - Protection mode information is not available
+
+
+|rated_life_used_percent
+|integer
+a|Percentage of rated life used
+
+
+|right_size_sector_count
+|integer
+a|Number of usable disk sectors that remain after subtracting the right-size adjustment for this disk.
+
+
+|rpm
+|integer
+a|Revolutions per minute
+
+
+|sanitize_spare
+|boolean
+a|Confirms spare disk sanitization (non-cryptographically).
+
+
+|sector_count
+|integer
+a|Number of sectors on the disk.
+
+
+|self_encrypting
+|boolean
+a|
+
+|serial_number
+|string
+a|
+
+|shelf
+|link:#shelf[shelf]
+a|Shelf
+
+
+|state
+|string
+a|State
+
+
+|stats
+|link:#stats[stats]
+a|
+
+|storage_pool
+|link:#storage_pool[storage_pool]
+a|Shared Storage Pool
+
+
+|type
+|string
+a|Disk interface type
+
+
+|uid
+|string
+a|The unique identifier for a disk
+
+
+|usable_size
+|integer
+a|
+
+|vendor
+|string
+a|
+
+|virtual
+|link:#virtual[virtual]
+a|Information about backing storage for disks on cloud platforms.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

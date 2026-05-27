@@ -1,0 +1,378 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-san-igroups-igroups.html'
+summary: 'Add nested initiator groups to an initiator group'
+---
+
+= Add nested initiator groups to an initiator group
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/san/igroups/{igroup.uuid}/igroups`#
+
+*Introduced In:* 9.9
+
+Adds one or more nested initiator groups to an initiator group. A single nested initiator group can be added by directly specifying the name or UUID. Multiple nested initiator groups can be added by specifying the names or UUIDs in the records array. Nested initiator groups cannot be added to an initiator group that already directly contains initiators.
+
+== Required properties
+
+* `name` and/or `uuid` or `records` - Nested initiator groups to add to the initiator group.
+
+== Related ONTAP commands
+
+* `lun igroup add`
+
+== Learn more
+
+* link:protocols_san_igroups_endpoint_overview.html[DOC /protocols/san/igroups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the parent initiator group.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup
+|link:#igroup[igroup]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|records
+|array[link:#records[records]]
+a|An array of initiator groups specified to add multiple nested initiator groups to an initiator group in a single API call. Not allowed when the `name` property is used.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "igroup": {
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "igroup1",
+  "records": [
+    {
+      "name": "igroup1",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#igroup_nested[igroup_nested]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "igroup": {
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "igroup1",
+      "records": [
+        {
+          "name": "igroup1",
+          "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374735
+| An attempt was made to add a child igroup that would exceed the maximum allowable depth.
+
+| 5374736
+| A supplied child initiator group already exists in the parent initiator group's hierarchy.
+
+| 5374737
+| A supplied child initiator group already exists in another initiator group's hierarchy.
+
+| 5374739
+| A supplied child initiator group has an operating system type that differs from the parent initiator group.
+
+| 5374740
+| A supplied child initiator group has an protocol that differs from the parent initiator group.
+
+| 5374741
+| A supplied child initiator group is already owned by a different child in the initiator group's hierarchy.
+
+| 5374742
+| A supplied child initiator group contains an initiator that is already owned by another initiator group in the hierarchy.
+
+| 5374764
+| An unreplicated initiator group cannot be added as a child of a replicated initiator group.
+
+| 5374852
+| The initiator group specified in the URI does not exist.
+
+| 5374878
+| The supplied child initiator group does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the parent initiator group.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#igroup_nested]
+[.api-collapsible-fifth-title]
+igroup_nested
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup
+|link:#igroup[igroup]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|records
+|array[link:#records[records]]
+a|An array of initiator groups specified to add multiple nested initiator groups to an initiator group in a single API call. Not allowed when the `name` property is used.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,350 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-cluster-ntp-servers-.html'
+summary: 'Update an NTP server configuration after validation'
+---
+
+= Update an NTP server configuration after validation
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/cluster/ntp/servers/{server}`#
+
+*Introduced In:* 9.7
+
+Updates the configuration of an NTP server used by the ONTAP cluster after validation.
+Patchable fields are:
+
+* `version`
+* `key.id`
+* `authentication_enabled`
+
+If `authentication_enabled` is modified to `false`, the associated NTP key is removed from the server instance.
+If `authentication_enabled` is modified to `true`, you must provide an NTP key ID in the PATCH body.
+
+== Related ONTAP commands
+
+* `cluster time-service ntp server modify`
+
+== Learn more
+
+* link:cluster_ntp_servers_endpoint_overview.html[DOC /cluster/ntp/servers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|server
+|string
+|path
+|True
+a|Server address or host name
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_enabled
+|boolean
+a|Set NTP symmetric authentication on (true) or off (false).
+
+
+|key
+|link:#ntp_key_reference[ntp_key_reference]
+a|
+
+|version
+|string
+a|NTP protocol version for server. Valid versions are 3, 4, or auto.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "authentication_enabled": 1,
+  "key": {
+    "id": 10
+  },
+  "version": "auto"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2097163
+| NTP server address was invalid.
+
+| 2097164
+| NTP server address was invalid.
+
+| 2097165
+| Could not resolve NTP server hostname.
+
+| 2097166
+| NTP server address query returned no valid IP addresses.
+
+| 2097167
+| Failed to connect to NTP server.
+
+| 2097169
+| NTP server provided was not synchronized.
+
+| 2097174
+| NTP server provided had too high of root distance.
+
+| 2097177
+| NTP server provided had an invalid stratum.
+
+| 2097181
+| NTP server address was invalid.
+
+| 2097182
+| NTP server address was invalid.
+
+| 2097183
+| NTP symmetric key authentication cannot be used for a node not in a cluster.
+
+| 2097185
+| NTP key authentication failed for the provided key.
+
+| 2097188
+| An invalid key identifier was provided. Identifiers must be in the range from 1 to 65535.
+
+| 2097193
+| An unknown key was provided.
+
+| 2097194
+| The field "authentication_enabled" cannot be false when the field NTP key is given.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ntp_key_reference]
+[.api-collapsible-fifth-title]
+ntp_key_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|NTP symmetric authentication key identifier or index number (ID). This ID,
+the type of cryptographic hash, and the cryptographic hash value are all
+provided by the remote NTP server.
+
+
+|===
+
+
+[#ntp_server]
+[.api-collapsible-fifth-title]
+ntp_server
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_enabled
+|boolean
+a|Set NTP symmetric authentication on (true) or off (false).
+
+
+|key
+|link:#ntp_key_reference[ntp_key_reference]
+a|
+
+|version
+|string
+a|NTP protocol version for server. Valid versions are 3, 4, or auto.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

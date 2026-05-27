@@ -1,0 +1,383 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_login_messages_endpoint_overview.html'
+summary: 'Manage security login messages'
+---
+
+= Manage security login messages
+
+
+
+== Overview
+
+You can use this API to display and manage the login messages configuration. The GET request retrieves all of the login messages in the cluster. GET operations on /security/login/messages/\{uuid} retrieve the login messages configuration by UUID. PATCH operations on /security/login/messages/\{uuid} update the login messages configuration by UUID.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving all of the login messages in the cluster
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/login/messages?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "2581e5aa-9fe3-11e8-b309-005056bbef18",
+    "scope": "cluster",
+    "banner": "*** WARNING: DO NOT PROCEED IF YOU ARE NOT AUTHORIZED! ****\n",
+    "message": "#### Welcome to Cluster X ####\n",
+    "show_cluster_message": true,
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/2581e5aa-9fe3-11e8-b309-005056bbef18"
+      }
+    }
+  },
+  {
+    "uuid": "7b1b3715-9ffa-11e8-a5dd-005056bbef18",
+    "scope": "svm",
+    "svm": {
+      "uuid": "7b1b3715-9ffa-11e8-a5dd-005056bbef18",
+      "name": "svm1"
+    },
+    "message": "#### Welcome to SVM1 ####\n",
+    "show_cluster_message": true,
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/7b1b3715-9ffa-11e8-a5dd-005056bbef18"
+      }
+    }
+  },
+  {
+    "uuid": "8ddee11e-a58c-11e8-85e0-005056bbef18",
+    "scope": "svm",
+    "svm": {
+      "uuid": "8ddee11e-a58c-11e8-85e0-005056bbef18",
+      "name": "svm3"
+    },
+    "banner": "*** WARNING: This system is for the use of authorized users only. ****\n",
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/8ddee11e-a58c-11e8-85e0-005056bbef18"
+      }
+    }
+  },
+  {
+    "uuid": "f7e41c99-9ffa-11e8-a5dd-005056bbef18",
+    "scope": "svm",
+    "svm": {
+      "uuid": "f7e41c99-9ffa-11e8-a5dd-005056bbef18",
+      "name": "svm2"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/f7e41c99-9ffa-11e8-a5dd-005056bbef18"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the login messages configuration at the cluster scope
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/login/messages?scope=cluster&fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "2581e5aa-9fe3-11e8-b309-005056bbef18",
+    "scope": "cluster",
+    "banner": "*** WARNING: DO NOT PROCEED IF YOU ARE NOT AUTHORIZED! ****\n",
+    "message": "#### Welcome to Cluster X ####\n",
+    "show_cluster_message": true,
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/2581e5aa-9fe3-11e8-b309-005056bbef18"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?scope=cluster&fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the login banner configured at the cluster scope
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/login/messages?scope=cluster&fields=banner" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "2581e5aa-9fe3-11e8-b309-005056bbef18",
+    "scope": "cluster",
+    "banner": "*** WARNING: DO NOT PROCEED IF YOU ARE NOT AUTHORIZED! ****\n",
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/2581e5aa-9fe3-11e8-b309-005056bbef18"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?scope=cluster&fields=banner"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the login messages configuration of a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/login/messages?svm.name=svm1&fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "7b1b3715-9ffa-11e8-a5dd-005056bbef18",
+    "scope": "svm",
+    "svm": {
+      "uuid": "7b1b3715-9ffa-11e8-a5dd-005056bbef18",
+      "name": "svm1"
+    },
+    "message": "#### Welcome to SVM1 ####\n",
+    "show_cluster_message": true,
+    "_links": {
+      "self": {
+        "href": "/api/security/login/messages/7b1b3715-9ffa-11e8-a5dd-005056bbef18"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?svm.name=svm1&fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the login messages configuration by UUID, including all fields
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/login/messages/7b1b3715-9ffa-11e8-a5dd-005056bbef18?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "7b1b3715-9ffa-11e8-a5dd-005056bbef18",
+"scope": "svm",
+"svm": {
+  "uuid": "7b1b3715-9ffa-11e8-a5dd-005056bbef18",
+  "name": "svm1"
+},
+"message": "#### Welcome to SVM1 ####\n",
+"show_cluster_message": true,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages/7b1b3715-9ffa-11e8-a5dd-005056bbef18"
+  }
+}
+}
+----
+
+'''
+
+=== Configuring the login banner in a cluster
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/login/messages?scope=cluster" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"banner\": \"You are entering secure area.\" }"
+
+# The response:
+{
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?scope=cluster"
+  }
+}
+}
+----
+
+'''
+
+=== Configuring the message of the day (MOTD) in a cluster
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/login/messages?scope=cluster" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"message\": \"Welcome to Cluster X\",  \"show_cluster_message\": true }"
+
+# The response:
+{
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?scope=cluster"
+  }
+}
+}
+----
+
+'''
+
+=== Clearing the login banner and message of the day (MOTD) in a cluster
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/login/messages?scope=cluster" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"banner\": \"\", \"message\": \"\" }"
+
+# The response:
+{
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?scope=cluster"
+  }
+}
+}
+----
+
+'''
+
+=== Configuring the login messages for a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/login/messages?svm.name=svm1" -H  "accept: application/hal+json" -H  "Content-Type: application/json" -d "{ \"banner\" : \"AUTHORIZED ACCESS ONLY\", \"message\": \"WELCOME!\" }"
+
+# The response:
+{
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/messages?svm.name=svm1"
+  }
+}
+}
+----
+
+'''
+
+=== Configuring the login messages by UUID
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/login/messages/7b1b3715-9ffa-11e8-a5dd-005056bbef18" -H  "accept: application/hal+json" -H  "Content-Type: application/json" -d "{ \"banner\" : \"AUTHORIZED ACCESS ONLY\", \"message\": \"WELCOME!\" }"
+----
+
+'''
+
+=== Clearing the login messages configuration by UUID
+
+'''
+
+----
+
+# The API:
+/api/security/login/messages/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/login/messages/7b1b3715-9ffa-11e8-a5dd-005056bbef18" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"banner\": \"\", \"message\": \"\" }"
+----
+
+'''
+
+

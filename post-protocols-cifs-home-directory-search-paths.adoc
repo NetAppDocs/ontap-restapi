@@ -1,0 +1,316 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-cifs-home-directory-search-paths.html'
+summary: 'Create a home directory search path'
+---
+
+= Create a home directory search path
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/cifs/home-directory/search-paths`#
+
+*Introduced In:* 9.6
+
+Creates a home directory search path.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the home directory search path.
+* `path` - Path in the owning SVM namespace that is used to search for home directories.
+
+== Related ONTAP commands
+
+* `cifs server home-directory search-path add`
+
+== Learn more
+
+* link:protocols_cifs_home-directory_search-paths_endpoint_overview.html[DOC /protocols/cifs/home-directory/search-paths]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|The position in the list of paths that is searched to find the home directory of the CIFS client. Not available in POST.
+
+
+|path
+|string
+a|The file system path that is searched to find the home directory of the CIFS client.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "index": 0,
+  "path": "/HomeDirectory/EngDomain",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cifs_search_path[cifs_search_path]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "index": 0,
+      "path": "/HomeDirectory/EngDomain",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655551
+| Invalid home-directory search-path path
+
+| 655462
+| The specified path is an invalid file-type
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_search_path]
+[.api-collapsible-fifth-title]
+cifs_search_path
+
+This is a list of CIFS home directory search paths. When a CIFS client connects to a home directory share, these paths are searched in the order indicated by the position field to find the home directory of the connected CIFS client.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|The position in the list of paths that is searched to find the home directory of the CIFS client. Not available in POST.
+
+
+|path
+|string
+a|The file system path that is searched to find the home directory of the CIFS client.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

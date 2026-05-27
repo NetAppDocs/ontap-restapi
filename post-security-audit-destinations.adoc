@@ -1,0 +1,432 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-audit-destinations.html'
+summary: 'Define the remote syslog or splunk server information'
+---
+
+= Define the remote syslog or splunk server information
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/audit/destinations`#
+
+*Introduced In:* 9.6
+
+Configures remote syslog/splunk server information.
+
+== Required properties
+
+All of the following fields are required for creating a remote syslog/splunk destination
+
+* `address`
+
+== Optional properties
+
+All of the following fields are optional for creating a remote syslog/splunk destination
+
+* `port` (1 - 65535)
+* `ipspace`
+* `protocol`
+* `facility`
+* `verify_server` (Can only be "true" when protocol is "tcp_encrypted")
+* `message_format` (Can be either "legacy-netapp" or "rfc-5424")
+* `timestamp_format_override` (Can be either "no-override", "rfc-3164", "iso-8601-utc" or "iso-8601-local-time")
+* `hostname_format_override` (Can be either "no-override", "fqdn" or "hostname-only")
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|force
+|boolean
+|query
+|False
+a|Skip the Connectivity Test
+
+* Default value:
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|Destination syslog\|splunk host to forward audit records to. This can be an IP address (IPv4\|IPv6) or a hostname.
+
+
+|facility
+|string
+a|This is the standard Syslog Facility value that is used when sending audit records to a remote server.
+
+
+|hostname_format_override
+|string
+a|Syslog Hostname Format Override
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|
+
+|message_format
+|string
+a|Syslog message format to be used. legacy_netapp format (variation of RFC-3164) is default message format.
+
+
+|port
+|integer
+a|Destination Port. The default port depends on the protocol chosen:
+For un-encrypted destinations the default port is 514.
+For encrypted destinations the default port is 6514.
+
+
+|protocol
+|string
+a|Log forwarding protocol
+
+
+|timestamp_format_override
+|string
+a|Syslog Timestamp Format Override.
+
+
+|verify_server
+|boolean
+a|This is only applicable when the protocol is tcp_encrypted. This controls whether the remote server's certificate is validated. Setting "verify_server" to "true" will enforce validation of remote server's certificate. Setting "verify_server" to "false" will not enforce validation of remote server's certificate.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "address": "1.1.1.1",
+  "facility": "string",
+  "hostname_format_override": "string",
+  "ipspace": {
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "message_format": "string",
+  "port": 514,
+  "protocol": "string",
+  "timestamp_format_override": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#security_audit_log_forward[security_audit_log_forward]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "address": "1.1.1.1",
+      "facility": "string",
+      "hostname_format_override": "string",
+      "ipspace": {
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "message_format": "string",
+      "port": 514,
+      "protocol": "string",
+      "timestamp_format_override": "string"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 15661
+| The object specified could not be found
+
+| 13114
+| Internal error
+
+| 13115
+| Invalid input
+
+| 4522285
+| Server verification cannot be enabled because it requires a protocol with encryption. Encryption can be selected using the protocol field.
+
+| 9240603
+| Cannot ping destination host. Verify connectivity to desired host or skip the connectivity check with the -force parameter.
+
+| 327698
+| Failed to create RPC client to destination host
+
+| 9240609
+| Cannot connect to destination host.
+
+| 9240604
+| Cannot resolve the destination host.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#security_audit_log_forward]
+[.api-collapsible-fifth-title]
+security_audit_log_forward
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|Destination syslog\|splunk host to forward audit records to. This can be an IP address (IPv4\|IPv6) or a hostname.
+
+
+|facility
+|string
+a|This is the standard Syslog Facility value that is used when sending audit records to a remote server.
+
+
+|hostname_format_override
+|string
+a|Syslog Hostname Format Override
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|
+
+|message_format
+|string
+a|Syslog message format to be used. legacy_netapp format (variation of RFC-3164) is default message format.
+
+
+|port
+|integer
+a|Destination Port. The default port depends on the protocol chosen:
+For un-encrypted destinations the default port is 514.
+For encrypted destinations the default port is 6514.
+
+
+|protocol
+|string
+a|Log forwarding protocol
+
+
+|timestamp_format_override
+|string
+a|Syslog Timestamp Format Override.
+
+
+|verify_server
+|boolean
+a|This is only applicable when the protocol is tcp_encrypted. This controls whether the remote server's certificate is validated. Setting "verify_server" to "true" will enforce validation of remote server's certificate. Setting "verify_server" to "false" will not enforce validation of remote server's certificate.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

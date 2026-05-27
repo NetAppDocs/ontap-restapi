@@ -1,0 +1,578 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-multi-admin-verify-requests.html'
+summary: 'Retrieve multi-admin-verify requests'
+---
+
+= Retrieve multi-admin-verify requests
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/multi-admin-verify/requests`#
+
+*Introduced In:* 9.11
+
+Retrieves multi-admin-verify requests.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|approved_users
+|string
+|query
+|False
+a|Filter by approved_users
+
+
+|index
+|integer
+|query
+|False
+a|Filter by index
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|execution_expiry_time
+|string
+|query
+|False
+a|Filter by execution_expiry_time
+
+
+|potential_approvers
+|string
+|query
+|False
+a|Filter by potential_approvers
+
+
+|approve_time
+|string
+|query
+|False
+a|Filter by approve_time
+
+
+|query
+|string
+|query
+|False
+a|Filter by query
+
+
+|approve_expiry_time
+|string
+|query
+|False
+a|Filter by approve_expiry_time
+
+
+|user_vetoed
+|string
+|query
+|False
+a|Filter by user_vetoed
+
+
+|user_requested
+|string
+|query
+|False
+a|Filter by user_requested
+
+
+|permitted_users
+|string
+|query
+|False
+a|Filter by permitted_users
+
+
+|pending_approvers
+|integer
+|query
+|False
+a|Filter by pending_approvers
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+
+|execute_on_approval
+|boolean
+|query
+|False
+a|Filter by execute_on_approval
+
+* Introduced in: 9.13
+
+
+|required_approvers
+|integer
+|query
+|False
+a|Filter by required_approvers
+
+
+|operation
+|string
+|query
+|False
+a|Filter by operation
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#multi_admin_verify_request[multi_admin_verify_request]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "approve_expiry_time": "string",
+      "approve_time": "string",
+      "approved_users": [
+        "string"
+      ],
+      "comment": "string",
+      "create_time": "string",
+      "execution_expiry_time": "string",
+      "index": 0,
+      "operation": "string",
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "pending_approvers": 0,
+      "permitted_users": [
+        "string"
+      ],
+      "potential_approvers": [
+        "string"
+      ],
+      "query": "string",
+      "required_approvers": 0,
+      "state": "string",
+      "user_requested": "string",
+      "user_vetoed": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+The owner of the request. This can identify the cluster or an SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#multi_admin_verify_request]
+[.api-collapsible-fifth-title]
+multi_admin_verify_request
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approve_expiry_time
+|string
+a|
+
+|approve_time
+|string
+a|
+
+|approved_users
+|array[string]
+a|The users that have approved the request.
+
+
+|comment
+|string
+a|Optional user-provided comment that is sent to the approval-group email indicating why the request was made.
+
+
+|create_time
+|string
+a|
+
+|execute_on_approval
+|boolean
+a|Specifies that the operation is executed automatically on final approval.
+
+
+|execution_expiry_time
+|string
+a|
+
+|index
+|integer
+a|Unique index that represents a request.
+
+
+|operation
+|string
+a|The command to execute.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the request. This can identify the cluster or an SVM.
+
+
+|pending_approvers
+|integer
+a|The number of approvers remaining that are required to approve.
+
+
+|permitted_users
+|array[string]
+a|List of users that can execute the operation once approved. If not set, any authorized user can perform the operation.
+
+
+|potential_approvers
+|array[string]
+a|The users that are able to approve the request.
+
+
+|query
+|string
+a|Identifies the specific entry upon which the user wants to operate.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|state
+|string
+a|The state of the request. PATCH supports approved and vetoed. The state only changes after setting to approved once no more approvers are required.
+
+
+|user_requested
+|string
+a|The user that created the request. Automatically set by ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|user_vetoed
+|string
+a|The user that vetoed the request.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

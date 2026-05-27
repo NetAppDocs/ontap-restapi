@@ -1,0 +1,331 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-network-fc-wwpn-aliases.html'
+summary: 'Create an FC WWPN alias'
+---
+
+= Create an FC WWPN alias
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/network/fc/wwpn-aliases`#
+
+*Introduced In:* 9.6
+
+Creates an FC WWPN alias.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the FC alias.
+* `alias` - Name of the FC alias.
+* `wwpn` - FC WWPN for which to create the alias.
+
+== Related ONTAP commands
+
+* `vserver fcp wwpn-alias set`
+
+== Learn more
+
+* link:network_fc_wwpn-aliases_endpoint_overview.html[DOC /network/fc/wwpn-aliases]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|string
+a|The FC WWPN alias. Required in POST.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|wwpn
+|string
+a|The FC initiator WWPN. Required in POST.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "alias": "host1",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "wwpn": "2f:a0:00:a0:98:0b:56:13"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#wwpn_alias[wwpn_alias]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "alias": "host1",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "wwpn": "2f:a0:00:a0:98:0b:56:13"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2621462
+| The specified SVM does not exist or cannot be accessed by this user.
+
+| 2621706
+| The specified `svm.uuid` and `svm.name` do not refer to the same SVM.
+
+| 2621707
+| No SVM was specified. Either `svm.name` or `svm.uuid` must be supplied.
+
+| 5373982
+| An invalid WWN was specified. The length is incorrect.
+
+| 5373983
+| An invalid WWN was specified. The format is incorrect.
+
+| 5374869
+| The alias already exists.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#wwpn_alias]
+[.api-collapsible-fifth-title]
+wwpn_alias
+
+A Fibre Channel (FC) world wide port name (WWPN) alias. A WWPN is a unique 64-bit identifier for an FC initiator. It is displayed as a 16-character hexadecimal value. SAN administrators may find it easier to identify FC initiators using an alias, especially in larger SANs.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|string
+a|The FC WWPN alias. Required in POST.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|wwpn
+|string
+a|The FC initiator WWPN. Required in POST.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

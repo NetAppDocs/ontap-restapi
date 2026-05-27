@@ -1,0 +1,102 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_rules_owner.uuid_operation_endpoint_overview.html'
+summary: 'Manage a multi-admin-verify rule'
+---
+
+= Manage a multi-admin-verify rule
+
+
+
+== Overview
+
+These APIs provide information about a specific multi-admin verification rule.
+Rules define the ONTAP commands (operations) that should be protected by multi-admin approval.
+While the feature is turned on, any ONTAP operation that is defined with a rule will be enforced with multi-admin approval to execute the command (operation).
+ +
+
+'''
+
+== Examples
+
+=== Retrieving a multi-admin-verify rule
+
+Displays information about a specific multi admin verification rule.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/rules/{owner.uuid}/{operation}
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/volume+delete"
+
+# The response:
+{
+"owner": {
+  "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+  "name": "cluster1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+    }
+  }
+},
+"operation": "volume delete",
+"auto_request_create": true,
+"query": "-vserver vs0",
+"required_approvers": 1,
+"create_time": "2022-01-07T22:14:03-05:00",
+"system_defined": false,
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/volume+delete"
+  }
+}
+}
+----
+
+'''
+
+=== Updating a multi-admin-verify rule
+
+Modifies the attributes of the rule.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/rules/{owner.uuid}/{operation}
+
+# The call:
+curl -X PATCH "https://<cluster-ip>/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/volume+delete" -d '{"required_approvers": 1}'
+----
+
+'''
+
+=== Deleting a multi-admin-verify rule
+
+Deletes the specified approval group.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/rules/{owner.uuid}/{operation}
+
+# The call:
+curl -X DELETE "https://<cluster-ip>/api/security/multi-admin-verify/rules/52b75787-7011-11ec-a23d-005056a78fd5/volume+delete"
+----
+
+'''
+
+

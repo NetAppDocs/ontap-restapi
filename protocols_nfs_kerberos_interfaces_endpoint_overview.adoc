@@ -1,0 +1,44 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_nfs_kerberos_interfaces_endpoint_overview.html'
+summary: 'View and update Kerberos interfaces'
+---
+
+= View and update Kerberos interfaces
+
+
+
+== Examples
+
+=== Retrieving the Kerberos interface configuration details
+
+----
+
+# The API:
+GET /api/protocols/nfs/kerberos/interfaces
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/nfs/kerberos/interfaces"
+----
+
+=== Updating the Kerberos interface configuration
+
+----
+
+# The API:
+PATCH /api/protocols/nfs/kerberos/interfaces/{interface.uuid}
+
+# The call:
+curl -d "@test_patch_kerb_interface.txt" -X PATCH "https://<mgmt-ip>/api/protocols/nfs/kerberos/interfaces/e62936de-7342-11e8-9eb4-0050568be2b7"
+test_patch_kerb_interface.txt(body):
+{
+ "enabled" : "true",
+ "spn": "nfs/datalif1-vsim3-d1.sim.netapp.com@NFS-NSR-W01.RTP.NETAPP.COM",
+ "user" :"administrator",
+ "password" :"Hello123!"
+}
+----
+
+

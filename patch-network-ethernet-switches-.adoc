@@ -1,0 +1,428 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-network-ethernet-switches-.html'
+summary: 'Update an Ethernet switch'
+---
+
+= Update an Ethernet switch
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/network/ethernet/switches/{name}`#
+
+*Introduced In:* 9.8
+
+Configures monitoring settings for an Ethernet switch.
+
+== Related ONTAP commands
+
+* `system switch ethernet modify`
+
+== Learn more
+
+* link:network_ethernet_switches_endpoint_overview.html[DOC /network/ethernet/switches]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Switch Name
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IP Address.
+
+
+|discovered
+|boolean
+a|Discovered By ONTAP CDP/LLDP
+
+* readOnly: 1
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|monitoring
+|link:#monitoring[monitoring]
+a|
+
+|rcf_version
+|string
+a|The switch reference configuration file (RCF) version.
+
+
+|role
+|string
+a|Switch role based on the interface configurations. Using '+' to combine multiple roles.
+Available role types are: cluster, multicluster, storage, multistorage, metrocluster.
+
+
+|serial_number
+|string
+a|Serial Number.
+
+
+|snmp
+|link:#snmp[snmp]
+a|
+
+|version
+|string
+a|Software Version.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "address": "string",
+  "monitoring": {
+    "reason": "string"
+  },
+  "rcf_version": "RCF NX9336C-FX2 v1.13 1-CLUSTER",
+  "role": [
+    "cluster+storage"
+  ],
+  "serial_number": "string",
+  "snmp": {
+    "user": "string",
+    "version": "string"
+  },
+  "version": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5636148
+| Failed to discover SNMPv3 engine ID of the remote switch.
+
+| 5636149
+| The "+++<snmp.user>+++\" must be a valid SNMPv3 user belonging to remote switch \"+++<name.>+++\" and must also be configured in ONTAP.+++</name.>++++++</snmp.user>+++
+
+| 5636152
+| 0.0.0.0 cannot be specified as the IP address for the "+++<address.>+++\" parameter.+++</address.>+++
+
+| 8912900
+| Invalid IP address.
+
+| 9044009
+| SNMPv3 client feature is not available until the effective cluster version is ONTAP 9.3 or later.
+
+| 12517379
+| Warning&#58; Settings updated, but the IP "+++<address.>+++\" is not reachable. Verify that the address is valid, or check the network path.+++</address.>+++
+
+| 12517381
+| Warning&#58; Settings updated, but the SNMP validation request timed out. Verify that the "+++<snmp.user>+++\" parameter is valid.+++</snmp.user>+++
+
+| 12517383
+| Warning&#58; Settings updated, but the SNMPv3 validation request timed out. Verify that the "+++<snmp.user>+++\" parameter is valid (i.e., the SNMPv3 user exists in ONTAP and on the remote switch). If the \"+++<snmp.user>+++\" parameter is valid, verify that the SNMPv3 user's credentials are the same both in ONTAP as well as in the remote switch. If a custom engine-id was provided for the SNMPv3 user, ensure it is the same as that of the remote switch.+++</snmp.user>++++++</snmp.user>+++
+
+| 12517411
+| The input value for "+++<name.>+++\", \"+++<address.>+++\" and/or \"+++<network.>+++\" must match its discovered value.+++</network.>++++++</address.>++++++</name.>+++
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#monitoring]
+[.api-collapsible-fifth-title]
+monitoring
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Enable Health Monitoring.
+
+
+|monitored
+|boolean
+a|Is Monitored.
+
+
+|reason
+|string
+a|Reason For Not Monitoring.
+
+
+|===
+
+
+[#snmp]
+[.api-collapsible-fifth-title]
+snmp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|user
+|string
+a|Community String or SNMPv3 Username.
+
+
+|version
+|string
+a|SNMP Version.
+
+
+|===
+
+
+[#switch]
+[.api-collapsible-fifth-title]
+switch
+
+Ethernet Switch REST API
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IP Address.
+
+
+|discovered
+|boolean
+a|Discovered By ONTAP CDP/LLDP
+
+* readOnly: 1
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|monitoring
+|link:#monitoring[monitoring]
+a|
+
+|rcf_version
+|string
+a|The switch reference configuration file (RCF) version.
+
+
+|role
+|string
+a|Switch role based on the interface configurations. Using '+' to combine multiple roles.
+Available role types are: cluster, multicluster, storage, multistorage, metrocluster.
+
+
+|serial_number
+|string
+a|Serial Number.
+
+
+|snmp
+|link:#snmp[snmp]
+a|
+
+|version
+|string
+a|Software Version.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,560 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-san-portsets.html'
+summary: 'Create a portset'
+---
+
+= Create a portset
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/san/portsets`#
+
+*Introduced In:* 9.9
+
+Creates a portset.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the portset.
+* `name` - Name of the portset.
+
+== Recommended optional properties
+
+* `protocol` - The network protocol of the interfaces in the portset.
+* `interfaces` - Network interfaces to include in the portset. This property can be used to create the portset and populate it with network interfaces in a single request.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned.
+
+* `protocol` - _mixed_ - Data protocol of the portset's network interfaces.
+
+== Related ONTAP commands
+
+* `lun portset create`
+
+== Learn more
+
+* link:protocols_san_portsets_endpoint_overview.html[DOC /protocols/san/portsets]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroups
+|array[link:#igroups[igroups]]
+a|An array initiator groups to which the portset is bound.
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|An array of network interfaces that are members of the portset. These are the only network interfaces through which the initiators of a bound igroup can access mapped LUNs.
+
+Zero or more network interfaces can be supplied when the portset is created. After creation, network interfaces can be added or removed from the portset using the `/protocols/san/portsets/{portset.uuid}/interfaces` endpoint. See link:post-protocols-san-portsets-interfaces(#-san-portset-interface-create)anddelete-protocols-san-portsets-interfaces-.html<</SAN/portset_interface_create,POST /protocols/san/portsets/{portset.uuid}/interfaces>> and [DELETE /protocols/san/portsets/{portset.uuid}/interfaces/\{uuid}]  for more details.
+
+
+|name
+|string
+a|The name of the portset. Required in POST.
+
+The name of a portset cannot be changed after creation.
+
+
+|protocol
+|string
+a|The protocols supported by the portset. This restricts the type of network interfaces that can be added to the portset. Optional in POST; if not supplied, this defaults to _mixed_.
+
+The protocol of a portset cannot be changed after creation.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier for a portset.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "igroups": [
+    {
+      "name": "igroup1",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "interfaces": [
+    {
+      "fc": {
+        "name": "fc_lif1",
+        "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+        "wwpn": "20:00:00:50:56:b4:13:a8"
+      },
+      "ip": {
+        "name": "lif1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "name": "portset1",
+  "protocol": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#portset[portset]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "igroups": [
+        {
+          "name": "igroup1",
+          "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "interfaces": [
+        {
+          "fc": {
+            "name": "fc_lif1",
+            "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+            "wwpn": "20:00:00:50:56:b4:13:a8"
+          },
+          "ip": {
+            "name": "lif1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "name": "portset1",
+      "protocol": "string",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1254259
+| A portset with the same name already exists in the SVM.
+
+| 2621462
+| The specified SVM does not exist.
+
+| 2621706
+| The specified `svm.uuid` and `svm.name` do not refer to the same SVM.
+
+| 2621707
+| No SVM was specified. Either `svm.name` or `svm.uuid` must be supplied.
+
+| 5373958
+| The specified portset name contains invalid characters.
+
+| 5373982
+| An invalid WWN was specified. The length is incorrect.
+
+| 5373983
+| An invalid WWN was specified. The format is incorrect.
+
+| 5374905
+| An invalid interfaces array element was specified.
+
+| 5374906
+| A specified network interface was not found.
+
+| 5374907
+| The specified network interface UUID and name don't identify the same network interface.
+
+| 5374914
+| An attempt was made to add a network interface of an incompatible protocol to a portset.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#fc]
+[.api-collapsible-fifth-title]
+fc
+
+An FC interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the FC interface.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface.
+
+
+|wwpn
+|string
+a|The WWPN of the FC interface.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#interfaces]
+[.api-collapsible-fifth-title]
+interfaces
+
+A container for either a Fibre Channel network interface or an IP network interface. On POST `fc` and `ip` are mutually exclusive.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fc
+|link:#fc[fc]
+a|An FC interface.
+
+
+|ip
+|link:#ip[ip]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|uuid
+|string
+a|The unique identifier of the network interface.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#portset]
+[.api-collapsible-fifth-title]
+portset
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroups
+|array[link:#igroups[igroups]]
+a|An array initiator groups to which the portset is bound.
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|An array of network interfaces that are members of the portset. These are the only network interfaces through which the initiators of a bound igroup can access mapped LUNs.
+
+Zero or more network interfaces can be supplied when the portset is created. After creation, network interfaces can be added or removed from the portset using the `/protocols/san/portsets/{portset.uuid}/interfaces` endpoint. See link:post-protocols-san-portsets-interfaces(#-san-portset-interface-create)anddelete-protocols-san-portsets-interfaces-.html<</SAN/portset_interface_create,POST /protocols/san/portsets/{portset.uuid}/interfaces>> and [DELETE /protocols/san/portsets/{portset.uuid}/interfaces/\{uuid}]  for more details.
+
+
+|name
+|string
+a|The name of the portset. Required in POST.
+
+The name of a portset cannot be changed after creation.
+
+
+|protocol
+|string
+a|The protocols supported by the portset. This restricts the type of network interfaces that can be added to the portset. Optional in POST; if not supplied, this defaults to _mixed_.
+
+The protocol of a portset cannot be changed after creation.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier for a portset.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,409 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-users-and-groups-bulk-import-.html'
+summary: 'Upload the bulk-import status of an SVM to a URI'
+---
+
+= Upload the bulk-import status of an SVM to a URI
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}`#
+
+*Introduced In:* 9.11
+
+Upload the status of the bulk-import of the specified SVM to the specified URI.
+
+== Important notes
+
+* Only the status of the last bulk-import will be uploaded and not the status of the previous bulk-imports.
+
+== Required properties
+
+* status_uri.path - URI to which the status needs to be uploaded.
+
+== Optional properties
+
+* status_uri.username - Username of the specified URI.
+* status_uri.password - Password of the specified URI.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups import get-status`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elements_ignored
+|integer
+a|Number of elements ignored.
+
+
+|elements_imported
+|integer
+a|Number of elements successfully imported.
+
+
+|state
+|string
+a|Operation status.
+
+
+|status_uri
+|link:#status_uri[status_uri]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "elements_ignored": 0,
+  "elements_imported": 0,
+  "state": "string",
+  "status_uri": {
+    "password": "string",
+    "path": "http://web.sample.com/web1/file1.7z",
+    "username": "user1"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#detailed_status]
+[.api-collapsible-fifth-title]
+detailed_status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the import status failure.
+
+
+|message
+|string
+a|Detailed description of the import status.
+
+
+|===
+
+
+[#import_uri]
+[.api-collapsible-fifth-title]
+import_uri
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|Password of the specified URI.
+
+
+|path
+|string
+a|URI from which to load the input file containing the CIFS local users and groups. The file must be encrypted using the 7zip utility. URI can be FTP or HTTP.
+
+
+|username
+|string
+a|Username of the specified URI.
+
+
+|===
+
+
+[#status_uri]
+[.api-collapsible-fifth-title]
+status_uri
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|Password of the specified URI.
+
+
+|path
+|string
+a|URI from which to load the input file containing the CIFS local users and groups. The file must be encrypted using the 7zip utility. URI can be FTP or HTTP.
+
+
+|username
+|string
+a|Username of the specified URI.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_cifs_users_and_groups_import]
+[.api-collapsible-fifth-title]
+local_cifs_users_and_groups_import
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elements_ignored
+|integer
+a|Number of elements ignored.
+
+
+|elements_imported
+|integer
+a|Number of elements successfully imported.
+
+
+|state
+|string
+a|Operation status.
+
+
+|status_uri
+|link:#status_uri[status_uri]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

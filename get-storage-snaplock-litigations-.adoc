@@ -1,0 +1,416 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-snaplock-litigations-.html'
+summary: 'Retrieve ongoing operations for a litigation ID'
+---
+
+= Retrieve ongoing operations for a litigation ID
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/snaplock/litigations/{id}`#
+
+*Introduced In:* 9.7
+
+Retrieves the list of ongoing operations for the specified litigation ID.
+
+== Related ONTAP commands
+
+* `snaplock legal-hold show`
+
+== Learn more
+
+* link:storage_snaplock_litigations_endpoint_overview.html[DOC /storage/snaplock/litigations]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|id
+|string
+|path
+|True
+a|Litigation ID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|id
+|string
+a|Specifies the litigation ID.
+
+
+|name
+|string
+a|Specifies the legal-hold litigation name.
+
+
+|operations
+|array[link:#snaplock_legal_hold_operation[snaplock_legal_hold_operation]]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "id": "string",
+  "name": "lit1",
+  "operations": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "id": 16842759,
+      "num_files_failed": 0,
+      "num_files_processed": 30,
+      "num_files_skipped": 10,
+      "num_inodes_ignored": 10,
+      "path": "/dir1",
+      "state": "completed",
+      "type": "begin"
+    }
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "volume": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13763280
+| Only a user with security login role "vsadmin-snaplock" is allowed to perform this operation.
+
+| 14090346
+| Internal Error. Wait a few minutes, then try the command again
+
+| 14090343
+| Invalid Field
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#snaplock_legal_hold_operation]
+[.api-collapsible-fifth-title]
+snaplock_legal_hold_operation
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|id
+|integer
+a|Operation ID.
+
+
+|num_files_failed
+|string
+a|Specifies the number of files on which legal-hold operation failed.
+
+
+|num_files_processed
+|string
+a|Specifies the number of files on which legal-hold operation was successful.
+
+
+|num_files_skipped
+|string
+a|Specifies the number of files on which legal-hold begin operation was skipped. The legal-hold begin operation is skipped on a file if it is already under hold for a given litigation.
+
+
+|num_inodes_ignored
+|string
+a|Specifies the number of inodes on which the legal-hold operation was not attempted because they were not regular files.
+
+
+|path
+|string
+a|Specifies the path on which legal-hold operation is applied.
+
+
+|state
+|string
+a|Specifies the status of legal-hold operation.
+
+
+|type
+|string
+a|Specifies the type of legal-hold operation.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,192 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-key-managers-auth-keys-.html'
+summary: 'Delete an authentication key'
+---
+
+= Delete an authentication key
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/key-managers/{security_key_manager.uuid}/auth-keys/{key_id}`#
+
+*Introduced In:* 9.12
+
+Deletes an authentication key.
+
+== Related ONTAP commands
+
+* `security key-manager key delete`
+
+== Required properties
+
+* `security_key_manager.uuid` - UUID of the external key manager.
+* `key_id` - Key ID of the authentication key to be deleted.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|security_key_manager.uuid
+|string
+|path
+|True
+a|External key manager UUID
+
+
+|key_id
+|string
+|path
+|True
+a|Key ID of the authentication key to be deleted.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536828
+| External key management is not enabled for the SVM.
+
+| 65536859
+| Authentication key-Id provided for deletion is in use.
+
+| 65536860
+| Key-id provided for deletion is not an authentication key.
+
+| 65538800
+| External KMIP DKMIP keymanager not configured on administrative Vserver.
+
+| 65538801
+| Internal error while accessing keymanager database.
+
+| 65538802
+| The UUID provided is not associated with the administrator SVM key manager.
+
+| 66060296
+| Failed to delete key from an external key server.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

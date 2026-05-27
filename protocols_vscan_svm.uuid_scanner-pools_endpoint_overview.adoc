@@ -1,0 +1,244 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_vscan_svm.uuid_scanner-pools_endpoint_overview.html'
+summary: 'Manage Vscan scanner-pool configuration'
+---
+
+= Manage Vscan scanner-pool configuration
+
+
+
+== Overview
+
+A scanner-pool defines the Vscan servers and privileged users that can connect to SVMs and a scanner policy or role determines whether a scanner-pool is active. You can configure a scanner-pool to be used on the local cluster or any other cluster in an MCC/DR setup.
+
+== Examples
+
+=== Retrieving all fields for all scanner-pools of an SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/<svm-uuid>/scanner-pools?fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "1ccbefd6-6132-11ef-92d9-005056bbd354",
+      "name": "vs1"
+    },
+    "name": "scanner-1",
+    "servers": [
+      "1.1.1.1",
+      "10.72.204.27"
+    ],
+    "privileged_users": [
+      "cifs\\u1",
+      "cifs\\u2"
+    ],
+    "role": "primary",
+    "cluster": {
+      "uuid": "3af387d8-6131-11ef-92d9-005056bbd354",
+      "name": "clus1"
+    }
+  },
+  {
+    "svm": {
+      "uuid": "1ccbefd6-6132-11ef-92d9-005056bbd354",
+      "name": "vs1"
+    },
+    "name": "scanner-2",
+    "servers": [
+      "1.1.1.1",
+      "10.72.204.27"
+    ],
+    "privileged_users": [
+      "cifs\\u1",
+      "cifs\\u2"
+    ],
+    "role": "secondary",
+    "cluster": {
+      "uuid": "3af387d8-6131-11ef-92d9-005056bbd354",
+      "name": "clus1"
+    }
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving all scanner-pools with _role_ set as _secondary_
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/<svm-uuid>/scanner-pools?role=secondary&fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "0e2f7c91-f227-11e8-9601-0050568ecc06",
+      "name": "vs1"
+    },
+    "name": "scanner-2",
+    "servers": [
+      "1.1.1.1",
+      "10.72.204.27"
+    ],
+    "privileged_users": [
+      "cifs\\u1",
+      "cifs\\u2"
+    ],
+    "role": "secondary",
+    "cluster": {
+      "uuid": "0933f9b5-f226-11e8-9601-0050568ecc06",
+      "name": "Cluster3"
+    }
+  }
+],
+"num_records": 1
+}
+----
+
+=== Retrieving the specified scanner-pool associated with an SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/0e2f7c91-f227-11e8-9601-0050568ecc06/scanner-pools/scanner-1?fields=*" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "0e2f7c91-f227-11e8-9601-0050568ecc06",
+  "name": "vs1"
+},
+"name": "scanner-1",
+"servers": [
+  "1.1.1.1",
+  "10.72.204.27"
+],
+"privileged_users": [
+  "cifs\\u1",
+  "cifs\\u2"
+],
+"role": "primary",
+"cluster": {
+  "uuid": "0933f9b5-f226-11e8-9601-0050568ecc06",
+  "name": "Cluster3"
+}
+}
+----
+
+=== Creating a scanner-pool for an SVM with all fields specified
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools/
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan/b103be27-17b8-11e9-b451-0050568ecd85/scanner-pools?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"cluster\": { \"name\": \"Cluster1\", \"uuid\": \"ab746d77-17b7-11e9-b450-0050568ecd85\" }, \"name\": \"test-scanner\", \"privileged_users\": [ \"cifs\\\\u1\", \"cifs\\\\u2\" ], \"role\": \"primary\", \"servers\": [ \"1.1.1.1\", \"10.72.204.27\" ]}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "test-scanner",
+    "servers": [
+      "1.1.1.1",
+      "10.72.204.27"
+    ],
+    "privileged_users": [
+      "cifs\\u1",
+      "cifs\\u2"
+    ],
+    "role": "primary",
+    "cluster": {
+      "uuid": "ab746d77-17b7-11e9-b450-0050568ecd85",
+      "name": "Cluster1"
+    }
+  }
+]
+}
+----
+
+=== Creating a scanner-pool for an SVM with an unspecified role and cluster
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools/
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan/b103be27-17b8-11e9-b451-0050568ecd85/scanner-pools" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"name\": \"test-scanner-1\", \"privileged_users\": [ \"cifs\\\\u1\", \"cifs\\\\u2\" ], \"servers\": [ \"1.1.1.1\", \"10.72.204.27\" ]}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "test-scanner-1",
+    "servers": [
+      "1.1.1.1",
+      "10.72.204.27"
+    ],
+    "privileged_users": [
+      "cifs\\u1",
+      "cifs\\u2"
+    ]
+  }
+]
+}
+----
+
+=== Updating a scanner-pool for an SVM with all of the fields specified
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/vscan/0e2f7c91-f227-11e8-9601-0050568ecc06/scanner-pools/test-scanner-1" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"cluster\": { \"name\": \"Cluster3\", \"uuid\": \"0933f9b5-f226-11e8-9601-0050568ecc06\" }, \"privileged_users\": [ \"cifs\\\\u1\", \"cifs\\\\u2\" ], \"role\": \"secondary\", \"servers\": [ \"1.1.1.1\", \"10.72.204.27\" ]}"
+----
+
+=== Updating the "role" of a scanner-pool for an SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/vscan/0e2f7c91-f227-11e8-9601-0050568ecc06/scanner-pools/test-scanner-1" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"cluster\": { \"name\": \"Cluster3\", \"uuid\": \"0933f9b5-f226-11e8-9601-0050568ecc06\" }, \"role\": \"primary\"}"
+----
+
+=== Deleting a scanner-pool for a specified SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/scanner-pools/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/vscan/0e2f7c91-f227-11e8-9601-0050568ecc06/scanner-pools/test-scanner-1" -H "accept: application/json"
+----
+
+

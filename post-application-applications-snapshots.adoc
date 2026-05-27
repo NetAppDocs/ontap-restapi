@@ -1,0 +1,439 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-application-applications-snapshots.html'
+summary: 'Create an application snapshot'
+---
+
+= Create an application snapshot
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/application/applications/{application.uuid}/snapshots`#
+
+*Introduced In:* 9.6
+
+Creates a snapshot of the application.
+
+== Required properties
+
+* `name`
+
+== Recommended optional properties
+
+* `consistency_type` - Track whether this snapshot is _application_ or _crash_ consistent.
+
+== Learn more
+
+* link:application_applications_application.uuid_snapshots_endpoint_overview.html[DOC /application/applications/{application.uuid}/snapshots]
+* link:application_overview.html[DOC /application]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|application.uuid
+|string
+|path
+|True
+a|Application UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application
+|link:#application[application]
+a|
+
+|comment
+|string
+a|Comment. Valid in POST.
+
+
+|components
+|array[link:#components[components]]
+a|
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Creation time
+
+
+|is_partial
+|boolean
+a|A partial snapshot means that not all volumes in an application component were included in the snapshot.
+
+
+|name
+|string
+a|The snapshot name. Valid in POST.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|uuid
+|string
+a|The snapshot UUID. Valid in URL.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "application": {
+    "name": "string",
+    "uuid": "string"
+  },
+  "comment": "string",
+  "components": [
+    {
+      "name": "string",
+      "uuid": "string"
+    }
+  ],
+  "consistency_type": "string",
+  "create_time": "string",
+  "name": "string",
+  "svm": {
+    "name": "string",
+    "uuid": "string"
+  },
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Application name
+
+
+|uuid
+|string
+a|The application UUID. Valid in URL.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Component name
+
+
+|uuid
+|string
+a|Component UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|SVM name
+
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#application_snapshot]
+[.api-collapsible-fifth-title]
+application_snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application
+|link:#application[application]
+a|
+
+|comment
+|string
+a|Comment. Valid in POST.
+
+
+|components
+|array[link:#components[components]]
+a|
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Creation time
+
+
+|is_partial
+|boolean
+a|A partial snapshot means that not all volumes in an application component were included in the snapshot.
+
+
+|name
+|string
+a|The snapshot name. Valid in POST.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|uuid
+|string
+a|The snapshot UUID. Valid in URL.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,55 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_nfs_connected-client-settings_endpoint_overview.html'
+summary: 'View and update NFS client settings'
+---
+
+= View and update NFS client settings
+
+
+
+== Overview
+
+This cluster-wide API is used to set the maximum cache idle time (client_retention_interval) for the connected-clients cache. If a
+client connected to NFS server is idle for longer than than the maximum cache idle time, the entry will be removed. The update_interval
+value will change when the client_retention_interval is changed. The update interval represents the interval between the cleaning
+happens. If the value of client_retention_interval is set to 60hrs the connected client entry will stay there for 60 hours
+and after that it will get removed. If the value of update_interval is 8 hours then the cache will be refreshed once every 8 hours.
+
+== Example
+
+=== Retrieves connected-client cache settings information
+
+----
+
+# The API:
+GET /api/protocols/nfs/connected-client-settings
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/nfs/connected-client-settings?return_timeout=15&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"client_retention_interval": "P7D",
+"update_interval": "PT8H"
+}
+----
+
+=== Updating connected-client cache settings
+
+----
+
+# The API:
+PATCH /api/protocols/nfs/connected-client-settings
+
+# The call:
+curl -d "@test_cache_settings_patch.txt" -X PATCH "https://<mgmt-ip>/api/protocols/nfs/connected-client-settings"
+test_cache_settings_patch.txt(body):
+{
+"client_retention_interval": "P7D"
+}
+----
+
+

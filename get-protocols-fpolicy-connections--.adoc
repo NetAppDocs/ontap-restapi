@@ -1,0 +1,443 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-fpolicy-connections--.html'
+summary: 'Retrieve the status of an FPolicy server'
+---
+
+= Retrieve the status of an FPolicy server
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/connections/{node.uuid}/{policy.name}/{server}`#
+
+*Introduced In:* 9.10
+
+Retrieves the status of an FPolicy server.
+
+== Related ONTAP commands
+
+* `vserver fpolicy show-engine`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_connections_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/connections]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID.
+
+
+|policy.name
+|string
+|path
+|True
+a|Policy name
+
+
+|server
+|string
+|path
+|True
+a|FPolicy Server IP address
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|disconnected_reason
+|link:#disconnected_reason[disconnected_reason]
+a|Indicates the reason for FPolicy server disconnection.
+
+
+|node
+|link:#node[node]
+a|
+
+|policy
+|link:#fpolicy_policy_reference[fpolicy_policy_reference]
+a|
+
+|server
+|string
+a|IP address of the FPolicy server.
+
+
+|session_uuid
+|string
+a|Unique session ID associated with each connection to the FPolicy server and it can be used to identify
+the established connection.
+
+
+|state
+|string
+a|Specifies the FPolicy server connection state indicating if it is in the connected or disconnected state.
+The following is a list of the possible states:
+
+* connected                 - Connected
+* disconnected              - Disconnected
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|FPolicy server type. The possible values are:
+
+*** primary - Primary server
+
+*** secondary  - Secondary server
+
+
+|update_time
+|string
+a|Specifies the time at which FPolicy server is connected or disconnected.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "disconnected_reason": {
+    "code": 9307,
+    "message": "TCP Connection to FPolicy server failed."
+  },
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "policy": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "string"
+  },
+  "server": "10.132.145.20",
+  "session_uuid": "5224ec64-b336-11eb-841c-0050568e14c2",
+  "state": "connected",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "primary",
+  "update_time": "2019-06-12 11:00:16 -0400"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#disconnected_reason]
+[.api-collapsible-fifth-title]
+disconnected_reason
+
+Indicates the reason for FPolicy server disconnection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Reason ID for the FPolicy Server disconnection.
+
+
+|message
+|string
+a|FPolicy server reason for disconnection message.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#fpolicy_policy_reference]
+[.api-collapsible-fifth-title]
+fpolicy_policy_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the FPolicy Policy name.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,2068 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-services.html'
+summary: 'Retrieve CIFS servers'
+---
+
+= Retrieve CIFS servers
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/services`#
+
+*Introduced In:* 9.6
+
+Retrieves CIFS servers.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `statistics.+*+`
+* `metric.+*+`
+
+== Related ONTAP commands
+
+* `vserver cifs server show`
+* `vserver cifs server options show`
+* `vserver cifs server security show`
+
+== Learn more
+
+* link:protocols_cifs_services_endpoint_overview.html[DOC /protocols/cifs/services]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|proxy_username
+|string
+|query
+|False
+a|Filter by proxy_username
+
+* Introduced in: 9.15
+
+
+|auth_user_type
+|string
+|query
+|False
+a|Filter by auth_user_type
+
+* Introduced in: 9.16
+
+
+|security.restrict_anonymous
+|string
+|query
+|False
+a|Filter by security.restrict_anonymous
+
+
+|security.use_ldaps
+|boolean
+|query
+|False
+a|Filter by security.use_ldaps
+
+* Introduced in: 9.10
+
+
+|security.smb_signing
+|boolean
+|query
+|False
+a|Filter by security.smb_signing
+
+
+|security.ldap_referral_enabled
+|boolean
+|query
+|False
+a|Filter by security.ldap_referral_enabled
+
+* Introduced in: 9.10
+
+
+|security.kdc_encryption
+|boolean
+|query
+|False
+a|Filter by security.kdc_encryption
+
+
+|security.aes_netlogon_enabled
+|boolean
+|query
+|False
+a|Filter by security.aes_netlogon_enabled
+
+* Introduced in: 9.10
+
+
+|security.session_security
+|string
+|query
+|False
+a|Filter by security.session_security
+
+* Introduced in: 9.10
+
+
+|security.try_ldap_channel_binding
+|boolean
+|query
+|False
+a|Filter by security.try_ldap_channel_binding
+
+* Introduced in: 9.10
+
+
+|security.use_start_tls
+|boolean
+|query
+|False
+a|Filter by security.use_start_tls
+
+* Introduced in: 9.10
+
+
+|security.lm_compatibility_level
+|string
+|query
+|False
+a|Filter by security.lm_compatibility_level
+
+* Introduced in: 9.8
+
+
+|security.encrypt_dc_connection
+|boolean
+|query
+|False
+a|Filter by security.encrypt_dc_connection
+
+* Introduced in: 9.8
+
+
+|security.smb_encryption
+|boolean
+|query
+|False
+a|Filter by security.smb_encryption
+
+
+|security.advertised_kdc_encryptions
+|string
+|query
+|False
+a|Filter by security.advertised_kdc_encryptions
+
+* Introduced in: 9.12
+
+
+|proxy_host
+|string
+|query
+|False
+a|Filter by proxy_host
+
+* Introduced in: 9.15
+
+
+|client_id
+|string
+|query
+|False
+a|Filter by client_id
+
+* Introduced in: 9.15
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|ad_domain.default_site
+|string
+|query
+|False
+a|Filter by ad_domain.default_site
+
+* Introduced in: 9.13
+
+
+|ad_domain.fqdn
+|string
+|query
+|False
+a|Filter by ad_domain.fqdn
+
+
+|ad_domain.organizational_unit
+|string
+|query
+|False
+a|Filter by ad_domain.organizational_unit
+
+
+|workgroup
+|string
+|query
+|False
+a|Filter by workgroup
+
+* Introduced in: 9.15
+* maxLength: 15
+* minLength: 1
+
+
+|tenant_id
+|string
+|query
+|False
+a|Filter by tenant_id
+
+* Introduced in: 9.15
+
+
+|verify_host
+|boolean
+|query
+|False
+a|Filter by verify_host
+
+* Introduced in: 9.15
+
+
+|oauth_host
+|string
+|query
+|False
+a|Filter by oauth_host
+
+* Introduced in: 9.15
+
+
+|options.widelink_reparse_versions
+|string
+|query
+|False
+a|Filter by options.widelink_reparse_versions
+
+* Introduced in: 9.10
+
+
+|options.shadowcopy
+|boolean
+|query
+|False
+a|Filter by options.shadowcopy
+
+* Introduced in: 9.11
+
+
+|options.max_same_user_sessions_per_connection
+|integer
+|query
+|False
+a|Filter by options.max_same_user_sessions_per_connection
+
+* Introduced in: 9.16
+
+
+|options.max_watches_set_per_tree
+|integer
+|query
+|False
+a|Filter by options.max_watches_set_per_tree
+
+* Introduced in: 9.16
+
+
+|options.max_opens_same_file_per_tree
+|integer
+|query
+|False
+a|Filter by options.max_opens_same_file_per_tree
+
+* Introduced in: 9.16
+
+
+|options.copy_offload
+|boolean
+|query
+|False
+a|Filter by options.copy_offload
+
+* Introduced in: 9.10
+
+
+|options.fake_open
+|boolean
+|query
+|False
+a|Filter by options.fake_open
+
+* Introduced in: 9.10
+
+
+|options.referral
+|boolean
+|query
+|False
+a|Filter by options.referral
+
+* Introduced in: 9.10
+
+
+|options.max_same_tree_connect_per_session
+|integer
+|query
+|False
+a|Filter by options.max_same_tree_connect_per_session
+
+* Introduced in: 9.16
+
+
+|options.smb_credits
+|integer
+|query
+|False
+a|Filter by options.smb_credits
+
+* Introduced in: 9.10
+* Max value: 8192
+* Min value: 2
+
+
+|options.advanced_sparse_file
+|boolean
+|query
+|False
+a|Filter by options.advanced_sparse_file
+
+* Introduced in: 9.10
+
+
+|options.dac_enabled
+|boolean
+|query
+|False
+a|Filter by options.dac_enabled
+
+* Introduced in: 9.15
+
+
+|options.junction_reparse
+|boolean
+|query
+|False
+a|Filter by options.junction_reparse
+
+* Introduced in: 9.10
+
+
+|options.shadowcopy_dir_depth
+|integer
+|query
+|False
+a|Filter by options.shadowcopy_dir_depth
+
+* Introduced in: 9.11
+
+
+|options.multichannel
+|boolean
+|query
+|False
+a|Filter by options.multichannel
+
+* Introduced in: 9.10
+
+
+|options.fsctl_trim
+|boolean
+|query
+|False
+a|Filter by options.fsctl_trim
+
+* Introduced in: 9.10
+
+
+|options.trusted_domain_enum_search_enabled
+|boolean
+|query
+|False
+a|Filter by options.trusted_domain_enum_search_enabled
+
+* Introduced in: 9.16
+
+
+|options.max_lifs_per_session
+|integer
+|query
+|False
+a|Filter by options.max_lifs_per_session
+
+* Introduced in: 9.16
+* Max value: 256
+* Min value: 1
+
+
+|options.client_dup_detection_enabled
+|boolean
+|query
+|False
+a|Filter by options.client_dup_detection_enabled
+
+* Introduced in: 9.16
+
+
+|options.path_component_cache
+|boolean
+|query
+|False
+a|Filter by options.path_component_cache
+
+* Introduced in: 9.10
+
+
+|options.admin_to_root_mapping
+|boolean
+|query
+|False
+a|Filter by options.admin_to_root_mapping
+
+* Introduced in: 9.10
+
+
+|options.client_version_reporting_enabled
+|boolean
+|query
+|False
+a|Filter by options.client_version_reporting_enabled
+
+* Introduced in: 9.16
+
+
+|options.null_user_windows_name
+|string
+|query
+|False
+a|Filter by options.null_user_windows_name
+
+* Introduced in: 9.10
+
+
+|options.large_mtu
+|boolean
+|query
+|False
+a|Filter by options.large_mtu
+
+* Introduced in: 9.10
+
+
+|options.max_connections_per_session
+|integer
+|query
+|False
+a|Filter by options.max_connections_per_session
+
+* Introduced in: 9.16
+* Max value: 1024
+* Min value: 2
+
+
+|options.backup_symlink_enabled
+|boolean
+|query
+|False
+a|Filter by options.backup_symlink_enabled
+
+* Introduced in: 9.15
+
+
+|options.export_policy_enabled
+|boolean
+|query
+|False
+a|Filter by options.export_policy_enabled
+
+* Introduced in: 9.13
+
+
+|proxy_type
+|string
+|query
+|False
+a|Filter by proxy_type
+
+* Introduced in: 9.15
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
+
+
+|default_unix_user
+|string
+|query
+|False
+a|Filter by default_unix_user
+
+
+|metric.iops.other
+|integer
+|query
+|False
+a|Filter by metric.iops.other
+
+* Introduced in: 9.7
+
+
+|metric.iops.total
+|integer
+|query
+|False
+a|Filter by metric.iops.total
+
+* Introduced in: 9.7
+
+
+|metric.iops.write
+|integer
+|query
+|False
+a|Filter by metric.iops.write
+
+* Introduced in: 9.7
+
+
+|metric.iops.read
+|integer
+|query
+|False
+a|Filter by metric.iops.read
+
+* Introduced in: 9.7
+
+
+|metric.latency.other
+|integer
+|query
+|False
+a|Filter by metric.latency.other
+
+* Introduced in: 9.7
+
+
+|metric.latency.total
+|integer
+|query
+|False
+a|Filter by metric.latency.total
+
+* Introduced in: 9.7
+
+
+|metric.latency.write
+|integer
+|query
+|False
+a|Filter by metric.latency.write
+
+* Introduced in: 9.7
+
+
+|metric.latency.read
+|integer
+|query
+|False
+a|Filter by metric.latency.read
+
+* Introduced in: 9.7
+
+
+|metric.timestamp
+|string
+|query
+|False
+a|Filter by metric.timestamp
+
+* Introduced in: 9.7
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.7
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.7
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.7
+
+
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.7
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.7
+
+
+|authentication_method
+|string
+|query
+|False
+a|Filter by authentication_method
+
+* Introduced in: 9.15
+
+
+|timeout
+|integer
+|query
+|False
+a|Filter by timeout
+
+* Introduced in: 9.15
+
+
+|group_policy_object_enabled
+|boolean
+|query
+|False
+a|Filter by group_policy_object_enabled
+
+* Introduced in: 9.12
+
+
+|netbios.enabled
+|boolean
+|query
+|False
+a|Filter by netbios.enabled
+
+
+|netbios.wins_servers
+|string
+|query
+|False
+a|Filter by netbios.wins_servers
+
+
+|netbios.aliases
+|string
+|query
+|False
+a|Filter by netbios.aliases
+
+* maxLength: 15
+* minLength: 1
+
+
+|auth-style
+|string
+|query
+|False
+a|Filter by auth-style
+
+* Introduced in: 9.15
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 15
+* minLength: 1
+
+
+|statistics.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.status
+|string
+|query
+|False
+a|Filter by statistics.status
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.7
+
+
+|proxy_port
+|integer
+|query
+|False
+a|Filter by proxy_port
+
+* Introduced in: 9.15
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|key_vault_uri
+|string
+|query
+|False
+a|Filter by key_vault_uri
+
+* Introduced in: 9.15
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cifs_service[cifs_service]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "ad_domain": {
+        "default_site": "string",
+        "fqdn": "example.com",
+        "organizational_unit": "string"
+      },
+      "auth-style": "domain",
+      "auth_user_type": "string",
+      "authentication_method": "string",
+      "client_id": "e959d1b5-5a63-4284-9268-851e30e3eceb",
+      "comment": "This CIFS Server Belongs to CS Department",
+      "default_unix_user": "string",
+      "key_vault_uri": "https://kmip-akv-keyvault.vault.azure.net/",
+      "metric": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "duration": "PT15S",
+        "iops": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "status": "ok",
+        "throughput": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "name": "CIFS1",
+      "netbios": {
+        "aliases": [
+          "ALIAS_1",
+          "ALIAS_2",
+          "ALIAS_3"
+        ],
+        "wins_servers": [
+          "10.224.65.20",
+          "10.224.65.21"
+        ]
+      },
+      "oauth_host": "login.microsoftonline.com",
+      "options": {
+        "max_connections_per_session": 32,
+        "max_lifs_per_session": 256,
+        "max_opens_same_file_per_tree": 1000,
+        "max_same_tree_connect_per_session": 5000,
+        "max_same_user_sessions_per_connection": 2500,
+        "max_watches_set_per_tree": 500,
+        "null_user_windows_name": "string",
+        "smb_credits": 128,
+        "widelink_reparse_versions": [
+          "smb1"
+        ]
+      },
+      "proxy_host": "proxy.eng.com",
+      "proxy_port": 1234,
+      "proxy_type": "string",
+      "proxy_username": "proxyuser",
+      "security": {
+        "advertised_kdc_encryptions": [
+          "string"
+        ],
+        "lm_compatibility_level": "string",
+        "restrict_anonymous": "string",
+        "session_security": "string"
+      },
+      "statistics": {
+        "iops_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "status": "ok",
+        "throughput_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "tenant_id": "c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe",
+      "timeout": 25,
+      "workgroup": "workgrp1"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ad_domain]
+[.api-collapsible-fifth-title]
+ad_domain
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_site
+|string
+a|The default site used by LIFs that do not have a site membership.
+
+
+|fqdn
+|string
+a|The fully qualified domain name of the Windows Active Directory to which this CIFS server belongs. A CIFS server appears as a member of Windows server object in the Active Directory store. POST and PATCH only.
+
+
+|organizational_unit
+|string
+a|Specifies the organizational unit within the Active Directory domain to associate with the CIFS server. POST and PATCH only.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS latency and throughput, for SVM protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#cifs_netbios]
+[.api-collapsible-fifth-title]
+cifs_netbios
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aliases
+|array[string]
+a|
+
+|enabled
+|boolean
+a|Specifies whether NetBios name service (NBNS) is enabled for the CIFS. If this service is enabled, the CIFS server will start sending the broadcast for name registration.
+
+
+|wins_servers
+|array[string]
+a|
+
+|===
+
+
+[#cifs_service_options]
+[.api-collapsible-fifth-title]
+cifs_service_options
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|admin_to_root_mapping
+|boolean
+a|Specifies whether or not Administrator can be mapped to the UNIX user "root".
+
+
+|advanced_sparse_file
+|boolean
+a|Specifies whether or not the CIFS server supports the advanced sparse file capabilities. This allows
+CIFS clients to query the allocated ranges of a file and to write zeroes or free data blocks for ranges
+of a file.
+
+
+|backup_symlink_enabled
+|boolean
+a|Specifies whether or not to preserve UNIX symlinks during backup through SMB.
+
+
+|client_dup_detection_enabled
+|boolean
+a|Specifies whether or not client duplicate session detection is enabled for CIFS.
+
+
+|client_version_reporting_enabled
+|boolean
+a|Specifies whether or not client version reporting is enabled for CIFS.
+
+
+|copy_offload
+|boolean
+a|Specifies whether or not to enable the Copy Offload feature. This feature enables direct
+data transfers within or between compatible storage devices without transferring the data
+through the host computer.
+
+Note that this will also enable/disable the direct copy feature accordingly.
+
+
+|dac_enabled
+|boolean
+a|Specifies whether or not the Dynamic Access Control (DAC) feature is enabled for the CIFS server.
+
+
+|export_policy_enabled
+|boolean
+a|Specifies whether or not export policies are enabled for CIFS.
+
+
+|fake_open
+|boolean
+a|Specifies whether or not fake open support is enabled. This parameter allows you to optimize the
+open and close requests coming from SMB 2 clients.
+
+
+|fsctl_trim
+|boolean
+a|Specifies whether or not the trim requests (FSCTL_FILE_LEVEL_TRIM) are supported on the CIFS server.
+
+
+|junction_reparse
+|boolean
+a|Specifies whether or not the reparse point support is enabled. When enabled the CIFS server
+exposes junction points to Windows clients as reparse points. This parameter is only active
+if the client has negotiated use of the SMB 2 or SMB 3 protocol. This parameter is not supported
+for SVMs with Infinite Volume.
+
+
+|large_mtu
+|boolean
+a|Specifies whether or not SMB clients can send reads up to 1 MB in size.
+
+
+|max_connections_per_session
+|integer
+a|Specifies the maximum number of connections allowed per multichannel session.
+
+
+|max_lifs_per_session
+|integer
+a|Specifies the maximum number of LIFs advertised per multichannel session.
+
+
+|max_opens_same_file_per_tree
+|integer
+a|Specifies the maximum number of opens on the same file per tree.
+
+
+|max_same_tree_connect_per_session
+|integer
+a|Specifies the maximum number of same tree connections per session.
+
+
+|max_same_user_sessions_per_connection
+|integer
+a|Specifies the maximum number of same user sessions per connection.
+
+
+|max_watches_set_per_tree
+|integer
+a|Specifies the maximum number of watches set per tree.
+
+
+|multichannel
+|boolean
+a|Specifies whether or not the CIFS server supports Multichannel.
+
+
+|null_user_windows_name
+|string
+a|Specifies a Windows User or Group name that should be mapped in case of a NULL user
+value.
+
+
+|path_component_cache
+|boolean
+a|Specifies whether or not the path component cache is enabled on the CIFS server.
+
+
+|referral
+|boolean
+a|Specifies whether or not to refer clients to more optimal LIFs. When enabled, it automatically
+refers clients to a data LIF local to the node which hosts the root of the requested share.
+
+
+|shadowcopy
+|boolean
+a|Specifies whether or not to enable the Shadowcopy Feature. This feature enables
+to take share-based backup copies of data that is in a data-consistent state at
+a specific point in time where the data is accessed over SMB 3.0 shares.
+
+
+|shadowcopy_dir_depth
+|integer
+a|Specifies the maximum level of subdirectories on which ONTAP should create shadow copies.
+
+* Default value: 5
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|smb_credits
+|integer
+a|Specifies the maximum number of outstanding requests on a CIFS connection.
+
+
+|trusted_domain_enum_search_enabled
+|boolean
+a|Specifies whether or not to enable trusted domain search.
+
+* If this parameter is set to true, it displays CIFS options only for CIFS servers
+that support enumeration of bidirectional trusted domains and that support searching in
+all bidirectional trusted domains when performing Windows user lookups for UNIX user to
+Windows user name mapping.
+* If set to false, it displays CIFS options for CIFS servers that do not support enumeration
+of bidirectional trusted domains.
+
+
+|widelink_reparse_versions
+|array[string]
+a|Specifies the CIFS protocol versions for which the widelink is reported as reparse point.
+
+
+|===
+
+
+[#cifs_service_security]
+[.api-collapsible-fifth-title]
+cifs_service_security
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|advertised_kdc_encryptions
+|array[string]
+a|
+
+|aes_netlogon_enabled
+|boolean
+a|Specifies whether or not an AES session key is enabled for the Netlogon channel.
+
+
+|encrypt_dc_connection
+|boolean
+a|Specifies whether encryption is required for domain controller connections.
+
+
+|kdc_encryption
+|boolean
+a|IMPORTANT: This attribute has been deprecated. Use "security.advertised_kdc_encryptions" to specify the encryption type to use.
+Specifies whether AES-128 and AES-256 encryption is enabled for all Kerberos-based communication with the Active Directory KDC.
+To take advantage of the strongest security with Kerberos-based communication, AES-256 and AES-128 encryption can be enabled on the CIFS server.
+Kerberos-related communication for CIFS is used during CIFS server creation on the SVM, as well
+as during the SMB session setup phase.
+The CIFS server supports the following encryption types for Kerberos communication:
+
+***** RC4-HMAC
+
+***** DES
+
+***** AES
+When the CIFS server is created, the domain controller creates a computer machine account in
+Active Directory. After a newly created machine account authenticates, the KDC and the CIFS server
+negotiates encryption types. At this time, the KDC becomes aware of the encryption capabilities of
+the particular machine account and uses those capabilities in subsequent communication with the
+CIFS server.
+In addition to negotiating encryption types during CIFS server creation, the encryption types are
+renegotiated when a machine account password is reset.
+
+
+|ldap_referral_enabled
+|boolean
+a|Specifies whether or not LDAP referral chasing is enabled for AD LDAP connections.
+
+
+|lm_compatibility_level
+|string
+a|It is CIFS server minimum security level, also known as the LMCompatibilityLevel. The minimum security level is the minimum level of the security tokens that        the CIFS server accepts from SMB clients.
+The available values are:
+
+* lm_ntlm_ntlmv2_krb          Accepts LM, NTLM, NTLMv2 and Kerberos
+* ntlm_ntlmv2_krb             Accepts NTLM, NTLMv2 and Kerberos
+* ntlmv2_krb                  Accepts NTLMv2 and Kerberos
+* krb                         Accepts Kerberos only
+
+
+|restrict_anonymous
+|string
+a|Specifies what level of access an anonymous user is granted. An anonymous user (also known as a "null user") can list or enumerate certain types of system information from Windows hosts on the network, including user names and details, account policies, and share names. Access for the anonymous user can be controlled by specifying one of three access restriction settings.
+ The available values are:
+
+** no_restriction   - No access restriction for an anonymous user.
+
+** no_enumeration   - Enumeration is restricted for an anonymous user.
+
+** no_access        - All access is restricted for an anonymous user.
+
+
+|session_security
+|string
+a|Specifies client session security for AD LDAP connections.
+The available values are:
+
+*** none - No Signing or Sealing.
+
+*** sign - Sign LDAP traffic.
+
+*** seal - Seal and Sign LDAP traffic
+
+
+|smb_encryption
+|boolean
+a|Specifies whether encryption is required for incoming CIFS traffic.
+
+
+|smb_signing
+|boolean
+a|Specifies whether signing is required for incoming CIFS traffic. SMB signing helps to ensure that network traffic between the CIFS server and the client is not compromised.
+
+
+|try_ldap_channel_binding
+|boolean
+a|Specifies whether or not channel binding is attempted in the case of TLS/LDAPS.
+
+
+|use_ldaps
+|boolean
+a|Specifies whether or not to use use LDAPS for secure Active Directory LDAP connections
+by using the TLS/SSL protocols.
+
+
+|use_start_tls
+|boolean
+a|Specifies whether or not to use SSL/TLS for allowing secure LDAP communication with
+Active Directory LDAP servers.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance numbers, such as IOPS latency and throughput for SVM protocols. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_service]
+[.api-collapsible-fifth-title]
+cifs_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ad_domain
+|link:#ad_domain[ad_domain]
+a|
+
+|auth-style
+|string
+a|Authentication type.
+
+
+|auth_user_type
+|string
+a|Specifies the type of user who can access the SMB Volume. The default is domain_user. In the case of a hybrid-user, ONTAP won't contact on-premise ADDS.
+
+* enum: ["domain_user", "hybrid_user"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|authentication_method
+|string
+a|Specifies the authentication method.
+The available values are:
+
+*** client_secret
+
+*** certificate
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|comment
+|string
+a|A descriptive text comment for the CIFS server. SMB clients can see the CIFS server comment when browsing servers on the network. If there is a space in the comment, you must enclose the entire string in quotation marks.
+
+
+|default_unix_user
+|string
+a|Specifies the UNIX user to which any authenticated CIFS user is mapped to, if the normal user mapping rules fails.
+
+
+|enabled
+|boolean
+a|Specifies if the CIFS service is administratively enabled.
+
+
+|group_policy_object_enabled
+|boolean
+a|If set to true, group policies will be applied to the SVM.
+
+
+|key_vault_uri
+|string
+a|URI of the deployed AKV that is used by ONTAP for storing keys.
+
+* example: https://kmip-akv-keyvault.vault.azure.net/
+* format: uri
+* Introduced in: 9.15
+* x-nullable: true
+
+
+|metric
+|link:#metric[metric]
+a|Performance numbers, such as IOPS latency and throughput, for SVM protocols.
+
+
+|name
+|string
+a|The name of the CIFS server.
+
+
+|netbios
+|link:#cifs_netbios[cifs_netbios]
+a|
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|options
+|link:#cifs_service_options[cifs_service_options]
+a|
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|security
+|link:#cifs_service_security[cifs_service_security]
+a|
+
+|statistics
+|link:#statistics[statistics]
+a|These are raw performance numbers, such as IOPS latency and throughput for SVM protocols. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|timeout
+|integer
+a|AKV connection timeout, in seconds. The allowed range is between 0 to 30 seconds.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the AKV host name. By default, verify_host is set to true.
+
+
+|workgroup
+|string
+a|The workgroup name.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

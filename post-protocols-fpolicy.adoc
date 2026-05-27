@@ -1,0 +1,1240 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-fpolicy.html'
+summary: 'Create an FPolicy configuration'
+---
+
+= Create an FPolicy configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/fpolicy`#
+
+*Introduced In:* 9.6
+
+Creates an FPolicy configuration.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the FPolicy configuration.
+
+== Recommended optional properties
+
+* `engines` -  External server to which the notifications will be sent.
+* `events` - File operations to monitor.
+* `policies` - Policy configuration which acts as a container for FPolicy event and FPolicy engine.
+* `scope` - Scope of the policy. Can be limited to exports, volumes, shares or file extensions.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `engines.type` - _synchronous_
+* `policies.engine` - _native_
+* `policies.mandatory` -  _true_
+* `events.volume_monitoring` - _false_
+* `events.file_operations.+*+` - _false_
+* `events.filters.+*+` - _false_
+* `events.monitor_fileop_failure.+*+` - _false_
+
+== Related ONTAP commands
+
+* `fpolicy policy event create`
+* `fpolicy policy external-engine create`
+* `fpolicy policy create`
+* `fpolicy policy scope create`
+* `fpolicy enable`
+* `fpolicy persistent-store create`
+
+== Learn more
+
+* link:protocols_fpolicy_endpoint_overview.html[DOC /protocols/fpolicy]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|engines
+|array[link:#fpolicy_engines[fpolicy_engines]]
+a|
+
+|events
+|array[link:#fpolicy_events[fpolicy_events]]
+a|
+
+|persistent_stores
+|array[link:#fpolicy_persistent_stores[fpolicy_persistent_stores]]
+a|
+
+|policies
+|array[link:#fpolicy_policies[fpolicy_policies]]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "engines": [
+    {
+      "certificate": {
+        "ca": "TASample1",
+        "name": "Sample1-FPolicy-Client",
+        "serial_number": "8DDE112A114D1FBC"
+      },
+      "format": "string",
+      "keep_alive_interval": "PT2M",
+      "max_connection_retries": 5,
+      "max_server_requests": 500,
+      "name": "fp_ex_eng",
+      "port": 9876,
+      "primary_servers": [
+        "10.132.145.20",
+        "10.140.101.109"
+      ],
+      "request_abort_timeout": "PT40S",
+      "request_cancel_timeout": "PT20S",
+      "resiliency": {
+        "directory_path": "/dir1",
+        "retention_duration": "PT3M"
+      },
+      "secondary_servers": [
+        "10.132.145.20",
+        "10.132.145.21"
+      ],
+      "server_progress_timeout": "PT1M",
+      "session_timeout": "PT10S",
+      "ssl_option": "string",
+      "status_request_interval": "PT10S",
+      "type": "string"
+    }
+  ],
+  "events": [
+    {
+      "name": "event_cifs",
+      "protocol": "string"
+    }
+  ],
+  "persistent_stores": [
+    {
+      "autosize_mode": "string",
+      "name": "ps1",
+      "size": "100M",
+      "volume": "psvol"
+    }
+  ],
+  "policies": [
+    {
+      "allow_privileged_access": true,
+      "enabled": true,
+      "engine": {
+        "name": "string"
+      },
+      "events": [
+        "event_cifs",
+        "event_open"
+      ],
+      "name": "fp_policy_1",
+      "persistent_store": "ps1",
+      "priority": 1,
+      "privileged_user": "mydomain\\testuser",
+      "scope": {
+        "exclude_export_policies": [
+          "string"
+        ],
+        "exclude_extension": [
+          "string"
+        ],
+        "exclude_shares": [
+          "string"
+        ],
+        "exclude_volumes": [
+          "vol1",
+          "vol_svm1",
+          "*"
+        ],
+        "include_export_policies": [
+          "string"
+        ],
+        "include_extension": [
+          "string"
+        ],
+        "include_shares": [
+          "sh1",
+          "share_cifs"
+        ],
+        "include_volumes": [
+          "vol1",
+          "vol_svm1"
+        ]
+      }
+    }
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#fpolicy[fpolicy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "engines": [
+        {
+          "certificate": {
+            "ca": "TASample1",
+            "name": "Sample1-FPolicy-Client",
+            "serial_number": "8DDE112A114D1FBC"
+          },
+          "format": "string",
+          "keep_alive_interval": "PT2M",
+          "max_connection_retries": 5,
+          "max_server_requests": 500,
+          "name": "fp_ex_eng",
+          "port": 9876,
+          "primary_servers": [
+            "10.132.145.20",
+            "10.140.101.109"
+          ],
+          "request_abort_timeout": "PT40S",
+          "request_cancel_timeout": "PT20S",
+          "resiliency": {
+            "directory_path": "/dir1",
+            "retention_duration": "PT3M"
+          },
+          "secondary_servers": [
+            "10.132.145.20",
+            "10.132.145.21"
+          ],
+          "server_progress_timeout": "PT1M",
+          "session_timeout": "PT10S",
+          "ssl_option": "string",
+          "status_request_interval": "PT10S",
+          "type": "string"
+        }
+      ],
+      "events": [
+        {
+          "name": "event_cifs",
+          "protocol": "string"
+        }
+      ],
+      "persistent_stores": [
+        {
+          "autosize_mode": "string",
+          "name": "ps1",
+          "size": "100M",
+          "volume": "psvol"
+        }
+      ],
+      "policies": [
+        {
+          "allow_privileged_access": true,
+          "enabled": true,
+          "engine": {
+            "name": "string"
+          },
+          "events": [
+            "event_cifs",
+            "event_open"
+          ],
+          "name": "fp_policy_1",
+          "persistent_store": "ps1",
+          "priority": 1,
+          "privileged_user": "mydomain\\testuser",
+          "scope": {
+            "exclude_export_policies": [
+              "string"
+            ],
+            "exclude_extension": [
+              "string"
+            ],
+            "exclude_shares": [
+              "string"
+            ],
+            "exclude_volumes": [
+              "vol1",
+              "vol_svm1",
+              "*"
+            ],
+            "include_export_policies": [
+              "string"
+            ],
+            "include_extension": [
+              "string"
+            ],
+            "include_shares": [
+              "sh1",
+              "share_cifs"
+            ],
+            "include_volumes": [
+              "vol1",
+              "vol_svm1"
+            ]
+          }
+        }
+      ],
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 9765032
+| The FPolicy engine, FPolicy event or FPolicy policy specified already exists
+
+| 9765031
+| If any of the FPolicy engine, FPolicy event, or FPolicy policy creation fails due to a systematic error or hardware failure, the cause of the failure is detailed in the error message
+
+| 2621706
+| The SVM UUID specified belongs to different SVM
+
+| 2621462
+| The SVM name specified does not exist
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#buffer_size]
+[.api-collapsible-fifth-title]
+buffer_size
+
+Specifies the send and receive buffer size of the connected socket for the FPolicy server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|recv_buffer
+|integer
+a|Specifies the receive buffer size of the connected socket for the FPolicy server. Default value is 256KB.
+
+
+|send_buffer
+|integer
+a|Specifies the send buffer size of the connected socket for the FPolicy server. Default value 1MB.
+
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Provides details about certificate used to authenticate the FPolicy server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ca
+|string
+a|Specifies the certificate authority (CA) name of the certificate
+used for authentication if SSL authentication between the SVM and the FPolicy
+server is configured.
+
+
+|name
+|string
+a|Specifies the certificate name as a fully qualified domain
+name (FQDN) or custom common name. The certificate is used if SSL authentication
+between the SVM and the FPolicy server is configured.
+
+
+|serial_number
+|string
+a|Specifies the serial number of the certificate used for
+authentication if SSL authentication between the SVM and the FPolicy
+server is configured.
+
+
+|===
+
+
+[#resiliency]
+[.api-collapsible-fifth-title]
+resiliency
+
+If all primary and secondary servers are down, or if no response is received from the FPolicy servers, file access events are stored inside the storage controller under the specified resiliency-directory-path.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|directory_path
+|string
+a|Specifies the directory path under the SVM namespace,
+where notifications are stored in the files whenever a network outage happens.
+
+
+|enabled
+|boolean
+a|Specifies whether the resiliency feature is enabled or not.
+Default is false.
+
+
+|retention_duration
+|string
+a|Specifies the ISO-8601 duration, for which the notifications are written
+to files inside the storage controller during a network outage. The value for
+this field must be between 0 and 600 seconds. Default is 180 seconds.
+
+
+|===
+
+
+[#fpolicy_engines]
+[.api-collapsible-fifth-title]
+fpolicy_engines
+
+Defines how ONTAP makes and manages connections to external FPolicy servers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|buffer_size
+|link:#buffer_size[buffer_size]
+a|Specifies the send and receive buffer size of the connected socket for the FPolicy server.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Provides details about certificate used to authenticate the FPolicy server.
+
+
+|format
+|string
+a|The format for the notification messages sent to the FPolicy servers.
+The possible values are:
+
+***** xml  - Notifications sent to the FPolicy server will be formatted using the XML schema.
+
+***** protobuf - Notifications sent to the FPolicy server will be formatted using Protobuf schema, which is a binary form.
+
+
+|keep_alive_interval
+|string
+a|Specifies the ISO-8601 interval time for a storage appliance to send Keep Alive message to an FPolicy server. The allowed range is between 10 to 600 seconds.
+
+
+|max_connection_retries
+|integer
+a|This parameter specifies the maximum number of attempts to reconnect to the FPolicy server from an SVM. It is used to specify the number of times a broken connection will be retried. The value for this field must be between 0 and 20. By default, it is 5.
+
+
+|max_server_requests
+|integer
+a|Specifies the maximum number of outstanding requests for the FPolicy server. It is used to specify maximum outstanding requests that will be queued up for the FPolicy server. The value for this field must be between 1 and 10000.  The default values are 500, 1000 or 2000 for Low-end(<64 GB memory), Mid-end(>=64 GB memory) and High-end(>=128 GB memory) Platforms respectively.
+
+
+|name
+|string
+a|Specifies the name to assign to the external server configuration.
+
+
+|port
+|integer
+a|Port number of the FPolicy server application.
+
+
+|primary_servers
+|array[string]
+a|
+
+|request_abort_timeout
+|string
+a|Specifies the ISO-8601 timeout duration for a screen request to be aborted by a storage appliance. The allowed range is between 0 to 200 seconds.
+
+
+|request_cancel_timeout
+|string
+a|Specifies the ISO-8601 timeout duration for a screen request to be processed by an FPolicy server. The allowed range is between 0 to 100 seconds.
+
+
+|resiliency
+|link:#resiliency[resiliency]
+a|If all primary and secondary servers are down, or if no response is received from the FPolicy servers, file access events are stored inside the storage controller under the specified resiliency-directory-path.
+
+
+|secondary_servers
+|array[string]
+a|
+
+|server_progress_timeout
+|string
+a|Specifies the ISO-8601 timeout duration in which a throttled FPolicy server must complete at least one screen request. If no request is processed within the timeout, connection to the FPolicy server is terminated. The allowed range is between 0 to 100 seconds.
+
+
+|session_timeout
+|string
+a|This parameter specifies the interval after which a new session ID is sent to the FPolicy server during reconnection attempts. The default value is set to 10 seconds. If the connection between the storage controller and the FPolicy server is terminated and reconnection is made within the -session-timeout interval, the old session ID is sent to the FPolicy server so that it can send responses for old notifications.
+
+
+|ssl_option
+|string
+a|Specifies the SSL option for external communication with the FPolicy server. Possible values include the following:
+
+* no_auth       When set to "no_auth", no authentication takes place.
+* server_auth   When set to "server_auth", only the FPolicy server is authenticated by the SVM. With this option, before creating the FPolicy external engine, the administrator must install the public certificate of the certificate authority (CA) that signed the FPolicy server certificate.
+* mutual_auth   When set to "mutual_auth", mutual authentication takes place between the SVM and the FPolicy server. This means authentication of the FPolicy server by the SVM along with authentication of the SVM by the FPolicy server. With this option, before creating the FPolicy external engine, the administrator must install the public certificate of the certificate authority (CA) that signed the FPolicy server certificate along with the public certificate and key file for authentication of the SVM.
+
+
+|status_request_interval
+|string
+a|Specifies the ISO-8601 interval time for a storage appliance to query a status request from an FPolicy server. The allowed range is between 0 to 50 seconds.
+
+
+|type
+|string
+a|The notification mode determines what ONTAP does after sending notifications to FPolicy servers.
+The possible values are:
+
+***** synchronous  - After sending a notification, wait for a response from the FPolicy server.
+
+***** asynchronous - After sending a notification, file request processing continues.
+
+* Default value: 1
+* enum: ["synchronous", "asynchronous"]
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|===
+
+
+[#file_operations]
+[.api-collapsible-fifth-title]
+file_operations
+
+Specifies the file operations for the FPolicy event. You must specify a valid protocol in the protocol parameter.
+The event will check the operations specified from all client requests using the protocol.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|boolean
+a|Access operations
+
+
+|close
+|boolean
+a|File close operations
+
+
+|create
+|boolean
+a|File create operations
+
+
+|create_dir
+|boolean
+a|Directory create operations
+
+
+|delete
+|boolean
+a|File delete operations
+
+
+|delete_dir
+|boolean
+a|Directory delete operations
+
+
+|getattr
+|boolean
+a|Get attribute operations
+
+
+|link
+|boolean
+a|Link operations
+
+
+|lookup
+|boolean
+a|Lookup operations
+
+
+|open
+|boolean
+a|File open operations
+
+
+|read
+|boolean
+a|File read operations
+
+
+|rename
+|boolean
+a|File rename operations
+
+
+|rename_dir
+|boolean
+a|Directory rename operations
+
+
+|setattr
+|boolean
+a|Set attribute operations
+
+
+|symlink
+|boolean
+a|Symbolic link operations
+
+
+|write
+|boolean
+a|File write operations
+
+
+|===
+
+
+[#filters]
+[.api-collapsible-fifth-title]
+filters
+
+Specifies the list of filters for a given file operation for the specified protocol.
+When you specify the filters, you must specify the valid protocols and a valid file operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|close_with_modification
+|boolean
+a|Filter the client request for close with modification.
+
+
+|close_with_read
+|boolean
+a|Filter the client request for close with read.
+
+
+|close_without_modification
+|boolean
+a|Filter the client request for close without modification.
+
+
+|exclude_directory
+|boolean
+a|Filter the client requests for directory operations. When this filter is specified directory operations are not monitored.
+
+
+|first_read
+|boolean
+a|Filter the client requests for the first-read.
+
+
+|first_write
+|boolean
+a|Filter the client requests for the first-write.
+
+
+|monitor_ads
+|boolean
+a|Filter the client request for alternate data stream.
+
+
+|offline_bit
+|boolean
+a|Filter the client request for offline bit set. FPolicy server receives notification only when offline files are accessed.
+
+
+|open_with_delete_intent
+|boolean
+a|Filter the client request for open with delete intent.
+
+
+|open_with_write_intent
+|boolean
+a|Filter the client request for open with write intent.
+
+
+|setattr_with_access_time_change
+|boolean
+a|Filter the client setattr requests for changing the access time of a file or directory.
+
+
+|setattr_with_allocation_size_change
+|boolean
+a|Filter the client setattr requests for changing the allocation size of a file.
+
+
+|setattr_with_creation_time_change
+|boolean
+a|Filter the client setattr requests for changing the creation time of a file or directory.
+
+
+|setattr_with_dacl_change
+|boolean
+a|Filter the client setattr requests for changing dacl on a file or directory.
+
+
+|setattr_with_group_change
+|boolean
+a|Filter the client setattr requests for changing group of a file or directory.
+
+
+|setattr_with_mode_change
+|boolean
+a|Filter the client setattr requests for changing the mode bits on a file or directory.
+
+
+|setattr_with_modify_time_change
+|boolean
+a|Filter the client setattr requests for changing the modification time of a file or directory.
+
+
+|setattr_with_owner_change
+|boolean
+a|Filter the client setattr requests for changing owner of a file or directory.
+
+
+|setattr_with_sacl_change
+|boolean
+a|Filter the client setattr requests for changing sacl on a file or directory.
+
+
+|setattr_with_size_change
+|boolean
+a|Filter the client setattr requests for changing the size of a file.
+
+
+|write_with_size_change
+|boolean
+a|Filter the client request for write with size change.
+
+
+|===
+
+
+[#fpolicy_events]
+[.api-collapsible-fifth-title]
+fpolicy_events
+
+The information that a FPolicy process needs to determine what file access operations to monitor and for which of the monitored events notifications should be sent to the external FPolicy server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_operations
+|link:#file_operations[file_operations]
+a|Specifies the file operations for the FPolicy event. You must specify a valid protocol in the protocol parameter.
+The event will check the operations specified from all client requests using the protocol.
+
+
+|filters
+|link:#filters[filters]
+a|Specifies the list of filters for a given file operation for the specified protocol.
+When you specify the filters, you must specify the valid protocols and a valid file operations.
+
+
+|monitor_fileop_failure
+|boolean
+a|Specifies whether failed file operations monitoring is required.
+
+
+|name
+|string
+a|Specifies the name of the FPolicy event.
+
+
+|protocol
+|string
+a|Protocol for which event is created. If you specify protocol, then you
+must also specify a valid value for the file operation parameters.
+The value of this parameter must be one of the following:
+
+***** cifs  - for the CIFS protocol.
+
+***** nfsv3 - for the NFSv3 protocol.
+
+***** nfsv4 - for the NFSv4 protocol.
+
+
+|volume_monitoring
+|boolean
+a|Specifies whether volume operation monitoring is required.
+
+
+|===
+
+
+[#fpolicy_persistent_stores]
+[.api-collapsible-fifth-title]
+fpolicy_persistent_stores
+
+The information that an FPolicy process needs in order to configure a Persistent Store.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autosize_mode
+|string
+a|Autosize mode for the volume.
+grow &dash; Volume automatically grows in response to the amount of space used.
+grow_shrink &dash; Volume grows or shrinks in response to the amount of space used.
+off &dash; Autosizing of the volume is disabled.
+
+
+|name
+|string
+a|The name specified for the FPolicy Persistent Store.
+
+
+|size
+|integer
+a|The size of the Persistent Store volume, in bytes.
+
+
+|volume
+|string
+a|The specified volume to store the events for the FPolicy Persistent Store.
+
+
+|===
+
+
+[#fpolicy_engine_reference]
+[.api-collapsible-fifth-title]
+fpolicy_engine_reference
+
+FPolicy external engine
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the FPolicy external engine.
+
+
+|===
+
+
+[#fpolicy_event_reference]
+[.api-collapsible-fifth-title]
+fpolicy_event_reference
+
+FPolicy events
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|check_extensions_on_directories
+|boolean
+a|Specifies whether the file name extension checks also apply to directory objects. If this parameter is set to true,
+the directory objects are subjected to the same extension checks as regular files. If this parameter is set to false,
+the directory names are not matched for extensions and notifications are sent for directories even if their name
+extensions do not match. Default is false.
+
+
+|exclude_export_policies
+|array[string]
+a|
+
+|exclude_extension
+|array[string]
+a|
+
+|exclude_shares
+|array[string]
+a|
+
+|exclude_volumes
+|array[string]
+a|
+
+|include_export_policies
+|array[string]
+a|
+
+|include_extension
+|array[string]
+a|
+
+|include_shares
+|array[string]
+a|
+
+|include_volumes
+|array[string]
+a|
+
+|object_monitoring_with_no_extension
+|boolean
+a|Specifies whether the extension checks also apply to objects with no extension. If this parameter is set to true,
+all objects with or without extensions are monitored. Default is false.
+
+
+|===
+
+
+[#fpolicy_policies]
+[.api-collapsible-fifth-title]
+fpolicy_policies
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|engine
+|link:#fpolicy_engine_reference[fpolicy_engine_reference]
+a|FPolicy external engine
+
+
+|events
+|array[link:#fpolicy_event_reference[fpolicy_event_reference]]
+a|
+
+|mandatory
+|boolean
+a|Specifies what action to take on a file access event in a case when all primary and secondary servers are down or no response is received from the FPolicy servers within a given timeout period. When this parameter is set to true, file access events will be denied under these circumstances.
+
+
+|name
+|string
+a|Specifies the name of the policy.
+
+
+|passthrough_read
+|boolean
+a|Specifies whether passthrough-read should be allowed for FPolicy servers
+registered for the policy. Passthrough-read is a way to read data for
+offline files without restoring the files to primary storage. Offline
+files are files that have been moved to secondary storage.
+
+
+|persistent_store
+|string
+a|Specifies the persistent storage name. This can then be used
+to enable persistent mode for FPolicy events.
+
+
+|priority
+|integer
+a|Specifies the priority that is assigned to this policy.
+
+
+|privileged_user
+|string
+a|Specifies the privileged user name for accessing files on the cluster
+using a separate data channel with privileged access. The input for
+this field should be in "domain\username" format.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#fpolicy]
+[.api-collapsible-fifth-title]
+fpolicy
+
+FPolicy is an infrastructure component of ONTAP that enables partner applications connected to your storage systems to monitor and set file access permissions. Every time a client accesses a file from a storage system, based on the configuration of FPolicy, the partner application is notified about file access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|engines
+|array[link:#fpolicy_engines[fpolicy_engines]]
+a|
+
+|events
+|array[link:#fpolicy_events[fpolicy_events]]
+a|
+
+|persistent_stores
+|array[link:#fpolicy_persistent_stores[fpolicy_persistent_stores]]
+a|
+
+|policies
+|array[link:#fpolicy_policies[fpolicy_policies]]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,110 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'san_overview.html'
+summary: 'ONTAP REST API SAN endpoints'
+---
+
+= ONTAP REST API SAN endpoints
+
+
+
+== Overview
+
+The storage area network (SAN) endpoints and objects enable you to configure, provision, and manage SAN-related objects.
+
+'''
+
+== Fibre Channel
+
+=== Logins
+
+Fibre Channel logins represent connections, formed by Fibre Channel initiators, that have successfully logged in to ONTAP. This represents the Fibre Channel login on which higher-level protocols, such as Fibre Channel Protocol (FCP) and Non-Volatile Memory Express over Fibre Channel (NVMe over FC), rely.
+
+The Fibre Channel logins REST API provides information about active Fibre Channel logins.
+
+=== WWPN Aliases
+
+A WWPN (world wide port name) is a unique 64-bit identifier for a Fibre Channel initiator. It is displayed as a 16-character hexadecimal value. SAN administrators may find it easier to identify Fibre Channel initiators using an alias, especially in larger SANs.
+
+The WWPN alias REST API allows you to create, delete and discover aliases for WWPNs.
+
+=== Services
+
+A Fibre Channel Protocol (FCP) service defines the properties of the Fibre Channel Protocol target for an SVM. There can be at most one FCP service for a given SVM. An SVM's FCP service must be created before FCP initiators can login to the SVM.
+
+The Fibre Channel Protocol (FCP) service REST API allows you to create, update, delete, and discover Fibre Channel Services for SVMs.
+Fibre Channel interfaces are the logical endpoints for Fibre Channel network connections to an SVM.
+
+'''
+
+== iSCSI
+
+=== Credentials
+
+An iSCSI credentials object defines the authentication credentials to be used between an iSCSI initiator and ONTAP. It identifies an authentication type, user names, and the passwords that must be used to authenticate a specific initiator.
+
+The iSCSI credentials REST API allows you to create, update, delete, and discover iSCSI credential objects.
+
+=== Services
+
+An iSCSI service defines the properties of the iSCSI target for an SVM. There can be at most one iSCSI service for an SVM. An SVM's iSCSI service must be created before iSCSI initiators can login to the SVM.
+
+The iSCSI service REST API allows you to create, update, delete, and discover iSCSI services for SVMs.
+
+=== Sessions
+
+An iSCSI session consists of one or more TCP connections that link an iSCSI initiator with an iSCSI target. TCP connections can be added and removed from an iSCSI session by the iSCSI initiator. Across all TCP connections within an iSCSI session, an initiator sees one and the same target. After the connection is established, iSCSI control, data, and status messages are communicated over the session.
+
+The iSCSI sessions REST API provides information about iSCSI initiators that have successfully logged in to ONTAP.
+
+=== Learn More
+
+* _IP Interfaces_ found in the _networking_ section. IP interfaces are the logical endpoints for iSCSI network connections to an SVM.
+
+'''
+
+== Initiator Groups
+
+An initiator group (igroup) is a collection of Fibre Channel WWPNs (world wide port names), iSCSI IQNs (qualified names), iSCSI EUIs (extended unique identifiers), or any combination of these, that identify host initiators.
+
+Initiator groups are used to control which hosts can access specific LUNs. To grant access to a LUN from one or more hosts, a network administrator creates an initiator group containing the hosts' initiator names, and then creates a LUN map that associates the initiator group with the LUN.
+
+The initiator group REST API allows you to create, update, delete, and discover initiator groups. It also enables you to add and remove initiators that can access the target and associated LUNs.
+
+== Portsets
+
+A portset is a collection of Fibre Channel Protocol and/or iSCSI network interfaces from the portset's SVM.
+
+Portsets are used to limit the network interfaces through which an initiator can connect to mapped LUNs. When a portset is bound to an initiator group (igroup), and the initiator group is mapped to a LUN, the initiators of the initiator group can only reach the LUN through the network interfaces in the portset.
+
+Portsets are not recommended for new configurations. With modern releases of ONTAP, it is recommended to use multiple SVMs and initiator groups with no bound portset to load balance applications over multiple ports on a node. Selective LUN mapping will automatically limit the number of visible paths to a LUN from the client host to those required for efficient access and high availability. The REST portset API is primarily intended for legacy use.
+
+The portset REST API allows you to create, delete, and discover portsets, and to add and remove network interfaces from portsets.
+
+A portset can be bound to one or more initiator groups. An initiator group (igroup) can be bound to at most one portset.
+
+== LUN Maps
+
+A LUN map is an association between a LUN and an initiator group. When a LUN is mapped to an initiator group, the group's initiators are granted access to the LUN. The relationship between an initiator group and a LUN is many initiator groups to many LUNs.
+
+The LUN map REST API allows you to create, delete, and discover LUN maps and manage the reporting nodes of a LUN map.
+
+== LUNs
+
+A LUN is the logical representation of storage in a storage area network (SAN).
+
+The LUN REST API allows you to create, update, delete, and discover LUNs.
+
+== VMware Virtual Volume (vVol) Bindings
+
+A VMware virtual volume (vVol) binding is an association between a LUN of class `protocol_endpoint` and a LUN of class `vvol`. Class `protocol_endpoint` LUNs are mapped to igroups and granted access using the same configuration as class `regular` LUNs. When a class `vvol` LUN is bound to a mapped class `protocol_endpoint` LUN, VMware can access the class `vvol` LUN through the class `protocol_endpoint` LUN mapping.
+
+Class `protocol_endpoint` and `vvol` LUNs support many-to-many vVol bindings. A LUN of one class can be bound to zero or more LUNs of the opposite class.
+
+The vVol binding between any two specific LUNs is reference counted. When a REST POST is executed for a vVol binding that already exists, the vVol binding reference count is incremented. When a REST DELETE is executed, the vVol binding reference count is decremented. Only when the vVol binding count reaches zero, or the query parameter `delete_all_references` is supplied, is the vVol binding destroyed.
+
+The vVol binding REST API allows you to create, delete, and discover vVol bindings.
+
+

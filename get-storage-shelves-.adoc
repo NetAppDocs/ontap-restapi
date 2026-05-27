@@ -1,0 +1,1252 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-shelves-.html'
+summary: 'Retrieve a shelf'
+---
+
+= Retrieve a shelf
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/shelves/{uid}`#
+
+*Introduced In:* 9.6
+
+Retrieves a specific shelf.
+
+== Related ONTAP commands
+
+* `storage shelf show`
+* `storage shelf port show`
+* `storage shelf drawer show`
+* `storage shelf drawer show-slot`
+* `storage shelf acp show`
+
+== Learn more
+
+* link:storage_shelves_endpoint_overview.html[DOC /storage/shelves]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uid
+|string
+|path
+|True
+a|Shelf UID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|acps
+|array[link:#acps[acps]]
+a|Alternate Control Paths to ACP processors/functions in shelf modules and expanders
+
+
+|bays
+|array[link:#bays[bays]]
+a|
+
+|connection_type
+|string
+a|
+
+|current_sensors
+|array[link:#current_sensors[current_sensors]]
+a|
+
+|disk_count
+|integer
+a|
+
+|drawers
+|array[link:#drawers[drawers]]
+a|
+
+|errors
+|array[link:#errors[errors]]
+a|
+
+|fans
+|array[link:#fans[fans]]
+a|
+
+|frus
+|array[link:#frus[frus]]
+a|
+
+|id
+|string
+a|
+
+|internal
+|boolean
+a|
+
+|local
+|boolean
+a|
+
+|location_led
+|string
+a|
+
+|manufacturer
+|link:#manufacturer[manufacturer]
+a|
+
+|model
+|string
+a|
+
+|module_type
+|string
+a|
+
+|name
+|string
+a|
+
+|paths
+|array[link:#paths[paths]]
+a|
+
+|ports
+|array[link:#ports[ports]]
+a|
+
+|raw_capacity
+|integer
+a|Raw capacity of drives in shelf in 4k blocks
+
+
+|serial_number
+|string
+a|
+
+|state
+|string
+a|
+
+|temperature_sensors
+|array[link:#temperature_sensors[temperature_sensors]]
+a|
+
+|uid
+|string
+a|
+
+|vendor
+|link:#vendor[vendor]
+a|
+
+|voltage_sensors
+|array[link:#voltage_sensors[voltage_sensors]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "acps": [
+    {
+      "address": "192.168.1.104",
+      "channel": "out_of_band",
+      "connection_state": "full_connectivity",
+      "error": {
+        "reason": {
+          "arguments": [
+            {
+              "code": "string",
+              "message": "string"
+            }
+          ],
+          "code": "4",
+          "message": "entry doesn't exist"
+        },
+        "severity": "string",
+        "type": "string"
+      },
+      "netmask": "255.255.252.0",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "port": "e0P",
+      "subnet": "192.168.0.1"
+    }
+  ],
+  "bays": [
+    {
+      "drawer": {
+        "id": 1,
+        "slot": 0
+      },
+      "id": 0,
+      "state": "ok",
+      "type": "single_disk"
+    }
+  ],
+  "connection_type": "sas",
+  "current_sensors": [
+    {
+      "current": 14410,
+      "id": 1,
+      "installed": 1,
+      "location": "rear of the shelf on the lower left power supply",
+      "state": "ok"
+    }
+  ],
+  "disk_count": 12,
+  "drawers": [
+    {
+      "disk_count": 12,
+      "error": "string",
+      "part_number": "111-03071",
+      "serial_number": "021604008263",
+      "state": "ok"
+    }
+  ],
+  "errors": [
+    {
+      "reason": {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": "4",
+        "message": "entry doesn't exist"
+      }
+    }
+  ],
+  "fans": [
+    {
+      "id": 1,
+      "installed": 1,
+      "location": "rear of the shelf on the lower left power supply",
+      "rpm": 3020,
+      "state": "ok"
+    }
+  ],
+  "frus": [
+    {
+      "firmware_version": "0191",
+      "installed": 1,
+      "part_number": "111-00690+A2",
+      "psu": {
+        "crest_factor": 92,
+        "model": "00",
+        "power_drawn": 210,
+        "power_rating": 1600
+      },
+      "serial_number": "8000166294",
+      "state": "error",
+      "type": "module"
+    }
+  ],
+  "id": "1",
+  "location_led": "off",
+  "manufacturer": {
+    "name": "NETAPP"
+  },
+  "model": "DS2246",
+  "module_type": "iom6",
+  "name": "1.1",
+  "paths": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "2a",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "ports": [
+    {
+      "cable": {
+        "identifier": "500a0980000b6c3f-50000d1703544b80",
+        "length": "2m",
+        "part_number": "112-00431+A0",
+        "serial_number": "616930439"
+      },
+      "designator": "square",
+      "id": 0,
+      "mac_address": "string",
+      "module_id": "a",
+      "remote": {
+        "chassis": "string",
+        "device": "string",
+        "mac_address": "string",
+        "phy": "12",
+        "port": "string",
+        "wwn": "50000D1703544B80"
+      },
+      "speed": 100,
+      "state": "connected",
+      "wwn": "500A0980000B6C3F"
+    }
+  ],
+  "raw_capacity": 5157308772,
+  "serial_number": "SHFMS1514000895",
+  "state": "ok",
+  "temperature_sensors": [
+    {
+      "ambient": "",
+      "id": 1,
+      "installed": 1,
+      "location": "temp sensor on midplane left",
+      "state": "ok",
+      "temperature": 32,
+      "threshold": {
+        "high": {
+          "critical": 60,
+          "warning": 55
+        },
+        "low": {
+          "critical": 0,
+          "warning": 5
+        }
+      }
+    }
+  ],
+  "uid": "7777841915827391056",
+  "vendor": {
+    "manufacturer": "XYZ",
+    "name": "XYZ",
+    "part_number": "A92831142733",
+    "product": "LS2246",
+    "serial_number": "891234572210221"
+  },
+  "voltage_sensors": [
+    {
+      "id": 1,
+      "installed": 1,
+      "location": "rear of the shelf on the lower left power supply",
+      "state": "ok",
+      "voltage": 12.18
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Error object is populated when connection_state becomes non-optimal
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reason
+|link:#error[error]
+a|
+
+|severity
+|string
+a|
+
+|type
+|string
+a|
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#acps]
+[.api-collapsible-fifth-title]
+acps
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|
+
+|channel
+|string
+a|
+
+|connection_state
+|string
+a|
+
+|enabled
+|boolean
+a|
+
+|error
+|link:#error[error]
+a|Error object is populated when connection_state becomes non-optimal
+
+
+|netmask
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|port
+|string
+a|
+
+|subnet
+|string
+a|
+
+|===
+
+
+[#drawer]
+[.api-collapsible-fifth-title]
+drawer
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|The drawer containing this bay
+
+
+|slot
+|integer
+a|The drawer slot for this bay
+
+
+|===
+
+
+[#bays]
+[.api-collapsible-fifth-title]
+bays
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|drawer
+|link:#drawer[drawer]
+a|
+
+|has_disk
+|boolean
+a|
+
+|id
+|integer
+a|
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|===
+
+
+[#current_sensors]
+[.api-collapsible-fifth-title]
+current_sensors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|current
+|integer
+a|Current, in milliamps
+
+
+|id
+|integer
+a|
+
+|installed
+|boolean
+a|
+
+|location
+|string
+a|
+
+|state
+|string
+a|
+
+|===
+
+
+[#drawers]
+[.api-collapsible-fifth-title]
+drawers
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|closed
+|boolean
+a|
+
+|disk_count
+|integer
+a|
+
+|error
+|string
+a|
+
+|id
+|integer
+a|
+
+|part_number
+|string
+a|
+
+|serial_number
+|string
+a|
+
+|state
+|string
+a|
+
+|===
+
+
+[#errors]
+[.api-collapsible-fifth-title]
+errors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reason
+|link:#error[error]
+a|
+
+|===
+
+
+[#fans]
+[.api-collapsible-fifth-title]
+fans
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|
+
+|installed
+|boolean
+a|
+
+|location
+|string
+a|
+
+|rpm
+|integer
+a|
+
+|state
+|string
+a|
+
+|===
+
+
+[#psu]
+[.api-collapsible-fifth-title]
+psu
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|crest_factor
+|integer
+a|The ratio of the peak voltage to the root-mean-square voltage
+
+
+|model
+|string
+a|
+
+|power_drawn
+|integer
+a|Power drawn, in watts
+
+
+|power_rating
+|integer
+a|Power rating, in watts
+
+
+|===
+
+
+[#frus]
+[.api-collapsible-fifth-title]
+frus
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|firmware_version
+|string
+a|
+
+|id
+|integer
+a|
+
+|installed
+|boolean
+a|
+
+|part_number
+|string
+a|
+
+|psu
+|link:#psu[psu]
+a|
+
+|serial_number
+|string
+a|
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|===
+
+
+[#manufacturer]
+[.api-collapsible-fifth-title]
+manufacturer
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#paths]
+[.api-collapsible-fifth-title]
+paths
+
+Storage port
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#cable]
+[.api-collapsible-fifth-title]
+cable
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|identifier
+|string
+a|
+
+|length
+|string
+a|
+
+|part_number
+|string
+a|
+
+|serial_number
+|string
+a|
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|chassis
+|string
+a|
+
+|device
+|string
+a|
+
+|mac_address
+|string
+a|
+
+|phy
+|string
+a|
+
+|port
+|string
+a|
+
+|wwn
+|string
+a|
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cable
+|link:#cable[cable]
+a|
+
+|designator
+|string
+a|
+
+|id
+|integer
+a|
+
+|internal
+|boolean
+a|
+
+|mac_address
+|string
+a|
+
+|module_id
+|string
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|speed
+|integer
+a|
+
+|state
+|string
+a|
+
+|wwn
+|string
+a|
+
+|===
+
+
+[#high]
+[.api-collapsible-fifth-title]
+high
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|critical
+|integer
+a|High critical threshold, in degrees Celsius
+
+
+|warning
+|integer
+a|High warning threshold, in degrees Celsius
+
+
+|===
+
+
+[#low]
+[.api-collapsible-fifth-title]
+low
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|critical
+|integer
+a|Low critical threshold, in degrees Celsius
+
+
+|warning
+|integer
+a|Low warning threshold, in degrees Celsius
+
+
+|===
+
+
+[#threshold]
+[.api-collapsible-fifth-title]
+threshold
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|high
+|link:#high[high]
+a|
+
+|low
+|link:#low[low]
+a|
+
+|===
+
+
+[#temperature_sensors]
+[.api-collapsible-fifth-title]
+temperature_sensors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ambient
+|boolean
+a|Sensor that measures the ambient temperature
+
+
+|id
+|integer
+a|
+
+|installed
+|boolean
+a|
+
+|location
+|string
+a|
+
+|state
+|string
+a|
+
+|temperature
+|integer
+a|Temperature, in degrees Celsius
+
+
+|threshold
+|link:#threshold[threshold]
+a|
+
+|===
+
+
+[#vendor]
+[.api-collapsible-fifth-title]
+vendor
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|manufacturer
+|string
+a|Support for this field will be removed in a future release. Please use vendor.name for this field.
+
+
+|name
+|string
+a|
+
+|part_number
+|string
+a|Part number
+
+
+|product
+|string
+a|Product name
+
+
+|serial_number
+|string
+a|Serial number
+
+
+|===
+
+
+[#voltage_sensors]
+[.api-collapsible-fifth-title]
+voltage_sensors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|
+
+|installed
+|boolean
+a|
+
+|location
+|string
+a|
+
+|state
+|string
+a|
+
+|voltage
+|number
+a|Voltage, in volts
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

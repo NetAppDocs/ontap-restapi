@@ -1,0 +1,272 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_ports_endpoint_overview.html'
+summary: 'Manage storage ports'
+---
+
+= Manage storage ports
+
+
+
+== Retrieving storage port information
+
+The storage port GET API retrieves all of the storage ports in the cluster.
+
+'''
+
+== Examples
+
+=== 1) Retrieve a list of storage ports from the cluster
+
+==== The following example shows the response with a list of storage ports in the cluster:
+
+'''
+
+----
+
+# The API:
+/api/storage/ports
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/ports" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0a",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0a"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0b",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0b"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0c",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0c"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0d",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0d"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0e",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0e"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0f",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0f"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node-1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+        }
+      }
+    },
+    "name": "0g",
+    "_links": {
+      "self": {
+        "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0g"
+      }
+    }
+  },
+],
+"num_records": 7,
+"_links": {
+  "self": {
+    "href": "/api/storage/ports"
+  }
+}
+}
+----
+
+'''
+
+=== 2) Retrieve a specific storage port from the cluster
+
+==== The following example shows the response of the requested storage port. If there is no storage port with the requested node uuid and name, an error is returned.
+
+'''
+
+----
+
+# The API:
+/api/storage/ports/{node.uuid}/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0a" -H "accept: application/hal+json"
+
+# The response:
+{
+"node": {
+  "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+  "name": "node-1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/0530d6c1-8c6d-11e8-907f-00a0985a72ee"
+    }
+  }
+},
+"name": "0a",
+"description": "SAS Host Adapter 0a (PMC-Sierra PM8001 rev. C)",
+"wwn": "500a098003633df0",
+"speed": 6,
+"cable": {
+  "part_number": "112-00429+A0",
+  "serial_number": "629230774",
+  "identifier": "500a0980066e2c01-500a098003633df0",
+  "length": "0.5m",
+  "vendor": "Molex Inc.",
+  "transceiver": "mini_sas_hd"
+},
+"state": "online",
+"enabled": true,
+"firmware_version": "01.12.09.00",
+"type": "sas",
+"redundant": true,
+"in_use": true,
+"_links": {
+  "self": {
+    "href": "/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/0a"
+  }
+}
+}
+----
+
+'''
+
+== Updating a storage port
+
+The storage port PATCH API modifies the port mode for storage/network use and allows the port to be enabled/disabled.
+
+'''
+
+== Examples
+
+=== 1) Using an Ethernet port for storage
+
+The following example sets an Ethernet port mode for storage use:
+
+'''
+
+----
+
+# The API:
+/api/storage/ports/{node.uuid}/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/e3a" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"mode": "storage"}'
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 2) Disabling a storage port
+
+The following example disables an unused storage port:
+
+'''
+
+----
+
+# The API:
+/api/storage/ports/{node.uuid}/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/ports/0530d6c1-8c6d-11e8-907f-00a0985a72ee/e3a" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"enabled": "false"}'
+
+# The response:
+{
+}
+----
+
+'''
+
+

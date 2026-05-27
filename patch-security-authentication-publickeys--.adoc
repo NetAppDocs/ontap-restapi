@@ -1,0 +1,351 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-authentication-publickeys--.html'
+summary: 'Update a public key for a user account'
+---
+
+= Update a public key for a user account
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/authentication/publickeys/{owner.uuid}/{account.name}/{index}`#
+
+*Introduced In:* 9.7
+
+Updates the public key and/or certificate for a user account.
+
+== Related ONTAP commands
+
+* `security login publickey modify`
+
+== Learn more
+
+* link:security_authentication_publickeys_owner.uuid_account.name_index_endpoint_overview.html[DOC /security/authentication/publickeys/{owner.uuid}/{account.name}/\{index}]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Account owner UUID
+
+
+|account.name
+|string
+|path
+|True
+a|User account name
+
+
+|index
+|integer
+|path
+|True
+a|Index number for the public key (where there are multiple keys for the same account).
+
+* Max value: 99
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|string
+a|Optional certificate for the public key.
+
+
+|certificate_details
+|string
+a|The details present in the certificate (READONLY).
+
+
+|certificate_expired
+|string
+a|The expiration details of the certificate (READONLY).
+
+
+|certificate_revoked
+|string
+a|The revocation details of the certificate (READONLY).
+
+
+|comment
+|string
+a|Optional comment for the public key.
+
+
+|obfuscated_fingerprint
+|string
+a|The obfuscated fingerprint for the public key (READONLY).
+
+
+|public_key
+|string
+a|The public key
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|The SHA fingerprint for the public key (READONLY).
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": "string",
+  "certificate_details": "string",
+  "certificate_expired": "string",
+  "certificate_revoked": "string",
+  "comment": "string",
+  "obfuscated_fingerprint": "string",
+  "public_key": "string",
+  "scope": "string",
+  "sha_fingerprint": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5832707
+| Failed to generate fingerprint for the public key.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#account_reference]
+[.api-collapsible-fifth-title]
+account_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|User account
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the public key.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#publickey]
+[.api-collapsible-fifth-title]
+publickey
+
+The public key for the user account (to access SSH).
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|string
+a|Optional certificate for the public key.
+
+
+|certificate_details
+|string
+a|The details present in the certificate (READONLY).
+
+
+|certificate_expired
+|string
+a|The expiration details of the certificate (READONLY).
+
+
+|certificate_revoked
+|string
+a|The revocation details of the certificate (READONLY).
+
+
+|comment
+|string
+a|Optional comment for the public key.
+
+
+|obfuscated_fingerprint
+|string
+a|The obfuscated fingerprint for the public key (READONLY).
+
+
+|public_key
+|string
+a|The public key
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|The SHA fingerprint for the public key (READONLY).
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

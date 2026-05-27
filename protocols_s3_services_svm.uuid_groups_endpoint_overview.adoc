@@ -1,0 +1,191 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_s3_services_svm.uuid_groups_endpoint_overview.html'
+summary: 'Manage S3 service group configuration'
+---
+
+= Manage S3 service group configuration
+
+
+
+== Overview
+
+An S3 group consists of one or many users. Policies are attached to the S3 group to have access control over S3 resources at group level.
+
+== Examples
+
+=== Retrieving all fields for all S3 groups of an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/groups:
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/groups?fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "comment": "Admin group",
+    "id": 5,
+    "name": "Admin-Group",
+    "policies": [
+      { "name": "Policy1" },
+      { "name": "Policy2" },
+      { "name": "Policy3" }
+    ],
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "users": [
+      { "name": "User1" },
+      { "name": "User2" },
+      { "name": "User3" }
+    ]
+  },
+  {
+    "comment": "Admin group",
+    "id": 6,
+    "name": "Admin-Group1",
+    "policies": [
+      { "name": "Policy1" },
+      { "name": "Policy2" },
+      { "name": "Policy3" }
+    ],
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "users": [
+      { "name": "User1" },
+      { "name": "User2" },
+      { "name": "User6" }
+    ]
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving the specified group in the SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/groups/{group_id}:
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/groups/5?fields=*" -H "accept: application/json"
+
+# The response:
+{
+"comment": "Admin group",
+"id": 5,
+"name": "Admin-Group",
+"policies": [
+  { "name": "Policy1" },
+  { "name": "Policy2" },
+  { "name": "Policy3" }
+],
+"svm": {
+  "name": "svm1",
+  "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+},
+"users": [
+  { "name": "User1" },
+  { "name": "User2" },
+  { "name": "User3" }
+]
+}
+----
+
+=== Creating an S3 group for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/groups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/groups?return_records=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"comment\": \"Admin group\", \"name\": \"Admin-Group\", \"policies\": [ { \"name\": \"Policy1\" }, { \"name\": \"Policy2\" }, { \"name\": \"Policy3\" } ], \"users\": [ { \"name\": \"User1\" }, { \"name\": \"User2\" }, { \"name\": \"User3\" } ]}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 16 Mar 2020 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 289
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "comment": "Admin group",
+    "id": 5,
+    "name": "Admin-Group",
+    "policies": [
+      { "name": "Policy1" },
+      { "name": "Policy2" },
+      { "name": "Policy3" }
+    ],
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "users": [
+      { "name": "User1" },
+      { "name": "User2" },
+      { "name": "User3" }
+    ]
+  }
+]
+}
+----
+
+=== Updating an S3 group for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/groups/{group_id}:
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/groups/5" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"comment\": \"Admin group\", \"name\": \"Admin-Group\", \"policies\": [ { \"name\": \"Policy1\" } ], \"users\": [ { \"name\": \"user-1\" } ]}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 16 Mar 2020 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+----
+
+=== Deleting an S3 group for a specified SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/groups/{group_id}:
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/groups/5" -H "accept: application/json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 16 Mar 2020 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+----
+
+

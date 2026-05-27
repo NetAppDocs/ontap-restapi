@@ -1,0 +1,394 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-web.html'
+summary: 'Retrieve the web services configuration'
+---
+
+= Retrieve the web services configuration
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/web`#
+
+*Introduced In:* 9.10
+
+Retrieves the web services configuration.
+
+== Related ONTAP commands
+
+* `system services web show`
+* `security ssl show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate used by cluster and node management interfaces for TLS connection requests.
+
+
+|client_enabled
+|boolean
+a|Indicates whether client authentication is enabled.
+
+
+|csrf
+|link:#csrf[csrf]
+a|
+
+|enabled
+|boolean
+a|Indicates whether remote clients can connect to the web services.
+
+
+|hsts
+|link:#hsts[hsts]
+a|
+
+|http_enabled
+|boolean
+a|Indicates whether HTTP is enabled.
+
+
+|http_port
+|integer
+a|HTTP port for cluster-level web services.
+
+
+|https_port
+|integer
+a|HTTPS port for cluster-level web services.
+
+
+|ocsp_enabled
+|boolean
+a|Indicates whether online certificate status protocol verification is enabled.
+
+
+|per_address_limit
+|integer
+a|The number of connections that can be processed concurrently from the same remote address.
+
+
+|state
+|string
+a|State of the cluster-level web services.
+
+
+|wait_queue_capacity
+|integer
+a|The maximum size of the wait queue for connections exceeding the per-address-limit.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "certificate": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "cert1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "csrf": {
+    "token": {
+      "concurrent_limit": 120,
+      "idle_timeout": 200,
+      "max_timeout": 1200
+    }
+  },
+  "hsts": {
+    "max_age": 31536000
+  },
+  "per_address_limit": 42,
+  "state": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Certificate used by cluster and node management interfaces for TLS connection requests.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#token]
+[.api-collapsible-fifth-title]
+token
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|concurrent_limit
+|integer
+a|Maximum number of concurrent CSRF tokens.
+
+
+|idle_timeout
+|integer
+a|Time for which an unused CSRF token is retained, in seconds.
+
+
+|max_timeout
+|integer
+a|Time for which an unused CSRF token, regardless of usage is retained, in seconds.
+
+
+|===
+
+
+[#csrf]
+[.api-collapsible-fifth-title]
+csrf
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|protection_enabled
+|boolean
+a|Indicates whether CSRF protection is enabled.
+
+
+|token
+|link:#token[token]
+a|
+
+|===
+
+
+[#hsts]
+[.api-collapsible-fifth-title]
+hsts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether HTTP Strict Transport Security (HSTS) is enabled.
+
+
+|max_age
+|integer
+a|HTTPS Strict Transport Security (HSTS) max-age value in seconds. The maximum time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

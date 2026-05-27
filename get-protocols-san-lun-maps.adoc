@@ -1,0 +1,759 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-lun-maps.html'
+summary: 'Retrieve LUN maps'
+---
+
+= Retrieve LUN maps
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/lun-maps`#
+
+*Introduced In:* 9.6
+
+Retrieves LUN maps.
+
+== Related ONTAP commands
+
+* `lun mapping show`
+
+== Learn more
+
+* link:protocols_san_lun-maps_endpoint_overview.html[DOC /protocols/san/lun-maps]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|lun.name
+|string
+|query
+|False
+a|Filter by lun.name
+
+
+|lun.smbc.replicated
+|boolean
+|query
+|False
+a|Filter by lun.smbc.replicated
+
+* Introduced in: 9.15
+
+
+|lun.node.uuid
+|string
+|query
+|False
+a|Filter by lun.node.uuid
+
+
+|lun.node.name
+|string
+|query
+|False
+a|Filter by lun.node.name
+
+
+|lun.uuid
+|string
+|query
+|False
+a|Filter by lun.uuid
+
+
+|reporting_nodes.name
+|string
+|query
+|False
+a|Filter by reporting_nodes.name
+
+* Introduced in: 9.10
+
+
+|reporting_nodes.uuid
+|string
+|query
+|False
+a|Filter by reporting_nodes.uuid
+
+* Introduced in: 9.10
+
+
+|igroup.replicated
+|boolean
+|query
+|False
+a|Filter by igroup.replicated
+
+* Introduced in: 9.15
+
+
+|igroup.uuid
+|string
+|query
+|False
+a|Filter by igroup.uuid
+
+
+|igroup.protocol
+|string
+|query
+|False
+a|Filter by igroup.protocol
+
+
+|igroup.os_type
+|string
+|query
+|False
+a|Filter by igroup.os_type
+
+
+|igroup.name
+|string
+|query
+|False
+a|Filter by igroup.name
+
+
+|igroup.initiators
+|string
+|query
+|False
+a|Filter by igroup.initiators
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|logical_unit_number
+|integer
+|query
+|False
+a|Filter by logical_unit_number
+
+* Max value: 4095
+* Min value: 0
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#lun_map[lun_map]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "igroup": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "initiators": [
+          "iqn.1998-01.com.corp.iscsi:name1"
+        ],
+        "name": "igroup1",
+        "os_type": "string",
+        "protocol": "string",
+        "uuid": "1ad8544d-8cd1-91e0-9e1c-723478563412"
+      },
+      "logical_unit_number": 1,
+      "lun": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "/vol/volume1/qtree1/lun1",
+        "node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cf8aa42-8cd1-12e0-a11c-423468563412"
+        },
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "reporting_nodes": [
+        {
+          "_links": {
+            "node": {
+              "href": "/api/resourcelink"
+            },
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "5ac8eb9c-4e32-dbaa-57ca-fb905976f54e"
+        }
+      ],
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group to which the LUN is mapped. Required in POST by supplying either the `igroup.uuid`, `igroup.name`, or both.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|initiators
+|array[string]
+a|The initiators that are members of the initiator group.
+
+
+|name
+|string
+a|The name of the initiator group. Valid in POST.
+
+
+|os_type
+|string
+a|The host operating system of the initiator group. All initiators in the group should be hosts of the same operating system.
+
+
+|protocol
+|string
+a|The protocols supported by the initiator group. This restricts the type of initiators that can be added to the initiator group.
+
+
+|replicated
+|boolean
+a|This property reports if the initiator group is replicated.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group. Valid in POST.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The LUN node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the LUN's node.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN node.
+
+
+|===
+
+
+[#smbc]
+[.api-collapsible-fifth-title]
+smbc
+
+"Properties related to SM-BC replication."
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|replicated
+|boolean
+a|This property reports if the LUN is replicated via SM-BC.
+
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN to which the initiator group is mapped. Required in POST by supplying either the `lun.uuid`, `lun.name`, or both.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the LUN. Valid in POST.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|node
+|link:#node[node]
+a|The LUN node.
+
+
+|smbc
+|link:#smbc[smbc]
+a|"Properties related to SM-BC replication."
+
+
+|uuid
+|string
+a|The unique identifier of the LUN. Valid in POST.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#reporting_nodes]
+[.api-collapsible-fifth-title]
+reporting_nodes
+
+A cluster node from which network paths to the LUN are advertised by ONTAP via the SAN protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|uuid
+|string
+a|The unique identifier of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#lun_map]
+[.api-collapsible-fifth-title]
+lun_map
+
+A LUN map is an association between a LUN and an initiator group. When a LUN is mapped to an initiator group, the initiator group's initiators are granted access to the LUN. The relationship between a LUN and an initiator group is many LUNs to many initiator groups.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group to which the LUN is mapped. Required in POST by supplying either the `igroup.uuid`, `igroup.name`, or both.
+
+
+|logical_unit_number
+|integer
+a|The logical unit number assigned to the LUN when mapped to the specified initiator group. The number is used to identify the LUN to initiators in the initiator group when communicating through Fibre Channel Protocol or iSCSI. Optional in POST; if no value is provided, ONTAP assigns the lowest available value.
+
+* example: 1
+* Max value: 4095
+* Min value: 0
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|lun
+|link:#lun[lun]
+a|The LUN to which the initiator group is mapped. Required in POST by supplying either the `lun.uuid`, `lun.name`, or both.
+
+
+|reporting_nodes
+|array[link:#reporting_nodes[reporting_nodes]]
+a|The cluster nodes from which network paths to the mapped LUNs are advertised via the SAN protocols as part of the Selective LUN Map (SLM) feature of ONTAP.
+
+When a LUN map is created, the cluster node hosting the LUN and its high availability (HA) partner are set as the default reporting node. In POST, the property `additional_reporting_node` may be used to add an additional node and its HA partner.
+
+For further information, see link:protocols_san_lun-maps_lun.uuid_igroup.uuid_reporting-nodes_endpoint_overview.html[DOC /protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes] .
+
+* readOnly: 1
+* Introduced in: 9.10
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

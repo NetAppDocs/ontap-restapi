@@ -1,0 +1,531 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-application-applications-snapshots.html'
+summary: 'Retrieve an application snapshot'
+---
+
+= Retrieve an application snapshot
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/application/applications/{application.uuid}/snapshots`#
+
+*Introduced In:* 9.6
+
+Retrieves snapshots of an application.
+
+== Query examples
+
+The following query returns all snapshots from May 4, 2017 EST. For readability, the colon (`:`) is left in this example. For an actual call, they should be escaped as `%3A`.
+
+----
+GET /application/applications/{application.uuid}/snapshots?create_time=2017-05-04T00:00:00-05:00..2017-05-04T23:59:59-05:00
+----
+
+The following query returns all snapshots that have been flagged as _application consistent_.
+
+----
+GET /application/applications/{application.uuid}/snapshots?consistency_type=application
+----
+
+== Learn more
+
+* link:application_applications_application.uuid_snapshots_endpoint_overview.html[DOC /application/applications/{application.uuid}/snapshots]
+* link:application_overview.html[DOC /application]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|application.uuid
+|string
+|path
+|True
+a|Application UUID
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by UUID
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|consistency_type
+|string
+|query
+|False
+a|Filter by consistency_type
+
+
+|components.name
+|string
+|query
+|False
+a|Filter by components.name
+
+
+|components.uuid
+|string
+|query
+|False
+a|Filter by components.uuid
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|is_partial
+|string
+|query
+|False
+a|Filter by is_partial
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#application_snapshot[application_snapshot]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "application": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "string",
+        "uuid": "string"
+      },
+      "comment": "string",
+      "components": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "string",
+          "uuid": "string"
+        }
+      ],
+      "consistency_type": "string",
+      "create_time": "string",
+      "name": "string",
+      "svm": {
+        "name": "string",
+        "uuid": "string"
+      },
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Application name
+
+
+|uuid
+|string
+a|The application UUID. Valid in URL.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Component name
+
+
+|uuid
+|string
+a|Component UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|SVM name
+
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#application_snapshot]
+[.api-collapsible-fifth-title]
+application_snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application
+|link:#application[application]
+a|
+
+|comment
+|string
+a|Comment. Valid in POST.
+
+
+|components
+|array[link:#components[components]]
+a|
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Creation time
+
+
+|is_partial
+|boolean
+a|A partial snapshot means that not all volumes in an application component were included in the snapshot.
+
+
+|name
+|string
+a|The snapshot name. Valid in POST.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|uuid
+|string
+a|The snapshot UUID. Valid in URL.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

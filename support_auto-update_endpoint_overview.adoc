@@ -1,0 +1,92 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_auto-update_endpoint_overview.html'
+summary: 'Manage an automatic update feature'
+---
+
+= Manage an automatic update feature
+
+
+
+== Overview
+
+The Automatic Update feature helps keep the ONTAP cluster current with the latest software component updates by automatically downloading and applying them to the cluster.
+By enabling this feature, you agree to the following terms:
+
+'''
+
+=== AUTOMATIC UPDATE TERMS
+
+_These Automatic Update Terms ("Terms") set forth the terms and conditions between NetApp, Inc., NetApp B.V., or any of their affiliates ("NetApp") and End User Customer ("Customer") in connection with the feature enabling Customer to receive software patches, upgrades, and updates to NetApp Software automatically ("Automatic Update"). By agreeing to and accepting Automatic Updates, Customer agrees to be bound by these Terms, as well as NetApp's End User License Agreement and Support Terms available at https://www.netapp.com/how-to-buy/sales-terms-and-conditions/._
+
+_By enabling the Automatic Update feature, Customer agrees to receive Automatic Updates that NetApp may provide from time to time, without any additional notice, and NetApp will not be liable for any damages, loss of data or loss of functionalities arising from provision of Automatic Updates. Customer may revoke acceptance of these Terms and disable the receipt of Automatic Updates by setting the feature configuration to "Disabled" in ONTAP._
+
+_Timely installation of updates to security features is required for such features to function properly, including ransomware detection._
+
+'''
+
+Important note:
+When the automatic update feature is disabled
+
+*** No new updates are shown to the user
+
+*** All automatic updates currently scheduled will have their schedules cancelled.
+
+*** All automatic updates currently waiting for user confirmation cannot be started until the feature is re-enabled.
+
+'''
+
+== Examples
+
+=== Retrieving the current status of the automatic update feature
+
+The following example shows how to retrieve the current status of the automatic update feature:
+
+[,json]
+----
+
+# The API:
+GET /support/auto-update
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/auto-update"
+
+# The response:
+{
+"enabled": true,
+"eula": {
+  "accepted": true,
+  "accepted_timestamp": "2020-12-01T21:24:44-04:00",
+  "user_id_accepted": "admin",
+  "accepted_ip_address": "192.168.1.125"
+},
+"_links": {
+  "self": {
+    "href": "/api/support/auto-update"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the status of the automatic update feature
+
+The following example shows how to update the status of the automatic update feature:
+
+[,json]
+----
+
+# The API:
+PATCH /support/auto-update
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/auto-update" -H "accept: application/hal+json" -d '{ "enabled" : "true" }'
+
+# The response:
+200 OK
+----
+
+

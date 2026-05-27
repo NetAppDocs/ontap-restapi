@@ -1,0 +1,380 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-vscan-on-access-policies-.html'
+summary: 'Update the Vscan On-Access policy configuration for an SVM'
+---
+
+= Update the Vscan On-Access policy configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}/on-access-policies/{name}`#
+
+*Introduced In:* 9.6
+
+Updates the Vscan On-Access policy configuration and/or enables/disables the Vscan On-Access policy of an SVM. You cannot modify the configurations for an On-Access policy associated with a data SVM which was created by SVM owned by the cluster, although you can enable and disable the policy associated with cluster SVM.
+
+== Related ONTAP commands
+
+* `vserver vscan on-access-policy modify`
+* `vserver vscan on-access-policy enable`
+* `vserver vscan on-access-policy disable`
+* `vserver vscan on-access-policy file-ext-to-include add`
+* `vserver vscan on-access-policy file-ext-to-exclude add`
+* `vserver vscan on-access-policy paths-to-exclude add`
+* `vserver vscan on-access-policy file-ext-to-include remove`
+* `vserver vscan on-access-policy file-ext-to-exclude remove`
+* `vserver vscan on-access-policy paths-to-exclude remove`
+
+== Learn more
+
+* link:protocols_vscan_svm.uuid_on-access-policies_endpoint_overview.html[DOC /protocols/vscan/{svm.uuid}/on-access-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Status of the On-Access Vscan policy
+
+
+|mandatory
+|boolean
+a|Specifies if scanning is mandatory. File access is denied if there are no external virus-scanning servers available for virus scanning.
+
+
+|owner
+|string
+a|Specifies the on-access policy owner.
+
+
+|protocol
+|string
+a|Specifies the file access protocol for the on-access policy. The following lists the possible protocols. CIFS  - SMB protocol
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "owner": "string",
+  "protocol": "string",
+  "scope": {
+    "exclude_extensions": [
+      "mp*",
+      "txt"
+    ],
+    "exclude_paths": [
+      "\\dir1\\dir2\\name",
+      "\\vol\\a b",
+      "\\vol\\a,b\\"
+    ],
+    "include_extensions": [
+      "mp*",
+      "txt"
+    ],
+    "max_file_size": 2147483648
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10027033
+| Configurations for an On-Access policy associated with a data SVM which was created by SVM owned by the cluster cannot be modified. However, the policy can be enabled or disabled.
+
+| 10027046
+| The specified SVM is not the owner of the specified policy. Check for the correct SVM who owns the policy.
+
+| 10027101
+| The file size must be in the range 1KB to 1TB
+
+| 10027107
+| The include extensions list cannot be empty. Specify at least one extension for inclusion.
+
+| 10027109
+| The specified CIFS path is invalid. It must be in the form "\dir1\dir2" or "\dir1\dir2\".
+
+| 10027249
+| The On-Access policy updated successfully but failed to enable/disable the policy. The reason for an enable policy operation failure might be that another policy is enabled. Disable the already enabled policy and then enable the policy. The reason for a disable policy operation failure might be that Vscan is enabled on the SVM. Disable the Vscan first and then disable the policy.
+
+| 10027250
+| The On-Access policy cannot be enabled/disabled. The reason for an enable policy operation failure might be that another policy is enabled. Disable the already enabled policy and then enable the policy. The reason for a disable policy operation failure might be that Vscan is enabled on the SVM. Disable the Vscan and then disable the policy.
+
+| 10027253
+| The number of paths specified exceeds the configured maximum number of paths. You cannot specify more than the maximum number of configured paths.
+
+| 10027254
+| The number of extensions specified exceeds the configured maximum number of extensions. You cannot specify more than the maximum number of configured extensions.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|exclude_extensions
+|array[string]
+a|List of file extensions for which scanning is not performed.
+
+
+|exclude_paths
+|array[string]
+a|List of file paths for which scanning must not be performed.
+
+
+|include_extensions
+|array[string]
+a|List of file extensions to be scanned.
+
+
+|max_file_size
+|integer
+a|Maximum file size, in bytes, allowed for scanning.
+
+
+|only_execute_access
+|boolean
+a|Scan only files opened with execute-access.
+
+
+|scan_readonly_volumes
+|boolean
+a|Specifies whether or not read-only volume can be scanned.
+
+
+|scan_without_extension
+|boolean
+a|Specifies whether or not files without any extension can be scanned.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vscan_on_access]
+[.api-collapsible-fifth-title]
+vscan_on_access
+
+An On-Access policy that defines the scope of an On-Access scan. Use On-Access scanning to check for viruses when clients open, read, rename, or close files over CIFS. By default, ONTAP creates an On-Access policy named "default_CIFS" and enables it for all the SVMs in a cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Status of the On-Access Vscan policy
+
+
+|mandatory
+|boolean
+a|Specifies if scanning is mandatory. File access is denied if there are no external virus-scanning servers available for virus scanning.
+
+
+|owner
+|string
+a|Specifies the on-access policy owner.
+
+
+|protocol
+|string
+a|Specifies the file access protocol for the on-access policy. The following lists the possible protocols. CIFS  - SMB protocol
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

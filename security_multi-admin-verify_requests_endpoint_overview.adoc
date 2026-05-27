@@ -1,0 +1,125 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_requests_endpoint_overview.html'
+summary: 'Manage multi-admin-verify approval requests'
+---
+
+= Manage multi-admin-verify approval requests
+
+
+
+== Overview
+
+These APIs provide information about multi-admin verification requests.
+If you need to execute a command that is protected by a multi-admin rule, you must first submit a request to be allowed to execute the command.
+The request must then be approved by the designated approvers according to the rule associated with the command.
+ +
+
+'''
+
+== Examples
+
+=== Creating a multi-admin-verify request
+
+Creates a request for the specified ONTAP operation.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/requests
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/multi-admin-verify/requests?return_records=true" -H "accept: application/hal+json" -d '{"operation": "volume delete", "query": "-vserver vs0 -volume v1", "permitted_users": ["user1","user2"]}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "index": 10,
+    "operation": "volume delete",
+    "query": "-vserver vs0 -volume v1",
+    "state": "pending",
+    "required_approvers": 2,
+    "pending_approvers": 2,
+    "execute_on_approval": false,
+    "permitted_users": [
+      "user1",
+      "user2"
+    ],
+    "user_requested": "admin",
+    "owner": {
+      "uuid": "c1483186-6e73-11ec-bc92-005056a7ad04",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/c1483186-6e73-11ec-bc92-005056a7ad04"
+        }
+      }
+    },
+    "create_time": "2022-01-06T16:59:49-05:00",
+    "approve_expiry_time": "2022-01-06T19:59:49-05:00",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/requests/10"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving multi-admin-verify requests
+
+Retrieves information about multi-admin verification requests.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/requests
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify/requests"
+
+# The response:
+{
+"records": [
+  {
+    "index": 1,
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/requests/1"
+      }
+    }
+  },
+  {
+    "index": 2,
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/requests/2"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify/requests"
+  }
+}
+}
+----
+
+'''
+
+

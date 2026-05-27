@@ -1,0 +1,557 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-vvol-bindings.html'
+summary: 'Retrieve vVol bindings'
+---
+
+= Retrieve vVol bindings
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/vvol-bindings`#
+
+*Introduced In:* 9.10
+
+Retrieves vVol bindings.
+
+== Related ONTAP commands
+
+* `lun bind show`
+* link:protocols_san_vvol-bindings_endpoint_overview.html[DOC /protocols/san/vvol-bindings]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|secondary_id
+|string
+|query
+|False
+a|Filter by secondary_id
+
+* Introduced in: 9.13
+
+
+|is_optimal
+|boolean
+|query
+|False
+a|Filter by is_optimal
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|vvol.uuid
+|string
+|query
+|False
+a|Filter by vvol.uuid
+
+
+|vvol.name
+|string
+|query
+|False
+a|Filter by vvol.name
+
+
+|protocol_endpoint.uuid
+|string
+|query
+|False
+a|Filter by protocol_endpoint.uuid
+
+
+|protocol_endpoint.name
+|string
+|query
+|False
+a|Filter by protocol_endpoint.name
+
+
+|count
+|integer
+|query
+|False
+a|Filter by count
+
+
+|id
+|integer
+|query
+|False
+a|Filter by id
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#vvol_binding[vvol_binding]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "count": 1,
+      "id": 1,
+      "is_optimal": 1,
+      "protocol_endpoint": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "/vol/volume1/lun1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "secondary_id": "0000D20000010000h",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "vvol": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "/vol/volume1/lun1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#protocol_endpoint]
+[.api-collapsible-fifth-title]
+protocol_endpoint
+
+The class `protocol_endpoint` LUN in the vVol binding. Required in POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+The SVM in which the vVol binding and its LUNs are located. Required in POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vvol]
+[.api-collapsible-fifth-title]
+vvol
+
+The class `vvol` LUN in the vVol binding. Required in POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#vvol_binding]
+[.api-collapsible-fifth-title]
+vvol_binding
+
+A VMware virtual volume (vVol) binding is an association between a LUN of class `protocol_endpoint` and a LUN of class `vvol`. Class `protocol_endpoint` LUNs are mapped to igroups and granted access using the same configuration as class `regular` LUNs. When a class `vvol` LUN is bound to a mapped class `protocol_endpoint` LUN, VMware can access the class `vvol` LUN through the class `protocol_endpoint` LUN mapping.
+
+Class `protocol_endpoint` and `vvol` LUNs support many-to-many vVol bindings. A LUN of one class can be bound to zero or more LUNs of the opposite class.
+
+The vVol binding between any two specific LUNs is reference counted. When a REST POST is executed for a vVol binding that already exists, the vVol binding reference count is incremented. When a REST DELETE is executed, the vVol binding reference count is decremented. Only when the vVol binding count reaches zero, or the query parameter `delete_all_references` is supplied, is the vVol binding destroyed.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|count
+|integer
+a|The vVol binding between any two specific LUNs is reference counted. When a REST POST is executed for a vVol binding that already exists, the vVol binding reference count is incremented. When a REST DELETE is executed, the vVol binding reference count is decremented. Only when the vVol binding count reaches zero, or the query parameter `delete_all_references` is supplied, is the vVol binding destroyed.
+
+
+|id
+|integer
+a|The ONTAP internal identifier assigned to the vVol binding. The bind identifier is unique amongst all class `vvol` LUNs bound to the same class `protocol_endpoint` LUN.
+
+This property was included in early releases of the REST API for vVols and is maintained for backward compatibility. See the `secondary_id` property, which replaces `id`.
+
+* example: 1
+* readOnly: 1
+* x-ntap-deprecated: 9.13.1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|is_optimal
+|boolean
+a|Indicates if the class `protocol_endpoint` LUN and the class `vvol` LUN are on the same cluster node.
+
+
+|protocol_endpoint
+|link:#protocol_endpoint[protocol_endpoint]
+a|The class `protocol_endpoint` LUN in the vVol binding. Required in POST.
+
+
+|secondary_id
+|string
+a|The identifier assigned to the vVol binding, known as the secondary LUN ID. The identifier is unique amongst all class `vvol` LUNs bound to the same class `protocol_endpoint` LUN.
+
+The format for a secondary LUN ID is 16 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|svm
+|link:#svm[svm]
+a|The SVM in which the vVol binding and its LUNs are located. Required in POST.
+
+
+|vvol
+|link:#vvol[vvol]
+a|The class `vvol` LUN in the vVol binding. Required in POST.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

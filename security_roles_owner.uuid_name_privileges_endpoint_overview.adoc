@@ -1,0 +1,199 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_roles_owner.uuid_name_privileges_endpoint_overview.html'
+summary: 'Manage role privilege details'
+---
+
+= Manage role privilege details
+
+
+
+== Overview
+
+This API is used to configure the role privileges (tuples of REST URI paths or command/command directory paths, their access levels and optional queries, where the tuples refer to command/command directory paths). It also retrieves all of the privilege tuples for a role and can add a tuple to an existing role or creates a new role with the provided tuple. The "path" attribute can be a resource-qualified endpoint. Currently, the only supported resource-qualified endpoints are the following&#58;
+
+=== Snapshots APIs
+
+&ndash; _/api/storage/volumes/{volume.uuid}/snapshots_
+
+=== File System Analytics APIs
+
+&ndash; _/api/storage/volumes/{volume.uuid}/files_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/clients_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/directories_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/files_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/users_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/clients_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/directories_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/files_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/users_
+
+==== ONTAP S3 APIs
+
+&ndash; _/api/protocols/s3/services/{svm.uuid}/users_
+
+In the APIs above, and in the context of REST roles, the wildcard character &#42; can be used in place of _{volume.uuid}_ or _{svm.uuid}_ to represent _all_ volumes or _all_ SVMs, depending on whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ corresponds to the _-instance-uuid_ field in the output of the "volume show" command at the diagnostic privilege level. It can also be retrieved through the REST endpoint _/api/storage/volumes_.
+
+The role can be SVM-scoped or cluster-scoped.
+
+Specify the owner UUID and the role name in the URI path. The owner UUID corresponds to the UUID of the SVM for which the role has been created and can be obtained from the response body of a GET request performed on one of the following APIs&#58;
+
+* _/api/security/roles_ for all the roles
+* _/api/security/roles/?scope=svm_ for SVM-scoped roles
+* _/api/security/roles/?owner.name=+++<svm-name>+++</i> for roles in a specific SVM This API response contains the complete URI for each role and can be used after suffixing it with _"privileges"_.+++</svm-name>+++_
+
+NOTE: The pre-defined roles can be retrieved but cannot be updated.
+
+== Examples
+
+=== Adding a privilege tuple for a REST URI/endpoint to an existing custom role
+
+----
+
+# The API:
+POST "/security/roles/{owner.uuid}/{name}/privileges"
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges" -d '{"access":"readonly","path":"/api/protocols"}'
+----
+
+=== Adding a privilege tuple for a command or command directory to an existing custom role
+
+----
+
+# The API:
+POST "/security/roles/{owner.uuid}/{name}/privileges"
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges" -d '{"access":"all","path":"statistics volume show","query":"-vserver vs1&#124;vs2 -aggregate aggr1&#124;aggr2"}'
+----
+
+=== Retrieving all the privilege tuples for a REST role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}/privileges"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges"
+
+# The response:
+{
+"records": [
+  {
+    "path": "/api/application",
+    "access": "all",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fapplication"
+      }
+    }
+  },
+  {
+    "path": "/api/protocols",
+    "access": "readonly",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fprotocols"
+      }
+    }
+  },
+  {
+    "path": "/api/storage/volumes/1385d680-74fc-4adb-a348-9a740e83702a/snapshots",
+    "access": "all",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fvolumes%2F1385d680-74fc-4adb-a348-9a740e83702a%2Fsnapshots"
+      }
+    }
+  },
+  {
+    "path": "/api/storage/volumes/*/top-metrics/users",
+    "access": "read_create_modify",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fvolumes%2F%2A%2Ftop-metrics%2Fusers"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges"
+  }
+}
+}
+----
+
+=== Retrieving all the privilege tuples for a custom legacy role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}/privileges"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges"
+
+# The response:
+{
+"records": [
+  {
+    "path": "network interface",
+    "access": "readonly",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/network%20interface"
+      }
+    }
+  },
+  {
+    "path": "security",
+    "access": "readonly",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/security"
+      }
+    }
+  },
+  {
+    "path": "security certificate"
+    "access": "all",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/security%20certificate"
+      }
+    }
+  },
+  {
+    "path": "security password"
+    "access": "all",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/security%20password"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges"
+  }
+}
+}
+----
+
+

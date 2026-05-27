@@ -1,0 +1,750 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-volumes-top-metrics-clients.html'
+summary: 'Retrieve clients with the most I/O activity'
+---
+
+= Retrieve clients with the most I/O activity
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/volumes/{volume.uuid}/top-metrics/clients`#
+
+*Introduced In:* 9.10
+
+Retrieves a list of clients with the most I/O activity.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|volume.uuid
+|string
+|path
+|True
+a|Volume UUID
+
+
+|top_metric
+|string
+|query
+|False
+a|I/O activity type
+
+* Default value: 1
+* enum: ["iops.read", "iops.write", "throughput.read", "throughput.write"]
+
+
+|client_ip
+|string
+|query
+|False
+a|Filter by client_ip
+
+
+|throughput.write
+|integer
+|query
+|False
+a|Filter by throughput.write
+
+
+|throughput.read
+|integer
+|query
+|False
+a|Filter by throughput.read
+
+
+|throughput.error.upper_bound
+|integer
+|query
+|False
+a|Filter by throughput.error.upper_bound
+
+
+|throughput.error.lower_bound
+|integer
+|query
+|False
+a|Filter by throughput.error.lower_bound
+
+
+|iops.error.upper_bound
+|integer
+|query
+|False
+a|Filter by iops.error.upper_bound
+
+
+|iops.error.lower_bound
+|integer
+|query
+|False
+a|Filter by iops.error.lower_bound
+
+
+|iops.write
+|integer
+|query
+|False
+a|Filter by iops.write
+
+
+|iops.read
+|integer
+|query
+|False
+a|Filter by iops.read
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|incomplete_response_reason
+|link:#incomplete_response_reason[incomplete_response_reason]
+a|Indicates that the metric report provides incomplete data.
+
+
+|notice
+|link:#notice[notice]
+a|Optional field that indicates why no records are returned by the volume activity tracking REST API.
+
+
+|num_records
+|integer
+a|Number of records.
+
+
+|partial_response_reason
+|link:#partial_response_reason[partial_response_reason]
+a|Indicates that the metric report provides partial data.
+
+
+|records
+|array[link:#top_metrics_client[top_metrics_client]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "incomplete_response_reason": {
+    "code": "111411207",
+    "message": "Partial data has been returned for this metric report. Reason: The activity tracking report for this volume is not available because the system is busy collecting tracking data."
+  },
+  "notice": {
+    "code": "111411207",
+    "message": "No read/write traffic on volume"
+  },
+  "num_records": 1,
+  "partial_response_reason": {
+    "code": "124518424",
+    "message": "The top metrics report contains partial data for read operations because NFSv4 reads using Multi-Processor I/O (MPIO) are not tracked."
+  },
+  "records": [
+    {
+      "client_ip": "192.168.185.170",
+      "iops": {
+        "error": {
+          "lower_bound": 34,
+          "upper_bound": 54
+        },
+        "read": 5,
+        "write": 10
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "throughput": {
+        "error": {
+          "lower_bound": 34,
+          "upper_bound": 54
+        },
+        "read": 12,
+        "write": 2
+      },
+      "volume": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "volume1",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 124518405
+| Volume activity tracking is not supported on volumes that contain LUNs.
+
+| 124518407
+| Volume activity tracking is not supported on FlexCache volumes.
+
+| 124518408
+| Volume activity tracking is not supported on audit staging volumes.
+
+| 124518409
+| Volume activity tracking is not supported on object store server volumes.
+
+| 124518410
+| Volume activity tracking is not supported on SnapMirror destination volumes.
+
+| 124518411
+| Enabling or disabling volume activity tracking is not supported on individual FlexGroup constituents.
+
+| 124518412
+| Volume activity tracking is not supported on SnapLock volumes.
+
+| 124518414
+| Volume activity tracking is not supported on volumes that contain NVMe namespaces.
+
+| 124518415
+| Failed to get the volume activity tracking report on volume volume.name in SVM svm.name.
+
+| 124518416
+| Internal error. Volume activity tracking report timed out for volume volume.name in SVM svm.name.
+
+| 124518417
+| Volume wildcard queries are not supported for activity tracking reports.
+
+| 124518418
+| The activity tracking report for volume volume.name in SVM svm.name returned zero records. Check whether the volume has read/write traffic. Refer to the REST API documentation for more information.
+
+| 124518422
+| Volume activity tracking is not supported on All SAN Array clusters.
+
+| 124518423
+| Volume activity tracking is not supported on the volume.
+
+| 124519411
+| Volume activity tracking is not enabled on the volume.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#incomplete_response_reason]
+[.api-collapsible-fifth-title]
+incomplete_response_reason
+
+Indicates that the metric report provides incomplete data.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Warning code indicating why partial data was reported.
+
+
+|message
+|string
+a|A message describing the reason for partial data.
+
+
+|===
+
+
+[#notice]
+[.api-collapsible-fifth-title]
+notice
+
+Optional field that indicates why no records are returned by the volume activity tracking REST API.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Warning code indicating why no records are returned.
+
+
+|message
+|string
+a|Details why no records are returned.
+
+
+|===
+
+
+[#partial_response_reason]
+[.api-collapsible-fifth-title]
+partial_response_reason
+
+Indicates that the metric report provides partial data.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Warning code indicating why partial data was reported.
+
+
+|message
+|string
+a|A message describing the reason for partial data.
+
+
+|===
+
+
+[#top_metric_value_error_bounds]
+[.api-collapsible-fifth-title]
+top_metric_value_error_bounds
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|lower_bound
+|integer
+a|Lower bound of the nominal value of a metric.
+
+
+|upper_bound
+|integer
+a|Upper bound of the nominal value of a metric.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#top_metric_value_error_bounds[top_metric_value_error_bounds]
+a|
+
+|read
+|integer
+a|Average number of read operations per second.
+
+
+|write
+|integer
+a|Average number of write operations per second.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#top_metric_value_error_bounds[top_metric_value_error_bounds]
+a|
+
+|read
+|integer
+a|Average number of read bytes received per second.
+
+
+|write
+|integer
+a|Average number of write bytes received per second.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#top_metrics_client]
+[.api-collapsible-fifth-title]
+top_metrics_client
+
+Information about a client's IO activity.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_ip
+|string
+a|IP address of the client. Both IPv4 and IPv6 IP addresses are supported.
+
+
+|iops
+|link:#iops[iops]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|throughput
+|link:#throughput[throughput]
+a|
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

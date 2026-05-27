@@ -1,0 +1,55 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_san_lun-maps_lun.uuid_igroup.uuid_reporting-nodes_endpoint_overview.html'
+summary: 'Add, remove, or discover LUN map reporting nodes'
+---
+
+= Add, remove, or discover LUN map reporting nodes
+
+
+
+== Overview
+
+A LUN map's reporting nodes are the cluster nodes from which network paths to a mapped LUN are advertised via the SAN protocols as part of the Selective LUN Map (SLM) feature of ONTAP. SLM reduces the number of paths from the host to a mapped LUN and enables management of a single initiator group (igroup) per host.
+
+If there are no reporting nodes in a LUN map, network paths to all cluster nodes having the appropriate network interfaces (LIFs) in the SVM are advertised. This is not a typical configuration and is reserved for limited specific use cases. Note that having no reporting nodes in a LUN map differs subtly from having all reporting nodes in the LUN map. If a LUN map has an empty reporting nodes list and a new node is added to the cluster, a path to the new node will also be advertised. If a LUN map has all cluster nodes in its reporting nodes list and a new node is added to the cluster, a path to the new node is not advertised unless the LUN map's reporting nodes are explicitly updated to include the new node.
+
+If portsets are used to further restrict access for initiators to specific LIFs, the mapped LUN will be accessible only via the LIFs in the portset that are on the reporting nodes of the LUN map.
+
+When a LUN map is created, the cluster node hosting the mapped LUN and its high availability (HA) partner are set as the initial reporting nodes.
+
+Before moving a mapped LUN or a volume containing mapped LUNs to another HA pair within the same cluster, the destination node should be added to the LUN map's reporting nodes. This ensures that active, optimized LUN paths are maintained. After moving a mapped LUN or a volume containing mapped LUNs to another HA pair within the same cluster, the cluster node that previously hosted the mapped LUN should be removed from the LUN map's reporting node. Further details for this workflow may be found in the ONTAP SAN Administration documentation - see `Modifying the SLM reporting-nodes list`.
+
+== Examples
+
+=== Adding a node to a LUN map
+
+This example adds a cluster node, and its high availability (HA) partner cluster node, to a LUN map's reporting nodes.
+
+----
+
+# The API:
+POST /api/protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/lun-maps/c8ad35ce-ef03-4577-88f0-9ad150ac6bbf/b10a8165-8346-11eb-ab8e-005056bbb402/reporting-nodes' -H 'Accept: application/hal+json' -d '{ "name": "node2" }'
+----
+
+'''
+
+=== Removing a node from a LUN map
+
+This example removes a cluster node, and its high availability (HA) partner cluster node, from a LUN map's reporting nodes.
+
+----
+
+# The API:
+DELETE /api/protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/lun-maps/c8ad35ce-ef03-4577-88f0-9ad150ac6bbf/b10a8165-8346-11eb-ab8e-005056bbb402/reporting-nodes/6d2cd7d5-493a-daf8-9ae1-219e4ad6f77d' -H 'Accept: application/hal+json'
+----
+
+

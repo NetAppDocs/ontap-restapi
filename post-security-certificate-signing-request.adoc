@@ -1,0 +1,469 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-certificate-signing-request.html'
+summary: 'Create a certificate signing request'
+---
+
+= Create a certificate signing request
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/certificate-signing-request`#
+
+*Introduced In:* 9.8
+
+This API generates a Certificate Signing Request(CSR) and a private key pair. A CSR is a message sent securely to a certificate authority (CA) via any electronic media to apply for a digital identity certificate. This is a general utility API for users to generate a CSR.
+
+== Required properties
+
+* `subject_name` - Subject details of the certificate, including but not limited to the common name. Can be omitted if subject_alternatives is specified.
+* `subject_alternatives` - Subject Alternate Name (SAN) extensions. Only required if a common name is not specified using subject_name.
+
+== Recommended optional properties
+
+* `security_strength` - Key size of the certificate, in bits. Specifying a stronger security strength in bits is recommended when creating a certificate. A value of at least 128 is necessary when using EC algorithm if the certificate is to be used in the context of TLSv1.3.
+* `hash_function` -  Hashing function.
+* `algorithm` - Asymmetric algorithm. Algorithm used to generate a public/private key pair when creating a certificate.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `security_strength` - _112_
+* `hash_function` - _sha256_
+* `algorithm` - _rsa_
+
+== Related ONTAP commands
+
+* `security certificate generate-csr`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|algorithm
+|string
+a|Asymmetric Encryption Algorithm.
+
+
+|csr
+|string
+a|A Certificate Signing Request (CSR) provided to a CA for obtaining a CA-signed certificate.
+
+
+|extended_key_usages
+|array[string]
+a|A list of extended key usage extensions.
+
+
+|generated_private_key
+|string
+a|Private key generated for the CSR.
+
+
+|hash_function
+|string
+a|Hashing function.
+
+
+|key_usages
+|array[string]
+a|A list of key usage extensions.
+
+
+|security_strength
+|integer
+a|Security strength of the certificate in bits.
+
+
+|subject_alternatives
+|link:#subject_alternatives[subject_alternatives]
+a|
+
+|subject_name
+|string
+a|Subject name details of the certificate. The format is a list of comma separated key=value pairs.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "algorithm": "string",
+  "csr": "string",
+  "extended_key_usages": [
+    "string"
+  ],
+  "generated_private_key": "string",
+  "hash_function": "string",
+  "key_usages": [
+    "string"
+  ],
+  "security_strength": 112,
+  "subject_alternatives": {
+    "dns": [
+      "*.example.com"
+    ],
+    "email": [
+      "abc@example.com"
+    ],
+    "ip": [
+      "10.225.34.10"
+    ],
+    "uri": [
+      "http://example.com"
+    ]
+  },
+  "subject_name": "C=US,O=NTAP,CN=test.domain.com"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|algorithm
+|string
+a|Asymmetric Encryption Algorithm.
+
+
+|csr
+|string
+a|A Certificate Signing Request (CSR) provided to a CA for obtaining a CA-signed certificate.
+
+
+|extended_key_usages
+|array[string]
+a|A list of extended key usage extensions.
+
+
+|generated_private_key
+|string
+a|Private key generated for the CSR.
+
+
+|hash_function
+|string
+a|Hashing function.
+
+
+|key_usages
+|array[string]
+a|A list of key usage extensions.
+
+
+|security_strength
+|integer
+a|Security strength of the certificate in bits.
+
+
+|subject_alternatives
+|link:#subject_alternatives[subject_alternatives]
+a|
+
+|subject_name
+|string
+a|Subject name details of the certificate. The format is a list of comma separated key=value pairs.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "algorithm": "string",
+  "csr": "string",
+  "extended_key_usages": [
+    "string"
+  ],
+  "generated_private_key": "string",
+  "hash_function": "string",
+  "key_usages": [
+    "string"
+  ],
+  "security_strength": 112,
+  "subject_alternatives": {
+    "dns": [
+      "*.example.com"
+    ],
+    "email": [
+      "abc@example.com"
+    ],
+    "ip": [
+      "10.225.34.10"
+    ],
+    "uri": [
+      "http://example.com"
+    ]
+  },
+  "subject_name": "C=US,O=NTAP,CN=test.domain.com"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 3735554
+| Certificate signing request failed.
+
+| 3735664
+| Key size is not supported in FIPS mode.
+
+| 3735665
+| Hash function is not supported in FIPS mode.
+
+| 3735700
+| Key size is not supported.
+
+| 3735713
+| Security strength bits length is not supported.
+
+| 3735714
+| Security strength bits length is not supported in FIPS mode.
+
+| 3735715
+| Certificate creation requires a common name or SAN extensions.
+
+| 3735741
+| Key size is not applicable with the EC encryption algorithm.
+
+| 3735750
+| Cannot supply "critical" as the only value in a list of extension values.
+
+| 52560173
+| Hash function is not supported for digital signatures.
+
+| 52560423
+| Failed to read the relative distinguished names.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#subject_alternatives]
+[.api-collapsible-fifth-title]
+subject_alternatives
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dns
+|array[string]
+a|A list of DNS names for Subject Alternate name extension.
+
+
+|email
+|array[string]
+a|A list of email addresses for Subject Alternate name extension
+
+
+|ip
+|array[string]
+a|A list of IP addresses for Subject Alternate name extension.
+
+
+|uri
+|array[string]
+a|A list of URIs for Subject Alternate name extension.
+
+
+|===
+
+
+[#certificate_signing_request]
+[.api-collapsible-fifth-title]
+certificate_signing_request
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|algorithm
+|string
+a|Asymmetric Encryption Algorithm.
+
+
+|csr
+|string
+a|A Certificate Signing Request (CSR) provided to a CA for obtaining a CA-signed certificate.
+
+
+|extended_key_usages
+|array[string]
+a|A list of extended key usage extensions.
+
+
+|generated_private_key
+|string
+a|Private key generated for the CSR.
+
+
+|hash_function
+|string
+a|Hashing function.
+
+
+|key_usages
+|array[string]
+a|A list of key usage extensions.
+
+
+|security_strength
+|integer
+a|Security strength of the certificate in bits.
+
+
+|subject_alternatives
+|link:#subject_alternatives[subject_alternatives]
+a|
+
+|subject_name
+|string
+a|Subject name details of the certificate. The format is a list of comma separated key=value pairs.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

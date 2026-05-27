@@ -1,0 +1,180 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-s3-services-policies-.html'
+summary: 'Delete an S3 policy configuration'
+---
+
+= Delete an S3 policy configuration
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/policies/{name}`#
+
+*Introduced In:* 9.8
+
+Deletes the S3 policy configuration of an SVM.
+
+== Related ONTAP commands
+
+* `vserver object-store-server policy delete`
+* `vserver object-store-server policy delete-statement`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_policies_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Policy name
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|92405858 +
+//end row
+//start row
+|Failed to "delete" the "policy" because the operation is only supported on data SVMs.
+//end row
+|===
+//end table
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

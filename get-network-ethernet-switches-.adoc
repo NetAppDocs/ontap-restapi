@@ -1,0 +1,348 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-ethernet-switches-.html'
+summary: 'Retrieve Ethernet switch details'
+---
+
+= Retrieve Ethernet switch details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ethernet/switches/{name}`#
+
+*Introduced In:* 9.8
+
+Retrieves the details of an Ethernet switch.
+
+== Related ONTAP commands
+
+* `system switch ethernet show`
+
+== Learn more
+
+* link:network_ethernet_switches_endpoint_overview.html[DOC /network/ethernet/switches]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|address
+|string
+a|IP Address.
+
+
+|discovered
+|boolean
+a|Discovered By ONTAP CDP/LLDP
+
+* readOnly: 1
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|model
+|string
+a|Model Number.
+
+
+|monitoring
+|link:#monitoring[monitoring]
+a|
+
+|name
+|string
+a|Name.
+
+
+|network
+|string
+a|Switch Network.
+
+
+|rcf_version
+|string
+a|The switch reference configuration file (RCF) version.
+
+
+|role
+|string
+a|Switch role based on the interface configurations. Using '+' to combine multiple roles.
+Available role types are: cluster, multicluster, storage, multistorage, metrocluster.
+
+
+|serial_number
+|string
+a|Serial Number.
+
+
+|snmp
+|link:#snmp[snmp]
+a|
+
+|version
+|string
+a|Software Version.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "address": "string",
+  "model": "string",
+  "monitoring": {
+    "reason": "string"
+  },
+  "name": "string",
+  "network": "string",
+  "rcf_version": "RCF NX9336C-FX2 v1.13 1-CLUSTER",
+  "role": [
+    "cluster+storage"
+  ],
+  "serial_number": "string",
+  "snmp": {
+    "user": "string",
+    "version": "string"
+  },
+  "version": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#monitoring]
+[.api-collapsible-fifth-title]
+monitoring
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Enable Health Monitoring.
+
+
+|monitored
+|boolean
+a|Is Monitored.
+
+
+|reason
+|string
+a|Reason For Not Monitoring.
+
+
+|===
+
+
+[#snmp]
+[.api-collapsible-fifth-title]
+snmp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|user
+|string
+a|Community String or SNMPv3 Username.
+
+
+|version
+|string
+a|SNMP Version.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

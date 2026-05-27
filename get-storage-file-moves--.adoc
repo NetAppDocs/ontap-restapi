@@ -1,0 +1,874 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-file-moves--.html'
+summary: 'Check the status of an active file move operation'
+---
+
+= Check the status of an active file move operation
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/file/moves/{node.uuid}/{uuid}/{index}`#
+
+*Introduced In:* 9.12
+
+== Overview
+
+Retrieve the status of an on-going file move operation.
+
+== Related ONTAP commands
+
+* `volume file move show`
+* `volume rebalance file-move show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Unique identifier of the node.
+
+
+|uuid
+|string
+|path
+|True
+a|Unique identifier of the file move operation.
+
+
+|index
+|integer
+|path
+|True
+a|The index of the file move within the overall operation
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_time
+|integer
+a|Time that the file move operation takes before cutover completes, in seconds.
+
+
+|destination
+|link:#destination[destination]
+a|Destination file information.
+
+
+|elapsed_time
+|integer
+a|Time elapsed since the start of the file move operation, in seconds.
+
+
+|failure
+|link:#error[error]
+a|Contains the most recent failure reason for move operation.
+
+
+|index
+|integer
+a|An additional unique element identifying one file among many that could possibly be moved as part of a job. File index is an identifier ordered by the file path arrays provided during create. For file move operations that involve only one file, the file-index value of zero is always correct.
+
+
+|is_destination_ready
+|boolean
+a|Indicates whether the destination file is ready for use.
+
+
+|is_flexgroup
+|boolean
+a|Indicates whether this is a FlexGroup file move operation.
+
+
+|is_snapshot_fenced
+|boolean
+a|Indicates whether snapshots are fenced.
+
+
+|max_cutover_time
+|integer
+a|The maximum amount of time, in seconds that the source can be quiesced before a destination file must be made available for read-write traffic. Not supported in FlexGroup volume file move operations.
+
+
+|max_throughput
+|integer
+a|Maximum amount of data, in bytes that can be transferred per second in support of this operation. A non-zero value less than 1 MB/s is set to 1 MB/s. A non-zero value greater than 1 MB/s is truncated to the nearest integral megabyte value. If unspecified, the default value is "0" which means no range is set for the data transfer.
+
+
+|node
+|link:#node[node]
+a|Node hosting the destination of this move operation.
+
+
+|scanner
+|link:#scanner[scanner]
+a|
+
+|source
+|link:#source[source]
+a|Source file information.
+
+
+|svm
+|link:#svm[svm]
+a|SVM of the FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+|uuid
+|string
+a|The UUID which uniquely identifies the job that started this move operation.
+
+
+|volume
+|link:#volume[volume]
+a|FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "cutover_time": 8,
+  "destination": {
+    "path": "d1/d2/file1",
+    "svm": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "volume": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "elapsed_time": 100,
+  "failure": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "index": 0,
+  "max_cutover_time": 10,
+  "max_throughput": 250000,
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "scanner": {
+    "percent": 80,
+    "progress": 80000,
+    "state": "string",
+    "total": 100000
+  },
+  "source": {
+    "path": "d1/d2/file1",
+    "svm": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "volume": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "4fcb3159-a4ee-42b5-bb16-f752f2c430fc",
+  "volume": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 6521
+| Cannot quiesce source file. Source file "file.name" is under construction and is being used by either a file copy or move operation. Wait a few minutes and try the operation again.
+
+| 6522
+| Volume is not VM aligned.
+
+| 6523
+| File suffix not VM aligned.
+
+| 6524
+| Completion interface not specified.
+
+| 6525
+| Maximum simultaneous file operations reached.
+
+| 6526
+| Lock conflict.
+
+| 6527
+| Permission denied.
+
+| 6528
+| Waiting for an I/O fence to be released.
+
+| 6529
+| Waiting for space to become available.
+
+| 6530
+| Waiting for an external process to complete.
+
+| 6531
+| Source volume was deleted.
+
+| 6532
+| Slowed due to resource constraints.
+
+| 6533
+| Volume does not support block reallocation.
+
+| 6534
+| File operation not supported.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#destination]
+[.api-collapsible-fifth-title]
+destination
+
+Destination file information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Contains the most recent failure reason for move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#destinations]
+[.api-collapsible-fifth-title]
+destinations
+
+Path for file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#sources]
+[.api-collapsible-fifth-title]
+sources
+
+Path for file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#files_to_move]
+[.api-collapsible-fifth-title]
+files_to_move
+
+A list of source files along with the destination file they are moved to. If the terminal path component of the destination is a directory, then the source file's basename is replicated in that directory. This is only used for FlexVol volume file move operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destinations
+|array[link:#destinations[destinations]]
+a|The destination file information.
+
+
+|sources
+|array[link:#sources[sources]]
+a|The source file information.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node hosting the destination of this move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM of the source reference file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Volume of the source reference file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#reference]
+[.api-collapsible-fifth-title]
+reference
+
+Reference file information.
+
+[#scanner]
+[.api-collapsible-fifth-title]
+scanner
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|percent
+|integer
+a|Scanner progress, as a percentage.
+
+
+|progress
+|integer
+a|Scanner progress, in bytes scanned.
+
+
+|state
+|string
+a|Status of the file move scanner.
+
+
+|total
+|integer
+a|Total bytes to be scanned.
+
+
+|===
+
+
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+Source file information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM of the FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

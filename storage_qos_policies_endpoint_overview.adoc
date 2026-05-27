@@ -1,0 +1,77 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_qos_policies_endpoint_overview.html'
+summary: 'Manage QoS policies'
+---
+
+= Manage QoS policies
+
+
+
+== Quality of Service Configuration
+
+A QoS policy defines measurable service level objectives (SLOs) that apply to the storage objects with which the policy is associated. There are two types of policies that can be configured: fixed, which defines a fixed SLO, or adaptive which defines a variable SLO for a storage object. Adaptive policies vary the SLO depending on the space usage of the storage object. A policy can be either a fixed policy or an adaptive one, not both.
+ +
+Service level objectives include minimum and maximum limits on throughput in terms of IOPS. Only maximum limits can be set in terms of both IOPS and/or throughput (MB/s). A QoS policy can be used to enforce SLOs for multiple storage objects by specifying "capacity_shared" to true. For example, if a QoS policy with "capacity_shared" is set to true and it has maximum_throughput_iops set to 1000, and this policy is assigned to four volumes, then the combined throughput of all four volumes is limited to 1000 IOPS. If "capacity_shared" is set to false then, each storage object will have it's SLOs enforced individually. For example, in the previous case if the same policy was applied to four volumes but with "capacity_shared" set to false, then each of the volumes would be limited to 1000 IOPS individually. Once "capacity_shared" is set, it cannot be modified.
+ +
+Adaptive parameters can specify the variable SLOs in terms of IOPS/TB. The actual IOPS enforced on the storage object can be calculated using the allocated space on the storage object. The policies are enforced individually amongst storage objects.
+
+== Examples
+
+=== 1) Create a fixed QoS policy
+
+The following example shows how to create a fixed QoS policy to limit throughput for a storage object between 5000 IOPS and 10000 IOPS which has capacity_shared set to false. This QoS policy can be used as a template to apply on multiple storage objects to provide individual SLOs to each object.
+ +
+
+'''
+
+----
+curl -X POST "https://172.21.69.245/api/storage/qos/policies?return_timeout=0" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"fixed\": { \"capacity_shared\": false, \"max_throughput_iops\": 10000, \"min_throughput_iops\": 5000 }, \"name\": \"qos_policy_5000_to_10000_iops\", \"svm\": { \"name\": \"vs0\" }}"
+----
+
+'''
+
+=== 2) Create an adaptive QoS policy
+
+The following example shows how to create an adaptive QoS policy which provides 5000 IOPS per GB of allocated space for a storage object with a peak of 6000 IOPS. Minimum IOPS regardless of allocated space are 1000 IOPS.
+ +
+
+'''
+
+----
+curl -X POST "https://172.21.69.245/api/storage/qos/policies?return_timeout=0" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"adaptive\": { \"absolute_min_iops\": 1000, \"expected_iops\": 5000, \"expected_iops_allocation\": \"used_space\", \"peak_iops\": 6000, \"peak_iops_allocation\": \"allocated_space\" }, \"name\": \"adaptive_pg_5k_to_6k\", \"svm\": { \"name\": \"vs0\" }}"
+----
+
+-
+
+'''
+
+=== 3) Update an existing QoS policy
+
+The following example shows how to update SLOs of an existing QoS policy and also rename it.
+ +
+
+'''
+
+----
+curl -X PATCH "https://172.21.69.245/api/storage/qos/policies/d38bafc0-5a51-11e9-bd5b-005056ac6f1f?return_timeout=0" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"fixed\": { \"max_throughput_iops\": 15000, \"min_throughput_iops\": 10000 }, \"name\": \"qos_policy_10k_to_15k_iops\"}"
+----
+
+'''
+
+=== 4) Delete an existing QoS policy
+
+When a QoS policy is deleted any associations of the policy with a storage objects are also removed.
+ +
+
+'''
+
+----
+curl -X DELETE "https://172.21.69.245/api/storage/qos/policies/d38bafc0-5a51-11e9-bd5b-005056ac6f1f?return_timeout=0" -H "accept: application/json"
+----
+
+'''
+
+

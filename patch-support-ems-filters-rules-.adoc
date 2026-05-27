@@ -1,0 +1,358 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-support-ems-filters-rules-.html'
+summary: 'Update an event filter rule'
+---
+
+= Update an event filter rule
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/support/ems/filters/{name}/rules/{index}`#
+
+*Introduced In:* 9.6
+
+Updates an event filter rule.
+
+== Recommended optional properties
+
+* `message_criteria` - Message criteria used by a rule to match an event.
+* `parameter_criteria` - Parameter criteria used by a rule to match an event.
+
+== Related ONTAP commands
+
+* `event filter rule add`
+* `event filter rule delete`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Filter name
+
+
+|index
+|string
+|path
+|True
+a|Filter rule index
+
+
+|new_index
+|integer
+|query
+|False
+a|New position for the filter rule index
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|Rule index. Rules are evaluated in ascending order. If a rule's index order is not specified during creation, the rule is appended to the end of the list.
+
+
+|message_criteria
+|link:#message_criteria[message_criteria]
+a|Matching message definitions for the filter. A property must be specified.
+
+
+|parameter_criteria
+|array[link:#parameter_criteria[parameter_criteria]]
+a|Parameter criteria used to match against events' parameters. Each parameter consists of a name and a value. When multiple parameter criteria are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard '*' characters.
+
+
+|type
+|string
+a|Rule type
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "index": 1,
+  "message_criteria": {
+    "name_pattern": "wafl.*",
+    "severities": "emergency,alert,error",
+    "snmp_trap_types": "standard,built_in"
+  },
+  "parameter_criteria": [
+    {
+      "name_pattern": "vol",
+      "value_pattern": "cloud*"
+    }
+  ],
+  "type": "include"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 983092
+| The index of the rule provided is outside the allowed range for the filter provided
+
+| 983095
+| The rule index provided is invalid for the filter provided
+
+| 983113
+| Default filters cannot be modified or removed
+
+| 983126
+| A rule requires at least one name_pattern, severities, snmp_trap_types, or parameter pattern to be defined
+
+| 983127
+| A property cannot contain a combination of the wildcard characters and other values.
+
+| 983128
+| An invalid value is provided for the property 'snmp_trap_types'
+
+| 983146
+| An invalid value is provided for the property 'severities'
+
+| 983147
+| The severities provided are not supported
+
+| 983155
+| The provided severities property does not match that of the name_pattern
+
+| 983156
+| The provided snmp_trap_types property does not match that of the name_pattern
+
+| 983157
+| The provided severities and snmp_trap_types properties do not match those of the name_pattern
+
+| 983158
+| The name_pattern provided does not exist
+
+| 983195
+| Empty field in parameter_criteria. Both name and value patterns must be specified
+
+| 983196
+| name_pattern and value_pattern fields in parameter_criteria are empty
+
+| 983211
+| Parameter criteria based filtering is not supported in this version of ONTAP
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#message_criteria]
+[.api-collapsible-fifth-title]
+message_criteria
+
+Matching message definitions for the filter. A property must be specified.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name_pattern
+|string
+a|Message name filter on which to match. Supports wildcards. Defaults to * if not specified.
+
+
+|severities
+|string
+a|A comma-separated list of severities or a wildcard.
+
+
+|snmp_trap_types
+|string
+a|A comma separated list of snmp_trap_types or a wildcard.
+
+
+|===
+
+
+[#parameter_criteria]
+[.api-collapsible-fifth-title]
+parameter_criteria
+
+Criterion used for parameter based filtering
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name_pattern
+|string
+a|Parameter name pattern. Wildcard character '*' is supported.
+
+
+|value_pattern
+|string
+a|Parameter value pattern. Wildcard character '*' is supported.
+
+
+|===
+
+
+[#ems_filter_rule]
+[.api-collapsible-fifth-title]
+ems_filter_rule
+
+Rule for an event filter
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|Rule index. Rules are evaluated in ascending order. If a rule's index order is not specified during creation, the rule is appended to the end of the list.
+
+
+|message_criteria
+|link:#message_criteria[message_criteria]
+a|Matching message definitions for the filter. A property must be specified.
+
+
+|parameter_criteria
+|array[link:#parameter_criteria[parameter_criteria]]
+a|Parameter criteria used to match against events' parameters. Each parameter consists of a name and a value. When multiple parameter criteria are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard '*' characters.
+
+
+|type
+|string
+a|Rule type
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

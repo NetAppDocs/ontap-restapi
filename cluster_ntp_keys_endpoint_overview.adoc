@@ -1,0 +1,45 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_ntp_keys_endpoint_overview.html'
+summary: 'Manage cluster NTP keys'
+---
+
+= Manage cluster NTP keys
+
+
+
+== Overview
+
+You can configure NTP to use shared private keys between ONTAP and trusted external NTP time servers.
+
+You acquire the keys from the external NTP time servers and individual entries created for each
+unique key. You can use the /cluster/ntp/servers API to associate a key with an external NTP time server
+used by ONTAP and enable authentication.
+
+=== Fields used for adding an NTP shared key
+
+The required fields are:
+
+* `id`
+* `digest_type`
+* `secret_key`
+
+== Example
+
+----
+
+# Body
+create_ntp_key.txt(body):
+{
+"id": 10,
+"digest_type": "sha1",
+"value": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster/ntp/keys" -d "@create_ntp_key.txt"
+----
+
+

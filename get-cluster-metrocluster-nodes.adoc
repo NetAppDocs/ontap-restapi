@@ -1,0 +1,972 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-metrocluster-nodes.html'
+summary: 'Retrieve MetroCluster nodes and configurations'
+---
+
+= Retrieve MetroCluster nodes and configurations
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/metrocluster/nodes`#
+
+*Introduced In:* 9.8
+
+Retrieves MetroCluster nodes and their configurations.
+
+== Related ONTAP Commands
+
+* `metrocluster node show`
+
+== Learn more
+
+* link:cluster_metrocluster_nodes_endpoint_overview.html[DOC /cluster/metrocluster/nodes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|is_mccip
+|boolean
+|query
+|False
+a|Filter by is_mccip
+
+* Introduced in: 9.12
+
+
+|dr_group_id
+|integer
+|query
+|False
+a|Filter by dr_group_id
+
+
+|dr_partner.uuid
+|string
+|query
+|False
+a|Filter by dr_partner.uuid
+
+* Introduced in: 9.12
+
+
+|dr_partner.system_id
+|string
+|query
+|False
+a|Filter by dr_partner.system_id
+
+* Introduced in: 9.12
+
+
+|dr_partner.name
+|string
+|query
+|False
+a|Filter by dr_partner.name
+
+* Introduced in: 9.12
+
+
+|dr_mirroring_state
+|string
+|query
+|False
+a|Filter by dr_mirroring_state
+
+
+|ha_partner.uuid
+|string
+|query
+|False
+a|Filter by ha_partner.uuid
+
+* Introduced in: 9.12
+
+
+|ha_partner.system_id
+|string
+|query
+|False
+a|Filter by ha_partner.system_id
+
+* Introduced in: 9.12
+
+
+|ha_partner.name
+|string
+|query
+|False
+a|Filter by ha_partner.name
+
+* Introduced in: 9.12
+
+
+|encryption_enabled
+|boolean
+|query
+|False
+a|Filter by encryption_enabled
+
+* Introduced in: 9.15
+
+
+|dr_partner_cluster.name
+|string
+|query
+|False
+a|Filter by dr_partner_cluster.name
+
+* Introduced in: 9.12
+
+
+|dr_partner_cluster.uuid
+|string
+|query
+|False
+a|Filter by dr_partner_cluster.uuid
+
+* Introduced in: 9.12
+
+
+|limit_enforcement
+|string
+|query
+|False
+a|Filter by limit_enforcement
+
+* Introduced in: 9.12
+
+
+|configuration_state
+|string
+|query
+|False
+a|Filter by configuration_state
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|node.system_id
+|string
+|query
+|False
+a|Filter by node.system_id
+
+* Introduced in: 9.12
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|dr_auxiliary_partner.uuid
+|string
+|query
+|False
+a|Filter by dr_auxiliary_partner.uuid
+
+* Introduced in: 9.12
+
+
+|dr_auxiliary_partner.system_id
+|string
+|query
+|False
+a|Filter by dr_auxiliary_partner.system_id
+
+* Introduced in: 9.12
+
+
+|dr_auxiliary_partner.name
+|string
+|query
+|False
+a|Filter by dr_auxiliary_partner.name
+
+* Introduced in: 9.12
+
+
+|automatic_uso
+|boolean
+|query
+|False
+a|Filter by automatic_uso
+
+* Introduced in: 9.9
+
+
+|dr_auxiliary_cluster.name
+|string
+|query
+|False
+a|Filter by dr_auxiliary_cluster.name
+
+* Introduced in: 9.12
+
+
+|dr_auxiliary_cluster.uuid
+|string
+|query
+|False
+a|Filter by dr_auxiliary_cluster.uuid
+
+* Introduced in: 9.12
+
+
+|cluster.name
+|string
+|query
+|False
+a|Filter by cluster.name
+
+
+|cluster.uuid
+|string
+|query
+|False
+a|Filter by cluster.uuid
+
+
+|ha_partner_cluster.name
+|string
+|query
+|False
+a|Filter by ha_partner_cluster.name
+
+* Introduced in: 9.12
+
+
+|ha_partner_cluster.uuid
+|string
+|query
+|False
+a|Filter by ha_partner_cluster.uuid
+
+* Introduced in: 9.12
+
+
+|dr_operation_state
+|string
+|query
+|False
+a|Filter by dr_operation_state
+
+* Introduced in: 9.9
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of Records
+
+
+|records
+|array[link:#metrocluster_node[metrocluster_node]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "cluster": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "configuration_state": "string",
+      "dr_auxiliary_cluster": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "dr_auxiliary_partner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "system_id": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "dr_group_id": 0,
+      "dr_mirroring_state": "string",
+      "dr_operation_state": "string",
+      "dr_partner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "system_id": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "dr_partner_cluster": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "ha_partner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "system_id": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "ha_partner_cluster": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "limit_enforcement": "string",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "system_id": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_auxiliary_cluster]
+[.api-collapsible-fifth-title]
+dr_auxiliary_cluster
+
+DR AUX cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_auxiliary_partner]
+[.api-collapsible-fifth-title]
+dr_auxiliary_partner
+
+AUX partner node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_partner]
+[.api-collapsible-fifth-title]
+dr_partner
+
+DR partner node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_partner_cluster]
+[.api-collapsible-fifth-title]
+dr_partner_cluster
+
+DR partner cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ha_partner]
+[.api-collapsible-fifth-title]
+ha_partner
+
+HA partner node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ha_partner_cluster]
+[.api-collapsible-fifth-title]
+ha_partner_cluster
+
+HA partner cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#metrocluster_node]
+[.api-collapsible-fifth-title]
+metrocluster_node
+
+Data for a node in a MetroCluster. REST: /api/cluster/metrocluster/nodes
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|automatic_uso
+|boolean
+a|Specifies if automatic unplanned switchover is enabled.
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|configuration_state
+|string
+a|Configuration state of the node.
+
+
+|dr_auxiliary_cluster
+|link:#dr_auxiliary_cluster[dr_auxiliary_cluster]
+a|DR AUX cluster.
+
+
+|dr_auxiliary_partner
+|link:#dr_auxiliary_partner[dr_auxiliary_partner]
+a|AUX partner node.
+
+
+|dr_group_id
+|integer
+a|DR Group ID.
+
+
+|dr_mirroring_state
+|string
+a|State of the DR mirroring configuration.
+
+
+|dr_operation_state
+|string
+a|State of the DR operation.
+
+
+|dr_partner
+|link:#dr_partner[dr_partner]
+a|DR partner node.
+
+
+|dr_partner_cluster
+|link:#dr_partner_cluster[dr_partner_cluster]
+a|DR partner cluster.
+
+
+|encryption_enabled
+|boolean
+a|Indicates if the encryption for NVLog and storage traffic is enabled.
+
+
+|ha_partner
+|link:#ha_partner[ha_partner]
+a|HA partner node.
+
+
+|ha_partner_cluster
+|link:#ha_partner_cluster[ha_partner_cluster]
+a|HA partner cluster.
+
+
+|is_mccip
+|boolean
+a|Indicates whether the configuration type is MCC-IP.
+
+
+|limit_enforcement
+|string
+a|Indicates if the node object limits are enforced.
+
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

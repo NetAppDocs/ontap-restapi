@@ -1,0 +1,410 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-cifs-unix-symlink-mapping.html'
+summary: 'Create a UNIX symbolic link mapping for a CIFS client'
+---
+
+= Create a UNIX symbolic link mapping for a CIFS client
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/cifs/unix-symlink-mapping`#
+
+*Introduced In:* 9.6
+
+Creates a UNIX symbolic link mapping for a CIFS client.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the CIFS unix-symlink-mapping.
+* `unix_path` - UNIX path to which the CIFS symlink mapping to be created.
+* `target.share` - CIFS share name on the destination CIFS server to which the UNIX symbolic link is pointing.
+* `target.path` - CIFS path on the destination to which the symbolic link maps.
+
+== Default property values
+
+* `target.server` - _Local_NetBIOS_Server_Name_
+* `locality` - _local_
+* `home_directory` - _false_
+
+== Related ONTAP commands
+
+* `vserver cifs symlink create`
+
+== Learn more
+
+* link:protocols_cifs_unix-symlink-mapping_endpoint_overview.html[DOC /protocols/cifs/unix-symlink-mapping]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|target
+|link:#cifs_target[cifs_target]
+a|
+
+|unix_path
+|string
+a|Specifies the UNIX path prefix to be matched for the mapping.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "target": {
+    "locality": "string",
+    "path": "/dir1/dir2/",
+    "server": "ENGCIFS",
+    "share": "ENG_SHARE"
+  },
+  "unix_path": "/mnt/eng_volume/"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cifs_symlink_mapping[cifs_symlink_mapping]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "target": {
+        "locality": "string",
+        "path": "/dir1/dir2/",
+        "server": "ENGCIFS",
+        "share": "ENG_SHARE"
+      },
+      "unix_path": "/mnt/eng_volume/"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655654
+| Must specify the target CIFS share while creating path mapping entries with localities "local" or "widelink"
+
+| 655572
+| The target path contains illegal characters or is too long
+
+| 655574
+| The target server contains illegal characters or is too long
+
+| 655436
+| If the locality is "local", the target server must be blank or must match the CIFS NetBIOS name for given SVM
+
+| 655439
+| The Specified target server is local CIFS server for given SVM but the locality is specified as "widelink"
+
+| 655546
+| Failed to create symlink mapping because administrative share cannot be used as target share
+
+| 655437
+| Failed to create the symlink mapping with locality "local" because the target share does not exist for the specified SVM
+
+| 655429
+| UNIX path must begin and end with a "/"
+
+| 655430
+| Target path must begin and end with a "/"
+
+| 655399
+| Failed to get the CIFS server for specified SVM
+
+| 656481
+| Failed to create the widelink because the target share does not exist for the specified SVM
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_target]
+[.api-collapsible-fifth-title]
+cifs_target
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|home_directory
+|boolean
+a|Specify if the destination share is a home directory.
+
+
+|locality
+|string
+a|Specifies whether the CIFS symbolic link is a local link or wide link.
+The following values are supported:
+
+* local - Local symbolic link maps only to the same CIFS share.
+* widelink - Wide symbolic link maps to any CIFS share on the network.
+
+
+|path
+|string
+a|Specifies the CIFS path on the destination to which the symbolic link maps. The final path is generated by concatenating the CIFS server name, the share name, the cifs-path and the remaining path in the symbolic link left after the prefix match. This value is specified by using a UNIX-style path name. The trailing forward slash is required for the full path name to be properly interpreted.
+
+
+|server
+|string
+a|Specifies the destination CIFS server where the
+UNIX symbolic link is pointing. This field is mandatory if the
+locality of the symbolic link is 'widelink'.
+You can specify the value in any of the following formats:
+
+*** DNS name of the CIFS server.
+
+*** IP address of the CIFS server.
+
+*** NetBIOS name of the CIFS server.
+
+
+|share
+|string
+a|Specifies the CIFS share name on the destination CIFS server to which the UNIX symbolic link is pointing.
+
+
+|===
+
+
+[#cifs_symlink_mapping]
+[.api-collapsible-fifth-title]
+cifs_symlink_mapping
+
+ONTAP allows for both CIFS and NFS access to the same datastore. This datastore can contain symbolic links created by UNIX clients which can point anywhere from the perspective of the UNIX client. To Access such UNIX symlink from CIFS share, we need to create a CIFS symbolic link path mapping from a UNIX symlink and target it as a CIFS path.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|target
+|link:#cifs_target[cifs_target]
+a|
+
+|unix_path
+|string
+a|Specifies the UNIX path prefix to be matched for the mapping.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

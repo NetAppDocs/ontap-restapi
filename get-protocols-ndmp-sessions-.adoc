@@ -1,0 +1,564 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-ndmp-sessions-.html'
+summary: 'Retrieve NDMP session details'
+---
+
+= Retrieve NDMP session details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/ndmp/sessions/{owner.uuid}/{session.id}`#
+
+*Introduced In:* 9.7
+
+Retrieves the details of a specific NDMP session.
+
+== Related ONTAP commands
+
+* `vserver services ndmp probe`
+* `system services ndmp probe`
+
+== Learn more
+
+* link:protocols_ndmp_sessions_endpoint_overview.html[DOC /protocols/ndmp/sessions]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|The NDMP node or SVM UUID based on whether NDMP is operating in node-scope or SVM-scope mode.
+
+
+|session.id
+|string
+|path
+|True
+a|NDMP session identifier
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|backup_engine
+|string
+a|Indicates the NDMP backup engine.
+
+
+|client_address
+|string
+a|Indicates the NDMP client address.
+
+
+|client_port
+|integer
+a|Indicates the NDMP client port.
+
+
+|data
+|link:#ndmp_data[ndmp_data]
+a|Information about the NDMP data server.
+
+
+|data_path
+|string
+a|Indicates the NDMP backup or restore path.
+
+
+|id
+|string
+a|NDMP session identifier.
+
+
+|mover
+|link:#ndmp_mover[ndmp_mover]
+a|Information about the NDMP mover.
+
+
+|node
+|link:#node[node]
+a|
+
+|scsi
+|link:#ndmp_scsi[ndmp_scsi]
+a|Information about the NDMP SCSI server.
+
+
+|source_address
+|string
+a|Indicates the NDMP local address on which connection was established.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|tape_device
+|string
+a|Indicates the NDMP tape device.
+
+
+|tape_mode
+|string
+a|The modes of a NDMP mover instance.
+
+
+|uuid
+|string
+a|The NDMP node or SVM UUID based on whether NDMP is operating in node-scope or SVM-scope mode.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "backup_engine": "string",
+  "client_address": "string",
+  "data": {
+    "bytes_processed": 5000,
+    "connection": {
+      "address": "string",
+      "port": 18600,
+      "type": "local"
+    },
+    "operation": "backup",
+    "reason": "aborted",
+    "state": "halted"
+  },
+  "data_path": "/vserver1/vol1",
+  "id": "string",
+  "mover": {
+    "bytes_moved": 645120,
+    "connection": {
+      "address": "string",
+      "port": 18600,
+      "type": "local"
+    },
+    "mode": "read",
+    "reason": "end_of_media",
+    "state": "connected"
+  },
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "scsi": {
+    "device_id": "string"
+  },
+  "source_address": "string",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "tape_device": "nrst0a",
+  "tape_mode": "write",
+  "uuid": "string"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 68812802
+| The UUID is not valid.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ndmp_connect]
+[.api-collapsible-fifth-title]
+ndmp_connect
+
+Indicates the NDMP connection attributes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|Indicates the NDMP data connection address.
+
+
+|port
+|integer
+a|Indicates the NDMP data connection port.
+
+
+|type
+|string
+a|The different NDMP connection types.
+
+
+|===
+
+
+[#ndmp_data]
+[.api-collapsible-fifth-title]
+ndmp_data
+
+Information about the NDMP data server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_processed
+|integer
+a|Indicates the NDMP data bytes processed.
+
+
+|connection
+|link:#ndmp_connect[ndmp_connect]
+a|Indicates the NDMP connection attributes.
+
+
+|operation
+|string
+a|Indicates the NDMP data server operation.
+
+
+|reason
+|string
+a|If the NDMP mover or data server is in the paused or halted state, then this property provides additional information for the state.
+
+
+|state
+|string
+a|The various states of the NDMP state machine during a backup or restore workflow.
+
+
+|===
+
+
+[#ndmp_mover]
+[.api-collapsible-fifth-title]
+ndmp_mover
+
+Information about the NDMP mover.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_moved
+|integer
+a|Indicates the NDMP mover bytes moved.
+
+
+|connection
+|link:#ndmp_connect[ndmp_connect]
+a|Indicates the NDMP connection attributes.
+
+
+|mode
+|string
+a|The modes of a NDMP mover instance.
+
+
+|reason
+|string
+a|If the NDMP mover or data server is in the paused or halted state, then this property provides additional information for the state.
+
+
+|state
+|string
+a|The various states of the NDMP state machine during a backup or restore workflow.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ndmp_scsi]
+[.api-collapsible-fifth-title]
+ndmp_scsi
+
+Information about the NDMP SCSI server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|device_id
+|string
+a|Indicates the NDMP SCSI device ID.
+
+
+|host_adapter
+|integer
+a|Indicates the NDMP SCSI host adapter.
+
+
+|lun_id
+|integer
+a|Indicates the NDMP SCSI LUN ID.
+
+
+|target_id
+|integer
+a|Indicates the NDMP SCSI target ID.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,845 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-igroups-initiators.html'
+summary: 'Retrieve initiators of an initiator group'
+---
+
+= Retrieve initiators of an initiator group
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/igroups/{igroup.uuid}/initiators`#
+
+*Introduced In:* 9.6
+
+Retrieves initiators of an initiator group.
+
+This API only reports initiators owned directly by the initiator group. Initiators of nested initiator groups are not included in this collection.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `connectivity_tracking.+*+`
+
+== Related ONTAP commands
+
+* `lun igroup show`
+
+== Learn more
+
+* link:protocols_san_igroups_endpoint_overview.html[DOC /protocols/san/igroups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the initiator group.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#igroup_initiator[igroup_initiator]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "string",
+      "connectivity_tracking": {
+        "alerts": [
+          {
+            "summary": {
+              "arguments": [
+                {
+                  "code": "string",
+                  "message": "string"
+                }
+              ],
+              "code": "4",
+              "message": "entry doesn't exist"
+            }
+          }
+        ],
+        "connection_state": "string",
+        "connections": [
+          {
+            "logins": [
+              {
+                "interface": {
+                  "fc": {
+                    "_links": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    },
+                    "name": "fc_lif1",
+                    "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+                    "wwpn": "20:00:00:50:56:b4:13:a8"
+                  },
+                  "ip": {
+                    "_links": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    },
+                    "ip": {
+                      "address": "10.10.10.7"
+                    },
+                    "name": "lif1",
+                    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+                  }
+                },
+                "last_seen_time": "2021-03-14 05:19:00 +0000"
+              }
+            ],
+            "node": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "node1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          }
+        ]
+      },
+      "igroup": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "igroup1",
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "iqn.1998-01.com.corp.iscsi:name1",
+      "proximity": {
+        "peer_svms": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "peer1",
+            "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+          }
+        ]
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374852
+| The initiator group specified in the URI does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#summary]
+[.api-collapsible-fifth-title]
+summary
+
+A user friendly message describing the connection state.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#alerts]
+[.api-collapsible-fifth-title]
+alerts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|summary
+|link:#summary[summary]
+a|A user friendly message describing the connection state.
+
+
+|===
+
+
+[#fc]
+[.api-collapsible-fifth-title]
+fc
+
+An FC interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC interface.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface.
+
+
+|wwpn
+|string
+a|The WWPN of the FC interface.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fc
+|link:#fc[fc]
+a|An FC interface.
+
+
+|ip
+|link:#ip[ip]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|===
+
+
+[#logins]
+[.api-collapsible-fifth-title]
+logins
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connected
+|boolean
+a|True if the initiator is currently logged in to this connection's interface.
+
+
+|interface
+|link:#interface[interface]
+a|
+
+|last_seen_time
+|string
+a|The last time this initiator logged in. Logins not seen for 48 hours are cleared and not reported.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#connections]
+[.api-collapsible-fifth-title]
+connections
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logins
+|array[link:#logins[logins]]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#connectivity_tracking]
+[.api-collapsible-fifth-title]
+connectivity_tracking
+
+Overview of the initiator's connections to ONTAP.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alerts
+|array[link:#alerts[alerts]]
+a|
+
+|connection_state
+|string
+a|Connection state.
+
+
+|connections
+|array[link:#connections[connections]]
+a|
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group in which the initiator is found.
+
+Note that this does not mean that the initiator cannot also be found in other initiator groups.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the initiator is proximal to the SVM of the containing initiator group. This is required for any POST or PATCH that includes the `proximity` sub-object.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the initiator is proximal.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|name
+|string
+a|The FC WWPN, iSCSI IQN, or iSCSI EUI that identifies the host initiator. Valid in POST only and not allowed when the `records` property is used.
+
+An FC WWPN consists of 16 hexadecimal digits grouped as 8 pairs separated by colons. The format for an iSCSI IQN is _iqn.yyyy-mm.reverse_domain_name:any_. The iSCSI EUI format consists of the _eui._ prefix followed by 16 hexadecimal characters.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+|===
+
+
+[#igroup_initiator]
+[.api-collapsible-fifth-title]
+igroup_initiator
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|connectivity_tracking
+|link:#connectivity_tracking[connectivity_tracking]
+a|Overview of the initiator's connections to ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group in which the initiator is found.
+
+Note that this does not mean that the initiator cannot also be found in other initiator groups.
+
+
+|name
+|string
+a|The FC WWPN, iSCSI IQN, or iSCSI EUI that identifies the host initiator. Valid in POST only and not allowed when the `records` property is used.
+
+An FC WWPN consists of 16 hexadecimal digits grouped as 8 pairs separated by colons. The format for an iSCSI IQN is _iqn.yyyy-mm.reverse_domain_name:any_. The iSCSI EUI format consists of the _eui._ prefix followed by 16 hexadecimal characters.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

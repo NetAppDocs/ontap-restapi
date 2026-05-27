@@ -1,0 +1,117 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_approval-groups_endpoint_overview.html'
+summary: 'View and create multi-admin-verify approval groups'
+---
+
+= View and create multi-admin-verify approval groups
+
+
+
+== Overview
+
+A group of users can be defined in a cluster server context.
+Approval groups can be associated with a rule or global setting from which the associated request can retrieve approvals.
+ +
+
+'''
+
+== Examples
+
+=== Creating a multi-admin-verify approval group
+
+Creates an approval group for a specified SVM for a specified list of ONTAP users.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/approval-groups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/multi-admin-verify/approval-groups?return_records=true" -H "accept: application/hal+json" -d '{"name": "group1", "approvers": ["admin"], "email": ["group1.approvers@email.com"]}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "owner": {
+      "uuid": "c109634f-7011-11ec-a23d-005056a78fd5",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/c109634f-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "name": "group1",
+    "approvers": [
+      "admin"
+    ],
+    "email": [
+      "group1.approvers@email.com"
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/approval-groups/c109634f-7011-11ec-a23d-005056a78fd5/group1"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving multi-admin-verify approval groups
+
+Displays information about approval groups and the users that are registered with each group.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/approval-groups
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify/approval-groups"
+
+# The response:
+{
+"records": [
+  {
+    "owner": {
+      "uuid": "52b75787-7011-11ec-a23d-005056a78fd5",
+      "name": "cluster1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/52b75787-7011-11ec-a23d-005056a78fd5"
+        }
+      }
+    },
+    "name": "group1",
+    "_links": {
+      "self": {
+        "href": "/api/security/multi-admin-verify/approval-groups/52b75787-7011-11ec-a23d-005056a78fd5/group1"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify/approval-groups"
+  }
+}
+}
+----
+
+'''
+
+

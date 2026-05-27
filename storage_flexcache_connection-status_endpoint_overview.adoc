@@ -1,0 +1,282 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_flexcache_connection-status_endpoint_overview.html'
+summary: 'Manage FlexCache connection status'
+---
+
+= Manage FlexCache connection status
+
+
+
+== Overview
+
+FlexCache is a persistent cache of an origin volume.
+
+FlexCache supports fan-out and more than one FlexCache can be created from one origin volume.
+This API retrieves the connection status between cache and origin volumes.
+
+== FlexCache APIs
+
+The following APIs can be used to perform operations related to FlexCache connection status:
+
+&ndash; GET       /api/storage/flexcache/connection-status
+
+&ndash; GET       /api/storage/flexcache/connection-status/\{node}/\{svm}/\{local_fg_msid}/\{remote_svm_uuid}/\{remote_vol_const_msid}
+
+== Examples
+
+=== Retrieving flexcache connection-status of all volumes.
+
+The GET request is used to retrieve connection-status between all origins and their corresponding FlexCache volumes.
+
+----
+
+# The API:
+/api/storage/flexcache/connection-status
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/flexcache/connection-status?" -H  "accept: application/json"
+
+# The response:
+{
+  "records": [
+    {
+      "node": "sti42-vsim-ucs511b",
+      "svm": "vs0",
+      "local_fg_msid": 2150359768,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359767,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511b/vs0/2150359768/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359767"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511d",
+      "svm": "vs0",
+      "local_fg_msid": 2150359768,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359767,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511d/vs0/2150359768/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359767"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359769,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359769"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359770,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359770"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359771,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359771"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359772,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359772"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359773,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359773"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359774,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359774"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359775,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359775"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359776,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359776"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359777,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359777"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359778,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359778"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359779,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359779"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359767,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359780,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359767/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359780"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511c",
+      "svm": "vs0",
+      "local_fg_msid": 2150359768,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359767,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359768/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359767"
+        }
+      }
+    },
+    {
+      "node": "sti42-vsim-ucs511a",
+      "svm": "vs0",
+      "local_fg_msid": 2150359768,
+      "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+      "remote_vol_const_msid": 2150359767,
+      "_links": {
+        "self": {
+          "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511a/vs0/2150359768/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359767"
+        }
+      }
+    }
+  ],
+  "num_records": 16,
+  "_links": {
+    "self": {
+      "href": "/api/storage/flexcache/connection-status/"
+    }
+  }
+}
+----
+
+=== Retrieving a single flexcache connection status
+
+The GET request is used to retrieve a specific connection status between 2 volumes.
+
+----
+
+# The API:
+/api/storage/flexcache/connection-status/{node}/{svm}/{local_fg_msid}/{remote_svm_uuid}/{remote_vol_const_msid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359768/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359767?" -H  "accept: application/json"
+
+# The response:
+{
+  "node": "sti42-vsim-ucs511c",
+  "svm": "vs0",
+  "local_fg_msid": 2150359768,
+  "remote_svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+  "remote_vol_const_msid": 2150359767,
+  "svm_uuid": "a9161fea-73a0-11f0-85c5-005056a7bcdb",
+  "volume": "fc0",
+  "remote_svm": "vs0",
+  "remote_volume": "vol0",
+  "remote_cluster": "C1_sti42-vsim-ucs511a_1754576895",
+  "conn_state": "connected",
+  "remote_endpoint": "origin",
+  "last_update_time": "2025-08-07T11:39:31-04:00",
+  "_links": {
+    "self": {
+      "href": "/api/storage/flexcache/connection-status/sti42-vsim-ucs511c/vs0/2150359768/a9161fea-73a0-11f0-85c5-005056a7bcdb/2150359767"
+    }
+  }
+}
+----
+
+

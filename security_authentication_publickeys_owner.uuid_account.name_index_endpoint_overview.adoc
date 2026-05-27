@@ -1,0 +1,55 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_publickeys_owner.uuid_account.name_index_endpoint_overview.html'
+summary: 'Manage authentication keys (end-users)'
+---
+
+= Manage authentication keys (end-users)
+
+
+
+== Overview
+
+This API configures the public keys for end-user (non-cluster admin) accounts.
+Specify the owner UUID, the user account name, and the index in the URI path. The owner UUID corresponds to the UUID of the SVM containing the user account associated with the public key and can be obtained from the response body of the GET request performed on the API "`/api/svm/svms".
+
+The index value corresponds to the public key that needs to be modified or deleted (it is possible to create more than one public key for the same user account).
+
+== Examples
+
+=== Retrieving the specific configured public key for user accounts
+
+----
+
+# The API:
+GET "/api/security/authentication/publickeys/{owner.uuid}/{account.name}/{index}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/publickeys/513a78c7-8c13-11e9-8f78-005056bbf6ac/pubuser4/0
+----
+
+=== Updating the public key, certificate, and comment for user accounts
+
+----
+
+# The API:
+PATCH "/api/security/authentication/publickeys/{owner.uuid}/{account.name}/{index}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/publickeys/d49de271-8c11-11e9-8f78-005056bbf6ac/pubuser1/0 --request PATCH --data '{ "comment": "Cserver-modification", "certificate": "<CERTIFICATE-CONTENT>" , "public_key": "<SSH-PUBLIC-KEY>" }'
+----
+
+=== Deleting the public key for user accounts
+
+----
+
+# The API:
+DELETE "/api/security/authentication/publickeys/{owner.uuid}/{account.name}/{index}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/publickeys/d49de271-8c11-11e9-8f78-005056bbf6ac/pubuser1/0 --request DELETE
+----
+
+

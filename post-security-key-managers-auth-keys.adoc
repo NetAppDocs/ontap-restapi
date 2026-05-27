@@ -1,0 +1,372 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-key-managers-auth-keys.html'
+summary: 'Create an authentication key'
+---
+
+= Create an authentication key
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/key-managers/{security_key_manager.uuid}/auth-keys`#
+
+*Introduced In:* 9.12
+
+Creates an authentication key.
+
+== Related ONTAP commands
+
+* `security key-manager key create`
+
+== Required properties
+
+* `security_key_manager.uuid` - UUID of the external key manager.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|security_key_manager.uuid
+|string
+|path
+|True
+a|External key manager UUID
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_id
+|string
+a|Key identifier.
+
+
+|key_tag
+|string
+a|Optional parameter to define key-tag for the authentication key, length 0-32 characters.
+
+
+|passphrase
+|string
+a|Authentication passphrase, length 20-32 characters. May contain the '=' character.
+
+
+|security_key_manager
+|link:#security_key_manager[security_key_manager]
+a|Security key manager object reference.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "key_id": "000000000000000002000000000001003aa8ce6a4fea3e466620134bea9510a10000000000000000",
+  "key_tag": "Authentication-Key-01",
+  "passphrase": "AuthenticationKey_01",
+  "security_key_manager": {
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563434"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#key_manager_auth_key[key_manager_auth_key]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "records": [
+    {
+      "key_id": "000000000000000002000000000001003aa8ce6a4fea3e466620134bea9510a10000000000000000",
+      "key_tag": "Authentication-Key-01",
+      "passphrase": "AuthenticationKey_01",
+      "security_key_manager": {
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563434"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536048
+| The maximum number of authentication keys are already configured.
+
+| 65536053
+| Invalid passphrase length; passphrase must be 20-32 ASCII-range characters.
+
+| 65536056
+| The key tag value provided contains invalid characters.
+
+| 65536056
+| The key-tag option cannot contain any spaces, tabs or new lines.
+
+| 65536076
+| Failed to push authentication key to any registered key servers.
+
+| 65536160
+| Unable to determine the current number of configured authentication keys.
+
+| 65536264
+| Failed to create authentication key.
+
+| 65536265
+| Failed to create a key-id for the authentication key.
+
+| 65536828
+| External key management is not enabled for the SVM.
+
+| 65536856
+| No key servers found for the SVM.
+
+| 65536872
+| Error cleaning up key database after key creation error.
+
+| 65536896
+| External key management is not configured on the partner site.
+
+| 65536987
+| One or more key servers are unavailable.
+
+| 65538800
+| External KMIP DKMIP keymanager not configured on administrative Vserver.
+
+| 65538801
+| Internal error while accessing keymanager database.
+
+| 65538802
+| The UUID provided is not associated with the administrator SVM key manager.
+
+| 66060289
+| Failed to store authentication key on key server.
+
+| 66060304
+| Invalid key length.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#security_key_manager]
+[.api-collapsible-fifth-title]
+security_key_manager
+
+Security key manager object reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|Key manager UUID
+
+
+|===
+
+
+[#key_manager_auth_key]
+[.api-collapsible-fifth-title]
+key_manager_auth_key
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_id
+|string
+a|Key identifier.
+
+
+|key_tag
+|string
+a|Optional parameter to define key-tag for the authentication key, length 0-32 characters.
+
+
+|passphrase
+|string
+a|Authentication passphrase, length 20-32 characters. May contain the '=' character.
+
+
+|security_key_manager
+|link:#security_key_manager[security_key_manager]
+a|Security key manager object reference.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

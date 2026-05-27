@@ -1,0 +1,426 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-login-totps.html'
+summary: 'Create the TOTP profile for a user account'
+---
+
+= Create the TOTP profile for a user account
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/login/totps`#
+
+*Introduced In:* 9.13
+
+Creates a TOTP profile for a user account.
+
+== Required properties
+
+* `owner.uuid` - Account owner UUID.
+* `account.name` - Account user name.
+
+== Related ONTAP commands
+
+* `security login totp create`
+
+== Learn more
+
+* link:security_login_totps_endpoint_overview.html[DOC /security/login/totps]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|
+
+|comment
+|string
+a|Optional comment for the TOTP profile.
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the TOTP profile.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|SHA fingerprint for the TOTP secret key.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "account": {
+    "name": "joe.smith"
+  },
+  "comment": "string",
+  "enabled": "",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "scope": "string",
+  "sha_fingerprint": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#totp_post[totp_post]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "account": {
+        "name": "joe.smith"
+      },
+      "comment": "string",
+      "emergency_codes": "17503785",
+      "enabled": 1,
+      "install_url": "string",
+      "owner": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "scope": "string",
+      "secret_key": "string",
+      "sha_fingerprint": "string",
+      "verification_code": "string"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 144834561
+| TOTP is not configured for the user.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#account_reference]
+[.api-collapsible-fifth-title]
+account_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|User account
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the TOTP profile.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#totp]
+[.api-collapsible-fifth-title]
+totp
+
+TOTP profile for the user account used to access SSH.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|
+
+|comment
+|string
+a|Optional comment for the TOTP profile.
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the TOTP profile.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|SHA fingerprint for the TOTP secret key.
+
+
+|===
+
+
+[#totp_post]
+[.api-collapsible-fifth-title]
+totp_post
+
+Response object of the TOTP profile creation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|
+
+|comment
+|string
+a|Optional comment for the TOTP profile.
+
+
+|emergency_codes
+|array[string]
+a|TOTP profile emergency codes for a user. These codes are for emergency use when a user cannot access 2FA codes through other means.
+
+
+|install_url
+|string
+a|TOTP profile installation URL for a user.
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the TOTP profile.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|secret_key
+|string
+a|TOTP profile secret key for a user.
+
+
+|sha_fingerprint
+|string
+a|SHA fingerprint for the TOTP secret key.
+
+
+|verification_code
+|string
+a|TOTP profile verification code for a user.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

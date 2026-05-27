@@ -1,0 +1,77 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_netgroup-files_svm.uuid_endpoint_overview.html'
+summary: 'Display netgroup file details'
+---
+
+= Display netgroup file details
+
+
+
+== Overview
+
+Displays the netgroup file details or raw netgroup file of an SVM.
+Note: The GET collection endpoint is not supported for netgroup files.
+
+== Examples
+
+=== Retrieving the netgroup file status of a given SVM
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/netgroup-files/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/netgroup-files/53942195-1709-11ec-b0d4-0050568efd14" -H "accept: application/hal+json"
+
+# The response:
+{
+"svm": {
+  "uuid": "53942195-1709-11ec-b0d4-0050568efd14",
+  "name": "svm1"
+},
+"timestamp": "2021-10-04T13:05:06+05:30",
+"hash_value": "729b6e43cee04bcee18efa3aa689881d",
+"hash_value_by_host": "eb109a44056a47bdeb4b407ec821a14b",
+"file_size": 5118686
+}
+----
+
+'''
+
+=== Retrieving the raw netgroup file of a given SVM
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/netgroup-files/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/netgroup-files/53942195-1709-11ec-b0d4-0050568efd14" -H "accept: multipart/form-data"
+----
+
+'''
+
+=== Deleting a netgroup file of a given SVM
+
+'''
+
+----
+
+# The API:
+DELETE /api/name-services/netgroup-files/{svm.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/name-services/netgroup-files/53942195-1709-11ec-b0d4-0050568efd14" -H "accept: application/json"
+----
+
+'''
+
+

@@ -1,0 +1,432 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-key-managers-key-servers-.html'
+summary: 'Retrieve key servers configured in an external key manager'
+---
+
+= Retrieve key servers configured in an external key manager
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/key-managers/{uuid}/key-servers/{server}`#
+
+*Introduced In:* 9.6
+
+Retrieves key servers configured in an external key manager.
+
+== Expensive properties
+
+There is an added computational cost to retrieving these properties. They are excluded from default GET results and must be explicitly requested using the `fields` query parameter. For more details, see link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields]. Additionally, these fields are unavailable for inactive configurations as they are only relevant to active configurations.
+
+* `connectivity.cluster_availability`
+* `connectivity.node_states.node.name`
+* `connectivity.node_states.node.uuid`
+* `connectivity.node_states.state`
+
+== Examples
+
+* To retrieve basic information about a key server:
++
+----
+GET /security/key-managers/{uuid}/key-servers/{server}
+----
+
+* To retrieve specific fields, including expensive properties:
++
+----
+GET /security/key-managers/{uuid}/key-servers/{server}?fields=connectivity.cluster_availability,connectivity.node_states.node.name
+----
+
+== Related ONTAP commands
+
+* `security key-manager external show`
+* `security key-manager external show-status`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|External key manager UUID
+
+
+|server
+|string
+|path
+|True
+a|Primary Key server configured in the key manager.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|connectivity
+|link:#connectivity[connectivity]
+a|This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|create_remove_timeout
+|integer
+a|The key server timeout for create and remove operations.
+-1 indicates that the server will wait indefinitely for the event to occur. 0 indicates that the server will not wait and will immediately timeout if it does not receive a response.
+
+
+|password
+|string
+a|Password credentials for connecting with the key server. This is not audited.
+
+
+|secondary_key_servers
+|array[string]
+a|A list of the secondary key servers associated with the primary key server.
+
+
+|server
+|string
+a|External key server for key management. If no port is provided, a default port of 5696 is used. Not valid in POST if `records` is provided.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+-1 indicates that the server will wait indefinitely for the event to occur. 0 indicates that the server will not wait and will immediately timeout if it does not receive a response.
+
+
+|username
+|string
+a|KMIP username credentials for connecting with the key server.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "connectivity": {
+    "node_states": [
+      {
+        "node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "state": "not_responding"
+      }
+    ]
+  },
+  "create_remove_timeout": 60,
+  "password": "password",
+  "secondary_key_servers": [
+    "secondary1.com",
+    "10.1.2.3"
+  ],
+  "server": "keyserver1.com:5698",
+  "timeout": 60,
+  "username": "username"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#key_server_state]
+[.api-collapsible-fifth-title]
+key_server_state
+
+The connectivity state of the key server for a specific node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|
+
+|state
+|string
+a|Key server connectivity state
+
+
+|===
+
+
+[#connectivity]
+[.api-collapsible-fifth-title]
+connectivity
+
+This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_availability
+|boolean
+a|Set to true when key server connectivity state is available on all nodes of the cluster.
+
+
+|node_states
+|array[link:#key_server_state[key_server_state]]
+a|An array of key server connectivity states for each node.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|connectivity
+|link:#connectivity[connectivity]
+a|This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|password
+|string
+a|Password credentials for connecting with the key server. This is not audited.
+
+
+|server
+|string
+a|External key server for key management. If no port is provided, a default port of 5696 is used. Not valid in POST if `records` is provided.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+
+
+|username
+|string
+a|KMIP username credentials for connecting with the key server.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

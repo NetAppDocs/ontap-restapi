@@ -1,0 +1,640 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-metrocluster-nodes-.html'
+summary: 'Retrieve the node configuration in MetroCluster'
+---
+
+= Retrieve the node configuration in MetroCluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/metrocluster/nodes/{node.uuid}`#
+
+*Introduced In:* 9.8
+
+Retrieves the node configuration in the MetroCluster.
+
+== Related ONTAP Commands
+
+* `metrocluster node show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|automatic_uso
+|boolean
+a|Specifies if automatic unplanned switchover is enabled.
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|configuration_state
+|string
+a|Configuration state of the node.
+
+
+|dr_auxiliary_cluster
+|link:#dr_auxiliary_cluster[dr_auxiliary_cluster]
+a|DR AUX cluster.
+
+
+|dr_auxiliary_partner
+|link:#dr_auxiliary_partner[dr_auxiliary_partner]
+a|AUX partner node.
+
+
+|dr_group_id
+|integer
+a|DR Group ID.
+
+
+|dr_mirroring_state
+|string
+a|State of the DR mirroring configuration.
+
+
+|dr_operation_state
+|string
+a|State of the DR operation.
+
+
+|dr_partner
+|link:#dr_partner[dr_partner]
+a|DR partner node.
+
+
+|dr_partner_cluster
+|link:#dr_partner_cluster[dr_partner_cluster]
+a|DR partner cluster.
+
+
+|encryption_enabled
+|boolean
+a|Indicates if the encryption for NVLog and storage traffic is enabled.
+
+
+|ha_partner
+|link:#ha_partner[ha_partner]
+a|HA partner node.
+
+
+|ha_partner_cluster
+|link:#ha_partner_cluster[ha_partner_cluster]
+a|HA partner cluster.
+
+
+|is_mccip
+|boolean
+a|Indicates whether the configuration type is MCC-IP.
+
+
+|limit_enforcement
+|string
+a|Indicates if the node object limits are enforced.
+
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "cluster": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "configuration_state": "string",
+  "dr_auxiliary_cluster": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "dr_auxiliary_partner": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "system_id": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "dr_group_id": 0,
+  "dr_mirroring_state": "string",
+  "dr_operation_state": "string",
+  "dr_partner": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "system_id": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "dr_partner_cluster": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "ha_partner": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "system_id": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "ha_partner_cluster": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "limit_enforcement": "string",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "system_id": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_auxiliary_cluster]
+[.api-collapsible-fifth-title]
+dr_auxiliary_cluster
+
+DR AUX cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_auxiliary_partner]
+[.api-collapsible-fifth-title]
+dr_auxiliary_partner
+
+AUX partner node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_partner]
+[.api-collapsible-fifth-title]
+dr_partner
+
+DR partner node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_partner_cluster]
+[.api-collapsible-fifth-title]
+dr_partner_cluster
+
+DR partner cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ha_partner]
+[.api-collapsible-fifth-title]
+ha_partner
+
+HA partner node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ha_partner_cluster]
+[.api-collapsible-fifth-title]
+ha_partner_cluster
+
+HA partner cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|system_id
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

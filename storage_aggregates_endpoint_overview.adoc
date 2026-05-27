@@ -1,0 +1,682 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_aggregates_endpoint_overview.html'
+summary: 'Retrieve or create a collection of storage aggregates'
+---
+
+= Retrieve or create a collection of storage aggregates
+
+
+
+== Retrieving storage aggregate information
+
+The Storage Aggregate GET API retrieves all data aggregates in the cluster. System owned root aggregates are not included in the output.
+This API also supports specific queries, in addition to queries on aggregate body properties, which affect the output of the API. The parameters
+for these queries are "recommend" and "show_spares". Using the "recommend" query returns the list of aggregates that are
+recommended for creation in the cluster. The "show_spares" query returns a response outside of the records body, which includes the groups
+of usable spares in the cluster. The "show_spares" query along with "flash_pool_eligible" restricts groups of usable spares for whole disk based flash pool creation. For storage pool creation, the appropriate groups of eligible spares will be returned by a GET on storage/pools?show_spares=true.
+The usable count for each class of spares does not include reserved spare capacity recommended by ONTAP best practices.
+
+The collection GET returns the aggregate identifiers, UUID and name, and the node on which the aggregate resides. The instance GET, by default, returns all of the properties defined in the aggregates object, except advanced properties.
+The properties "space.footprint", "is_spare_low", "space.block_storage.inactive_user_data", "space.block_storage.inactive_user_data_percent", "inode_attributes.version", "inode_attributes.files_private_used", "inode_attributes.file_private_capacity" and "inode_attributes.file_public_capacity"  are considered advanced properties and only returned when requested
+using the "fields" query parameter. Performance "metric" and "statistics" for aggregates are also only returned when requested. The "statistics" property accounts for the cumulative raw values collected by ONTAP for an aggregate, while the "metric" property displays the incremental average for latency and incremental changes in IOPs and throughput over the last 15 seconds. Any external application can use the raw statistics to derive its own incremental performance metrics.
+The collection GET does not support queries in conjunction with the "order_by" parameter.
+
+== Creating storage aggregates
+
+When the POST command is issued with no properties, the system evaluates the cluster attached storage, determines the optimal aggregate layout and configures the aggregates. This layout is completely controlled by the system.
+To view the recommended optimal layout rather than creating it, use the GET endpoint, setting the "recommend" query to 'true'. This response will also include any warnings related to any inefficiencies in the storage configuration.
+Recommended aggregate creation is not supported on ONTAP Cloud and MetroCluster with Fibre Channel (FC).
+Alternatively, POST can be used with specific properties to create an aggregate as requested. At a minimum, the
+aggregate name, disk count, and the node where it should reside are required if any properties are provided.
+Aggregates are automatically created and expanded in the ASA r2 system. Therefore, automatic and manual aggregate creation or expansion through REST is not supported.
+
+When using POST with input properties, three properties are required. These are:
+
+* name
+* node.name or node.uuid
+* block_storage.primary.disk_count
+
+=== Remaining properties are optional
+
+The following properties can be specified in POST:
+
+* name - Name of the aggregate.
+* node.name and node.uuid - Node on which the aggregate will be created.
+* block_storage.primary.disk_count - Number of disks to be used to create the aggregate.
+* block_storage.mirror.enabled - Specifies whether or not the aggregate should be created using SyncMirror.
+* block_storage.primary.checksum_style - Checksum style of the disks to be use for the aggregate.
+* block_storage.primary.disk_class - Class of disks to be use to for the aggregate.
+* block_storage.primary.raid_size - Desired RAID size of the aggregate.
+* block_storage.primary.raid_type - Desired RAID type of the aggregate.
+* snaplock_type - SnapLock type to use on the aggregate.
+* data_encryption.software_encryption_enabled - Enable or disable NAE (NetApp Aggregate Encryption) on the aggregate.
+* simulate - Simulate the creation of the aggregate with specified input parameters.
+If the simulate field is specified, the response includes information on the proposed aggregate disk layout, any associated warnings, along with the proposed final size of the aggregate.
+
+'''
+
+== Examples
+
+=== Retrieving a list of aggregates from the cluster
+
+The following example shows the response with a list of data aggregates in the cluster:
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+    "name": "test1",
+    "node": {
+      "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+      "name": "node-1",
+    },
+  },
+  {
+    "uuid": "4a7e4139-ca7a-420b-9a11-3f040d2189fd",
+    "name": "test4",
+    "node": {
+      "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+      "name": "node-2",
+    },
+  }
+],
+"num_records": 2,
+}
+----
+
+=== Retrieving a list of aggregates recommended for creation from the cluster
+
+The following example shows the response with a list of recommended data aggregates in the cluster.
+
+NOTE: Each aggregate UUID provided in this response is not guaranteed to be the same UUID for the aggregate if it is created.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates?recommend=true&fields=*" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "795bf7c2-fa4b-11e8-ba65-005056bbe5c1",
+    "name": "node_2_SSD_1",
+    "node": {
+      "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+      "name": "node-2",
+    },
+    "space": {
+      "block_storage": {
+        "size": 1116180480
+      }
+    },
+    "block_storage": {
+      "primary": {
+        "disk_count": 22,
+        "disk_class": "solid_state",
+        "raid_type": "raid_dp",
+        "disk_type": "ssd",
+        "raid_size": 24,
+        "simulated_raid_groups": [
+           {
+             "name": "node_2_SSD_1/plex0/rg0",
+             "raid_type": "raid_dp",
+             "parity_disk_count": 2,
+             "data_disk_count": 9,
+             "usable_size": 12309487,
+             "is_partition": true
+           },
+           {
+             "name": "node_2_SSD_1/plex1/rg0",
+             "raid_type": "raid_dp",
+             "parity_disk_count": 2,
+             "data_disk_count": 9,
+             "usable_size": 12309487,
+             "is_partition": false
+           }
+        ]
+      },
+      "hybrid_cache": {
+        "enabled": true,
+        "storage_pools": [
+            {
+                "allocation_units_count": 1,
+                "storage_pool": {
+                    "name": "sp1",
+                    "uuid": "1511d084-7290-11ec-ae5b-005056bb2afa"
+                }
+            },
+            {
+                "allocation_units_count": 1,
+                "storage_pool": {
+                    "name": "sp2",
+                    "uuid": "342d234f-7291-11ec-ae5b-005056bb2afa"
+                }
+            }
+        ]
+      },
+      "mirror": {
+        "enabled": true
+      }
+    },
+  },
+  {
+    "uuid": "795c0a15-fa4b-11e8-ba65-005056bbe5c1",
+    "name": "node_1_SSD_1",
+    "node": {
+      "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+      "name": "node-1",
+    },
+    "space": {
+      "block_storage": {
+        "size": 352477184
+      }
+    },
+    "block_storage": {
+      "primary": {
+        "disk_count": 22,
+        "disk_class": "solid_state",
+        "raid_type": "raid_dp",
+        "disk_type": "ssd",
+        "raid_size": 24,
+        "simulated_raid_groups": [
+           {
+             "name": "node_1_SSD_1/plex0/rg0",
+             "raid_type": "raid_dp",
+             "parity_disk_count": 2,
+             "data_disk_count": 9,
+             "usable_size": 12309487,
+             "is_partition": true
+           },
+           {
+             "name": "node_1_SSD_1/plex1/rg0",
+             "raid_type": "raid_dp",
+             "parity_disk_count": 2,
+             "data_disk_count": 9,
+             "usable_size": 12309487,
+             "is_partition": false
+           }
+         ]
+      },
+      "hybrid_cache": {
+        "enabled": false
+      },
+      "mirror": {
+        "enabled": true
+      }
+    },
+  }
+],
+"recommendation_spares" [
+  {
+    "node": {
+      "uuid": "795bf7c2-fa4b-11e8-ba65-005056bbe5cl",
+      "name": "node-2"
+      }
+    },
+    "disk_class": "solid-state",
+    "size": "2856845312",
+    "is_partition": true,
+    "disk_type": "ssd",
+    "syncmirror_pool": "pool10",
+    "usable": 1
+  }
+],
+"num_records": 2,
+"warnings": [
+  {
+    "name": "node_1_SSD_1",
+    "warning": {
+      "code": 19726347,
+      "message": "Unable to use all attached capacity on node \"node_1\". 3 local/remote pool disks not usable for mirroring.",
+      "arguments": [
+        "node_1",
+        "3"
+      ]
+    },
+    "action": {
+      "code": 19726348,
+      "message": "Contact technical support."
+    }
+  },
+  {
+    "name": "node_2_SSD_1",
+    "warning": {
+      "code": 19726347,
+      "message": "Unable to use all attached capacity on node \"node_2\". 3 local/remote pool disks not usable for mirroring.",
+      "arguments": [
+        "node_2",
+        "3"
+      ]
+    },
+    "action": {
+      "code": 19726348,
+      "message": "Contact technical support."
+    }
+  }
+]
+}
+----
+
+=== Retrieving the usable spare information for the cluster
+
+The following example shows the response from retrieving usable spare information according to ONTAP best practices.
+
+----
+
+ # The API:
+/api/storage/aggregates?show_spares=true
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates?show_spares=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [],
+"num_records": 0,
+"spares": [
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd",
+    "size": 3720609792,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partitioned": true,
+    "usable": 12,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      },
+      {
+        "raid_type": "raid4",
+        "default": false,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      },
+      {
+        "raid_type": "raid_tec",
+        "default": false,
+        "aggregate_min_disks": 7,
+        "raid_group": {
+          "min": 4,
+          "max": 29,
+          "default": 25
+        }
+      }
+    ]
+  },
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd_nvm",
+    "size": 8583380992,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partitioned": false,
+    "usable": 5,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      },
+      {
+        "raid_type": "raid4",
+        "default": false,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      },
+      {
+        "raid_type": "raid_tec",
+        "default": false,
+        "aggregate_min_disks": 7,
+        "raid_group": {
+          "min": 4,
+          "max": 29,
+          "default": 25
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Retrieving the SSD spare count information for the cluster
+
+The following example shows the response from retrieving SSD spare count information.
+
+----
+
+# The API:
+/api/storage/aggregates?show_spares=true&flash_pool_eligible=true
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates?show_spares=true&flash_pool_eligible=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [],
+"num_records": 0,
+"spares": [
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd",
+    "size": 3720609792,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partitioned": true,
+    "usable": 12,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      },
+      {
+        "raid_type": "raid4",
+        "default": false,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      },
+      {
+        "raid_type": "raid_tec",
+        "default": false,
+        "aggregate_min_disks": 7,
+        "raid_group": {
+          "min": 4,
+          "max": 29,
+          "default": 25
+        }
+      }
+    ]
+  },
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd_nvm",
+    "size": 8583380992,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partitioned": false,
+    "usable": 5,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      },
+      {
+        "raid_type": "raid4",
+        "default": false,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      },
+      {
+        "raid_type": "raid_tec",
+        "default": false,
+        "aggregate_min_disks": 7,
+        "raid_group": {
+          "min": 4,
+          "max": 29,
+          "default": 25
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Retrieving the total spare count information for the cluster
+
+The following example shows the response from retrieving total spare count information, under advanced privilege.
+
+----
+
+ # The API:
+/api/storage/aggregates?show_spares=true&fields=**
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates?show_spares=true&fields=**" -H "accept: application/json"
+
+# The response:
+{
+"records": [],
+"num_records": 0,
+"spares": [
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd",
+    "size": 3720609792,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partitioned": true,
+    "usable": 12,
+    "total": 14,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      },
+      {
+        "raid_type": "raid4",
+        "default": false,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      },
+      {
+        "raid_type": "raid_tec",
+        "default": false,
+        "aggregate_min_disks": 7,
+        "raid_group": {
+          "min": 4,
+          "max": 29,
+          "default": 25
+        }
+      }
+    ]
+  },
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd_nvm",
+    "size": 8583380992,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partitioned": false,
+    "usable": 5,
+    "total": 6,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      },
+      {
+        "raid_type": "raid4",
+        "default": false,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      },
+      {
+        "raid_type": "raid_tec",
+        "default": false,
+        "aggregate_min_disks": 7,
+        "raid_group": {
+          "min": 4,
+          "max": 29,
+          "default": 25
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Simulating the creation of an aggregate using defined parameters
+
+The following example shows the response in the simulation of a manual aggregate creation:
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call
+curl -X POST "https://<mgmt-ip>/api/storage/aggregates" -H "accept: application/json" -d "{\"name\":\"node_2_SSD_1\",\"node\": {\"name\":\"node-2\"},\"block_storage\": {\"primary\": {\"disk_count\": \"12\" }},\"simulate\": \"true\"}"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "795bf7c2-fa4b-11e8-ba65-005056bbe5c1",
+    "name": "node_2_SSD_1",
+    "node": {
+      "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+      "name": "node-2",
+    },
+    "space": {
+      "block_storage": {
+        "size": 1116180480
+      }
+    },
+    "block_storage": {
+      "primary": {
+        "disk_count": 12,
+        "disk_class": "solid_state",
+        "raid_type": "raid_dp",
+        "disk_type": "ssd",
+        "raid_size": 24,
+        "simulated_raid_groups": [
+           {
+             "name": "node_2_SSD_1/plex0/rg0",
+             "raid_type": "raid_dp",
+             "parity_disk_count": 2,
+             "data_disk_count": 10,
+             "usable_size": 558090240,
+             "is_partition": true
+           },
+        ]
+      },
+      "hybrid_cache": {
+        "enabled": false
+      },
+      "mirror": {
+        "enabled": false
+      }
+    }
+  }
+],
+"num_records": 1,
+"warnings": [
+  {
+    "name": "node-2"
+    "warning": {
+      "code": 19726347,
+      "message": "Number of unassigned disks attached to node \"node-2\": 6.",
+      "arguments": [
+        "node-2",
+        "6"
+      ]
+    }
+  }
+]
+}
+----
+
+

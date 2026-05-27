@@ -1,0 +1,616 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-fcp-services-metrics.html'
+summary: 'Retrieve historical performance metrics for the FC protocol service of an SVM'
+---
+
+= Retrieve historical performance metrics for the FC protocol service of an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/fcp/services/{svm.uuid}/metrics`#
+
+*Introduced In:* 9.7
+
+Retrieves historical performance metrics for the FC Protocol service of an SVM.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|latency.other
+|integer
+|query
+|False
+a|Filter by latency.other
+
+
+|latency.total
+|integer
+|query
+|False
+a|Filter by latency.total
+
+
+|latency.write
+|integer
+|query
+|False
+a|Filter by latency.write
+
+
+|latency.read
+|integer
+|query
+|False
+a|Filter by latency.read
+
+
+|iops.other
+|integer
+|query
+|False
+a|Filter by iops.other
+
+
+|iops.total
+|integer
+|query
+|False
+a|Filter by iops.total
+
+
+|iops.write
+|integer
+|query
+|False
+a|Filter by iops.write
+
+
+|iops.read
+|integer
+|query
+|False
+a|Filter by iops.read
+
+
+|timestamp
+|string
+|query
+|False
+a|Filter by timestamp
+
+
+|throughput.write
+|integer
+|query
+|False
+a|Filter by throughput.write
+
+
+|throughput.read
+|integer
+|query
+|False
+a|Filter by throughput.read
+
+
+|throughput.total
+|integer
+|query
+|False
+a|Filter by throughput.total
+
+
+|status
+|string
+|query
+|False
+a|Filter by status
+
+
+|duration
+|string
+|query
+|False
+a|Filter by duration
+
+
+|svm.uuid
+|string
+|path
+|True
+a|The unique identifier of the SVM.
+
+
+|interval
+|string
+|query
+|False
+a|The time range for the data. Examples can be 1h, 1d, 1m, 1w, 1y.
+The period for each time range is as follows:
+
+* 1h: Metrics over the most recent hour sampled over 15 seconds.
+* 1d: Metrics over the most recent day sampled over 5 minutes.
+* 1w: Metrics over the most recent week sampled over 30 minutes.
+* 1m: Metrics over the most recent month sampled over 2 hours.
+* 1y: Metrics over the most recent year sampled over a day.
+* Default value: 1
+* enum: ["1h", "1d", "1w", "1m", "1y"]
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "duration": "PT15S",
+      "iops": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "svm": {
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "throughput": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 8585947
+| No metrics are available for the requested object.
+
+| 8586225
+| An unexpected error occurred retrieving metrics for the requested object.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the SVM.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+Performance numbers, such as IOPS latency and throughput, for SVM protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

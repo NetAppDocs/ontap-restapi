@@ -1,0 +1,689 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_endpoint_overview.html'
+summary: 'Manage clusters'
+---
+
+= Manage clusters
+
+
+
+= Overview
+:doctype: book
+
+You can use this API to create a cluster, update cluster-wide configurations, and retrieve the current configuration details.
+
+== Creating a cluster
+
+You can create a new cluster by issuing a POST request to /cluster. Parameters are provided in the body of the POST request to configure cluster-wide settings and add nodes during the cluster setup.
+
+=== Fields used for creating a cluster
+
+The fields used for the cluster APIs fall into the following categories:
+
+* Required cluster-wide configuration
+* Optional cluster-wide configuration
+
+=== Required cluster-wide configuration
+
+The following fields are always required for any POST /cluster request:
+
+* name
+* password
+
+=== Optional cluster-wide configuration
+
+The following fields are used to set up additional cluster-wide configurations:
+
+* location
+* contact
+* dns_domains
+* name_servers
+* ntp_servers
+* timezone
+* license
+* configuration_backup
+* management_interface
+* nodes
+* active_directory
+
+=== Nodes field
+
+The nodes field specifies the nodes to join to the cluster. To use this API, all nodes must run the same version of ONTAP. If you do not specify a node, the cluster is configured with one node added. The REST request is issued to the node that is added to the cluster. If you specify one node, do not use the "node.cluster_interface.ip.address" field. If you specify multiple nodes, specify the node to which the REST request is issued in addition to the remote nodes. Use the "node.cluster_interface.ip.address" field to identify each node. All other node fields are optional in all cases. If you provide a field for one node, you need to provide the same field for all nodes.
+
+=== Node networking fields
+
+The cluster management interface and each node management interface use the cluster management interface subnet mask and gateway. For advanced configurations in which the cluster and node management interfaces are on different subnets, use the /network/ip/interface APIs to configure network interfaces after setup is complete.
+The management interfaces are used to communicate with the name servers and NTP servers. The address family of the name servers and NTP servers must match the management interfaces address family.
+
+=== Single node cluster field
+
+When the "single_node_cluster" field is set to "true", the cluster is created in single node cluster mode. You can provide a node field for this node for node-specific configuration but do not use the "node.cluster_interface.ip.address" field. Storage failover is configured to non-HA mode, and ports used for cluster ports are moved to the default IPspace. This might cause the node to reboot during setup. While a node reboots, the RESTful interface might not be available. See "Connection failures during cluster create" for more information.
+
+=== Create recommended aggregates parameter
+
+When the "create_recommended_aggregates" parameter is set to "true", aggregates based on an optimal layout recommended by the system are created on each of the nodes in the cluster. The default setting is "false".
+
+'''
+
+== Performance monitoring
+
+Performance of the cluster can be monitored by the `metric.+*+` and `statistics.+*+` fields. These fields show the performance of the cluster in terms of IOPS, latency and throughput. The `metric.+*+` fields denote an average, whereas the `statistics.+*+` fields denote a real-time monotonically increasing value aggregated across all nodes.
+
+'''
+
+== Analytics auto-enable properties
+
+New SVMs will use the values set for the "auto_enable_analytics" and "auto_enable_activity_tracking" fields as the default for new volumes. The default setting is false.
+
+=== Setting auto_enable_analytics
+
+----
+
+# The API:
+/api/cluster/
+
+# The Call:
+curl -X PATCH "https://<mgmt-ip>/api/cluster" -d '{ "auto_enable_analytics" : "true"}'
+
+# The response:
+{
+"job": {
+  "uuid": "a079cfd8-50d0-11ed-9a7f-005056acd56e",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/a079cfd8-50d0-11ed-9a7f-005056acd56e"
+    }
+  }
+}
+}
+----
+
+=== Setting auto_enable_activity_tracking
+
+----
+
+# The API:
+/api/cluster/
+
+# Modify  field:
+curl -X PATCH "https://<mgmt-ip>/api/cluster" -d '{ "auto_enable_activity_tracking" : "true"}'
+
+# The response:
+{
+"job": {
+  "uuid": "8a8b29e6-557a-11ed-92cc-005056ac76ec",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8a8b29e6-557a-11ed-92cc-005056ac76ec"
+    }
+  }
+}
+}
+----
+
+'''
+
+== Monitoring cluster create status
+
+=== Errors before the job starts
+
+Configuration in the POST /cluster request is validated before the cluster create job starts. If an invalid configuration is found, an HTTP error code in the 4xx range is returned. No cluster create job is started.
+
+=== Polling on the job
+
+After a successful POST /cluster request is issued, an HTTP error code of 202 is returned along with a job UUID and link in the body of the response. The cluster create job continues asynchronously and is monitored with the job UUID using the /cluster/jobs API. The "message" field in the response of the GET /cluster/jobs/\{uuid} request shows the current step in the job, and the "state" field shows the overall state of the job.
+
+=== Errors during the job
+
+If a failure occurs during the cluster create job, the job body provides details of the error along with error code fields. See the error table under "Responses" in the POST /cluster documentation for common error codes and descriptions.
+
+=== Rerunning POST /cluster
+
+The POST /cluster request can be rerun if errors occur. When rerunning the request, use the same body and query parameters. You can change the value of any field in the original body or query, but you cannot change the provided fields. For example, an initial request might have a body section as follows:
+ +
+
+----
+body =
+{
+"name": "clusCreateRerun",
+"password": "openSesame",
+"nodes": [
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "1.1.1.1"
+      }
+    }
+  },
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "2.2.2.2"
+      }
+    }
+  }
+]
+}
+----
+
+A rerun request updates the body details to:
+ +
+
+----
+body =
+{
+"name": "clusCreateRerun",
+"password": "openSesame",
+"nodes": [
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "3.3.3.3"
+      }
+    }
+  },
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "4.4.4.4"
+      }
+    }
+  }
+]
+}
+----
+
+A rerun request with the following body details is invalid:
+ +
+
+----
+body =
+{
+"name": "clusCreateRerun",
+"password": "openSesame",
+"nodes": [
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "3.3.3.3"
+      }
+    }
+  }
+]
+}
+----
+
+Note that the password might already be configured. If a password is already configured and then a new password is provided, the new request overwrites the existing password. If a password is already configured either by another interface or by a previous POST request to /cluster, authenticate any future REST requests with that password. If a POST request to /cluster with the default return_timeout of 0 returns an error, then the password was not changed.
+
+=== Connection failures during cluster create
+
+A request to poll the job status might fail during a cluster create job in the following two cases. In these cases, programmatic use of the RESTful interface might be resilient to these connection failures.
+
+. When the "single_node_cluster" flag is set to "true", the node might reboot. During this time, the RESTful interface might refuse connections and return errors on a GET request, or connection timeouts might occur. Programmatic use of the RESTful interface during reboots must consider these effects while polling a cluster create job.
+. The "mgmt_auto" LIF is removed during the cluster create job. A POST /cluster request might be issued on the "mgmt_auto" LIF. However, requests to poll the job status might fail during cluster create when the "mgmt_auto" LIF is removed. The "mgmt_auto" LIF is only removed if a cluster management interface is provided as an argument to POST /cluster, and only after the cluster management interface is created. Programmatic use of the POST /cluster API on the "mgmt_auto" LIF should be configured to dynamically switch to polling the job on the cluster management LIF.
+
+'''
+
+== Active Directory account for the cluster
+
+An Active Directory account for the cluster can be retrieved, created, modified, and deleted by using the `active_directory.+*+` fields. An account can be created either during cluster creation using a POST request or after cluster creation using a PATCH request.
+An Active Directory account can be deleted by passing `null` as the Active Directory name during a PATCH request. The `username` and `password` fields are required to create, modify, and delete an Active Directory account.
+Creating a new Active Directory account for the cluster:
+
+----
+
+# The API:
+/api/cluster/
+
+# Modify  field:
+curl -X PATCH "https://<mgmt-ip>/api/cluster" -d '{ "active_directory": {"username": "administrator", "password": "password", "name": "adaccount", "fqdn": "test.com", "force_account_overwrite" : true, "security": {"advertised_kdc_encryptions": ["des"]}}}'
+
+# The response:
+{
+"job": {
+  "uuid": "8a8b29e6-557a-11ed-92cc-005056ac76ec",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8a8b29e6-557a-11ed-92cc-005056ac76ec"
+    }
+  }
+}
+}
+----
+
+Deleting the Active Directory account of the cluster:
+
+----
+
+# The API:
+/api/cluster/
+
+# Modify  field:
+curl -X PATCH "https://<mgmt-ip>/api/cluster" -d '{ "active_directory": {"username": "administrator","password": "password","name": null}}'
+
+# The response:
+{
+"job": {
+  "uuid": "8a8b29e6-557a-11ed-92cc-005056ac76ec",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8a8b29e6-557a-11ed-92cc-005056ac76ec"
+    }
+  }
+}
+}
+----
+
+'''
+
+== Modifying cluster configurations
+
+The following fields can be used to modify a cluster-wide configuration:
+
+* name
+* location
+* contact
+* dns_domains
+* name_servers
+* timezone
+* auto-enable-analytics
+* auto-enable-activity-tracking
+* active_directory
+
+'''
+
+= Examples
+
+[discrete]
+=== Minimally configuring a 2-node setup
+
+----
+
+# Body
+minimal_2_node_cluster.txt(body):
+{
+"name": "clusCreateExample1",
+"password": "openSesame",
+"nodes": [
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "1.1.1.1"
+      }
+    }
+  },
+  {
+    "cluster_interface": {
+      "ip": {
+        "address": "2.2.2.2"
+      }
+    }
+  }
+]
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster" -d "@minimal_2_node_cluster.txt"
+----
+
+'''
+
+[discrete]
+=== Setting up a single node with additional node configuration and auto aggregate creation
+
+----
+
+# Body
+single_node_additional_config.txt(body):
+{
+"name": "clusCreateExample2",
+"password": "openSesame",
+"nodes": [
+  {
+    "name": "singleNode",
+    "location": "Sunnyvale"
+  }
+]
+}
+
+# Request
+curl -X POST "https://<mgmt-ip>/api/cluster?single_node_cluster=true&create_recommended_aggregates=true" -d "@single_node_additional_config.txt"
+----
+
+'''
+
+[discrete]
+=== Modifying a cluster-wide configuration
+
+----
+
+# Body
+modify_cluster_config.txt(body):
+{
+"contact": "it@company.com"
+}
+
+# Request
+curl -X PATCH "https://<mgmt-ip>/api/cluster" -d "@modify_cluster_config.txt"
+----
+
+'''
+
+== Creating a cluster using the cluster "create" operation
+
+This example shows how to create a cluster using the cluster APIs. Specifically, this example shows the creation of a two-node cluster and uses information from the nodes themselves combined with user supplied information to configure the cluster.
+
+=== Preparing for setup
+
+Before the REST APIs can be issued to create the cluster, the cluster must be wired up and powered on. The network connections between the nodes for the cluster interconnect and the connections to the management network must be completed.  After the nodes are powered on, the nodes automatically configure interfaces on the platform's default cluster ports to allow the nodes to discover each other during setup and expansion workflows. You must configure a management interface on one node or use the mgmt_auto LIF, which is assigned an IP address using DHCP, to start using the REST APIs.  By making a console connection to a node, the cluster setup wizard guides you through the configuration of the initial node management interface to which the REST calls can be sent.  Once this step is completed, exit the wizard by typing "exit". You can then issue REST API requests.
+
+. Wire and power on the nodes.
+. Make a console connection to one node to access the cluster setup wizard.
+. Enter node management interface information to enable REST API requests to be sent to the node.
+
+----
+Welcome to the cluster setup wizard.
+You can enter the following commands at any time:
+"help" or "?" - if you want to have a question clarified,
+"back" - if you want to change previously answered questions, and
+"exit" or "quit" - if you want to quit the cluster setup wizard.
+Any changes you made before quitting will be saved.
+You can return to cluster setup at any time by typing "cluster setup".
+To accept a default or omit a question, do not enter a value.
+This system will send event messages and periodic reports to NetApp Technical
+Support. To disable this feature, enter
+autosupport modify -support disable
+within 24 hours.
+Enabling AutoSupport can significantly speed problem determination and
+resolution should a problem occur on your system.
+For further information on AutoSupport, see:
+  http://support.netapp.com/autosupport/
+  Type yes to confirm and continue {yes}: yes
+  Enter the node management interface port [e0c]:
+    Enter the node management interface IP address: 10.224.82.249
+    Enter the node management interface netmask: 255.255.192.0
+    Enter the node management interface default gateway: 10.224.64.1
+    A node management interface on port e0c with IP address 10.224.82.249 has been created.
+    Use your web browser to complete cluster setup by accessing
+    https://10.224.82.249
+    Otherwise, press Enter to complete cluster setup using the command line
+    interface: exit
+    Exiting the cluster setup wizard. Any changes you made have been saved.
+    The cluster administrator's account (username "admin") password is set to the system default.
+    Warning: You have exited the cluster setup wizard before completing all
+    of the tasks. The cluster is not configured. You can complete cluster setup by typing
+    "cluster setup" in the command line interface.
+----
+
+'''
+
+=== Discovering the nodes
+
+If you issue a GET /api/cluster/nodes request when the nodes are not in a cluster, the API returns a list of nodes that were discovered on the cluster interconnect.  Information returned includes the node's serial number, model, software version, UUID, and cluster interface address.  The number of nodes returned should be the same as the number of nodes expected to be in the cluster.  If too many nodes are discovered, remove the nodes that should not be part of the cluster.  If not enough nodes are discovered, verify all the nodes are powered on, that the connections to the cluster interconnect are complete, and retry the command.
+ +
+
+----
+
+# The API:
+/api/cluster/nodes
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/nodes?fields=state,uptime" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "6dce4710-c860-11e9-b5bc-005056bb6135",
+    "name": "cluster1",
+    "uptime": 134555,
+    "state": "up",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/6dce4710-c860-11e9-b5bc-005056bb6135"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/cluster/nodes?fields=state,uptime"
+  }
+}
+}
+----
+
+'''
+
+=== Creating the cluster
+
+When the node information is available, including each node's cluster interface address, you can assemble the information for creating the cluster.  Provide the cluster name and the password for the admin account.  The rest of the information is optional and can be configured later using other APIs.  Provide the cluster interface address for each node to be included in the cluster so that you can connect to it while adding it to the cluster. In addition to the cluster interface address, you can provide the optional node name, location, and management interface information. If you do not provide node names, nodes are named based on the cluster name. The nodes' management interface subnet mask and gateway values are omitted and must be the same as the cluster management interface's subnet mask and gateway.
+ +
+
+----
+
+# The API:
+/api/cluster
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/cluster" -H "accept: application/hal+json" -H "accept: application/hal+json" -d '{"name":"cluster1","location":"datacenter1","contact":"me","dns_domains":["example.com"],"name_servers":["10.224.223.130","10.224.223.131","10.224.223.132"],"ntp_servers":["time.nist.gov"],"active_directory": {"username": "administrator","password": "password","name": "adaccount","fqdn": "test.com","force_account_overwrite" : true}, "management_interface":{"ip":{"address":"10.224.82.25","netmask":"255.255.192.0","gateway":"10.224.64.1"}},"password":"mypassword","license":{"keys":["AMEPOSOIKLKGEEEEDGNDEKSJDEEE"]},"nodes":[{"cluster_interface":{"ip":{"address":"169.254.245.113"}},"name":"node1","management_interface":{"ip":{"address":"10.224.82.29"}}},{"cluster_interface":{"ip":{"address":"169.254.217.95"}},"name":"node2","management_interface":{"ip":{"address":"10.224.82.31"}}}]}'
+
+# The response:
+{
+"job": {
+  "uuid": "b5bc07e2-19e9-11e9-a751-005056bbd95f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/b5bc07e2-19e9-11e9-a751-005056bbd95f"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Monitoring the progress of cluster creation
+
+To monitor the progress of the cluster create operation, poll the returned job link until the state value is no longer "running" or "queued".
+ +
+
+----
+
+# The API:
+/api/cluster/jobs/b5bc07e2-19e9-11e9-a751-005056bbd95f
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/jobs/b5bc07e2-1e9-11e9-a751-005056bbd95f" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "b5bc07e2-19e9-11e9-a751-005056bbd95f",
+"description": "POST /api/cluster",
+"state": "success",
+"message": "success",
+"code": 0,
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/b5bc07e2-19e9-11e9-a751-005056bbd95f"
+  }
+}
+}
+----
+
+'''
+
+=== Verifying the cluster information
+
+After the cluster is created, you can verify the information applied using a number of APIs. You can retrieve most of the information provided using the /api/cluster and /api/cluster/nodes APIs. In addition, you can view the network interface and route information using the /api/network APIs. The following example shows how to retrieve the cluster information:
+ +
+
+----
+
+# The API:
+/api/cluster
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster" -H "accept: application/hal+json"
+
+# The response:
+{
+"name": "C1_sti44-vsim-ucs515w_1621957038",
+"uuid": "5f7f57c7-bd67-11eb-95f4-005056a7b9b1",
+"location": "sti",
+"contact": "example_name",
+"version": {
+  "full": "NetApp Release 9.10.1: Mon May 24 08:07:35 UTC 2021",
+  "generation": 9,
+  "major": 10,
+  "minor": 1
+},
+"dns_domains": [
+  "example.com"
+],
+"name_servers": [
+  "192.0.2.1",
+  "192.0.2.2"
+],
+"ntp_servers": [
+  "192.0.2.3"
+],
+"peering_policy": {
+  "minimum_passphrase_length": 8,
+  "authentication_required": true,
+  "encryption_required": false
+},
+"management_interfaces": [
+  {
+    "uuid": "beef2db7-bd67-11eb-95f4-005056a7b9b1",
+    "name": "clus_mgmt",
+    "ip": {
+      "address": "192.0.2.4"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/interfaces/beef2db7-bd67-11eb-95f4-005056a7b9b1"
+      }
+    }
+  },
+  {
+    "uuid": "cb63e02c-bd72-11eb-95f4-005056a7b9b1",
+    "name": "sti44-vsim-ucs515w_cluster_mgmt_inet6",
+    "ip": {
+      "address": "2001:db8:ef56:gh78::ij90"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/interfaces/cb63e02c-bd72-11eb-95f4-005056a7b9b1"
+      }
+    }
+  },
+  {
+    "uuid": "ea13dec1-bd72-11eb-bd00-005056a7f50e",
+    "name": "sti44-vsim-ucs515x_cluster_mgmt_inet6",
+    "ip": {
+      "address": "2001:db8:ef56:gh78::ij91"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/interfaces/ea13dec1-bd72-11eb-bd00-005056a7f50e"
+      }
+    }
+  }
+],
+"metric": {
+  "timestamp": "2021-05-26T20:36:15Z",
+  "duration": "PT15S",
+  "status": "ok",
+  "latency": {
+    "other": 0,
+    "total": 0,
+    "read": 0,
+    "write": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  }
+},
+"statistics": {
+  "timestamp": "2021-05-26T20:36:25Z",
+  "status": "ok",
+  "latency_raw": {
+    "other": 0,
+    "total": 0,
+    "read": 0,
+    "write": 0
+  },
+  "iops_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  }
+},
+"timezone": {
+  "name": "America/New_York"
+},
+"san_optimized": false,
+"active_directory": {
+  "name": "ADACCOUNT",
+  "fqdn": "TEST.COM",
+  "organizational_unit": "CN=Computers"
+},
+"_links": {
+  "self": {
+    "href": "/api/cluster"
+  }
+}
+}
+
+# The API:
+/api/cluster
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster?fields=management_interfaces" -H "accept: application/hal+json"
+
+# The response:
+{
+"management_interfaces": [
+  {
+    "uuid": "c661725a-19e9-11e9-a751-005056bbd95f",
+    "name": "cluster_mgmt",
+    "ip": {
+      "address": "192.0.2.1"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/interfaces/c661725a-19e9-11e9-a751-005056bbd95f"
+      }
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/cluster"
+  }
+}
+}
+----
+
+

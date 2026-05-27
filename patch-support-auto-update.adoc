@@ -1,0 +1,263 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-support-auto-update.html'
+summary: 'Update the current enabled status of an automatic update feature'
+---
+
+= Update the current enabled status of an automatic update feature
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/support/auto-update`#
+
+*Introduced In:* 9.10
+
+Updates the current enabled status of the automatic update feature and accepts the EULA.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|force
+|boolean
+|query
+|False
+a|Set the force flag to true to enable the automatic update feature regardless of how AutoSupport is configured. Without this flag set to true, an attempt to enable the automatic update feature fails unless AutoSupport is enabled, its transport is HTTPS, and the AutoSupport OnDemand feature is enabled.
+
+* Introduced in: 9.16
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|enabled
+|boolean
+a|Flag indicating feature state.
+
+
+|eula
+|link:#eula[eula]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "enabled": 1,
+  "eula": {
+    "accepted": 1,
+    "accepted_ip_address": "192.168.1.125",
+    "accepted_timestamp": "2020-12-01 09:12:23 -0400",
+    "user_id_accepted": "admin"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262179
+| Unexpected argument.
+
+| 131072216
+| Automatic update requires AutoSupport to be enabled.
+
+| 131072217
+| Automatic update requires AutoSupport OnDemand to be enabled.
+
+| 131072218
+| Automatic update requires AutoSupport to use the HTTPS transport.
+
+| 131072219
+| The provided parameter requires an effective cluster version of ONTAP 9.16.1 or later.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self]
+[.api-collapsible-fifth-title]
+self
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#eula]
+[.api-collapsible-fifth-title]
+eula
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|accepted
+|boolean
+a|Flag indicating the End User License Agreement (EULA) acceptance. When the feature is enabled, it is assumed that the EULA is accepted.
+
+
+|accepted_ip_address
+|string
+a|IP Address from where the EULA was accepted.
+
+
+|accepted_timestamp
+|string
+a|Date and time when the EULA was accepted.
+
+
+|user_id_accepted
+|string
+a|User ID that provided the EULA acceptance.
+
+
+|===
+
+
+[#auto_update_info]
+[.api-collapsible-fifth-title]
+auto_update_info
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|enabled
+|boolean
+a|Flag indicating feature state.
+
+
+|eula
+|link:#eula[eula]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

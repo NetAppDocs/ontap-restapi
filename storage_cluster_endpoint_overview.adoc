@@ -1,0 +1,109 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_cluster_endpoint_overview.html'
+summary: 'Manage cluster-wide storage'
+---
+
+= Manage cluster-wide storage
+
+
+
+Retrieves cluster-wide storage details across the different tiers.
+Storage details include storage efficiency, block storage and cloud storage information.
+
+'''
+
+Example
+
+=== Retrieving cluster-wide storage details
+
+The following example shows the details returned for a GET request on cluster-wide storage:
+
+'''
+
+----
+
+# The API:
+/api/storage/cluster
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/cluster" -H "accept: application/hal+json"
+
+# The response:
+{
+"efficiency": {
+  "savings": 143360,
+  "ratio": 1.134099616858238,
+  "logical_used": 1212416
+},
+"efficiency_without_snapshots": {
+  "savings": 0,
+  "ratio": 1,
+  "logical_used": 167936
+},
+"efficiency_without_snapshots_flexclones": {
+  "savings": 0,
+  "ratio": 1,
+  "logical_used": 167936
+},
+"block_storage": {
+  "used": 6269812736,
+  "size": 56125612032,
+  "available": 49855799296,
+  "physical_used": 1838284800,
+  "inactive_data": 0,
+  "medias": [
+    {
+      "type": "ssd",
+      "size": 9891430400,
+      "available": 3728039936,
+      "used": 6163390464,
+      "physical_used": 1832886272,
+      "efficiency": {
+        "savings": 0,
+        "ratio": 1,
+        "logical_used": 0
+      },
+      "efficiency_without_snapshots": {
+        "savings": 0,
+        "ratio": 1,
+        "logical_used": 0
+      },
+      "efficiency_without_snapshots_flexclones": {
+        "savings": 0,
+        "ratio": 1,
+        "logical_used": 0
+      }
+    },
+    {
+      "type": "vmdisk",
+      "size": 46234181632,
+      "available": 46127759360,
+      "used": 106422272,
+      "physical_used": 5398528,
+      "efficiency": {
+        "savings": 282624,
+        "ratio": 1.303964757709251,
+        "logical_used": 1212416
+      },
+      "efficiency_without_snapshots": {
+        "savings": 0,
+        "ratio": 1,
+        "logical_used": 167936
+      },
+      "efficiency_without_snapshots_flexclones": {
+        "savings": 0,
+        "ratio": 1,
+        "logical_used": 167936
+      }
+    }
+  ]
+}
+}
+----
+
+'''
+
+

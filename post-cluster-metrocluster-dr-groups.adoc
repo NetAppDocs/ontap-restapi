@@ -1,0 +1,597 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-metrocluster-dr-groups.html'
+summary: 'Create a new DR group in a MetroCluster IP configuration'
+---
+
+= Create a new DR group in a MetroCluster IP configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/metrocluster/dr-groups`#
+
+*Introduced In:* 9.8
+
+Creates a new DR group in the MetroCluster over IP configuration.
+
+== Required properties
+
+* `partner_cluster.name`
+* `dr_pairs`
+
+== Recommended optional properties
+
+* `mccip_ports`
+
+== Learn more
+
+* link:cluster_metrocluster_dr-groups_endpoint_overview.html[DOC /cluster/metrocluster/dr-groups]
+
+== Related ONTAP commands
+
+* `metrocluster configuration-settings dr-group create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dr_pairs
+|array[link:#dr_pair[dr_pair]]
+a|
+
+|id
+|integer
+a|DR Group ID
+
+
+|mccip_ports
+|array[link:#mccip_ports[mccip_ports]]
+a|List of Port specifications.
+
+
+|partner_cluster
+|link:#partner_cluster[partner_cluster]
+a|Partner cluster information.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "dr_pairs": [
+    {
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "partner": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "id": 0,
+  "mccip_ports": [
+    {
+      "l3_config": {
+        "ipv4_interface": {
+          "address": "10.10.10.7",
+          "gateway": "10.1.1.1",
+          "netmask": "24"
+        }
+      },
+      "name": "e1b",
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "uuid": "string",
+      "vlan_id": 200
+    }
+  ],
+  "partner_cluster": {
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+
+| 2430034
+| Node "node" is not found in partner cluster "cluster". Use the "cluster show" command on the partner cluster to see the list of valid node names.
+
+| 2430060
+| The DR group cannot be created while node "node" on cluster "cluster" is configured for MetroCluster.
+
+| 2432833
+| Operation is already running.
+
+| 2432836
+| There are not enough disks in Pool1. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+
+| 2432840
+| Configuring DR Groups
+
+| 2432841
+| Generating IP addresses
+
+| 2432844
+| Checking remote storage pool
+
+| 2432845
+| Mirroring aggregates
+
+| 2432846
+| Configuring MetroCluster and DR mirroring
+
+| 2432857
+| Adding new MetroCluster DR Group
+
+| 2432858
+| MetroCluster DR Group setup done
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Local node of the DR Group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#partner]
+[.api-collapsible-fifth-title]
+partner
+
+Partner node of the DR Group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_pair]
+[.api-collapsible-fifth-title]
+dr_pair
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|Local node of the DR Group.
+
+
+|partner
+|link:#partner[partner]
+a|Partner node of the DR Group.
+
+
+|===
+
+
+[#ipv4_interface]
+[.api-collapsible-fifth-title]
+ipv4_interface
+
+Object to setup an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|gateway
+|string
+a|The IPv4 or IPv6 address of the default router.
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#l3_config]
+[.api-collapsible-fifth-title]
+l3_config
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipv4_interface
+|link:#ipv4_interface[ipv4_interface]
+a|Object to setup an interface along with its default router.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#mccip_ports]
+[.api-collapsible-fifth-title]
+mccip_ports
+
+Port configuration specification.
+l3_config information is only needed when configuring a MetroCluster IP for use in a layer 3 network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|l3_config
+|link:#l3_config[l3_config]
+a|
+
+|name
+|string
+a|Port name
+
+
+|node
+|link:#node[node]
+a|Node information
+
+
+|uuid
+|string
+a|Port UUID
+
+
+|vlan_id
+|integer
+a|VLAN ID
+
+
+|===
+
+
+[#partner_cluster]
+[.api-collapsible-fifth-title]
+partner_cluster
+
+Partner cluster information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#metrocluster_dr_group]
+[.api-collapsible-fifth-title]
+metrocluster_dr_group
+
+DR group information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dr_pairs
+|array[link:#dr_pair[dr_pair]]
+a|
+
+|id
+|integer
+a|DR Group ID
+
+
+|mccip_ports
+|array[link:#mccip_ports[mccip_ports]]
+a|List of Port specifications.
+
+
+|partner_cluster
+|link:#partner_cluster[partner_cluster]
+a|Partner cluster information.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

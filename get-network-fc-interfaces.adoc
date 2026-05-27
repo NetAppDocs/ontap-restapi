@@ -1,0 +1,1651 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-fc-interfaces.html'
+summary: 'Retrieve FC interfaces'
+---
+
+= Retrieve FC interfaces
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/fc/interfaces`#
+
+*Introduced In:* 9.6
+
+Retrieves FC interfaces.
+
+== Related ONTAP commands
+
+* `network interface show`
+* `vserver fcp interface show`
+
+== Learn more
+
+* link:network_fc_interfaces_endpoint_overview.html[DOC /network/fc/interfaces]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|recommend.svm.name
+|string
+|query
+|False
+a|The name of an existing SVM for which to recommend FC interfaces. If neither query parameter `recommend.svm.name` nor `recommend.svm.uuid` are provided when recommending FC interfaces, recommendations are made for a new, non-existent SVM.
+
+* Introduced in: 9.11
+
+
+|recommend.svm.uuid
+|string
+|query
+|False
+a|The UUID of an existing SVM for which to recommend FC interfaces. If neither query parameter `recommend.svm.name` nor `recommend.svm.uuid` are provided when recommending FC interfaces, recommendations are made for a new, non-existent SVM.
+
+* Introduced in: 9.11
+
+
+|recommend.data_protocol
+|string
+|query
+|False
+a|The target data protocol for which to recommend FC interfaces. This query parameter is required when recommending FC interfaces.
+
+* Introduced in: 9.11
+* enum: ["fcp", "fc_nvme"]
+
+
+|recommend.interfaces_per_node
+|integer
+|query
+|False
+a|The target number of interfaces per FC fabric per cluster node when recommending FC interfaces. If this query parameter is not provided, the default value is one (1).
+
+* Introduced in: 9.11
+* Default value: 1
+* Max value: 4
+* Min value: 1
+
+
+|recommend.fabrics.name
+|array[string]
+|query
+|False
+a|The names of the FC fabrics to target when recommending FC interfaces. If this query parameter is not provided, FC interfaces will be recommended for each FC fabric discovered.
+
+* Introduced in: 9.11
+
+
+|recommend.nodes.name
+|array[string]
+|query
+|False
+a|The names of the cluster nodes to target when recommending FC interfaces. If this query parameter is not provided, FC interfaces will be recommended for all nodes that have FC network ports supporting target data protocol. Query parameters `recommend.nodes.name` and `recommend.nodes.uuid` are mutually exclusive; use either names or UUIDs to identify cluster nodes.
+
+* Introduced in: 9.11
+
+
+|recommend.nodes.uuid
+|array[string]
+|query
+|False
+a|The UUIDs of the cluster nodes to target when recommending FC interfaces. If this query parameter is not provided, FC interfaces will be recommended for all nodes that have FC network ports supporting target data protocol. Query parameters `recommend.nodes.name` and `recommend.nodes.uuid` are mutually exclusive; use either names or UUIDs to identify cluster nodes.
+
+* Introduced in: 9.11
+
+
+|recommend.proposed.locations.port.uuid
+|array[string]
+|query
+|False
+a|The UUIDs of the FC ports on which FC interfaces are proposed. A UUID may be supplied multiple times to proposed multiple FC interfaces. FC ports must be enabled, support the target data protocol and be reporting an FC fabric.
+
+* Introduced in: 9.11
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|statistics.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.status
+|string
+|query
+|False
+a|Filter by statistics.status
+
+* Introduced in: 9.8
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.8
+
+
+|location.port.name
+|string
+|query
+|False
+a|Filter by location.port.name
+
+
+|location.port.node.name
+|string
+|query
+|False
+a|Filter by location.port.node.name
+
+
+|location.port.uuid
+|string
+|query
+|False
+a|Filter by location.port.uuid
+
+
+|location.home_port.name
+|string
+|query
+|False
+a|Filter by location.home_port.name
+
+* Introduced in: 9.8
+
+
+|location.home_port.node.name
+|string
+|query
+|False
+a|Filter by location.home_port.node.name
+
+* Introduced in: 9.8
+
+
+|location.home_port.uuid
+|string
+|query
+|False
+a|Filter by location.home_port.uuid
+
+* Introduced in: 9.8
+
+
+|location.home_node.name
+|string
+|query
+|False
+a|Filter by location.home_node.name
+
+* Introduced in: 9.8
+
+
+|location.home_node.uuid
+|string
+|query
+|False
+a|Filter by location.home_node.uuid
+
+* Introduced in: 9.8
+
+
+|location.is_home
+|boolean
+|query
+|False
+a|Filter by location.is_home
+
+* Introduced in: 9.8
+
+
+|location.node.name
+|string
+|query
+|False
+a|Filter by location.node.name
+
+
+|location.node.uuid
+|string
+|query
+|False
+a|Filter by location.node.uuid
+
+
+|wwpn
+|string
+|query
+|False
+a|Filter by wwpn
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|port_address
+|string
+|query
+|False
+a|Filter by port_address
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|data_protocol
+|string
+|query
+|False
+a|Filter by data_protocol
+
+
+|metric.latency.other
+|integer
+|query
+|False
+a|Filter by metric.latency.other
+
+* Introduced in: 9.8
+
+
+|metric.latency.total
+|integer
+|query
+|False
+a|Filter by metric.latency.total
+
+* Introduced in: 9.8
+
+
+|metric.latency.write
+|integer
+|query
+|False
+a|Filter by metric.latency.write
+
+* Introduced in: 9.8
+
+
+|metric.latency.read
+|integer
+|query
+|False
+a|Filter by metric.latency.read
+
+* Introduced in: 9.8
+
+
+|metric.iops.other
+|integer
+|query
+|False
+a|Filter by metric.iops.other
+
+* Introduced in: 9.8
+
+
+|metric.iops.total
+|integer
+|query
+|False
+a|Filter by metric.iops.total
+
+* Introduced in: 9.8
+
+
+|metric.iops.write
+|integer
+|query
+|False
+a|Filter by metric.iops.write
+
+* Introduced in: 9.8
+
+
+|metric.iops.read
+|integer
+|query
+|False
+a|Filter by metric.iops.read
+
+* Introduced in: 9.8
+
+
+|metric.timestamp
+|string
+|query
+|False
+a|Filter by metric.timestamp
+
+* Introduced in: 9.8
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.8
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.8
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.8
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.8
+
+
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.8
+
+
+|wwnn
+|string
+|query
+|False
+a|Filter by wwnn
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|recommend
+|link:#recommend[recommend]
+a|Response properties specific to the FC interface placement functionality. See the _Interface placement recommendations_ section of link:network_fc_interfaces_endpoint_overview.html[DOC /network/fc/interfaces]
+
+
+|records
+|array[link:#fc_interface[fc_interface]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "recommend": {
+    "messages": [
+      {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": 5375959,
+        "message": "Network ports are disabled.",
+        "severity": "informational"
+      }
+    ]
+  },
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "string",
+      "data_protocol": "string",
+      "location": {
+        "home_node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "home_port": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "0a",
+          "node": {
+            "name": "node1"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "port": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "0a",
+          "node": {
+            "name": "node1"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      },
+      "metric": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "duration": "PT15S",
+        "iops": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "status": "ok",
+        "throughput": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "name": "fc_lif1",
+      "port_address": "5060F",
+      "state": "string",
+      "statistics": {
+        "iops_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "status": "ok",
+        "throughput_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000"
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "bce9827d-4d8f-60af-c771-6e8e9af2c6f0",
+      "wwnn": "20:00:00:50:56:b4:13:01",
+      "wwpn": "20:00:00:50:56:b4:13:a8"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5373982
+| An invalid WWN was specified. The length is incorrect.
+
+| 5373983
+| An invalid WWN was specified. The format is incorrect.
+
+| 5374938
+| Query parameter `recommend.data_protocol` is required when any other `recommend` query parameters are specified.
+
+| 5374939
+| Query parameter `recommend.fabrics.name` specifies a duplicate FC fabric.
+
+| 5374940
+| Query parameter `recommend.nodes.name` or `recommend.nodes.uuid` specifies a duplicate node.
+
+| 5375953
+| Query parameter `recommend.fabrics.name` specifies an FC fabric to which no FC port is connected.
+
+| 5375954
+| Query parameter `recommend.nodes.name` or `recommend.nodes.uuid` specifies a node that does not support the specified data protocol.
+
+| 5375955
+| Query parameter `recommend.proposed.locations.port.uuid` does not specify a valid port or specifies a port that is support the specified data protocol.
+
+| 5375956
+| Query parameter `recommend.proposed.locations.port.uuid` specifies a port that is not located on a node specified by query parameter `recommend.nodes.name` or `recommend.nodes.uuid`. If the nodes are to be constrained, only ports on those nodes may be proposed.
+
+| 5375957
+| Query parameter `recommend.proposed.locations.port.uuid` specifies a port that is disabled.
+
+| 5375958
+| Query parameter `recommend.proposed.locations.port.uuid` specifies a port that is not reporting a connected FC fabric.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#fc_interface_recommend_message]
+[.api-collapsible-fifth-title]
+fc_interface_recommend_message
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|The message substitution arguments.
+
+
+|code
+|string
+a|The message code. Possible messages:
+
+ONTAP Error Response Codes
+
+Error Code -- Description
+
+5375959 -- Network ports are disabled.
+
+5375960 -- Network ports are enabled, but not reporting a connected FC fabric.
+
+5375961 -- The limit for the number of FC network interfaces on a cluster node has been reached.
+
+5375962 -- The limit for the number of FC network interfaces on a port has been reached.
+
+5375963 -- An HA pair of cluster nodes has a discrepancy in the presence of FC ports.
+
+5375964 -- An HA pair of cluster nodes has a discrepancy in support for an FC data protocol.
+
+5375965 -- An HA pair of cluster nodes cannot be reached from the same FC fabrics.
+
+5375966 -- A cluster node cannot be reached from all of the FC fabrics from which other cluster nodes with FC interfaces in the SVM can be reached.
+
+5375967 -- The limit for the number of FC network interfaces on a cluster node has been exceeded.
+
+5375968 -- The limit for the number of FC network interfaces on an FC port has been exceeded.
+
+5375969 -- The requested number of network interfaces per FC fabric per cluster node has not been achieved.
+
+5375970 -- The SVM cannot be reached from all of the FC fabrics to which the cluster is connected.
+
+5375971 -- The limit for the number of NVMe network interfaces on a cluster node has been exceeded.
+
+5375972 -- The limit for the number of cluster nodes containing NVMe network interfaces for the SVM has been exceeded.
+
+5375973 -- The SVM can be reached from a number of FC fabrics other than what is preferred.
+
+
+|message
+|string
+a|The message text.
+
+
+|severity
+|string
+a|The severity of the message. Message severities are as follows:
+
+* `error` - Messages reporting problems that must be corrected before creating the FC network interfaces.
+* `warning` - Messages indicating issues that need rectifying in order to achieve an optimal configuration.
+* `informational` - Messages providing relevant information for consideration.
+
+
+|===
+
+
+[#recommend]
+[.api-collapsible-fifth-title]
+recommend
+
+Response properties specific to the FC interface placement functionality. See the _Interface placement recommendations_ section of link:network_fc_interfaces_endpoint_overview.html[DOC /network/fc/interfaces]
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|messages
+|array[link:#fc_interface_recommend_message[fc_interface_recommend_message]]
+a|Messages describing the results of a FC network interface placement operation or evaluation of caller-proposed locations.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#home_node]
+[.api-collapsible-fifth-title]
+home_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node on which the FC port is located.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the node on which the FC port is located.
+
+
+|===
+
+
+[#home_port]
+[.api-collapsible-fifth-title]
+home_port
+
+An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC port.
+
+
+|node
+|link:#node[node]
+a|The node on which the FC port is located.
+
+
+|uuid
+|string
+a|The unique identifier of the FC port.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC port.
+
+
+|node
+|link:#node[node]
+a|The node on which the FC port is located.
+
+
+|uuid
+|string
+a|The unique identifier of the FC port.
+
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+The location of the FC interface is defined by the location of its port. An FC port is identified by its UUID, or a combination of its cluster node name and port name. Either the UUID or the cluster node name and port name are required for POST. To move an interface, supply either the port UUID or the cluster node name and port name in a PATCH.
+
+`location.node` and `location.port` refer to the current location of the FC interface. This can be different from `location.home_node` and `location.home_port` in instances where the FC interface has failed over to its HA partner node. The `location.node`, `location.port`, and `location.is_home` properties are not available for interfaces on the inactive side of a MetroCluster relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|home_node
+|link:#home_node[home_node]
+a|
+
+|home_port
+|link:#home_port[home_port]
+a|An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+|is_home
+|boolean
+a|Indicates if the FC interface is currently on its home node.
+
+
+|node
+|link:#node[node]
+a|
+
+|port
+|link:#port[port]
+a|An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS latency and throughput
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance numbers, such as IOPS latency and throughput. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#fc_interface]
+[.api-collapsible-fifth-title]
+fc_interface
+
+A Fibre Channel (FC) interface is the logical endpoint for FC network connections to an SVM. An FC interface provides FC access to storage within the interface SVM using either Fibre Channel Protocol or NVMe over Fibre Channel (NVMe/FC).
+
+An FC interface is created on an FC port which is located on a cluster node. The FC port must be specified to identify the location of the interface for a POST or PATCH operation that relocates an interface. You can identify the port by supplying either the cluster node and port names or the port UUID.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A user configurable comment. Optional in POST; valid in PATCH. To clear a prior comment, set the property to an empty string in PATCH.
+
+
+|data_protocol
+|string
+a|The data protocol for which the FC interface is configured. Required in POST.
+
+
+|enabled
+|boolean
+a|The administrative state of the FC interface. The FC interface can be disabled to block all FC communication with the SVM through this interface. Optional in POST and PATCH; defaults to _true_ (enabled) in POST.
+
+
+|location
+|link:#location[location]
+a|The location of the FC interface is defined by the location of its port. An FC port is identified by its UUID, or a combination of its cluster node name and port name. Either the UUID or the cluster node name and port name are required for POST. To move an interface, supply either the port UUID or the cluster node name and port name in a PATCH.
+
+`location.node` and `location.port` refer to the current location of the FC interface. This can be different from `location.home_node` and `location.home_port` in instances where the FC interface has failed over to its HA partner node. The `location.node`, `location.port`, and `location.is_home` properties are not available for interfaces on the inactive side of a MetroCluster relationship.
+
+
+|metric
+|link:#metric[metric]
+a|Performance numbers, such as IOPS latency and throughput
+
+
+|name
+|string
+a|The name of the FC interface. Required in POST; optional in PATCH.
+
+
+|port_address
+|string
+a|The port address of the FC interface. Each FC port in an FC switched fabric has its own unique FC port address for routing purposes. The FC port address is assigned by a switch in the fabric when that port logs in to the fabric. This property refers to the address given by a switch to the FC interface when the SVM performs a port login (PLOGI).
+
+This is useful for obtaining statistics and diagnostic information from FC switches.
+
+This is a hexadecimal encoded numeric value.
+
+
+|state
+|string
+a|The current operational state of the FC interface. The state is set to _down_ if the interface is not enabled.
+
+If the cluster node hosting the port is down or unavailable, no state value is returned.
+
+
+|statistics
+|link:#statistics[statistics]
+a|These are raw performance numbers, such as IOPS latency and throughput. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface. Required in the URL.
+
+
+|wwnn
+|string
+a|The world wide node name (WWNN) of the FC interface SVM. The WWNN is generated by ONTAP when Fibre Channel Protocol or the NVMe service is created for the FC interface SVM.
+
+* example: 20:00:00:50:56:b4:13:01
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|wwpn
+|string
+a|The world wide port name (WWPN) of the FC interface. The WWPN is generated by ONTAP when the FC interface is created.
+
+* example: 20:00:00:50:56:b4:13:a8
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

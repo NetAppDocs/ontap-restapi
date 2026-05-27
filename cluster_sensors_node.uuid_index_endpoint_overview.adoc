@@ -1,0 +1,62 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_sensors_node.uuid_index_endpoint_overview.html'
+summary: 'Manage environment sensors'
+---
+
+= Manage environment sensors
+
+
+
+= Overview
+
+You can use this API to retrieve the details of all platform environment sensors
+
+== Examples
+
+=== Retrieving values of a single sensor
+
+[,json]
+----
+
+# The API:
+GET /api/cluster/sensors/{node.uuid}/{index}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/sensors/{node.uuid}/{index}" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"node": {
+  "uuid": "19ec0b4a-4a4d-11ec-9036-d039ea4a991a",
+  "name": "node1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/19ec0b4a-4a4d-11ec-9036-d039ea4a991a"
+    }
+  }
+},
+"index": 1,
+"name": "PVCCSA CPU FD",
+"type": "voltage",
+"value": 831,
+"value_units": "mV",
+"threshold_state": "normal",
+"critical_low_threshold": 297,
+"warning_low_threshold": 396,
+"warning_high_threshold": 1485,
+"critical_high_threshold": 1683,
+"_links": {
+  "self": {
+    "href": "/api/cluster/sensors/19ec0b4a-4a4d-11ec-9036-d039ea4a991a/1"
+  }
+}
+}
+----
+
+

@@ -1,0 +1,278 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-file-clone-split-loads-.html'
+summary: 'Update the maximum split load'
+---
+
+= Update the maximum split load
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/file/clone/split-loads/{node.uuid}`#
+
+*Introduced In:* 9.10
+
+Updates the maximum split load.
+
+== Related Ontap command
+
+* `volume file clone split load modify`
+
+== Learn More
+
+* [`DOC /storage/file/clone`]
+
+----
+
+# The call:
+curl -X PATCH "https://<mgmt_IP>/api/storage/file/clone/split-loads/9686b8d1-a828-11eb-80d8-005056bbe7b6" -d '{"load": {"maximum": "16TB" } }'
+
+# The response to successful patch is empty body
+----
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|load
+|link:#load[load]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "load": {
+    "allowable": "4KB",
+    "current": 0,
+    "maximum": "4KB",
+    "token_reserved": 0
+  },
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 13565966
+| Failed to modify the maximum split load on the node due to an invalid field value.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#load]
+[.api-collapsible-fifth-title]
+load
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allowable
+|integer
+a|Specifies the available file clone split load on the node.
+
+
+|current
+|integer
+a|Specifies the current on-going file clone split load on the node.
+
+
+|maximum
+|integer
+a|Specifies the maximum allowable file clone split load on the node at any point in time. The least allowable file clone split load is 4KB and the maximum is 675TB. The default value is 4KB for the maximum split load when unit is not specified. The default file clone split load is set based on the system configuration.
+
+
+|token_reserved
+|integer
+a|Specifies the file clone split load on the node reserved for tokens.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#split_load]
+[.api-collapsible-fifth-title]
+split_load
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|load
+|link:#load[load]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

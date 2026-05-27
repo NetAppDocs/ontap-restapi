@@ -1,0 +1,486 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-quota-rules-.html'
+summary: 'Update quota policy rule properties'
+---
+
+= Update quota policy rule properties
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/quota/rules/{uuid}`#
+
+*Introduced In:* 9.7
+
+Updates properties of a specific quota policy rule.
+
+Important notes:
+
+* The quota resize functionality is supported with the PATCH operation.
+* Quota resize allows you to modify the quota limits, directly in the filesystem.
+* The quota must be enabled on a FlexVol or a FlexGroup volume for `quota resize` to take effect.
+* If the quota is disabled on the volume, the quota policy rule PATCH API modifies the rule, but this does not affect the limits in the filesystem.
+
+== Related ONTAP commands
+
+* `quota policy rule modify`
+* `quota resize`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Rule UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|files
+|link:#files[files]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|user_mapping
+|boolean
+a|This parameter enables user mapping for user quota policy rules. This is valid in POST or PATCH for user quota policy rules only.
+
+
+|uuid
+|string
+a|Unique identifier for the quota policy rule. This field is generated when the quota policy rule is created.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "uuid": "5f1d13a7-f401-11e8-ac1a-005056a7c3b9"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5308478
+| User mapping can only be turned on for UNIX usernames or Windows account names.
+
+| 5308501
+| Mapping from Windows user to UNIX user for user rule was unsuccessful.
+
+| 5308502
+| Mapping from UNIX user to Windows user for user rule was unsuccessful.
+
+| 5308545
+| The specified quota rule UUID is invalid.
+
+| 5308561
+| Failed to obtain volume quota state or invalid quota state obtained for volume.
+
+| 5308567
+| Quota policy rule modify operation succeeded, but quota resize failed due to internal error.
+
+| 5308573
+| Input value is greater than limit for field.
+
+| 5308574
+| Input value is out of range for field.
+
+| 5308575
+| Input value is incorrectly larger than listed field.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#files]
+[.api-collapsible-fifth-title]
+files
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hard_limit
+|integer
+a|This parameter specifies the hard limit for files. This is valid in POST or PATCH.
+
+
+|soft_limit
+|integer
+a|This parameter specifies the soft limit for files. This is valid in POST or PATCH.
+
+
+|===
+
+
+[#group]
+[.api-collapsible-fifth-title]
+group
+
+This parameter specifies the target group to which the group quota policy rule applies. This parameter takes a group name or identifier. This parameter is only valid for the POST operation of a group quota policy rule. The POST operation will fail with an appropriate error if this parameter is used as an input to create a user or a tree quota policy rule. This input parameter for POST takes either a group name or a group identifier, but not both. For default quota rules, the group name must be chosen and should be specified as "". For explicit group quota rules, this parameter can contain a UNIX group name or a UNIX group identifier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Quota target group ID
+
+
+|name
+|string
+a|Quota target group name
+
+
+|===
+
+
+[#qtree]
+[.api-collapsible-fifth-title]
+qtree
+
+This parameter specifies the target qtree to which the user/group/tree quota policy rule applies. For a user/group quota policy rule at qtree level, this parameter takes a qtree name and is valid in GET or POST. For a user/group quota policy rule at volume level, this parameter is not valid in GET or POST. For a tree quota policy rule, this parameter is mandatory and is valid in both POST and GET. For a default tree quota policy rule, this parameter needs to be specified as "". For a tree quota policy rule at qtree level, this parameter takes a qtree name and is valid in GET or POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|The unique identifier for a qtree.
+
+
+|name
+|string
+a|The name of the qtree.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hard_limit
+|integer
+a|This parameter specifies the space hard limit, in bytes. If less than 1024 bytes, the value is rounded up to 1024 bytes. Valid in POST or PATCH. For a POST operation where the parameter is either empty or set to -1, no limit is applied. For a PATCH operation where a limit is configured, use a value of -1 to clear the limit.
+
+
+|soft_limit
+|integer
+a|This parameter specifies the space soft limit, in bytes. If less than 1024 bytes, the value is rounded up to 1024 bytes. Valid in POST or PATCH. For a POST operation where the parameter is either empty or set to -1, no limit is applied. For a PATCH operation where a limit is configured, use a value of -1 to clear the limit.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#users]
+[.api-collapsible-fifth-title]
+users
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Quota target user ID
+
+
+|name
+|string
+a|Quota target user name
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#quota_rule]
+[.api-collapsible-fifth-title]
+quota_rule
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|files
+|link:#files[files]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|user_mapping
+|boolean
+a|This parameter enables user mapping for user quota policy rules. This is valid in POST or PATCH for user quota policy rules only.
+
+
+|uuid
+|string
+a|Unique identifier for the quota policy rule. This field is generated when the quota policy rule is created.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

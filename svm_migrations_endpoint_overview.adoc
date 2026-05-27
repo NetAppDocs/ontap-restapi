@@ -1,0 +1,432 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'svm_migrations_endpoint_overview.html'
+summary: 'Manage SVM migration'
+---
+
+= Manage SVM migration
+
+
+
+= Overview
+
+You can use this API to migrate an SVM from a source cluster to a destination cluster. During the migration, you can pause, resume, or abort the operation, and retrieve the migration status and transfer status of volumes in the SVM.
+The migrations APIs are only accessible from the destination cluster.
+
+== Precondition
+
+The cluster peering relationship should be created between the source and destination clusters prior to using this API.
+
+== SVM migration APIs
+
+The following APIs are used to manage SVM migration:
+
+* POST /api/svm/migrations
+* PATCH /api/svm/migrations/\{uuid}
+* GET /api/svm/migrations/
+* GET /api/svm/migrations/\{uuid}
+* GET /api/svm/migrations/{svm_migration.uuid}/volumes
+* GET /api/svm/migrations/{svm_migration.uuid}/volumes/{volume.uuid}
+* DELETE /api/svm/migrations/\{uuid}
+
+== Important notes
+
+The migration of temperature-sensitive storage efficiency (TSSE) volumes from AFF to FAS systems has a known limitation. The migration preserves the TSSE savings and after migration completes, the volume will not receive any further TSSE savings for the new data written on the volume.
+
+== Starting a migration
+
+To start a migration operation, issue a POST request to /svm/migrations. Parameters are provided in the body of the POST request to specify the source cluster and the source SVM.
+
+== Monitoring the status of the SVM migration
+
+You can use GET /svm/migrations to retrieve the status of the SVM migration and GET /svm/migrations/{svm_migration.uuid}/volumes to retrieve the transfer status of the volumes in the SVM migration.
+
+=== Possible errors before starting the migration
+
+Configurations in the POST /svm/migrations request are validated before the SVM migration starts. If an invalid configuration is found or the migration pre-checks fail, an HTTP error code in the 4xx range is returned. No SVM migration operation is started.
+
+=== Polling the migration operation
+
+After a successful POST /svm/migrations request is issued, an HTTP error code of 202 is returned along with a migration UUID and link in the body of the response. The SVM migration continues asynchronously and is monitored using the migration UUID and the GET /svm/migrations/\{uuid} API.
+
+=== Errors during the migration operation
+
+If a failure occurs during the SVM migration, the GET /svm/migrations response provides details of the error along with any error code fields.
+
+=== Pausing the migration operation
+
+You can use PATCH /svm/migrations/\{uuid} with the action "pause" to pause the SVM migration to update the SVM configuration on the source SVM.
+
+=== Resuming the migration operation
+
+You can use PATCH /svm/migrations\{uuid} with the action "resume" to resume the SVM migration from a paused state.
+You can modify the throttle value when you resume the SVM migration. To set the throttle value to unlimited, specify the throttle value as 0.
+
+=== Aborting the migration operation
+
+You can use DELETE /svm/migrations/\{uuid} to delete the SVM on the destination cluster if the SVM migration has failed or is paused.
+Use the DELETE /svm/migrations/\{uuid} request to remove the SVM on the source cluster; this might be used when  communication between the source and destination cluster is reduced.
+
+== Retrieving the migration status
+
+You can use GET /svm/migrations/\{uuid} to retrieve the current status of your migration.
+
+== Retrieving the volume transfer status
+
+You can use GET /svm/migrations/{svm_migration.uuid}/volumes to retrieve the current transfer status of all volumes in the migrating SVM.
+
+== Retrieving the volume transfer status of a specific volume
+
+You can use GET /svm/migrations/{svm_migrations.uuid}/volumes/{volume.uuid} to retrieve the transfer status of a specific volume in the migrating SVM.
+
+'''
+
+== Examples
+
+=== Starting a Migration
+
+----
+
+# API
+/api/svm/migrations
+----
+
+=== POST body included from file
+
+----
+svm_migration_post_body.txt:
+{
+"source": {
+  "svm": {
+    "name": "vs1"
+  },
+  "cluster": {
+    "name": "siteB"
+  }
+}
+}
+curl -X POST https://<mgmt-ip>/api/svm/migrations -H "Content-Type: application+hal/json" -d "@svm_migration_post_body.txt"
+----
+
+=== Inline POST body
+
+----
+curl -X POST https://<mgmt-ip>/api/svm/migrations -H "Content-Type: application+hal/json" -d '{"source": {"svm": {"name": "vs1"}, "cluster": {"name": "siteB"}}}'
+----
+
+=== POST Response
+
+----
+Date: Wed, 25 Aug 2021 19:04:47 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5
+Content-Length: 189
+Content-Type: application/hal+json
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"job": {
+  "uuid": "5184a3e1-05d7-11ec-a40f-005056bba9a5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/5184a3e1-05d7-11ec-a40f-005056bba9a5"
+    }
+  }
+}
+}
+----
+
+=== Retrieving POST Job status
+
+Use the link provided in the response to the POST request to fetch the status of the start operation
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/jobs/5184a3e1-05d7-11ec-a40f-005056bba9a5
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 19:05:04 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Type: application/hal+json
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 224
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"uuid": "5184a3e1-05d7-11ec-a40f-005056bba9a5",
+"description": "POST /api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2021-08-25T15:04:48-04:00",
+"end_time": "2021-08-25T15:04:57-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/5184a3e1-05d7-11ec-a40f-005056bba9a5"
+  }
+}
+}
+----
+
+=== Retrieving all migrations
+
+The location header in the POST operation provides the uuid of the migrate operation that was started using POST. Also, you can list all the migrate operations using the collection GET.
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/svm/migrations
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 19:05:11 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Type: application/hal+json
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 170
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"records": [
+  {
+    "uuid": "517c5e74-05d7-11ec-a40f-005056bba9a5",
+    "_links": {
+      "self": {
+        "href": "/api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/svm/migrations/"
+  }
+}
+}
+----
+
+=== Retrieving a specific migration
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 19:05:33 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Type: application/hal+json
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 379
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"uuid": "517c5e74-05d7-11ec-a40f-005056bba9a5",
+"state": "setup_configuration",
+"start_time": "2021-08-25T15:04:49-04:00",
+"current_operation": "start",
+"source": {
+  "svm": {
+    "uuid": "424b6002-fb1a-11eb-9383-005056bbcf32",
+    "name": "vs1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/424b6002-fb1a-11eb-9383-005056bbcf32"
+      }
+    }
+  },
+  "cluster": {
+    "uuid": "b54babec-fb14-11eb-9383-005056bbcf32",
+    "name": "siteB",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/b54babec-fb14-11eb-9383-005056bbcf32"
+      }
+    }
+  }
+},
+"destination": {
+  "ipspace": {
+    "uuid": "f305cf0b-fb14-11eb-829d-005056bba9a5",
+    "name": "Default"
+  }
+},
+"auto_cutover": false,
+"auto_source_cleanup": false,
+"throttle": 0,
+"_links": {
+  "self": {
+    "href": "/api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5"
+  }
+}
+}
+----
+
+=== Pausing a migration
+
+To pause the migration use the PATCH request on the migration UUID.
+
+==== Request
+
+----
+curl -X PATCH https://<mgmt-ip>/api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5?action=pause
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 19:06:11 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"job": {
+  "uuid": "82dea7c7-05d7-11ec-a40f-005056bba9a5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/82dea7c7-05d7-11ec-a40f-005056bba9a5"
+    }
+  }
+}
+}
+----
+
+=== Monitoring PATCH job status
+
+Use the link provided in the response of the PATCH request to fetch the information of the patch job.
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/jobs/82dea7c7-05d7-11ec-a40f-005056bba9a5
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 21:40:06 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Type: application/hal+json
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 222
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"uuid": "82dea7c7-05d7-11ec-a40f-005056bba9a5",
+"description": "PATCH /api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2021-08-25T15:06:11-04:00",
+"end_time": "2021-08-25T15:06:11-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/82dea7c7-05d7-11ec-a40f-005056bba9a5"
+  }
+}
+}
+----
+
+=== Aborting a migration
+
+To abort the migration use the DELETE request on the migration UUID.
+
+==== Request
+
+----
+curl -X DELETE https://<mgmt-ip>/api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 22:57:23 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"job": {
+  "uuid": "cf870f19-05f7-11ec-a40f-005056bba9a5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/cf870f19-05f7-11ec-a40f-005056bba9a5"
+    }
+  }
+}
+}
+----
+
+=== Monitoring DELETE job status
+
+Use the link provided in the response of the PATCH request to fetch the information of the patch job.
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/jobs/cf870f19-05f7-11ec-a40f-005056bba9a5
+----
+
+==== Response
+
+----
+Date: Wed, 25 Aug 2021 23:05:47 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Type: application/hal+json
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 228
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+{
+"uuid": "cf870f19-05f7-11ec-a40f-005056bba9a5",
+"description": "DELETE /api/svm/migrations/517c5e74-05d7-11ec-a40f-005056bba9a5",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2021-08-25T18:57:23-04:00",
+"end_time": "2021-08-25T18:57:24-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/cf870f19-05f7-11ec-a40f-005056bba9a5"
+  }
+}
+}
+----
+
+

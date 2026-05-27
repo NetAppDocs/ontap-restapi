@@ -1,0 +1,1507 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-application-applications-components.html'
+summary: 'Retrieve application components'
+---
+
+= Retrieve application components
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/application/applications/{application.uuid}/components`#
+
+*Introduced In:* 9.6
+
+Retrieves application components.
+
+== Overview
+
+The application component object exposes how to access an application. Most application interfaces abstract away the underlying ONTAP storage elements, but this interface exposes what is necessary to connect to and uses the storage that is provisioned for an application. See the application component model for a detailed description of each property.
+
+== Query examples
+
+Queries are limited on this API. Most of the details are nested under the `nfs_access`, `cifs_access`, or `san_access` properties, but those properties do not support queries, and properties nested under those properties cannot be requested individually in the current release.
+
+The following query returns all application components with names beginning in _secondary_.
+
+----
+GET /application/applications/{application.uuid}/components?name=secondary*
+----
+
+The following query returns all application components at the _extreme_ storage service.
+
+----
+GET /application/applications/{application.uuid}/components?storage_service.name=extreme
+----
+
+== Learn more
+
+* link:application_overview.html[DOC /application]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|application.uuid
+|string
+|path
+|True
+a|Application UUID
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by UUID
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|storage_service.name
+|string
+|query
+|False
+a|Filter by storage_service.name
+
+
+|storage_service.uuid
+|string
+|query
+|False
+a|Filter by storage_service.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#application_component[application_component]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "application": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "string",
+        "uuid": "string"
+      },
+      "backing_storage": {
+        "luns": [
+          {
+            "creation_timestamp": "string",
+            "path": "string",
+            "size": 0,
+            "uuid": "string"
+          }
+        ],
+        "namespaces": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "creation_timestamp": "string",
+            "name": "string",
+            "size": 0,
+            "uuid": "string"
+          }
+        ],
+        "volumes": [
+          {
+            "creation_timestamp": "string",
+            "name": "string",
+            "size": 0,
+            "uuid": "string"
+          }
+        ]
+      },
+      "cifs_access": [
+        {
+          "backing_storage": {
+            "type": "string",
+            "uuid": "string"
+          },
+          "ips": [
+            "string"
+          ],
+          "path": "string",
+          "permissions": [
+            {
+              "access": "string",
+              "user_or_group": "string"
+            }
+          ],
+          "server": {
+            "name": "string"
+          },
+          "share": {
+            "name": "string"
+          }
+        }
+      ],
+      "file_system": "string",
+      "host_management_url": "string",
+      "host_name": "string",
+      "name": "string",
+      "nfs_access": [
+        {
+          "backing_storage": {
+            "type": "string",
+            "uuid": "string"
+          },
+          "export_policy": {
+            "name": "string"
+          },
+          "ips": [
+            "string"
+          ],
+          "path": "string",
+          "permissions": [
+            {
+              "access": "string",
+              "host": "string"
+            }
+          ]
+        }
+      ],
+      "nvme_access": [
+        {
+          "backing_storage": {
+            "type": "string",
+            "uuid": "string"
+          },
+          "subsystem_map": {
+            "anagrpid": "string",
+            "nsid": "string",
+            "subsystem": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "hosts": [
+                {
+                  "_links": {
+                    "self": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    }
+                  },
+                  "nqn": "string"
+                }
+              ],
+              "name": "string",
+              "uuid": "string"
+            }
+          }
+        }
+      ],
+      "protection_groups": [
+        {
+          "name": "string",
+          "rpo": {
+            "local": {
+              "description": "string",
+              "name": "string"
+            },
+            "remote": {
+              "description": "string",
+              "name": "string"
+            }
+          },
+          "uuid": "string"
+        }
+      ],
+      "san_access": [
+        {
+          "backing_storage": {
+            "type": "string",
+            "uuid": "string"
+          },
+          "lun_mappings": [
+            {
+              "fcp": [
+                {
+                  "interface": {
+                    "_links": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    },
+                    "name": "fc_lif1",
+                    "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+                    "wwpn": "20:00:00:50:56:b4:13:a8"
+                  }
+                }
+              ],
+              "igroup": {
+                "initiators": [
+                  "string"
+                ],
+                "name": "string",
+                "uuid": "string"
+              },
+              "iscsi": [
+                {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "interface": {
+                    "_links": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    },
+                    "ip": {
+                      "address": "10.10.10.7"
+                    },
+                    "name": "lif1",
+                    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+                  },
+                  "port": 3260
+                }
+              ],
+              "lun_id": 0
+            }
+          ],
+          "serial_number": "string"
+        }
+      ],
+      "storage_service": {
+        "name": "string",
+        "uuid": "string"
+      },
+      "svm": {
+        "name": "string",
+        "uuid": "string"
+      },
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Application name
+
+
+|uuid
+|string
+a|The application UUID. Valid in URL.
+
+
+|===
+
+
+[#application_lun_object]
+[.api-collapsible-fifth-title]
+application_lun_object
+
+LUN object
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|creation_timestamp
+|string
+a|LUN creation time
+
+
+|path
+|string
+a|LUN path
+
+
+|size
+|integer
+a|LUN size
+
+
+|uuid
+|string
+a|LUN UUID
+
+
+|===
+
+
+[#application_namespace_object]
+[.api-collapsible-fifth-title]
+application_namespace_object
+
+Namespace object
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|creation_timestamp
+|string
+a|Namespace creation time
+
+
+|name
+|string
+a|Namespace name
+
+
+|size
+|integer
+a|Namespace size
+
+
+|uuid
+|string
+a|Namespace UUID
+
+
+|===
+
+
+[#application_volume_object]
+[.api-collapsible-fifth-title]
+application_volume_object
+
+Volume object
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|creation_timestamp
+|string
+a|Creation time
+
+
+|name
+|string
+a|Name
+
+
+|size
+|integer
+a|Size
+
+
+|uuid
+|string
+a|UUID
+
+
+|===
+
+
+[#application_backing_storage]
+[.api-collapsible-fifth-title]
+application_backing_storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|luns
+|array[link:#application_lun_object[application_lun_object]]
+a|
+
+|namespaces
+|array[link:#application_namespace_object[application_namespace_object]]
+a|
+
+|volumes
+|array[link:#application_volume_object[application_volume_object]]
+a|
+
+|===
+
+
+[#backing_storage]
+[.api-collapsible-fifth-title]
+backing_storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|type
+|string
+a|Backing storage type
+
+
+|uuid
+|string
+a|Backing storage UUID
+
+
+|===
+
+
+[#permissions]
+[.api-collapsible-fifth-title]
+permissions
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Access granted to the user or group
+
+
+|user_or_group
+|string
+a|User or group
+
+
+|===
+
+
+[#server]
+[.api-collapsible-fifth-title]
+server
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Server name
+
+
+|===
+
+
+[#share]
+[.api-collapsible-fifth-title]
+share
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Share name
+
+
+|===
+
+
+[#application_cifs_properties]
+[.api-collapsible-fifth-title]
+application_cifs_properties
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|backing_storage
+|link:#backing_storage[backing_storage]
+a|
+
+|ips
+|array[string]
+a|
+
+|path
+|string
+a|Junction path
+
+
+|permissions
+|array[link:#permissions[permissions]]
+a|
+
+|server
+|link:#server[server]
+a|
+
+|share
+|link:#share[share]
+a|
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Export policy name
+
+
+|===
+
+
+[#permissions]
+[.api-collapsible-fifth-title]
+permissions
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Access granted to the host
+
+
+|host
+|string
+a|Host granted access
+
+
+|===
+
+
+[#application_nfs_properties]
+[.api-collapsible-fifth-title]
+application_nfs_properties
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|backing_storage
+|link:#backing_storage[backing_storage]
+a|
+
+|export_policy
+|link:#export_policy[export_policy]
+a|
+
+|ips
+|array[string]
+a|
+
+|path
+|string
+a|Junction path
+
+
+|permissions
+|array[link:#permissions[permissions]]
+a|
+
+|===
+
+
+[#self]
+[.api-collapsible-fifth-title]
+self
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#self[self]
+a|
+
+|===
+
+
+[#hosts]
+[.api-collapsible-fifth-title]
+hosts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|nqn
+|string
+a|Host
+
+
+|===
+
+
+[#subsystem]
+[.api-collapsible-fifth-title]
+subsystem
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|hosts
+|array[link:#hosts[hosts]]
+a|
+
+|name
+|string
+a|Subsystem name
+
+
+|uuid
+|string
+a|Subsystem UUID
+
+
+|===
+
+
+[#subsystem_map]
+[.api-collapsible-fifth-title]
+subsystem_map
+
+Subsystem map object
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|anagrpid
+|string
+a|Subsystem ANA group ID
+
+
+|nsid
+|string
+a|Subsystem namespace ID
+
+
+|subsystem
+|link:#subsystem[subsystem]
+a|
+
+|===
+
+
+[#application_nvme_access]
+[.api-collapsible-fifth-title]
+application_nvme_access
+
+Application NVME access
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|backing_storage
+|link:#backing_storage[backing_storage]
+a|
+
+|is_clone
+|boolean
+a|Clone
+
+
+|subsystem_map
+|link:#subsystem_map[subsystem_map]
+a|Subsystem map object
+
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the local RPO. This includes details on the snapshot schedule.
+
+
+|name
+|string
+a|The local RPO of the component. This indicates how often component snapshots are automatically created.
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the remote RPO.
+
+
+|name
+|string
+a|The remote RPO of the component. A remote RPO of zero indicates that the component is synchronously replicated to another cluster.
+
+
+|===
+
+
+[#rpo]
+[.api-collapsible-fifth-title]
+rpo
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local
+|link:#local[local]
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+[#application_protection_groups]
+[.api-collapsible-fifth-title]
+application_protection_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Protection group name
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|uuid
+|string
+a|Protection group UUID
+
+
+|===
+
+
+[#fc_interface_reference]
+[.api-collapsible-fifth-title]
+fc_interface_reference
+
+An FC interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC interface.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface.
+
+
+|wwpn
+|string
+a|The WWPN of the FC interface.
+
+
+|===
+
+
+[#application_san_access_fcp_endpoint]
+[.api-collapsible-fifth-title]
+application_san_access_fcp_endpoint
+
+A Fibre Channel Protocol (FCP) access endpoint for the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|interface
+|link:#fc_interface_reference[fc_interface_reference]
+a|An FC interface.
+
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|name
+|string
+a|Igroup name
+
+
+|uuid
+|string
+a|Igroup UUID
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#application_san_access_iscsi_endpoint]
+[.api-collapsible-fifth-title]
+application_san_access_iscsi_endpoint
+
+An iSCSI access endpoint for the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|interface
+|link:#interface[interface]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|port
+|integer
+a|The TCP port number of the iSCSI access endpoint.
+
+
+|===
+
+
+[#application_lun_mapping_object]
+[.api-collapsible-fifth-title]
+application_lun_mapping_object
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fcp
+|array[link:#application_san_access_fcp_endpoint[application_san_access_fcp_endpoint]]
+a|All possible Fibre Channel Protocol (FCP) access endpoints for the LUN.
+
+
+|igroup
+|link:#igroup[igroup]
+a|
+
+|iscsi
+|array[link:#application_san_access_iscsi_endpoint[application_san_access_iscsi_endpoint]]
+a|All possible iSCSI access endpoints for the LUN.
+
+
+|lun_id
+|integer
+a|LUN ID
+
+
+|===
+
+
+[#application_san_access]
+[.api-collapsible-fifth-title]
+application_san_access
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|backing_storage
+|link:#backing_storage[backing_storage]
+a|
+
+|is_clone
+|boolean
+a|Clone
+
+
+|lun_mappings
+|array[link:#application_lun_mapping_object[application_lun_mapping_object]]
+a|
+
+|serial_number
+|string
+a|LUN serial number
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Storage service name
+
+
+|uuid
+|string
+a|Storage service UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|SVM name
+
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#application_component]
+[.api-collapsible-fifth-title]
+application_component
+
+Application component
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application
+|link:#application[application]
+a|
+
+|backing_storage
+|link:#application_backing_storage[application_backing_storage]
+a|
+
+|cifs_access
+|array[link:#application_cifs_properties[application_cifs_properties]]
+a|
+
+|file_system
+|string
+a|Defines the type of file system that will be installed on this application component.
+
+
+|host_management_url
+|string
+a|Host management URL
+
+
+|host_name
+|string
+a|L2 Host FQDN
+
+
+|name
+|string
+a|Application component name
+
+
+|nfs_access
+|array[link:#application_nfs_properties[application_nfs_properties]]
+a|
+
+|nvme_access
+|array[link:#application_nvme_access[application_nvme_access]]
+a|
+
+|protection_groups
+|array[link:#application_protection_groups[application_protection_groups]]
+a|
+
+|san_access
+|array[link:#application_san_access[application_san_access]]
+a|
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|svm
+|link:#svm[svm]
+a|
+
+|uuid
+|string
+a|The application component UUID. Valid in URL.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

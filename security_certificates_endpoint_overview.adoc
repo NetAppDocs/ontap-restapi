@@ -1,0 +1,381 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_certificates_endpoint_overview.html'
+summary: 'Manage security certificates'
+---
+
+= Manage security certificates
+
+
+
+:doctype: book
+
+== Overview
+
+This API displays security certificate information and manages the certificates in ONTAP.
+
+== Installing certificates in ONTAP
+
+The security certificates GET request retrieves all of the certificates in the cluster.
+
+== Examples
+
+=== Retrieving all certificates installed in the cluster with their common-names
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/certificates?fields=common_name" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "name": "vs0"
+    },
+    "uuid": "dad2363b-8ac0-11e8-9058-005056b482fc",
+    "common_name": "vs0",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/dad2363b-8ac0-11e8-9058-005056b482fc"
+      }
+    }
+  },
+  {
+    "uuid": "1941e048-8ac1-11e8-9058-005056b482fc",
+    "common_name": "ROOT",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/1941e048-8ac1-11e8-9058-005056b482fc"
+      }
+    }
+  },
+  {
+    "uuid": "5a3a77a8-892d-11e8-b7da-005056b482fc",
+    "common_name": "cert_name",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/5a3a77a8-892d-11e8-b7da-005056b482fc"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/security/certificates?fields=common_name"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all certificates installed at cluster-scope with their common-names
+
+'''
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/certificates?scope=cluster&fields=common_name" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "1941e048-8ac1-11e8-9058-005056b482fc",
+    "scope": "cluster",
+    "common_name": "ROOT",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/1941e048-8ac1-11e8-9058-005056b482fc"
+      }
+    }
+  },
+  {
+    "uuid": "5a3a77a8-892d-11e8-b7da-005056b482fc",
+    "scope": "cluster",
+    "common_name": "cert_name",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/5a3a77a8-892d-11e8-b7da-005056b482fc"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/certificates?scope=cluster&fields=common_name"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all certificates installed on a specific SVM with their common-names
+
+'''
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/certificates?svm.name=vs0&fields=common_name" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "name": "vs0"
+    },
+    "uuid": "dad2363b-8ac0-11e8-9058-005056b482fc",
+    "common_name": "vs0",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/dad2363b-8ac0-11e8-9058-005056b482fc"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/certificates?svm.name=vs0&fields=common_name"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a certificate using its UUID for all fields
+
+'''
+
+----
+
+# The API:
+/api/security/certificates/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/certificates/dad2363b-8ac0-11e8-9058-005056b482fc?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"svm": {
+  "uuid": "d817293c-8ac0-11e8-9058-005056b482fc",
+  "name": "vs0"
+},
+"uuid": "dad2363b-8ac0-11e8-9058-005056b482fc",
+"scope": "svm",
+"type": "server",
+"common_name": "vs0",
+"serial_number": "15428D45CF81CF56",
+"ca": "vs0",
+"hash_function": "sha256",
+"key_size": 2048,
+"expiry_time": "2019-07-18T15:29:14-04:00",
+"public_certificate": "<CERTIFICATE-CONTENT>",
+"_links": {
+  "self": {
+    "href": "/api/security/certificates/dad2363b-8ac0-11e8-9058-005056b482fc"
+  }
+}
+}
+----
+
+=== Creating a certificate in a cluster
+
+These certificates can be used to help administrators enable certificate-based authentication and to enable SSL-based communication to the cluster.
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificates" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{  \"common_name\": \"TEST-SERVER\",  \"type\": \"server\"  }"
+----
+
+=== Installing a certificate in a cluster
+
+These certificates can be used to help administrators enable certificate-based authentication and to enable-SSL based communication to the cluster.
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificates" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{ \"type\": \"server_ca\", \"public_certificate\": \"<CERTIFICATE-CONTENT>\"  }"
+----
+
+'''
+
+=== Installing a certificate on a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificates" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{   \"svm\" : { \"name\" : \"vs0\" }, \"type\": \"server_ca\", \"public_certificate\": \"<CERTIFICATE-CONTENT>\"  }"
+----
+
+'''
+
+=== Installing a CA-signed certificate on a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificates" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{   \"svm\" : { \"name\" : \"vs0\" }, \"type\": \"server\", \"public_certificate\": \"<CERTIFICATE-CONTENT>\", \"intermediate_certificates\": [\"<CERTIFICATE-CONTENT>\",\"<CERTIFICATE-CONTENT>\"]}"
+----
+
+'''
+
+=== Deleting a certificate using its UUID
+
+'''
+
+----
+
+# The API:
+/api/security/certificates/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/certificates/dad2363b-8ac0-11e8-9058-005056b482fc?fields=*" -H "accept: application/hal+json"
+----
+
+=== Signing a new certificate signing request using an existing CA certificate UUID
+
+Once you have created a certificate of type "root_ca", you can use that certificate to act as a local Certificate Authority to sign new certificate signing requests. The following example signs a new certificate signing request using an existing CA certificate UUID. If successful, the API returns a signed certificate.
+
+----
+
+# The API:
+/api/security/certificates/{ca.uuid}/sign
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificates/253add53-8ac9-11e8-9058-005056b482fc/sign" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{ \"signing_request\": \"<CERTIFICATE-CONTENT>\",  \"hash_function\": \"sha256\"}"
+
+# The response:
+{
+"public_certificate": "<CERTIFICATE-CONTENT>"
+}
+----
+
+=== Generate a new Certificate Signing Request (CSR)
+
+----
+
+# The API:
+/api/security/certificate-signing-request
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificate-signing-request" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{ \"algorithm\": \"rsa\", \"extended_key_usage\": [\"serverauth\"], \"hash_function\": \"sha256\",  \"key_usage\": [\"digitalsignature\"], \"security_strength\": \"112\", \"subject_alternatives\": { \"dns\": [ \"*.example.com\", \"*.example1.com\" ], \"email\": [\"abc@example.com\", \"abc@example1.com\"], \"ip\": [\"10.225.34.223\", \"10.225.34.224\"], \"uri\": [\"http://example.com\", \"http://example1.com\"] }, \"subject_name\": \"C=US,O=NTAP,CN=test.domain.com\"}"
+{
+"csr": "-----BEGIN CERTIFICATE REQUEST-----\n-----END CERTIFICATE REQUEST-----\n",
+"generated_private_key": "-----BEGIN PRIVATE KEY-----\n-----END PRIVATE KEY-----\n"
+}
+----
+
+'''
+
+----
+
+### Download and install a certificate from the Azure Key Vault.
+----
+
+= The API:
+
+/api/security/certificates
+
+= The call:
+
+curl -X POST "https://+++<mgmt-ip>+++/api/security/certificates" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"svm\": {\"name\" : \"vs0\"}, \"name\" : \"vs0-client-cert\", \"type\" : \"client\", \"azure\": { \"key_vault\" : \"https://example.vault.azure.net\", \"client_id\" : \"12345678-abcd-1234-12ad-dfasdffgfdaaa\", \"tenant_id\" : \"12345678-abcd-abcd-test-720ef604b100\", \"client_secret\" : \"clientSecretString\", \"verify_host\": false }}" { "job": { "uuid": "be8d45cb-1d41-11ee-9725-005056ae0f31", "_links": { "self": { "href": "/api/cluster/jobs/be8d45cb-1d41-11ee-9725-005056ae0f31" } } } }+++</mgmt-ip>+++
+
+----
+
+
+'''
+----
+
+[discrete]
+=== Creating a root-ca certificate in a cluster when DCN cluster is configured.
+
+----
+
+# The API:
+/api/security/certificates
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/certificates" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{  \"common_name\": \"TEST-ROOT-CA\",  \"type\": \"root_ca\"  }"
+
+# The response:
+{
+"job": {
+  "uuid": "be8d45cb-1d41-11ee-9725-005056ae0f31",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/be8d45cb-1d41-11ee-9725-005056ae0f31"
+    }
+  }
+}
+}
+----
+
+'''
+
+[discrete]
+=== Deleting a CA certificate using its UUID when DCN cluster is configured.
+
+'''
+
+----
+
+# The API:
+/api/security/certificates/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/certificates/dad2363b-8ac0-11e8-9058-005056b482fc?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"job": {
+  "uuid": "be8d45cb-1d41-11ee-9725-005056ae0f31",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/be8d45cb-1d41-11ee-9725-005056ae0f31"
+    }
+  }
+}
+}
+----
+
+'''
+
+

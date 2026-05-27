@@ -1,0 +1,250 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-multi-admin-verify-approval-groups-.html'
+summary: 'Update a multi-admin-verify approval group'
+---
+
+= Update a multi-admin-verify approval group
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/multi-admin-verify/approval-groups/{owner.uuid}/{name}`#
+
+*Introduced In:* 9.11
+
+Updates a multi-admin-verify approval group.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|
+
+|name
+|string
+|path
+|True
+a|
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approvers
+|array[string]
+a|List of users that can approve a request.
+
+
+|email
+|array[string]
+a|Email addresses that are notified when a request is created, approved, vetoed, or executed.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the approval group. The only valid owner is currently the cluster.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "approvers": [
+    "string"
+  ],
+  "email": [
+    "string"
+  ],
+  "owner": {
+    "name": "svm1"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262331
+| At least one approver is required.
+
+| 262332
+| An add or remove list is required.
+
+| 262333
+| Invalid user in approval group.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+The owner of the approval group. The only valid owner is currently the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a POST or PATCH method.
+
+
+|===
+
+
+[#multi_admin_verify_approval_group]
+[.api-collapsible-fifth-title]
+multi_admin_verify_approval_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approvers
+|array[string]
+a|List of users that can approve a request.
+
+
+|email
+|array[string]
+a|Email addresses that are notified when a request is created, approved, vetoed, or executed.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the approval group. The only valid owner is currently the cluster.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

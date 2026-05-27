@@ -1,0 +1,563 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-gcp-kms-.html'
+summary: 'Retrieve the Google Cloud KMS configuration'
+---
+
+= Retrieve the Google Cloud KMS configuration
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/gcp-kms/{uuid}`#
+
+*Introduced In:* 9.9
+
+Retrieves the Google Cloud KMS configuration for the SVM specified by the UUID.
+
+== Related ONTAP commands
+
+* `security key-manager external gcp show`
+* `security key-manager external gcp check`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Google Cloud KMS UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authentication_method
+|string
+a|Google Cloud KMS authentication method.
+
+
+|caller_account
+|string
+a|Google Cloud KMS caller account email
+
+
+|cloudkms_host
+|string
+a|Google Cloud KMS host subdomain.
+
+
+|ekmip_reachability
+|array[link:#ekmip_reachability[ekmip_reachability]]
+a|
+
+|gce_metadata_server
+|string
+a|A custom metadata server URL used for retrieving short lived authentication tokens if the default service account is not used. This is only applicable when the `authentication_method` is set to `sa_credentials_attachment`.
+
+
+|google_reachability
+|link:#google_reachability[google_reachability]
+a|Indicates whether or not the Google Cloud KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|key_name
+|string
+a|Key Identifier of Google Cloud KMS key encryption key.
+
+
+|key_ring_location
+|string
+a|Google Cloud KMS key ring location.
+
+
+|key_ring_name
+|string
+a|Google Cloud KMS key ring name of the deployed Google Cloud application.
+
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|oauth_url
+|string
+a|Open authorization URL for the access token.
+
+
+|port
+|integer
+a|Authorization server and Google Cloud KMS port number.
+
+
+|privileged_account
+|string
+a|Google Cloud KMS account to impersonate.
+
+
+|project_id
+|string
+a|Google Cloud project (application) ID of the deployed Google Cloud application that has appropriate access to the Google Cloud KMS.
+
+
+|proxy_host
+|string
+a|Proxy host name.
+
+
+|proxy_port
+|integer
+a|Proxy port number.
+
+
+|proxy_type
+|string
+a|Type of proxy.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|state
+|link:#state[state]
+a|Google Cloud Key Management Services is a cloud key management service (KMS) that provides a secure store for encryption keys. This object indicates whether or not the Google Cloud KMS key protection is available on all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|A unique identifier for the Google Cloud KMS.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the Google Cloud KMS host name.
+
+
+|verify_ip
+|boolean
+a|Verify the identity of the Google Cloud KMS IP address.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "authentication_method": "application_credentials_key",
+  "caller_account": "myaccount@myproject.com",
+  "cloudkms_host": "cloudkms.googleapis.com",
+  "ekmip_reachability": [
+    {
+      "code": "346758",
+      "message": "embedded KMIP server status unavailable on node.",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "gce_metadata_server": "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token",
+  "google_reachability": {
+    "code": "346758",
+    "message": "Google Cloud KMS is not reachable from all nodes - <reason>."
+  },
+  "key_name": "cryptokey1",
+  "key_ring_location": "global",
+  "key_ring_name": "gcpapp1-keyring",
+  "oauth_host": "oauth2.googleapis.com",
+  "oauth_url": "https://oauth2.googleapis.com/token",
+  "port": 443,
+  "privileged_account": "myserviceaccount@myproject.iam.gserviceaccount.com",
+  "project_id": "gcpapp1",
+  "proxy_host": "proxy.eng.com",
+  "proxy_port": 1234,
+  "proxy_type": "http",
+  "proxy_username": "proxyuser",
+  "scope": "string",
+  "state": {
+    "code": "346758",
+    "message": "Top-level internal key protection key (KEK) is unavailable on the following nodes with the associated reasons: Node: node1. Reason: No volumes created yet for the SVM. Wrapped KEK status will be available after creating encrypted volumes."
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65537551
+| Top-level internal key protection key (KEK) unavailable on one or more nodes.
+
+| 65537552
+| Embedded KMIP server status not available.
+
+| 65537730
+| The Google Cloud Key Management Service is unreachable from one or more nodes.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ekmip_reachability]
+[.api-collapsible-fifth-title]
+ekmip_reachability
+
+Provides the connectivity status for the given SVM on the given node to all EKMIP servers configured on all nodes of the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if a given SVM is able to communicate to the EKMIP servers of all of the nodes in the cluster.
+
+
+|message
+|string
+a|Error message set when cluster-wide EKMIP server availability from the given SVM and node is false.
+
+
+|node
+|link:#node[node]
+a|
+
+|reachable
+|boolean
+a|Set to true if the given SVM on the given node is able to communicate to all EKMIP servers configured on all nodes in the cluster.
+
+
+|===
+
+
+[#google_reachability]
+[.api-collapsible-fifth-title]
+google_reachability
+
+Indicates whether or not the Google Cloud KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if Google Cloud KMS is reachable from all nodes in the cluster.
+
+
+|message
+|string
+a|Set to the error message when 'reachable' is false.
+
+
+|reachable
+|boolean
+a|Set to true if the Google Cloud KMS is reachable from all nodes of the cluster.
+
+
+|===
+
+
+[#state]
+[.api-collapsible-fifth-title]
+state
+
+Google Cloud Key Management Services is a cloud key management service (KMS) that provides a secure store for encryption keys. This object indicates whether or not the Google Cloud KMS key protection is available on all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_state
+|boolean
+a|Set to true when Google Cloud KMS key protection is available on all nodes of the cluster.
+
+
+|code
+|string
+a|Error code corresponding to the status message. Returns 0 if Google Cloud KMS key protection is available in all nodes of the cluster.
+
+
+|message
+|string
+a|Error message set when top-level internal key protection key (KEK) availability on cluster is false.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

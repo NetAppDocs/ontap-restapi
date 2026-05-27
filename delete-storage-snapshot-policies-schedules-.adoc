@@ -1,0 +1,174 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-storage-snapshot-policies-schedules-.html'
+summary: 'Delete a schedule from a snapshot policy'
+---
+
+= Delete a schedule from a snapshot policy
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/storage/snapshot-policies/{snapshot_policy.uuid}/schedules/{schedule.uuid}`#
+
+*Introduced In:* 9.8
+
+Deletes a schedule from a snapshot policy
+
+== Related ONTAP commands
+
+* `snapshot policy remove-schedule`
+
+== Learn more
+
+* link:storage_snapshot-policies_snapshot_policy.uuid_schedules_endpoint_overview.html[DOC /storage/snapshot-policies/{snapshot_policy.uuid}/schedules]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|snapshot_policy.uuid
+|string
+|path
+|True
+a|Snapshot policy UUID
+
+
+|schedule.uuid
+|string
+|path
+|True
+a|Snapshot policy schedule UUID
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Code
+
+|===
+| Error Code | Description
+
+| 1638411
+| At least minimum number of schedule must be specified for the policy.
+
+| 1638412
+| Schedule does not exist in snapshot policy.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

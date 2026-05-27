@@ -1,0 +1,437 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-s3-services-users-.html'
+summary: 'Update an S3 user configuration'
+---
+
+= Update an S3 user configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/users/{name}`#
+
+*Introduced In:* 9.7
+
+Updates the S3 user configuration of an SVM.
+
+== Important notes
+
+* User access_key and secret_key pair can be regenerated using the PATCH operation.
+* User access_key and secret_key is returned in a PATCH operation if the "regenerate_keys" field is specified as true.
+* If "regenerate_keys" is true and user keys have expiry configuration, then "key_expiry_time" is also returned as part of response.
+* User access_key and secret_key pair can be deleted using the PATCH operation.
+
+== Recommended optional properties
+
+* `regenerate_keys` - Specifies if secret_key and access_key need to be regenerated.
+* `delete_keys` - Specifies if secret_key and access_key need to be deleted.
+* `comment` - Any information related to the S3 user.
+
+== Related ONTAP commands
+
+* `vserver object-store-server user show`
+* `vserver object-store-server user regenerate-keys`
+* `vserver object-store-server user delete-keys`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_users_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/users]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|User name
+
+
+|regenerate_keys
+|boolean
+|query
+|False
+a|Specifies whether or not to regenerate the user keys.
+
+* Default value:
+
+
+|delete_keys
+|boolean
+|query
+|False
+a|Specifies whether or not to delete the user keys.
+
+* Introduced in: 9.14
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|comment
+|string
+a|Can contain any additional information about the user being created or modified.
+
+
+|key_expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|key_time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys won't expire.
+
+
+|secret_key
+|string
+a|Specifies the secret key for the user.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "access_key": "<AWS-ACCESS-KEY-ID>",
+  "comment": "S3 user",
+  "key_expiry_time": "2024-01-01 00:00:00 +0000",
+  "key_time_to_live": "PT6H3M",
+  "secret_key": "<AWS-SECRET-ACCESS-KEY>",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#s3_service_user_post_response[s3_service_user_post_response]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "access_key": "<AWS-ACCESS-KEY-ID>",
+      "key_expiry_time": "2024-01-01 00:00:00 +0000",
+      "name": "user-1",
+      "secret_key": "<AWS-SECRET-ACCESS-KEY>"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 92405792
+| Failed to regenerate access-key and secret-key for user.
+
+| 92406082
+| Cannot perform "regenerate_keys" and "delete_keys" operations simultaneously on an S3 user.
+
+| 92406081
+| The "regenerate_keys" operation on S3 User "user-2" in SVM "vs1" succeeded. However, modifying all of the other S3 user properties failed. Reason: resource limit exceeded. Retry the operation again without specifying the "regenerate_keys" parameter.
+
+| 92406080
+| Cannot delete root user keys because there exists at least one S3 SnapMirror relationship that is using these keys.
+
+| 92406083
+| The maximum supported value for user key expiry configuration is "1095" days.
+
+| 92406088
+| The "key_time_to_live" parameter can only be used when the "regenerate_keys" operation is performed.
+
+| 92406096
+| The user does not have permission to access the requested resource \"\{0}\".
+
+| 92406097
+| Internal error. The operation configuration is not correct.
+
+| 92406196
+| The specified value for the "key_time_to_live" field cannot be greater than the maximum limit specified for the "max_key_time_to_live" field in the object store server.
+|===
+
+| 92406197   | Object store user "user-2" must have a non-zero value for the "key_time_to_live" field because the maximum limit specified for the "max_key_time_to_live" field in the object store server is not zero.
+| 92406200   | An object store user with the same access-key already exists. |
+| 92406201   | Missing access-key or secret-key. Either provide both of the keys or none. If not provided, keys are generated automatically. |
+| 92406202   | The "delete_keys" operation must be performed without specifying the user keys. |
+| 92406205   | The object store user access key contains invalid characters. Valid characters are 0-9 and A-Z. |
+| 92406308   | Cannot disable user "user1" in SVM "vs1" because the user belongs to at least one object store group. Remove the user from all groups before disabling the user. |
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#s3_user]
+[.api-collapsible-fifth-title]
+s3_user
+
+This is a container of S3 users.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|comment
+|string
+a|Can contain any additional information about the user being created or modified.
+
+
+|key_expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|key_time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys won't expire.
+
+
+|secret_key
+|string
+a|Specifies the secret key for the user.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+[#s3_service_user_post_response]
+[.api-collapsible-fifth-title]
+s3_service_user_post_response
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|key_expiry_time
+|string
+a|Specifies the date and time after which the keys expire and are no longer valid.
+
+
+|name
+|string
+a|The name of the user.
+
+
+|secret_key
+|string
+a|Specifies the secret key for the user.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

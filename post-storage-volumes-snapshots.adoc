@@ -1,0 +1,698 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-volumes-snapshots.html'
+summary: 'Create a volume snapshot'
+---
+
+= Create a volume snapshot
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/volumes/{volume.uuid}/snapshots`#
+
+*Introduced In:* 9.6
+
+Creates a volume snapshot.
+
+== Required properties
+
+* `name` - Name of the snapshot to be created.
+
+== Recommended optional properties
+
+* `comment` - Comment associated with the snapshot.
+* `expiry_time` - snapshots with an expiry time set are not allowed to be deleted until the retention time is reached.
+* `snapmirror_label` - Label for SnapMirror operations.
+* `snaplock_expiry_time` - Expiry time for snapshot locking enabled volumes.
+
+== Related ONTAP commands
+
+* `snapshot create`
+
+== Learn more
+
+* link:storage_volumes_volume.uuid_snapshots_endpoint_overview.html[DOC /storage/volumes/{volume.uuid}/snapshots]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|volume.uuid
+|string
+|path
+|True
+a|Volume UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment associated with the snapshot. This is an optional attribute for POST or PATCH.
+
+
+|compress_savings
+|integer
+a|Savings due to compression at the time the snapshot was taken in bytes.
+
+
+|create_time
+|string
+a|Creation time of the snapshot. It is the volume access time when the snapshot was created.
+
+
+|dedup_savings
+|integer
+a|Savings due to dedup at the time the snapshot was taken in bytes.
+
+
+|delta
+|link:#snapshot_delta[snapshot_delta]
+a|Reports the amount of space consumed between two WAFL file systems, in bytes. The two WAFL file systems should be specified in a comma-separated format using the "name" parameter. To determine the space consumed between a snapshot and the Active File System, only the snapshot name needs to be mentioned.
+
+
+|expiry_time
+|string
+a|The expiry time for the snapshot. This is an optional attribute for POST or PATCH. Snapshots with an expiry time set are not allowed to be deleted until the retention time is reached.
+
+
+|logical_size
+|integer
+a|Size of the logical used file system at the time the snapshot is captured.
+
+
+|name
+|string
+a|Snapshot. Valid in POST or PATCH.
+
+
+|owners
+|array[string]
+a|
+
+|provenance_volume
+|link:#provenance_volume[provenance_volume]
+a|
+
+|reclaimable_space
+|integer
+a|Space reclaimed when the snapshot is deleted, in bytes.
+
+
+|size
+|integer
+a|Size of the active file system at the time the snapshot is captured. The actual size of the snapshot also includes those blocks trapped by other snapshots. On a snapshot deletion, the "size" amount of blocks is the maximum number of blocks available. On a snapshot restore, the "afs-used size" value will match the snapshot "size" value.
+
+
+|snaplock
+|link:#snaplock[snaplock]
+a|
+
+|snaplock_expiry_time
+|string
+a|SnapLock expiry time for the snapshot, if the snapshot is taken on a SnapLock volume. A snapshot is not allowed to be deleted or renamed until the SnapLock ComplianceClock time goes beyond this retention time. This option can be set during snapshot POST and snapshot PATCH on snapshot locking enabled volumes. This field will no longer be supported in a future release. Use snaplock.expiry_time instead.
+
+
+|snapmirror_label
+|string
+a|Label for SnapMirror operations
+
+
+|state
+|string
+a|State of the FlexGroup volume snapshot. In the "pre_conversion" state, the snapshot was created before converting the FlexVol to a FlexGroup volume. A recently created snapshot can be in the "unknown" state while the system is calculating the state. In the "partial" state, the snapshot is consistent but exists only on the subset of the constituents that existed prior to the FlexGroup's expansion. Partial snapshots cannot be used for a snapshot restore operation. A snapshot is in an "invalid" state when it is present in some FlexGroup constituents but not in others. At all other times, a snapshot is valid.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The UUID of the snapshot in the volume that uniquely identifies the snapshot in that volume.
+
+
+|vbn0_savings
+|integer
+a|Savings due vbn0 at the time the snapshot was taken in bytes.
+
+
+|version_uuid
+|string
+a|The 128 bit identifier that uniquely identifies a snapshot and its logical data layout.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "compress_savings": 1131223,
+  "create_time": "2019-02-04 19:00:00 +0000",
+  "dedup_savings": 1131223,
+  "delta": {
+    "size_consumed": 0,
+    "time_elapsed": "string"
+  },
+  "expiry_time": "2019-02-04 19:00:00 +0000",
+  "logical_size": 1228800,
+  "name": "this_snapshot",
+  "owners": [
+    "string"
+  ],
+  "provenance_volume": {
+    "uuid": "4cd8a442-86d1-11e0-ae1c-125648563413"
+  },
+  "size": "122880",
+  "snaplock": {
+    "expired": 1,
+    "expiry_time": "2019-02-04 19:00:00 +0000",
+    "time_until_expiry": "PT3H27M45S"
+  },
+  "snaplock_expiry_time": "2019-02-04 19:00:00 +0000",
+  "snapmirror_label": "string",
+  "state": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "vbn0_savings": 1131223,
+  "version_uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Code
+
+|===
+| Error Code | Description
+
+| 524479
+| The specified volume is not online or does not have enough space to create a snapshot.
+
+| 1520351
+| Snapshot operation is not allowed.
+
+| 525062
+| Cannot exceed maximum number of snapshots.
+
+| 2621462
+| The specified SVM name does not exist.
+
+| 525059
+| A snapshot with the specified name already exists.
+
+| 1638461
+| Snapshots can only be created on read/write (RW) volumes.
+
+| 1638477
+| User-created snapshot names cannot begin with the specified prefix.
+
+| 1638518
+| The specified snapshot name is invalid.
+
+| 1638532
+| Failed to create the snapshot on the specified volume because a revert operation is in progress.
+
+| 1638537
+| Cannot determine the status of the snapshot create operation for the specified volume.
+
+| 1638574
+| The "expiry-time" parameter is not supported for FlexGroup volumes.
+
+| 1638616
+| Bulk snapshot create is not supported with multiple snapshot names.
+
+| 1638617
+| Bulk snapshot create is not supported with volume names in a mixed-version cluster.
+
+| 1638618
+| The property cannot be specified for snapshot create.
+
+| 1638630
+| Snapshot create operation is not supported on destination of SnapMirror active sync relationship with policy-type "automated-failover-duplex".
+
+| 1638644
+| POST, DELETE, and PATCH requests on the snapshot session endpoint are not supported on this platform.
+
+| 92405873
+| Unable to create the snapshot for object store volumes.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#snapshot_delta]
+[.api-collapsible-fifth-title]
+snapshot_delta
+
+Reports the amount of space consumed between two WAFL file systems, in bytes. The two WAFL file systems should be specified in a comma-separated format using the "name" parameter. To determine the space consumed between a snapshot and the Active File System, only the snapshot name needs to be mentioned.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size_consumed
+|integer
+a|Indicates the space that has changed between two specified WAFL file systems, in bytes.
+
+
+|time_elapsed
+|string
+a|Time elapsed between two specified WAFL file systems.
+
+
+|===
+
+
+[#provenance_volume]
+[.api-collapsible-fifth-title]
+provenance_volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|UUID for the volume that is used to identify the source volume in a mirroring relationship. When the mirroring relationship is broken, a volume's Instance UUID and Provenance UUID are made identical. An unmirrored volume's Provenance UUID is the same as its Instance UUID. This field is valid for flexible volumes only.
+
+
+|===
+
+
+[#snaplock]
+[.api-collapsible-fifth-title]
+snaplock
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expired
+|boolean
+a|Indicates whether a SnapLock snapshot has expired.
+
+
+|expiry_time
+|string
+a|SnapLock expiry time for the snapshot, if the snapshot is taken on a SnapLock volume. A snapshot is not allowed to be deleted or renamed until the SnapLock ComplianceClock time goes beyond this retention time. This option can be set during snapshot POST and snapshot PATCH on snapshot locking enabled volumes. It can also be used to extend the expiry time of a locked snapshot on a SnapLock for SnapVault destination consistency-group.
+
+
+|time_until_expiry
+|string
+a|Indicates the remaining SnapLock expiry time of a locked snapshot, in seconds. This field is set only when the remaining time interval is less than 136 years.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+The snapshot object represents a point in time snapshot of a volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment associated with the snapshot. This is an optional attribute for POST or PATCH.
+
+
+|compress_savings
+|integer
+a|Savings due to compression at the time the snapshot was taken in bytes.
+
+
+|create_time
+|string
+a|Creation time of the snapshot. It is the volume access time when the snapshot was created.
+
+
+|dedup_savings
+|integer
+a|Savings due to dedup at the time the snapshot was taken in bytes.
+
+
+|delta
+|link:#snapshot_delta[snapshot_delta]
+a|Reports the amount of space consumed between two WAFL file systems, in bytes. The two WAFL file systems should be specified in a comma-separated format using the "name" parameter. To determine the space consumed between a snapshot and the Active File System, only the snapshot name needs to be mentioned.
+
+
+|expiry_time
+|string
+a|The expiry time for the snapshot. This is an optional attribute for POST or PATCH. Snapshots with an expiry time set are not allowed to be deleted until the retention time is reached.
+
+
+|logical_size
+|integer
+a|Size of the logical used file system at the time the snapshot is captured.
+
+
+|name
+|string
+a|Snapshot. Valid in POST or PATCH.
+
+
+|owners
+|array[string]
+a|
+
+|provenance_volume
+|link:#provenance_volume[provenance_volume]
+a|
+
+|reclaimable_space
+|integer
+a|Space reclaimed when the snapshot is deleted, in bytes.
+
+
+|size
+|integer
+a|Size of the active file system at the time the snapshot is captured. The actual size of the snapshot also includes those blocks trapped by other snapshots. On a snapshot deletion, the "size" amount of blocks is the maximum number of blocks available. On a snapshot restore, the "afs-used size" value will match the snapshot "size" value.
+
+
+|snaplock
+|link:#snaplock[snaplock]
+a|
+
+|snaplock_expiry_time
+|string
+a|SnapLock expiry time for the snapshot, if the snapshot is taken on a SnapLock volume. A snapshot is not allowed to be deleted or renamed until the SnapLock ComplianceClock time goes beyond this retention time. This option can be set during snapshot POST and snapshot PATCH on snapshot locking enabled volumes. This field will no longer be supported in a future release. Use snaplock.expiry_time instead.
+
+
+|snapmirror_label
+|string
+a|Label for SnapMirror operations
+
+
+|state
+|string
+a|State of the FlexGroup volume snapshot. In the "pre_conversion" state, the snapshot was created before converting the FlexVol to a FlexGroup volume. A recently created snapshot can be in the "unknown" state while the system is calculating the state. In the "partial" state, the snapshot is consistent but exists only on the subset of the constituents that existed prior to the FlexGroup's expansion. Partial snapshots cannot be used for a snapshot restore operation. A snapshot is in an "invalid" state when it is present in some FlexGroup constituents but not in others. At all other times, a snapshot is valid.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The UUID of the snapshot in the volume that uniquely identifies the snapshot in that volume.
+
+
+|vbn0_savings
+|integer
+a|Savings due vbn0 at the time the snapshot was taken in bytes.
+
+
+|version_uuid
+|string
+a|The 128 bit identifier that uniquely identifies a snapshot and its logical data layout.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

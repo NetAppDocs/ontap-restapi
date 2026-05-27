@@ -1,0 +1,518 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-file-clone-split-loads.html'
+summary: 'Retrieve the clone split load of a node'
+---
+
+= Retrieve the clone split load of a node
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/file/clone/split-loads`#
+
+*Introduced In:* 9.10
+
+Retrieves the clone split load of a node.
+
+== Related Ontap Commands
+
+* `volume file clone split load show`
+
+== Retrieving file clone split load related information
+
+The GET operation can be used to retrieve information about clone split load data. Split load data is the data currently undergoing the split. There is a limit on split load data. This API communicates how much data is undergoing split and how much can still be processed.
+
+----
+
+# The API:
+/api/storage/file/clone/split-loads
+
+# The call:
+curl -X GET "https://<mgmt_ip>/api/storage/file/clone/split-loads" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "158d592f-a829-11eb-a47b-005056bb46d7",
+      "name": "node1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/158d592f-a829-11eb-a47b-005056bb46d7"
+        }
+      }
+    },
+    "load": {
+      "maximum": 35184372088832,
+      "current": 0,
+      "token_reserved": 0,
+      "allowable": 35184372088832
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/file/clone/split-loads/158d592f-a829-11eb-a47b-005056bb46d7"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "9686b8d1-a828-11eb-80d8-005056bbe7b6",
+      "name": "node2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/9686b8d1-a828-11eb-80d8-005056bbe7b6"
+        }
+      }
+    },
+    "load": {
+      "maximum": 35184372088832,
+      "current": 0,
+      "token_reserved": 0,
+      "allowable": 35184372088832
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/file/clone/split-loads/9686b8d1-a828-11eb-80d8-005056bbe7b6"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links":
+  "self": {
+    "href": "/api/storage/file/clone/split-loads"
+  }
+}
+}
+----
+
+== Learn More
+
+* [`DOC /storage/file/clone`]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|load.allowable
+|integer
+|query
+|False
+a|Filter by load.allowable
+
+
+|load.token_reserved
+|integer
+|query
+|False
+a|Filter by load.token_reserved
+
+
+|load.maximum
+|integer
+|query
+|False
+a|Filter by load.maximum
+
+
+|load.current
+|integer
+|query
+|False
+a|Filter by load.current
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#split_load[split_load]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "load": {
+        "allowable": "4KB",
+        "current": 0,
+        "maximum": "4KB",
+        "token_reserved": 0
+      },
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#load]
+[.api-collapsible-fifth-title]
+load
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allowable
+|integer
+a|Specifies the available file clone split load on the node.
+
+
+|current
+|integer
+a|Specifies the current on-going file clone split load on the node.
+
+
+|maximum
+|integer
+a|Specifies the maximum allowable file clone split load on the node at any point in time. The least allowable file clone split load is 4KB and the maximum is 675TB. The default value is 4KB for the maximum split load when unit is not specified. The default file clone split load is set based on the system configuration.
+
+
+|token_reserved
+|integer
+a|Specifies the file clone split load on the node reserved for tokens.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#split_load]
+[.api-collapsible-fifth-title]
+split_load
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|load
+|link:#load[load]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

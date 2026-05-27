@@ -1,0 +1,846 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-ipsec-policies.html'
+summary: 'Retrieve IPsec policies'
+---
+
+= Retrieve IPsec policies
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/ipsec/policies`#
+
+*Introduced In:* 9.8
+
+Retrieves the collection of IPsec policies.
+
+== Related ONTAP commands
+
+* `security ipsec policy show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|authentication_method
+|string
+|query
+|False
+a|Filter by authentication_method
+
+* Introduced in: 9.10
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|local_identity
+|string
+|query
+|False
+a|Filter by local_identity
+
+
+|protocol
+|string
+|query
+|False
+a|Filter by protocol
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 64
+* minLength: 1
+
+
+|certificate_modify_keepsa
+|boolean
+|query
+|False
+a|Filter by certificate_modify_keepsa
+
+* Introduced in: 9.18
+
+
+|remote_endpoint.netmask
+|string
+|query
+|False
+a|Filter by remote_endpoint.netmask
+
+
+|remote_endpoint.port
+|string
+|query
+|False
+a|Filter by remote_endpoint.port
+
+
+|remote_endpoint.address
+|string
+|query
+|False
+a|Filter by remote_endpoint.address
+
+
+|remote_endpoint.family
+|string
+|query
+|False
+a|Filter by remote_endpoint.family
+
+
+|remote_identity
+|string
+|query
+|False
+a|Filter by remote_identity
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|certificate.name
+|string
+|query
+|False
+a|Filter by certificate.name
+
+* Introduced in: 9.10
+
+
+|certificate.uuid
+|string
+|query
+|False
+a|Filter by certificate.uuid
+
+* Introduced in: 9.10
+
+
+|local_endpoint.netmask
+|string
+|query
+|False
+a|Filter by local_endpoint.netmask
+
+
+|local_endpoint.port
+|string
+|query
+|False
+a|Filter by local_endpoint.port
+
+
+|local_endpoint.address
+|string
+|query
+|False
+a|Filter by local_endpoint.address
+
+
+|local_endpoint.family
+|string
+|query
+|False
+a|Filter by local_endpoint.family
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|ipspace.name
+|string
+|query
+|False
+a|Filter by ipspace.name
+
+
+|ipspace.uuid
+|string
+|query
+|False
+a|Filter by ipspace.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|ppk.identity
+|string
+|query
+|False
+a|Filter by ppk.identity
+
+* Introduced in: 9.17
+* maxLength: 64
+* minLength: 6
+
+
+|action
+|string
+|query
+|False
+a|Filter by action
+
+* Introduced in: 9.15
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|error
+|link:#error[error]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "action": "string",
+      "authentication_method": "string",
+      "certificate": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "string",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "ipspace": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "local_endpoint": {
+        "address": "10.10.10.7",
+        "family": "string",
+        "netmask": "24",
+        "port": "23"
+      },
+      "local_identity": "string",
+      "name": "string",
+      "ppk": {
+        "identity": "string"
+      },
+      "protocol": "17",
+      "remote_endpoint": {
+        "address": "10.10.10.7",
+        "family": "string",
+        "netmask": "24",
+        "port": "23"
+      },
+      "remote_identity": "string",
+      "scope": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Certificate for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#local_endpoint]
+[.api-collapsible-fifth-title]
+local_endpoint
+
+Local endpoint for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|family
+|string
+a|IPv4 or IPv6
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|port
+|string
+a|Application port to be covered by the IPsec policy
+
+
+|===
+
+
+[#ppk]
+[.api-collapsible-fifth-title]
+ppk
+
+Post-quantum pre-shared key information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|identity
+|string
+a|Post-quantum pre-shared key identity.
+
+
+|===
+
+
+[#remote_endpoint]
+[.api-collapsible-fifth-title]
+remote_endpoint
+
+Remote endpoint for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|family
+|string
+a|IPv4 or IPv6
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|port
+|string
+a|Application port to be covered by the IPsec policy
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+IPsec policy object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Action for the IPsec policy.
+
+
+|authentication_method
+|string
+a|Authentication method for the IPsec policy.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate for the IPsec policy.
+
+
+|certificate_modify_keepsa
+|boolean
+a|Indicates whether old security associations are kept upon certificate modification.
+
+
+|enabled
+|boolean
+a|Indicates whether or not the policy is enabled.
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+|local_endpoint
+|link:#local_endpoint[local_endpoint]
+a|Local endpoint for the IPsec policy.
+
+
+|local_identity
+|string
+a|Local Identity
+
+
+|name
+|string
+a|IPsec policy name.
+
+
+|ppk
+|link:#ppk[ppk]
+a|Post-quantum pre-shared key information.
+
+
+|protocol
+|string
+a|Lower layer protocol to be covered by the IPsec policy.
+
+
+|remote_endpoint
+|link:#remote_endpoint[remote_endpoint]
+a|Remote endpoint for the IPsec policy.
+
+
+|remote_identity
+|string
+a|Remote Identity
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|Unique identifier of the IPsec policy.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

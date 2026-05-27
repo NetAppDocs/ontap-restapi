@@ -1,0 +1,485 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_ldap_endpoint_overview.html'
+summary: 'Manage LDAP server configurations'
+---
+
+= Manage LDAP server configurations
+
+
+
+== Overview
+
+LDAP servers are used to centrally maintain user information. LDAP configurations must be set up
+to lookup information stored in the LDAP directory on the external LDAP servers. This API is used to retrieve and manage
+LDAP server configurations.
+
+== Retrieving LDAP information
+
+The LDAP GET endpoint retrieves all of the LDAP configurations in the cluster.
+
+== Examples
+
+=== Retrieving all of the fields for all LDAP configurations
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap?fields=**" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "servers": [
+      "10.10.10.10",
+      "domainB.example.com"
+    ],
+    "schema": "ad_idmu",
+    "port": 389,
+    "ldaps_enabled": false,
+    "min_bind_level": "anonymous",
+    "bind_dn": "cn=Administrators,cn=users,dc=domainA,dc=example,dc=com",
+    "base_dn": "dc=domainA,dc=example,dc=com",
+    "base_scope": "subtree",
+    "use_start_tls": true,
+    "session_security": "none",
+    "referral_enabled": false,
+    "bind_as_cifs_server": false,
+    "query_timeout": 3,
+    "is_owner": true,
+    "user_scope": "subtree",
+    "group_scope": "subtree",
+    "netgroup_scope": "subtree",
+    "is_netgroup_byhost_enabled": false,
+    "netgroup_byhost_scope": "subtree",
+    "group_membership_filter": "",
+    "status": {
+      "state": "down",
+      "message": "The LDAP configuration is invalid. Verify that the AD domain or servers are reachable and that the network configuration is correct",
+      "dn_message": [
+        "No LDAP DN configured"
+      ],
+      "code": 4915258,
+      "ipv4_state": "down",
+      "ipv6_state": "down"
+    },
+    "try_channel_binding": true,
+    "restrict_discovery_to_site" : false,
+    "_links": {
+      "self": {
+        "href": "/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "6a52023b-7066-11e8-b9b8-005056b41bd1",
+      "name": "vs2",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/6a52023b-7066-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "ad_domain": "example.com",
+    "schema": "rfc_2307",
+    "port": 389,
+    "ldaps_enabled": false,
+    "min_bind_level": "simple",
+    "bind_dn": "cn=Administrators,cn=users,dc=domainB,dc=example,dc=com",
+    "base_dn": "dc=domainB,dc=example,dc=com",
+    "base_scope": "subtree",
+    "use_start_tls": true,
+    "session_security": "sign",
+    "referral_enabled": false,
+    "bind_as_cifs_server": false,
+    "query_timeout": 0,
+    "is_owner": true,
+    "user_scope": "subtree",
+    "group_scope": "subtree",
+    "netgroup_scope": "subtree",
+    "is_netgroup_byhost_enabled": false,
+    "netgroup_byhost_scope": "subtree",
+    "group_membership_filter": "",
+    "status": {
+      "state": "up",
+      "message": "Successfully connected to LDAP server \"172.20.192.44\". Successfully connected to LDAP server \"fd20:8b1e:b255:5056:999:d9:516c:bf69\".",
+      "dn_message": [
+        "All the configured DNs are available."
+      ],
+      "code": 0,
+      "ipv4_state": "up",
+      "ipv6_state": "up"
+    },
+    "try_channel_binding": true,
+    "restrict_discovery_to_site": true,
+    "_links": {
+      "self": {
+        "href": "/api/name-services/ldap/6a52023b-7066-11e8-b9b8-005056b41bd1"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/name-services/ldap?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all of the LDAP configurations that have the _use_start_tls_ set to _true_
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap?use_start_tls=true" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "6a52023b-7066-11e8-b9b8-005056b41bd1",
+      "name": "vs2",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/6a52023b-7066-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "use_start_tls": true,
+    "_links": {
+      "self": {
+        "href": "/api/name-services/ldap/6a52023b-7066-11e8-b9b8-005056b41bd1"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/name-services/ldap?use_start_tls=true"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the LDAP configuration of a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"servers": [
+  "10.10.10.10",
+  "domainB.example.com"
+],
+"schema": "ad_idmu",
+"port": 389,
+"ldaps_enabled": false,
+"min_bind_level": "anonymous",
+"bind_dn": "cn=Administrators,cn=users,dc=domainA,dc=example,dc=com",
+"base_dn": "dc=domainA,dc=example,dc=com",
+"base_scope": "subtree",
+"use_start_tls": true,
+"referral_enabled": false,
+"session_security": "none",
+"bind_as_cifs_server": true,
+"query_timeout": 3,
+"is_owner": true,
+"try_channel_binding": true,
+"restrict_discovery_to_site": false,
+"_links": {
+  "self": {
+    "href": "/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all the fields of the LDAP configuration of a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1?fields=**" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"servers": [
+  "10.10.10.10",
+  "domainB.example.com"
+],
+"schema": "ad_idmu",
+"port": 389,
+"ldaps_enabled": false,
+"min_bind_level": "anonymous",
+"bind_dn": "cn=Administrators,cn=users,dc=domainA,dc=example,dc=com",
+"base_dn": "dc=domainA,dc=example,dc=com",
+"base_scope": "subtree",
+"use_start_tls": true,
+"referral_enabled": false,
+"session_security": "none",
+"bind_as_cifs_server": true,
+"query_timeout": 3,
+"is_owner": true,
+"user_scope": "subtree",
+"group_scope": "subtree",
+"netgroup_scope": "subtree",
+"is_netgroup_byhost_enabled": false,
+"netgroup_byhost_scope": "subtree",
+"group_membership_filter": "",
+"try_channel_binding": true,
+"restrict_discovery_to_site": false,
+"status": {
+  "state": "down",
+  "message": "The LDAP configuration is invalid. Verify that the AD domain or servers are reachable and that the network configuration is correct",
+  "dn_message": [
+    "No LDAP DN configured"
+  ],
+  "code": 4915258,
+  "ipv4_state": "down",
+  "ipv6_state": "down"
+},
+"_links": {
+  "self": {
+    "href": "/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the LDAP server status of a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap/9e4a2e3b-f66f-11ea-aec8-0050568e155c?fields=status" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "9e4a2e3b-f66f-11ea-aec8-0050568e155c",
+  "name": "vs2"
+},
+"status": {
+  "state": "up",
+  "message": "Successfully connected to LDAP server \"172.20.192.44\". Successfully connected to LDAP server \"fd20:8b1e:b255:5056:999:d9:516c:bf69\".",
+  "code": 0,
+  "ipv4_state": "up",
+  "ipv6_state": "up"
+}
+}
+----
+
+'''
+
+=== Retrieving all of the LDAP configurations that have the _restrict_discovery_to_site_ set to _true_
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/ldap?restrict_discovery_to_site=true" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "6a52023b-7066-11e8-b9b8-005056b41bd1",
+      "name": "vs2",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/6a52023b-7066-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "restrict_discovery_to_site": true,
+    "_links": {
+      "self": {
+        "href": "/api/name-services/ldap/6a52023b-7066-11e8-b9b8-005056b41bd1"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/name-services/ldap?restrict_discovery_to_site=true"
+  }
+}
+}
+----
+
+'''
+
+== Creating an LDAP configuration
+
+The LDAP POST endpoint creates an LDAP configuration for the specified SVM.
+
+== Examples
+
+=== Creating an LDAP configuration with all the fields specified
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/ldap" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"uuid\": \"179d3c85-7053-11e8-b9b8-005056b41bd1\" }, \"servers\": [ \"10.10.10.10\", \"domainB.example.com\" ], \"schema\": \"ad_idmu\", \"port\": 389, \"ldaps_enabled\": false, \"min_bind_level\": \"anonymous\", \"bind_dn\": \"cn=Administrators,cn=users,dc=domainA,dc=example,dc=com\", \"bind_password\": \"abc\", \"base_dn\": \"dc=domainA,dc=example,dc=com\", \"base_scope\": \"subtree\", \"use_start_tls\": false, \"session_security\": \"none\", \"referral_enabled\": false, \"bind_as_cifs_server\": false, \"query_timeout\": 4, \"user_dn\": \"cn=abc,users,dc=com\", \"user_scope\": \"subtree\", \"group_dn\": \"cn=abc,users,dc=com\", \"group_scope\": \"subtree\", \"netgroup_dn\": \"cn=abc,users,dc=com\", \"netgroup_scope\": \"subtree\", \"netgroup_byhost_dn\": \"cn=abc,users,dc=com\", \"netgroup_byhost_scope\": \"subtree\", \"is_netgroup_byhost_enabled\": false, \"group_membership_filter\": \"\", \"skip_config_validation\": false } "
+----
+
+'''
+
+=== Creating an LDAP configuration with Active Directory domain and preferred Active Directory servers specified
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/ldap" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"name\": \"vs2\" }, \"ad_domain\": \"domainA.example.com\", \"preferred_ad_servers\": [ \"11.11.11.11\" ], \"port\": 389, \"ldaps_enabled\": false, \"bind_dn\": \"cn=Administrators,cn=users,dc=domainA,dc=example,dc=com\", \"bind_password\": \"abc\", \"base_dn\": \"dc=domainA,dc=example,dc=com\", \"session_security\": \"none\", \"referral_enabled\": false, \"query_timeout\": 3}"
+----
+
+'''
+
+=== Creating an LDAP configuration with a number of optional fields not specified
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/ldap" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"name\": \"vs2\" }, \"servers\": [ \"11.11.11.11\" ], \"port\": 389, \"bind_dn\": \"cn=Administrators,cn=users,dc=domainA,dc=example,dc=com\", \"bind_password\": \"abc\", \"base_dn\": \"dc=domainA,dc=example,dc=com\", \"session_security\": \"none\"}"
+----
+
+'''
+
+=== Creating an LDAP configuration with Active Directory domain specified and _restrict_discovery_to_site_ set to _true_
+
+'''
+
+----
+
+# The API:
+/api/name-services/ldap
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/ldap" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"svm\": { \"name\": \"vs2\" }, \"ad_domain\": \"example.com\", \"port\": 389, \"bind_dn\": \"cn=Administrators,cn=users,dc=domainA,dc=example,dc=com\", \"bind_password\": \"abc\", \"base_dn\": \"dc=domainA,dc=example,dc=com\", \"session_security\": \"none\", \"restrict_discovery_to_site\": true}"
+----
+
+'''
+
+== Updating an LDAP configuration
+
+The LDAP PATCH endpoint updates the LDAP configuration for the specified SVM. The following example shows a PATCH operation:
+
+----
+
+# The API:
+/api/name-services/ldap/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"servers\": [ \"55.55.55.55\" ], \"schema\": \"ad_idmu\", \"port\": 636, \"ldaps_enabled\": true, \"use_start_tls\": false, \"referral_enabled\": false ,\"restrict_discovery_to_site\": false}"
+----
+
+'''
+
+== Deleting an LDAP configuration
+
+The LDAP DELETE endpoint deletes the LDAP configuration for the specified SVM. The following example shows a DELETE operation:
+
+----
+
+# The API:
+/api/name-services/ldap/{svm.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/name-services/ldap/179d3c85-7053-11e8-b9b8-005056b41bd1" -H "accept: application/hal+json"
+----
+
+'''
+
+

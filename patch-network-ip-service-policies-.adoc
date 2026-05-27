@@ -1,0 +1,311 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-network-ip-service-policies-.html'
+summary: 'Update a service policy for network interfaces'
+---
+
+= Update a service policy for network interfaces
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/network/ip/service-policies/{uuid}`#
+
+*Introduced In:* 9.8
+
+Updates a service policy for network interfaces.
+
+== Related ONTAP commands
+
+* `network interface service-policy add-service`
+* `network interface service-policy modify-service`
+* `network interface service-policy remove-service`
+* `network interface service-policy rename`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|UUID of the service policy
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_built_in
+|boolean
+a|
+
+|name
+|string
+a|
+
+|services
+|array[string]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "name": "default-intercluster",
+  "services": [
+    "data_nfs"
+  ],
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1376669
+| Port must reside in the same IPspace as the interface's SVM.
+
+| 2621740
+| An unexpected error when trying to determine whether the target Vserver was locked or not on this cluster.
+
+| 53281911
+| Modifying the service policy is disallowed because policies on this SVM are managed by the system
+
+| 53281929
+| Service policies cannot combine block and file services.
+
+| 53281930
+| Service policies maintained by the system cannot be renamed.
+
+| 53281931
+| Service policy names cannot start with "default-".
+
+| 53281932
+| Service cannot be added because the service does not exist for the specified SVM or IPspace.
+
+| 53281933
+| A Cluster-scoped service cannot be added to a SVM-scoped service policy.
+
+| 53281934
+| An SVM-scoped service cannot be added to a Cluster-scoped service policy.
+
+| 53281952
+| The service policy on an SVM cannot be updated to include a block service. Use built-in service policies for SAN services.
+
+| 53281953
+| The service policy on an SVM cannot be updated to include a new service.
+
+| 53281960
+| Service cannot be removed from the service policy because it is used by one or more interfaces.
+
+| 53281961
+| Service cannot be removed from the service policy because it is used by one or more interfaces.
+
+| 53281963
+| Service cannot be removed from the service policy because it is used by one or more interfaces.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#ip_service_policy]
+[.api-collapsible-fifth-title]
+ip_service_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_built_in
+|boolean
+a|
+
+|name
+|string
+a|
+
+|services
+|array[string]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

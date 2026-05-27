@@ -1,0 +1,204 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_destinations_endpoint_overview.html'
+summary: 'Manage event destinations'
+---
+
+= Manage event destinations
+
+
+
+== Overview
+
+Manages the list of destinations. A destination is defined by a type and a place to which an event's information is transmitted.
+
+== Destination Types
+
+An EMS destination is defined by a single type, which is one of the following:
+
+* email
+* syslog
+* rest_api
+* snmp
+
+=== Email
+
+The 'email' type allows you to define a mailbox where information about an observed event is sent by SMTP. Enter the address in the destination field in a valid format.
+For example: administrator@mycompany.com
+
+=== Syslog
+
+The 'syslog' type allows you to specify a remote syslog server that can receive information about an observed event. Enter the hostname or IP address in the destination field.
+For example: syslog.mycompany.com, 192.168.1.1
+
+You can optionally specify the port and transport protocol to be used. The supported transport protocols are:
+
+* udp_unencrypted
+* tcp_unencrypted
+* tcp_encrypted
+
+#
+
+If transport is specified and the port is not specified, the default port for each transport is automatically selected. The default port for udp_unencrypted is 514, for tcp_unencrypted 601, and for tcp_encrypted 6514. The default transport protocol is udp_unencrypted.
+
+#
+
+The message format to be used can also be optionally specified. The supported message formats are:
+
+* legacy_netapp (format: <PRIVAL>TIMESTAMP [HOSTNAME:Event-name:Event-severity]: MSG)
+* rfc_5424 (format: <PRIVAL>VERSION TIMESTAMP HOSTNAME Event-source - Event-name - MSG)
+
+#
+
+If the default timestamp or hostname formats in the message format needs to be overridden, use timestamp_override and hostname_override properties.
+
+The supported timestamp formats are:
+
+* no_override (timestamp format based on the syslog.format.message property i.e. rfc_3164 if syslog.format.message is legacy_netapp, iso_8601_local_time if syslog.format.message is rfc_5424)
+* rfc_3164 (format: Mmm dd hh:mm:ss)
+* iso_8601_local_time (format: YYYY-MM-DDThh:mm:ss+/-hh:mm)
+* iso_8601_utc (format: YYYY-MM-DDThh:mm:ssZ)
+
+#
+
+The supported hostname formats are:
+
+* no_override (hostname format based on the syslog.format.message property i.e. fqdn if syslog.format.message is rfc_5424, hostname_only if syslog.format.message is legacy_netapp)
+* fqdn (Fully Qualified Domain Name)
+* hostname_only
+
+=== Rest API
+
+The 'rest_api' type allows you to define a URL where information about an observed event is sent using the REST protocol. Enter the URL in the destination field.
+The URL must contain a valid transmission schema which can be one of the following:
+
+* http
+* https
+
+#
+
+Using the _https_ schema, you can configure a client-side certificate for mutual authentication. A client-side certificate is specified by the `ca` and `serial_number` fields in the `certificate` object. The `name` field of the `certificate` object is read-only and cannot be used to configure a client-side certificate.
+
+For example: http://rest.mycompany.com, https://192.168.1.1
+
+=== SNMP
+
+The 'snmp' type describes addresses where information about an observed event is sent using SNMP traps. The system defines a default instance of this type and it is restricted to read-only.
+This type has the following limitations:
+
+* Cannot create new destinations of type 'snmp'
+* Cannot modify the default 'snmp' destination
+
+SNMP trap host details need to be configured through one of the following:
+
+|===
+| Type | Command / API
+
+| CLI
+| 'system snmp traphost'
+
+| ZAPI
+| 'snmp-traphost-add' / 'snmp-traphost-delete'
+|===
+
+== Examples
+
+=== Retrieving the list of active destinations
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/destinations
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/destinations" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "name": "snmp-traphost",
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/destinations/snmp-traphost"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/support/ems/destinations"
+  }
+}
+}
+----
+
+=== Creating a new 'email' destination
+
+[,json]
+----
+
+# The API:
+POST /support/ems/destinations
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/destinations" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_destinations_post.txt"
+test_ems_destinations_post.txt(body):
+
+# JSON Body
+{
+"name": "Technician_Email",
+"type": "email",
+"destination": "technician@mycompany.com",
+"filters": [
+  { "name" : "critical-wafl" }
+]
+}
+
+# The response:
+201 Created
+----
+
+=== Creating a new 'syslog' destination
+
+[,json]
+----
+
+# The API:
+POST /support/ems/destinations
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/destinations" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_destinations_syslog_post.txt"
+test_ems_destinations_syslog_post.txt(body):
+
+# JSON Body
+{
+"name": "Syslog_dest",
+"type": "syslog",
+"destination": "syslog.mycompany.com",
+"syslog": {
+  "port": 601,
+  "transport": "tcp_unencrypted",
+  "format": {
+    "message": "rfc_5424",
+    "hostname_override": "fqdn",
+    "timestamp_override": "iso_8601_local_time"
+  }
+},
+"filters": [
+  { "name" : "critical-wafl" }
+]
+}
+
+# The response:
+201 Created
+----
+
+

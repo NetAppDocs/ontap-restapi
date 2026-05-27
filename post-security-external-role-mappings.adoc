@@ -1,0 +1,339 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-external-role-mappings.html'
+summary: 'Create an external-role-mapping entry'
+---
+
+= Create an external-role-mapping entry
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/external-role-mappings`#
+
+*Introduced In:* 9.16
+
+Creates an external-role-mapping entry.
+
+== Required properties
+
+* `external_role`
+* `provider`
+* `ontap_role`
+
+== Optional properties
+
+* `comment`
+
+== Related ONTAP commands
+
+* `security login external-role-mapping create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Any comment regarding this external-role-mapping entry.
+
+
+|external_role
+|string
+a|External Identity provider role.
+
+
+|ontap_role
+|link:#ontap_role[ontap_role]
+a|ONTAP role to map with the external identity role.
+
+* Introduced in: 9.16
+
+
+|provider
+|string
+a|Type of the external identity provider.
+
+
+|timestamp
+|string
+a|Date and time indicating when this external-role-mapping entry was created.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "external_role": "string",
+  "ontap_role": {
+    "name": "admin"
+  },
+  "provider": "string",
+  "timestamp": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#security_external_role_mapping[security_external_role_mapping]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "records": [
+    {
+      "comment": "string",
+      "external_role": "string",
+      "ontap_role": {
+        "name": "admin"
+      },
+      "provider": "string",
+      "timestamp": "string"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5636243
+| Provided ONTAP role is not configured.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ontap_role]
+[.api-collapsible-fifth-title]
+ontap_role
+
+ONTAP role to map with the external identity role.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#security_external_role_mapping]
+[.api-collapsible-fifth-title]
+security_external_role_mapping
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Any comment regarding this external-role-mapping entry.
+
+
+|external_role
+|string
+a|External Identity provider role.
+
+
+|ontap_role
+|link:#ontap_role[ontap_role]
+a|ONTAP role to map with the external identity role.
+
+* Introduced in: 9.16
+
+
+|provider
+|string
+a|Type of the external identity provider.
+
+
+|timestamp
+|string
+a|Date and time indicating when this external-role-mapping entry was created.
+
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

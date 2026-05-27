@@ -1,0 +1,574 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-shares-.html'
+summary: 'Retrieve a CIFS share'
+---
+
+= Retrieve a CIFS share
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/shares/{svm.uuid}/{name}`#
+
+*Introduced In:* 9.6
+
+Retrieves a CIFS share.
+
+== Related ONTAP commands
+
+* `vserver cifs share show`
+* `vserver cifs share properties show`
+
+== Learn more
+
+* link:protocols_cifs_shares_endpoint_overview.html[DOC /protocols/cifs/shares]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Share Name
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_based_enumeration
+|boolean
+a|If enabled, all folders inside this share are visible to a user based on that individual user access right; prevents
+the display of folders or other shared resources that the user does not have access to.
+
+
+|acls
+|array[link:#acls[acls]]
+a|
+
+|allow_unencrypted_access
+|boolean
+a|Specifies whether or not the SMB2 clients are allowed to access the encrypted share.
+
+
+|attribute_cache
+|boolean
+a|Specifies that connections through this share cache attributes for a short time to improve performance.
+
+
+|browsable
+|boolean
+a|Specifies whether or not the Windows clients can browse the share.
+
+
+|change_notify
+|boolean
+a|Specifies whether CIFS clients can request for change notifications for directories on this share.
+
+
+|comment
+|string
+a|Specify the CIFS share descriptions.
+
+
+|continuously_available
+|boolean
+a|Specifies whether or not the clients connecting to this share can open files in a persistent manner.
+Files opened in this way are protected from disruptive events, such as, failover and giveback.
+If the Vscan ONTAP feature is used, it is not supported in continuous availability (CA) shares.
+
+* Default value: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|dir_umask
+|string
+a|Directory Mode Creation Mask to be viewed as an octal number.
+
+
+|encryption
+|boolean
+a|Specifies that SMB encryption must be used when accessing this share. Clients that do not support encryption are not
+able to access this share.
+
+
+|file_umask
+|string
+a|File Mode Creation Mask to be viewed as an octal number.
+
+
+|force_group_for_create
+|string
+a|Specifies that all files that CIFS users create in a specific share belong to the same group
+(also called the "force-group"). The "force-group" must be a predefined group in the UNIX group
+database. This setting has no effect unless the security style of the volume is UNIX or mixed
+security style.
+
+
+|home_directory
+|boolean
+a|Specifies whether or not the share is a home directory share, where the share and path names are dynamic.
+ONTAP home directory functionality automatically offer each user a dynamic share to their home directory without creating an
+individual SMB share for each user.
+The ONTAP CIFS home directory feature enable us to configure a share that maps to
+different directories based on the user that connects to it. Instead of creating a separate shares for each user,
+a single share with a home directory parameters can be created.
+In a home directory share, ONTAP dynamically generates the share-name and share-path by substituting
+%w, %u, and %d variables with the corresponding Windows user name, UNIX user name, and domain name, respectively.
+
+* Default value: 1
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|max_connections_per_share
+|integer
+a|Maximum number of tree connections on share.
+
+
+|name
+|string
+a|Specifies the name of the CIFS share that you want to create. If this
+is a home directory share then the share name includes the pattern as
+%w (Windows user name), %u (UNIX user name) and %d (Windows domain name)
+variables in any combination with this parameter to generate shares dynamically.
+
+
+|namespace_caching
+|boolean
+a|Specifies whether or not the SMB clients connecting to this share can cache the directory enumeration
+results returned by the CIFS servers.
+
+
+|no_strict_security
+|boolean
+a|Specifies whether or not CIFS clients can follow a unix symlinks outside the share boundaries.
+
+
+|offline_files
+|string
+a|Offline Files
+The supported values are:
+
+*** none - Clients are not permitted to cache files for offline access.
+
+*** manual - Clients may cache files that are explicitly selected by the user for offline access.
+
+*** documents - Clients may automatically cache files that are used by the user for offline access.
+
+*** programs - Clients may automatically cache files that are used by the user for offline access
+       and may use those files in an offline mode even if the share is available.
+
+
+|oplocks
+|boolean
+a|Specify whether opportunistic locks are enabled on this share. "Oplocks" allow clients to lock files and cache content locally,
+which can increase performance for file operations.
+
+
+|path
+|string
+a|The fully-qualified pathname in the owning SVM namespace that is shared through this share.
+If this is a home directory share then the path should be dynamic by specifying the pattern
+%w (Windows user name), %u (UNIX user name), or %d (domain name) variables in any combination.
+ONTAP generates the path dynamically for the connected user and this path is appended to each
+search path to find the full Home Directory path.
+
+* example: /volume_1/eng_vol/
+* maxLength: 256
+* minLength: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|show_previous_versions
+|boolean
+a|Specifies that the previous version can be viewed and restored from the client.
+
+
+|show_snapshot
+|boolean
+a|Specifies whether or not the snapshots can be viewed and traversed by clients.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|unix_symlink
+|string
+a|Controls the access of UNIX symbolic links to CIFS clients.
+The supported values are:
+
+***** local - Enables only local symbolic links which is within the same CIFS share.
+
+***** widelink - Enables both local symlinks and widelinks.
+
+***** disable - Disables local symlinks and widelinks.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|vscan_profile
+|string
+a|Vscan File-Operations Profile
+The supported values are:
+
+*** no_scan - Virus scans are never triggered for accesses to this share.
+
+*** standard - Virus scans can be triggered by open, close, and rename operations.
+
+*** strict - Virus scans can be triggered by open, read, close, and rename operations.
+
+*** writes_only - Virus scans can be triggered only when a file that has been modified is closed.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "acls": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "permission": "string",
+      "type": "string",
+      "user_or_group": "ENGDOMAIN\\ad_user",
+      "win_sid_unix_id": "string"
+    }
+  ],
+  "comment": "HR Department Share",
+  "dir_umask": "21",
+  "file_umask": "21",
+  "force_group_for_create": "string",
+  "name": "HR_SHARE",
+  "offline_files": "string",
+  "path": "/volume_1/eng_vol/",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "unix_symlink": "string",
+  "volume": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  },
+  "vscan_profile": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#acls]
+[.api-collapsible-fifth-title]
+acls
+
+The permissions that users and groups have on a CIFS share.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|permission
+|string
+a|Specifies the access rights that a user or group has on the defined CIFS Share.
+The following values are allowed:
+
+* no_access    - User does not have CIFS share access
+* read         - User has only read access
+* change       - User has change access
+* full_control - User has full_control access
+
+
+|type
+|string
+a|Specifies the type of the user or group to add to the access control
+list of a CIFS share. The following values are allowed:
+
+* windows    - Windows user or group
+* unix_user  - UNIX user
+* unix_group - UNIX group
+
+
+|user_or_group
+|string
+a|Specifies the user or group name to add to the access control list of a CIFS share.
+
+
+|win_sid_unix_id
+|string
+a|Windows SID/UNIX ID depending on access-control type.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

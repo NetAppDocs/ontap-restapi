@@ -1,0 +1,525 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-s3-services-policies.html'
+summary: 'Retrieve the S3 policies in an SVM configuration'
+---
+
+= Retrieve the S3 policies in an SVM configuration
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/policies`#
+
+*Introduced In:* 9.8
+
+Retrieves the S3 policies SVM configuration.
+
+== Related ONTAP commands
+
+* `vserver object-store-server policy show`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_policies_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|statements.actions
+|string
+|query
+|False
+a|Filter by statements.actions
+
+
+|statements.resources
+|string
+|query
+|False
+a|Filter by statements.resources
+
+
+|statements.effect
+|string
+|query
+|False
+a|Filter by statements.effect
+
+
+|statements.index
+|integer
+|query
+|False
+a|Filter by statements.index
+
+
+|statements.sid
+|string
+|query
+|False
+a|Filter by statements.sid
+
+* maxLength: 256
+* minLength: 0
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 128
+* minLength: 1
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|read-only
+|boolean
+|query
+|False
+a|Filter by read-only
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#s3_policy[s3_policy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "comment": "S3 policy.",
+      "name": "Policy1",
+      "statements": [
+        {
+          "actions": [
+            "*"
+          ],
+          "effect": "allow",
+          "index": 0,
+          "resources": [
+            "bucket1",
+            "bucket1/*"
+          ],
+          "sid": "FullAccessToBucket1"
+        }
+      ],
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#s3_policy_statement]
+[.api-collapsible-fifth-title]
+s3_policy_statement
+
+Specifies information about a single access policy statement.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|actions
+|array[string]
+a|For each resource, S3 supports a set of operations. The resource operations allowed or denied are identified by an action list:
+
+* GetObject - retrieves objects from a bucket.
+* PutObject - puts objects in a bucket.
+* DeleteObject - deletes objects from a bucket.
+* ListBucket - lists the objects in a bucket.
+* GetBucketAcl - retrieves the access control list (ACL) of a bucket.
+* GetObjectAcl - retrieves the access control list (ACL) of an object.
+* ListAllMyBuckets - lists all of the buckets in a server.
+* ListBucketMultipartUploads - lists the multipart uploads in progress for a bucket.
+* ListMultipartUploadParts - lists the parts in a multipart upload.
+* CreateBucket - creates a new bucket.
+* DeleteBucket - deletes an existing bucket.
+* GetObjectTagging - retrieves the tag set of an object.
+* PutObjecttagging - sets the tag set for an object.
+* DeleteObjectTagging - deletes the tag set of an object.
+* GetBucketLocation - retrieves the location of a bucket.
+* GetBucketVersioning - retrieves the versioning configuration of a bucket.
+* PutBucketVersioning - modifies the versioning configuration of a bucket.
+* ListBucketVersions - lists the object versions in a bucket.
+* PutBucketPolicy - puts bucket policy on the bucket specified.
+* GetBucketPolicy - retrieves the bucket policy of a bucket.
+* DeleteBucketPolicy - deletes the policy created for a bucket.
+The wildcard character "*" can be used to form a regular expression for specifying actions.
+
+
+|effect
+|string
+a|Specifies whether access is allowed or denied. If access (to allow) is not granted explicitly to a resource, access is implicitly denied. Access can also be denied explicitly to a resource, in order to make sure that a user cannot access it, even if a different policy grants access.
+
+
+|index
+|integer
+a|Specifies a unique statement index used to identify a particular statement. This parameter should not be specified in the POST method. A statement index is automatically generated. It is not retrieved in the GET method.
+
+
+|resources
+|array[string]
+a|
+
+|sid
+|string
+a|Specifies the statement identifier which contains additional information about the statement.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#s3_policy]
+[.api-collapsible-fifth-title]
+s3_policy
+
+An S3 policy is an object. It defines resource (bucket, folder or object) permissions. These policies get evaluated when an object store user user makes a request. Permissions in the policies determine whether the request is allowed or denied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Can contain any additional information about the S3 policy.
+
+
+|name
+|string
+a|Specifies the name of the policy. A policy name length can range from 1 to 128 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-". It cannot be specified in a PATCH method.
+
+
+|read-only
+|boolean
+a|Specifies whether or not the s3 policy is read only. This parameter should not be specified in the POST method.
+
+
+|statements
+|array[link:#s3_policy_statement[s3_policy_statement]]
+a|Specifies the policy statements.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

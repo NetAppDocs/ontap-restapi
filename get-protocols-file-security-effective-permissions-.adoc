@@ -1,0 +1,353 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-file-security-effective-permissions-.html'
+summary: 'Retrieve effective security permissions on a file'
+---
+
+= Retrieve effective security permissions on a file
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/file-security/effective-permissions/{svm.uuid}/{path}`#
+
+*Introduced In:* 9.8
+
+Retrieves effective security permissions on a file.
+
+== Related ONTAP commands
+
+* `vserver security file-directory show-effective-permissions`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|path
+|string
+|path
+|True
+a|File Path
+
+
+|user
+|string
+|query
+|True
+a|User_Name
+
+
+|share.name
+|string
+|query
+|False
+a|Share Name
+
+
+|type
+|string
+|query
+|False
+a|User Type
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_permissions
+|array[string]
+a|Specifies the effective permission granted to a user on the specified file or folder path.
+
+
+|path
+|string
+a|Specifies the path of the file or the folder for which you want to display effective permissions.
+The path is relative to the SVM root volume. If "-share-name" is specified then path will be relative to the share path.
+
+
+|share
+|link:#share[share]
+a|
+
+|share_permissions
+|array[string]
+a|Specifies the effective permission granted to a user on the specified file or folder path.
+
+
+|svm
+|link:#svm_reference[svm_reference]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Specifies the user type. The following values are allowed:
+
+* windows  - Windows user
+* unix     - UNIX user
+
+
+|user
+|string
+a|Specifies the user for which effective permission needs to be displayed for the specified path.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "file_permissions": [
+    "string"
+  ],
+  "path": "/dir1/dir2",
+  "share": {
+    "name": "string",
+    "path": "string"
+  },
+  "share_permissions": [
+    "string"
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "string",
+  "user": "cifs1/administrator"
+}
+====
+
+== Error
+
+```
+Status: Default, Ontap error response codes | error code | description | | ---------- | ----------- | | 262278     | user is a required field | | 655865     | the specified path cannot be used if the file does not exist | | 655470     | the specified share does not exist |
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#share]
+[.api-collapsible-fifth-title]
+share
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Displays the file or directory effective permission for the mentioned user, only for files and directories contained where the
+specified path is relative to the root of the specified share. If this parameter is not specified, the SVM root volume is
+taken as the default. If this parameter is specified, the effective share permission of the user is also displayed.
+Wildcard query characters are not supported.
+
+
+|path
+|string
+a|Displays the CIFS share path.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm_reference]
+[.api-collapsible-fifth-title]
+svm_reference
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

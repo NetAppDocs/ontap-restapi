@@ -1,0 +1,1963 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-aggregates-.html'
+summary: 'Retrieve an aggregate specified by the UUID'
+---
+
+= Retrieve an aggregate specified by the UUID
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/aggregates/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves the aggregate specified by the UUID. The recommend query cannot be used for this operation.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `metric.+*+`
+* `space.block_storage.inactive_user_data`
+* `space.block_storage.inactive_user_data_percent`
+* `space.footprint`
+* `is_spare_low`
+* `statistics.+*+`
+
+== Related ONTAP commands
+
+* `storage aggregate show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Aggregate UUID
+
+
+|show_spares
+|boolean
+|query
+|False
+a|If set to 'true', the spares object is returned instead of records to show the spare groups in the cluster that are compatible with the aggregate. The default setting is 'false'.
+
+* Introduced in: 9.12
+
+
+|flash_pool_eligible
+|boolean
+|query
+|False
+a|If set to 'true' along with show_spares, the spares object is restricted to return spare groups that are compatible with flash pool creation or addition for the specified aggregate. The default setting is 'false'.
+
+* Introduced in: 9.12
+
+
+|auto_provision_policy
+|string
+|query
+|False
+a|If set to expand, a query is run on the system for the recommended optimal expansion layout of the aggregate.
+
+* Introduced in: 9.8
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|block_storage
+|link:#block_storage[block_storage]
+a|Configuration information for the locally attached portion of the aggregate. When a cloud store is also used by this aggregate, this is referred to as the performance tier.
+
+
+|cloud_storage
+|link:#cloud_storage[cloud_storage]
+a|Configuration information for the cloud storage portion of the aggregate. This is referred to as the capacity tier.
+
+
+|create_time
+|string
+a|Timestamp of aggregate creation.
+
+
+|data_encryption
+|link:#data_encryption[data_encryption]
+a|
+
+|dr_home_node
+|link:#dr_home_node[dr_home_node]
+a|Node where the aggregate resides after disaster recovery. The value for this field might differ from the 'node' field during switchover.
+
+
+|home_node
+|link:#home_node[home_node]
+a|Node where the aggregate resides after giveback. The value for this field might differ from the value of the 'node' field during takeover.
+
+
+|inactive_data_reporting
+|link:#inactive_data_reporting[inactive_data_reporting]
+a|
+
+|inode_attributes
+|link:#inode_attributes[inode_attributes]
+a|
+
+|is_spare_low
+|boolean
+a|Specifies whether the aggregate is in a spares low condition on any of the RAID groups.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|metric
+|link:#metric[metric]
+a|The most recent sample of I/O metrics for the aggregate.
+
+
+|name
+|string
+a|Aggregate name.
+
+
+|node
+|link:#node[node]
+a|Node where the aggregate currently resides.
+
+
+|sidl_enabled
+|boolean
+a|Specifies whether or not SIDL is enabled on the aggregate.
+
+
+|snaplock_type
+|string
+a|SnapLock type.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|state
+|string
+a|Operational state of the aggregate.
+
+
+|statistics
+|link:#statistics[statistics]
+a|The real time I/O statistics for the aggregate.
+
+
+|uuid
+|string
+a|Aggregate UUID.
+
+
+|volume-count
+|integer
+a|Number of volumes in the aggregate.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "_tags": [
+    "team:csi",
+    "environment:test"
+  ],
+  "block_storage": {
+    "hybrid_cache": {
+      "disk_count": 6,
+      "disk_type": "string",
+      "raid_size": 24,
+      "raid_type": "string",
+      "simulated_raid_groups": [
+        {
+          "name": "string"
+        }
+      ],
+      "size": 1612709888,
+      "storage_pools": [
+        {
+          "storage_pool": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "storage_pool_1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          }
+        }
+      ],
+      "used": 26501122
+    },
+    "mirror": {
+      "enabled": "",
+      "state": "string"
+    },
+    "plexes": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "plex0"
+      }
+    ],
+    "primary": {
+      "checksum_style": "string",
+      "disk_class": "performance",
+      "disk_count": 8,
+      "disk_type": "string",
+      "raid_size": 16,
+      "raid_type": "string",
+      "simulated_raid_groups": [
+        {
+          "name": "string",
+          "raid_type": "string"
+        }
+      ]
+    },
+    "storage_type": "string"
+  },
+  "cloud_storage": {
+    "stores": [
+      {
+        "cloud_store": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "store1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "used": 0
+      }
+    ]
+  },
+  "create_time": "2018-01-01 12:00:00 -0400",
+  "dr_home_node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "home_node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "inactive_data_reporting": {
+    "start_time": "2019-12-12 12:00:00 -0400"
+  },
+  "inode_attributes": {
+    "file_private_capacity": 31136,
+    "file_public_capacity": 31136,
+    "files_private_used": 502,
+    "files_total": 31136,
+    "files_used": 97,
+    "max_files_available": 31136,
+    "max_files_possible": 2844525,
+    "max_files_used": 97,
+    "used_percent": 5,
+    "version": 4
+  },
+  "is_spare_low": "",
+  "metric": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "duration": "PT15S",
+    "iops": {
+      "read": 200,
+      "total": 1000,
+      "write": 100
+    },
+    "latency": {
+      "read": 200,
+      "total": 1000,
+      "write": 100
+    },
+    "status": "ok",
+    "throughput": {
+      "read": 200,
+      "total": 1000,
+      "write": 100
+    },
+    "timestamp": "2017-01-25 11:20:13 +0000"
+  },
+  "name": "node1_aggr_1",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "snaplock_type": "string",
+  "snapshot": {
+    "files_total": 10,
+    "files_used": 3,
+    "max_files_available": 5,
+    "max_files_used": 50
+  },
+  "space": {
+    "block_storage": {
+      "aggregate_metadata": 2655,
+      "aggregate_metadata_percent": 8,
+      "available": 10156560384,
+      "data_compacted_count": 1990000,
+      "data_compaction_space_saved": 1996000,
+      "data_compaction_space_saved_percent": 27,
+      "full_threshold_percent": 0,
+      "inactive_user_data": 304448,
+      "inactive_user_data_percent": 0,
+      "physical_used": 2461696,
+      "physical_used_percent": 50,
+      "size": 10156769280,
+      "used": 2088960,
+      "used_including_snapshot_reserve": 674685,
+      "used_including_snapshot_reserve_percent": 35,
+      "used_percent": 50,
+      "volume_deduplication_shared_count": 1990000,
+      "volume_deduplication_space_saved": 1996000,
+      "volume_deduplication_space_saved_percent": 27,
+      "volume_footprints_percent": 14
+    },
+    "cloud_storage": {
+      "used": 402743264
+    },
+    "efficiency": {
+      "logical_used": 0,
+      "ratio": 0,
+      "savings": 0,
+      "wise_tsse_min_used_capacity_pct": 0
+    },
+    "efficiency_without_snapshots": {
+      "logical_used": 0,
+      "ratio": 0,
+      "savings": 0
+    },
+    "efficiency_without_snapshots_flexclones": {
+      "logical_used": 0,
+      "ratio": 0,
+      "savings": 0
+    },
+    "footprint": 608896,
+    "snapshot": {
+      "available": 2000,
+      "reserve_percent": 20,
+      "total": 5000,
+      "used": 3000,
+      "used_percent": 45
+    },
+    "total_provisioned_space": 20971520
+  },
+  "state": "string",
+  "statistics": {
+    "iops_raw": {
+      "read": 200,
+      "total": 1000,
+      "write": 100
+    },
+    "latency_raw": {
+      "read": 200,
+      "total": 1000,
+      "write": 100
+    },
+    "status": "ok",
+    "throughput_raw": {
+      "read": 200,
+      "total": 1000,
+      "write": 100
+    },
+    "timestamp": "2017-01-25 11:20:13 +0000"
+  },
+  "uuid": "string",
+  "volume-count": 0
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 787092
+| The target field cannot be specified for this operation.
+
+| 7209049
+| Cannot perform the operation because the aggregate is currently expanding.
+
+| 8586225
+| Unexpected error encountered when retrieving metrics and statistics for this aggregate.
+
+| 19726382
+| Another provisioning operation is in progress on this cluster. Wait a few minutes, and try the operation again.
+
+| 19726390
+| Unable to provide a recommendation to expand the aggregate.
+
+| 19726391
+| Too many unassigned disks visible to the node that owns this aggregate.
+
+| 19726392
+| Layout of this aggregate is not a supported configuration.
+
+| 19726393
+| Failed to expand the aggregate. Aggregate expansion is not supported on this system.
+
+| 19726394
+| Automatic aggregate expansion is not supported on systems with multiple data aggregates.
+
+| 19726395
+| Automatic aggregate expansion is not supported when MetroCluster is not configured
+
+| 19726396
+| Automatic aggregate expansion is not supported when the DR group is not in a normal state
+
+| 19726397
+| Aggregates must contain disks with identical disk-types and disk-sizes.
+
+| 19726402
+| Internal error. Unable to determine the MetroCluster configuration state.
+
+| 19726538
+| Cannot perform the operation because the aggregate is not in a healthy state.
+
+| 19726541
+| Cannot perform the operation because the specified aggregate is a root aggregate.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#simulated_raid_groups]
+[.api-collapsible-fifth-title]
+simulated_raid_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|added_data_disk_count
+|integer
+a|Number of added data disks in RAID group.
+
+
+|added_parity_disk_count
+|integer
+a|Number of added parity disks in RAID group.
+
+
+|existing_data_disk_count
+|integer
+a|Number of existing data disks in the RAID group.
+
+
+|existing_parity_disk_count
+|integer
+a|Number of existing parity disks in the RAID group.
+
+
+|is_partition
+|boolean
+a|Indicates whether the disk is partitioned (true) or whole (false).
+
+
+|name
+|string
+a|Name of the raid group.
+
+
+|usable_size
+|integer
+a|Usable size of each disk, in bytes.
+
+
+|===
+
+
+[#storage_pool_reference]
+[.api-collapsible-fifth-title]
+storage_pool_reference
+
+Shared Storage Pool
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pools]
+[.api-collapsible-fifth-title]
+storage_pools
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allocation_units_count
+|integer
+a|Allocation count of storage pool.
+
+
+|storage_pool
+|link:#storage_pool_reference[storage_pool_reference]
+a|Shared Storage Pool
+
+
+|===
+
+
+[#hybrid_cache]
+[.api-collapsible-fifth-title]
+hybrid_cache
+
+Contains the configuration for the hybrid cache. The hybrid cache is made up of either whole SSDs or storage pool SSDs.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk_count
+|integer
+a|Number of disks used in the cache tier of the aggregate. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|disk_type
+|string
+a|Type of disk being used by the aggregate's cache tier.
+
+
+|enabled
+|boolean
+a|Specifies whether the aggregate uses HDDs with SSDs as a cache.
+
+
+|raid_size
+|integer
+a|Option to specify the maximum number of disks that can be included in a RAID group.
+
+
+|raid_type
+|string
+a|RAID type for SSD cache of the aggregate. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|simulated_raid_groups
+|array[link:#simulated_raid_groups[simulated_raid_groups]]
+a|
+
+|size
+|integer
+a|Total usable space in bytes of SSD cache. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|storage_pools
+|array[link:#storage_pools[storage_pools]]
+a|List of storage pool properties and allocation_units_count for aggregate.
+
+
+|used
+|integer
+a|Space used in bytes of SSD cache. Only provided when hybrid_cache.enabled is 'true'.
+
+
+|===
+
+
+[#mirror]
+[.api-collapsible-fifth-title]
+mirror
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Aggregate is SyncMirror protected
+
+
+|state
+|string
+a|
+
+|===
+
+
+[#plex_reference]
+[.api-collapsible-fifth-title]
+plex_reference
+
+Plex
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#simulated_raid_groups]
+[.api-collapsible-fifth-title]
+simulated_raid_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|added_data_disk_count
+|integer
+a|Number of added data disks in RAID group.
+
+
+|added_parity_disk_count
+|integer
+a|Number of added parity disks in RAID group.
+
+
+|data_disk_count
+|integer
+a|Number of data disks in RAID group.
+
+
+|existing_data_disk_count
+|integer
+a|Number of existing data disks in the RAID group.
+
+
+|existing_parity_disk_count
+|integer
+a|Number of existing parity disks in the RAID group.
+
+
+|is_partition
+|boolean
+a|Indicates whether the disk is partitioned (true) or whole (false).
+
+
+|name
+|string
+a|Name of the raid group.
+
+
+|parity_disk_count
+|integer
+a|Number of parity disks in RAID group.
+
+
+|raid_type
+|string
+a|RAID type of the aggregate.
+
+
+|usable_size
+|integer
+a|Usable size of each disk, in bytes.
+
+
+|===
+
+
+[#primary]
+[.api-collapsible-fifth-title]
+primary
+
+Configuration information for the primary storage portion of the aggregate. This excludes the hybrid cache details.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|checksum_style
+|string
+a|The checksum style used by the aggregate.
+
+
+|disk_class
+|string
+a|The class of disks being used by the aggregate.
+
+
+|disk_count
+|integer
+a|Number of disks used in the aggregate. This includes parity disks, but excludes disks in the hybrid cache.
+
+
+|disk_type
+|string
+a|The type of disk being used by the aggregate.
+
+
+|raid_size
+|integer
+a|Option to specify the maximum number of disks that can be included in a RAID group.
+
+
+|raid_type
+|string
+a|RAID type of the aggregate.
+
+
+|simulated_raid_groups
+|array[link:#simulated_raid_groups[simulated_raid_groups]]
+a|
+
+|===
+
+
+[#block_storage]
+[.api-collapsible-fifth-title]
+block_storage
+
+Configuration information for the locally attached portion of the aggregate. When a cloud store is also used by this aggregate, this is referred to as the performance tier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hybrid_cache
+|link:#hybrid_cache[hybrid_cache]
+a|Contains the configuration for the hybrid cache. The hybrid cache is made up of either whole SSDs or storage pool SSDs.
+
+
+|mirror
+|link:#mirror[mirror]
+a|
+
+|plexes
+|array[link:#plex_reference[plex_reference]]
+a|Plex reference for each plex in the aggregate.
+
+
+|primary
+|link:#primary[primary]
+a|Configuration information for the primary storage portion of the aggregate. This excludes the hybrid cache details.
+
+
+|storage_type
+|string
+a|Type of aggregate.
+
+
+|uses_partitions
+|boolean
+a|If true, aggregate is using shared disks.
+
+
+|===
+
+
+[#cloud_store]
+[.api-collapsible-fifth-title]
+cloud_store
+
+Cloud store
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#cloud_storage_tier]
+[.api-collapsible-fifth-title]
+cloud_storage_tier
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cloud_store
+|link:#cloud_store[cloud_store]
+a|Cloud store
+
+
+|used
+|integer
+a|Capacity used in bytes in the cloud store by this aggregate. This is a cached value calculated every 5 minutes.
+
+
+|===
+
+
+[#cloud_storage]
+[.api-collapsible-fifth-title]
+cloud_storage
+
+Configuration information for the cloud storage portion of the aggregate. This is referred to as the capacity tier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attach_eligible
+|boolean
+a|Specifies whether the aggregate is eligible for a cloud store to be attached.
+
+
+|migrate_threshold
+|integer
+a|Specifies the minimum percentage of performance tier free space that must exist in order for migration of data from the capacity tier to performance tier to be allowed. Only valid for PATCH operations.
+
+
+|stores
+|array[link:#cloud_storage_tier[cloud_storage_tier]]
+a|Configuration information for each cloud storage portion of the aggregate.
+
+
+|tiering_fullness_threshold
+|integer
+a|The percentage of space in the performance tier that must be used before data is tiered out to the cloud store. Only valid for PATCH operations.
+
+
+|===
+
+
+[#data_encryption]
+[.api-collapsible-fifth-title]
+data_encryption
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|drive_protection_enabled
+|boolean
+a|Specifies whether the aggregate uses self-encrypting drives with data protection enabled.
+
+
+|software_encryption_enabled
+|boolean
+a|Specifies whether NetApp aggregate encryption is enabled. All data in the aggregate is encrypted.
+
+
+|===
+
+
+[#dr_home_node]
+[.api-collapsible-fifth-title]
+dr_home_node
+
+Node where the aggregate resides after disaster recovery. The value for this field might differ from the 'node' field during switchover.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#home_node]
+[.api-collapsible-fifth-title]
+home_node
+
+Node where the aggregate resides after giveback. The value for this field might differ from the value of the 'node' field during takeover.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#inactive_data_reporting]
+[.api-collapsible-fifth-title]
+inactive_data_reporting
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether or not inactive data reporting is enabled on the aggregate.
+
+
+|start_time
+|string
+a|Timestamp at which inactive data reporting was enabled on the aggregate.
+
+
+|===
+
+
+[#inode_attributes]
+[.api-collapsible-fifth-title]
+inode_attributes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_private_capacity
+|integer
+a|Number of files that can currently be stored on disk for system metadata files. This number will dynamically increase as more system files are created.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|file_public_capacity
+|integer
+a|Number of files that can currently be stored on disk for user-visible files.  This number will dynamically increase as more user-visible files are created.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|files_private_used
+|integer
+a|Number of system metadata files used. If the referenced file system is restricted or offline, a value of 0 is returned.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|files_total
+|integer
+a|Maximum number of user-visible files that this referenced file system can currently hold. If the referenced file system is restricted or offline, a value of 0 is returned.
+
+
+|files_used
+|integer
+a|Number of user-visible files used in the referenced file system. If the referenced file system is restricted or offline, a value of 0 is returned.
+
+
+|max_files_available
+|integer
+a|The count of the maximum number of user-visible files currently allowable on the referenced file system.
+
+
+|max_files_possible
+|integer
+a|The largest value to which the maxfiles-available parameter can be increased by reconfiguration, on the referenced file system.
+
+
+|max_files_used
+|integer
+a|The number of user-visible files currently in use on the referenced file system.
+
+
+|used_percent
+|integer
+a|The percentage of disk space currently in use based on user-visible file count on the referenced file system.
+
+
+|version
+|integer
+a|The inofile-version of the aggregate. If the referenced file system is restricted or offline, a value of 0 is returned.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+The most recent sample of I/O metrics for the aggregate.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node where the aggregate currently resides.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|files_total
+|integer
+a|Total files allowed in snapshots
+
+
+|files_used
+|integer
+a|Total files created in snapshots
+
+
+|max_files_available
+|integer
+a|Maximum files available for snapshots
+
+
+|max_files_used
+|integer
+a|Files in use by snapshots
+
+
+|===
+
+
+[#block_storage]
+[.api-collapsible-fifth-title]
+block_storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate_metadata
+|integer
+a|Space used by different metafiles and internal operations inside the aggregate, in bytes.
+
+
+|aggregate_metadata_percent
+|integer
+a|Aggregate metadata as a percentage.
+
+
+|available
+|integer
+a|Space available in bytes.
+
+
+|data_compacted_count
+|integer
+a|Amount of compacted data in bytes.
+
+
+|data_compaction_space_saved
+|integer
+a|Space saved in bytes by compacting the data.
+
+
+|data_compaction_space_saved_percent
+|integer
+a|Percentage saved by compacting the data.
+
+
+|full_threshold_percent
+|integer
+a|The aggregate used percentage at which 'monitor.volume.full' EMS is generated.
+
+
+|inactive_user_data
+|integer
+a|The size that is physically used in the block storage and has a cold temperature, in bytes. This property is only supported if the aggregate is either attached to a cloud store or can be attached to a cloud store.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either block_storage.inactive_user_data or **.
+
+
+|inactive_user_data_percent
+|integer
+a|The percentage of inactive user data in the block storage. This property is only supported if the aggregate is either attached to a cloud store or can be attached to a cloud store.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either block_storage.inactive_user_data_percent or **.
+
+
+|physical_used
+|integer
+a|Total physical used size of an aggregate in bytes.
+
+
+|physical_used_percent
+|integer
+a|Physical used percentage.
+
+
+|size
+|integer
+a|Total usable space in bytes, not including WAFL reserve and aggregate snapshot reserve.
+
+
+|used
+|integer
+a|Space used or reserved in bytes. Includes volume guarantees and aggregate metadata.
+
+
+|used_including_snapshot_reserve
+|integer
+a|Total used including the snapshot reserve, in bytes.
+
+
+|used_including_snapshot_reserve_percent
+|integer
+a|Total used including the Snapshot reserve as a percentage.
+
+
+|used_percent
+|integer
+a|Aggregate used percentage.
+
+
+|volume_deduplication_shared_count
+|integer
+a|Amount of shared bytes counted by storage efficiency.
+
+
+|volume_deduplication_space_saved
+|integer
+a|Amount of space saved in bytes by storage efficiency.
+
+
+|volume_deduplication_space_saved_percent
+|integer
+a|Percentage of space saved by storage efficiency.
+
+
+|volume_footprints_percent
+|integer
+a|A summation of volume footprints inside the aggregate, as a percentage. A volume's footprint is the amount of space being used for the volume in the aggregate.
+
+
+|===
+
+
+[#cloud_storage]
+[.api-collapsible-fifth-title]
+cloud_storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|used
+|integer
+a|Used space in bytes in the cloud store. Only applicable for aggregates with a cloud store tier.
+
+
+|===
+
+
+[#efficiency]
+[.api-collapsible-fifth-title]
+efficiency
+
+Storage efficiency.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_adaptive_compression_savings
+|boolean
+a|Indicates whether or not aggregate has auto adaptive compression savings.
+
+
+|cross_volume_background_dedupe
+|boolean
+a|Indicates whether or not cross volume background deduplication is enabled.
+
+
+|cross_volume_dedupe_savings
+|boolean
+a|Indicates whether or not aggregate has cross volume deduplication savings.
+
+
+|cross_volume_inline_dedupe
+|boolean
+a|Indicates whether or not cross volume inline deduplication is enabled.
+
+
+|enable_workload_informed_tsse
+|boolean
+a|Indicates whether Workload Informed TSSE is enabled on the system.
+
+
+|logical_used
+|integer
+a|Logical used
+
+
+|ratio
+|number
+a|Data reduction ratio (logical_used / used)
+
+
+|savings
+|integer
+a|Space saved by storage efficiencies (logical_used - used)
+
+
+|wise_tsse_min_used_capacity_pct
+|integer
+a|Minimum amount of used data in aggregate required to trigger cold compression on TSSE volumes.
+
+
+|===
+
+
+[#efficiency_without_snapshots]
+[.api-collapsible-fifth-title]
+efficiency_without_snapshots
+
+Storage efficiency that does not include the savings provided by snapshots.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logical_used
+|integer
+a|Logical used
+
+
+|ratio
+|number
+a|Data reduction ratio (logical_used / used)
+
+
+|savings
+|integer
+a|Space saved by storage efficiencies (logical_used - used)
+
+
+|===
+
+
+[#efficiency_without_snapshots_flexclones]
+[.api-collapsible-fifth-title]
+efficiency_without_snapshots_flexclones
+
+Storage efficiency that does not include the savings provided by snapshots and Flexclone volumes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logical_used
+|integer
+a|Logical used
+
+
+|ratio
+|number
+a|Data reduction ratio (logical_used / used)
+
+
+|savings
+|integer
+a|Space saved by storage efficiencies (logical_used - used)
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|Available space for snapshots in bytes
+
+
+|reserve_percent
+|integer
+a|Percentage of space reserved for snapshots
+
+
+|total
+|integer
+a|Total space for snapshots in bytes
+
+
+|used
+|integer
+a|Space used by snapshots in bytes
+
+
+|used_percent
+|integer
+a|Percentage of disk space used by snapshots
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|block_storage
+|link:#block_storage[block_storage]
+a|
+
+|cloud_storage
+|link:#cloud_storage[cloud_storage]
+a|
+
+|efficiency
+|link:#efficiency[efficiency]
+a|Storage efficiency.
+
+
+|efficiency_without_snapshots
+|link:#efficiency_without_snapshots[efficiency_without_snapshots]
+a|Storage efficiency that does not include the savings provided by snapshots.
+
+
+|efficiency_without_snapshots_flexclones
+|link:#efficiency_without_snapshots_flexclones[efficiency_without_snapshots_flexclones]
+a|Storage efficiency that does not include the savings provided by snapshots and Flexclone volumes.
+
+
+|footprint
+|integer
+a|A summation of volume footprints (including volume guarantees), in bytes. This includes all of the volume footprints in the block_storage tier and the cloud_storage tier.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|total_provisioned_space
+|integer
+a|A summation of volume size, in bytes. This includes all of the volumes inside the aggregate.
+This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either total_provisioned_space or **.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+The real time I/O statistics for the aggregate.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

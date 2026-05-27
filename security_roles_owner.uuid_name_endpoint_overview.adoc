@@ -1,0 +1,160 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_roles_owner.uuid_name_endpoint_overview.html'
+summary: 'View or delete a role'
+---
+
+= View or delete a role
+
+
+
+== Overview
+
+This API is used to retrieve or delete a role. The role can be SVM-scoped or cluster-scoped.
+
+Specify the owner UUID and the role name in the URI path. The owner UUID corresponds to the UUID of the SVM for which the role has been created and can be obtained from the response body of a GET call performed on one of the following APIs:
+_/api/security/roles_ for all roles
+_/api/security/roles/?scope=svm_ for SVM-scoped roles
+_/api/security/roles/?owner.name=+++<svm-name>+++</i> for roles in a specific SVM This API response contains the complete URI for each role that can be used for retrieving or deleting a role.+++</svm-name>+++_
+
+NOTE: The pre-defined roles can be retrieved but cannot be deleted.
+
+== Examples
+
+=== Retrieving the role configuration for a REST role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/secure_role"
+
+# The response:
+{
+"owner": {
+  "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/aaef7c38-4bd3-11e9-b238-0050568e2e25"
+    }
+  }
+},
+"name": "secure_role",
+"privileges": [
+  {
+    "path": "/api/security",
+    "access": "all",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/secure_role/privileges/%2Fapi%2Fsecurity"
+      }
+    }
+  },
+  {
+    "path": "/api/storage/volumes/651f7fdf-7752-11eb-8d4e-0050568ed6bd/snapshots",
+    "access": "readonly",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/secure_role/privileges/%2Fapi%2Fstorage%2Fvolumes%2F651f7fdf-7752-11eb-8d4e-0050568ed6bd%2Fsnapshots"
+      }
+    }
+  },
+  {
+    "path": "/api/storage/volumes/6dfeb406-9a16-11ec-819e-005056bb1a7c/top-metrics/clients",
+    "access": "readonly",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/secure_role/privileges/%2Fapi%2Fstorage%2Fvolumes%2F6dfeb406-9a16-11ec-819e-005056bb1a7c%2Ftop-metrics%2Fclients"
+      }
+    }
+  }
+],
+"builtin": false,
+"scope": "svm",
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/secure_role"
+  }
+}
+}
+----
+
+=== Retrieving the role configuration for a custom legacy role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/finVolNoDel"
+
+# The response:
+{
+"owner": {
+  "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/aaef7c38-4bd3-11e9-b238-0050568e2e25"
+    }
+  }
+},
+"name": "finVolNoDel",
+"privileges": [
+  {
+    "path": "DEFAULT",
+    "access": "none",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/finVolNoDel/privileges/DEFAULT"
+      }
+    }
+  },
+  {
+    "path": "volume",
+    "access": "all",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/finVolNoDel/privileges/volume"
+      }
+    }
+  },
+  {
+    "path": "volume delete",
+    "access": "none",
+    "query": "-volume vol_fin*",
+    "_links": {
+      "self": {
+        "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/finVolNoDel/privileges/volume%20delete"
+      }
+    }
+  }
+],
+"builtin": false,
+"scope": "svm",
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/finVolNoDel"
+  }
+}
+}
+----
+
+=== Deleting a custom role
+
+----
+
+# The API:
+DELETE "/api/security/roles/{owner.uuid}/{name}"
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1"
+----
+
+

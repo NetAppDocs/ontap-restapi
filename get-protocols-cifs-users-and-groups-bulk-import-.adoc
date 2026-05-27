@@ -1,0 +1,362 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-users-and-groups-bulk-import-.html'
+summary: 'Retrieve import operation status for CIFS local users, groups, and group memberships'
+---
+
+= Retrieve import operation status for CIFS local users, groups, and group memberships
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}`#
+
+*Introduced In:* 9.11
+
+Retrieves information about the import operation status of the CIFS local users,
+groups, and group memberships.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups import get-status`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|detailed_status
+|link:#detailed_status[detailed_status]
+a|
+
+|elements_ignored
+|integer
+a|Number of elements ignored.
+
+
+|elements_imported
+|integer
+a|Number of elements successfully imported.
+
+
+|import_uri
+|link:#import_uri[import_uri]
+a|
+
+|state
+|string
+a|Operation status.
+
+
+|status_uri
+|link:#status_uri[status_uri]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "detailed_status": {
+    "code": "6684732",
+    "message": "string"
+  },
+  "elements_ignored": 0,
+  "elements_imported": 0,
+  "import_uri": {
+    "path": "http://web.sample.com/web1/file1.7z"
+  },
+  "state": "string",
+  "status_uri": {
+    "path": "http://web.sample.com/web1/file1.7z"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#detailed_status]
+[.api-collapsible-fifth-title]
+detailed_status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the import status failure.
+
+
+|message
+|string
+a|Detailed description of the import status.
+
+
+|===
+
+
+[#import_uri]
+[.api-collapsible-fifth-title]
+import_uri
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|URI from which to load the input file containing the CIFS local users and groups. The file must be encrypted using the 7zip utility. URI can be FTP or HTTP.
+
+
+|===
+
+
+[#status_uri]
+[.api-collapsible-fifth-title]
+status_uri
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|URI from which to load the input file containing the CIFS local users and groups. The file must be encrypted using the 7zip utility. URI can be FTP or HTTP.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

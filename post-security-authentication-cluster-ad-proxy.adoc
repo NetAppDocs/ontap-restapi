@@ -1,0 +1,237 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-authentication-cluster-ad-proxy.html'
+summary: 'Configure a data SVM as a proxy'
+---
+
+= Configure a data SVM as a proxy
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/authentication/cluster/ad-proxy`#
+
+*Introduced In:* 9.7
+
+Configures a data SVM as a proxy for Active Directory based authentication for cluster user accounts.
+
+== Required properties
+
+* `svm.name` or `svm.uuid` - Name and UUID of the SVM for a cluster user account.
+
+== Related ONTAP commands
+
+* `security login domain-tunnel create`
+
+== Learn more
+
+* link:security_authentication_cluster_ad-proxy_endpoint_overview.html[DOC /security/authentication/cluster/ad-proxy]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2621516
+| This operation is only supported on a data SVM.
+
+| 2621706
+| The specified `svm.uuid` and `svm.name` refer to different SVMs.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cluster_ad_proxy]
+[.api-collapsible-fifth-title]
+cluster_ad_proxy
+
+The SVM configured as proxy for Active Directory authentication of cluster accounts.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

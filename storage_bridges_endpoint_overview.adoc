@@ -1,0 +1,275 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_bridges_endpoint_overview.html'
+summary: 'Manage storage bridges'
+---
+
+= Manage storage bridges
+
+
+
+== Retrieving storage bridge information
+
+The storage bridge GET API retrieves all of the bridges in the cluster.
+
+'''
+
+== Examples
+
+=== 1) Retrieves a list of bridges from the cluster
+
+==== The following example shows the response with a list of bridges from the cluster:
+
+'''
+
+----
+
+# The API:
+/api/storage/bridges
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/bridges" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "wwn": "2000001086a18100",
+    "name": "ATTO_2000001086a18100",
+    "_links": {
+      "self": {
+        "href": "/api/storage/bridges/2000001086a18100"
+      }
+    }
+  },
+  {
+    "wwn": "2000001086a18380",
+    "name": "ATTO_2000001086a18380",
+    "_links": {
+      "self": {
+        "href": "/api/storage/bridges/2000001086a18380"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/storage/bridges/"
+  }
+}
+}
+----
+
+'''
+
+=== 2) Retrieves a specific bridge from the cluster
+
+==== The following example shows the response of the requested bridge. If there is no bridge with the requested wwn, an error is returned.
+
+'''
+
+----
+
+# The API:
+/api/storage/bridges/{wwn}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/bridges/2000001086a18100" -H "accept: application/hal+json"
+
+# The response:
+{
+ "wwn": "2000001086a18100",
+ "chassis_throughput_state": "ok",
+ "dram_single_bit_error_count": 0,
+ "firmware_version": "3.10 007A",
+ "ip_address": "10.226.57.178",
+ "security_enabled": false,
+ "monitoring_enabled": true,
+ "model": "FibreBridge 7500N",
+ "state": "ok",
+ "managed_by": "in_band",
+ "serial_number": "FB7500N102450",
+ "symbolic_name": "RTP-FCSAS02-41KK10",
+ "vendor": "atto",
+ "name": "ATTO_2000001086a18100",
+ "last_reboot": {
+ "reason": {
+   "message": "Reason: \"FirmwareRestart Command\".",
+   "code": "39321683"
+ },
+ "time": "2020-12-09T00:47:58-05:00"
+ },
+ "paths": [
+ {
+   "name": "0e",
+   "node": {
+     "name": "sti8080mcc-htp-005",
+     "uuid": "ecc3d992-3a86-11eb-9fab-00a0985a6024",
+     "_links": {
+       "self": {
+         "href": "/api/cluster/nodes/ecc3d992-3a86-11eb-9fab-00a0985a6024"
+       }
+     }
+   },
+   "_links": {
+     "self": {
+       "href": "/api/storage/ports/ecc3d992-3a86-11eb-9fab-00a0985a6024/0e"
+     }
+   },
+   "target_port": {
+     "wwn": "2100001086a18380"
+   }
+ }
+ ],
+ "temperature_sensor": {
+ "name": "Chassis Temperature Sensor",
+ "minimum": 0,
+ "maximum": 90,
+ "reading": 54,
+ "state": "ok"
+ },
+ "fc_ports": [
+{
+ "id": 1,
+ "state": "online",
+ "enabled": true,
+ "negotiated_data_rate": 8,
+ "configured_data_rate": 8,
+ "conn_mode": "ptp",
+ "data_rate_capability": 16,
+ "wwn": "2100001086a18100",
+ "peer_wwn": "0000000000000000",
+ "sfp": {
+  "vendor": "FINISAR CORP.",
+  "serial_number": "UW106SA",
+  "part_number": "FTLF8529P3BCV",
+  "data_rate_capability": 16
+ }
+},
+{
+ "id": 2,
+ "state": "online",
+ "enabled": true,
+ "negotiated_data_rate": 16,
+ "configured_data_rate": 16,
+ "conn_mode": "ptp",
+ "data_rate_capability": 16,
+ "wwn": "2200001086a18100",
+ "peer_wwn": "0000000000000000",
+ "sfp": {
+  "vendor": "FINISAR CORP.",
+  "serial_number": "UW1072B",
+  "part_number": "FTLF8529P3BCV",
+  "data_rate_capability": 16
+  }
+ }
+],
+ "power_supply_units": [
+{
+ "name": "A",
+ "state": "ok"
+},
+{
+ "name": "B",
+ "state": "ok"
+}
+ ],
+ "sas_ports": [
+{
+ "id": 1,
+  "state": "online",
+  "enabled": true,
+  "data_rate_capability": 12,
+  "negotiated_data_rate": 6,
+  "wwn": "5001086000a18100",
+  "phy_1": {
+    "state": "online"
+  },
+  "phy_2": {
+    "state": "online"
+  },
+  "phy_3": {
+    "state": "online"
+  },
+  "phy_4": {
+    "state": "online"
+  },
+  "cable": {
+    "vendor": "Molex Inc.",
+    "serial_number": "618130935",
+    "technology": "Passive Copper 5m ID:00",
+    "part_number": "112-00431"
+  }
+ },
+{
+  "state": "offline",
+  "enabled": false,
+  "data_rate_capability": 12,
+  "negotiated_data_rate": 0,
+  "wwn": "5001086000a18104",
+  "phy_1": {
+    "state": "offline"
+  },
+  "phy_2": {
+    "state": "offline"
+  },
+  "phy_3": {
+    "state": "offline"
+  },
+  "phy_4": {
+    "state": "offline"
+  },
+ },
+{
+  "state": "offline",
+  "enabled": false,
+  "data_rate_capability": 12,
+  "negotiated_data_rate": 0,
+  "wwn": "5001086000a18108",
+  "phy_1": {
+    "state": "offline"
+  },
+  "phy_2": {
+    "state": "offline"
+  },
+  "phy_3": {
+    "state": "offline"
+  },
+  "phy_4": {
+    "state": "offline"
+  },
+ },
+{
+  "state": "offline",
+  "enabled": false,
+  "data_rate_capability": 12,
+  "negotiated_data_rate": 0,
+  "wwn": "5001086000a1810c",
+  "phy_1": {
+    "state": "offline"
+  },
+  "phy_2": {
+    "state": "offline"
+  },
+  "phy_3": {
+    "state": "offline"
+  },
+  "phy_4": {
+    "state": "offline"
+  },
+}
+],
+"_links": {
+"self": {
+  "href": "/api/storage/bridges/2000001086a18100"
+ }
+}
+}
+----
+
+'''
+
+

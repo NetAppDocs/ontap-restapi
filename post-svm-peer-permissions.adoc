@@ -1,0 +1,385 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-svm-peer-permissions.html'
+summary: 'Create an SVM peer permission'
+---
+
+= Create an SVM peer permission
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/svm/peer-permissions`#
+
+*Introduced In:* 9.6
+
+Creates an SVM peer permission.
+
+== Required properties
+
+* `svm.name` or `svm.uuid` - SVM name
+* `cluster_peer.uuid` or `cluster_peer.name` - Peer cluster name or peer cluster UUID
+* `applications` - Peering applications
+
+== Related ONTAP commands
+
+* `vserver peer permission create`
+
+== Examples
+
+The following examples show how to create SVM peer permissions.
+
+. Creates an SVM peer permission entry with the local SVM and cluster peer names
+
+----
+ POST "/api/svm/peer-permissions" '{"cluster_peer":{"name":"cluster2"}, "svm":{"name":"VS1"}, "applications":["snapmirror"]}'
+----
+
+. Creates an SVM peer permission entry with the local SVM and cluster peer UUID
+
+----
+ POST "/api/svm/peer-permissions" '{"cluster_peer":{"uuid":"d3268a74-ee76-11e8-a9bb-005056ac6dc9"}, "svm":{"uuid":"8f467b93-f2f1-11e8-9027-005056ac81fc"}, "applications":["snapmirror"]}'
+----
+
+. Creates an SVM peer permission entry with all SVMs and the cluster peer name
+
+----
+ POST "/api/svm/peer-permissions" '{"cluster_peer":{"name":"cluster2"}, "svm":{"name":"*"}, "applications":["snapmirror"]}'
+----
+
+== Learn more
+
+* link:svm_peer-permissions_endpoint_overview.html[DOC /svm/peer-permissions]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|applications
+|array[string]
+a|A list of applications for an SVM peer relationship.
+
+
+|cluster_peer
+|link:#cluster_peer[cluster_peer]
+a|Peer cluster details
+
+
+|svm
+|link:#svm[svm]
+a|Local SVM permitted for peer relationship. To create peer permissions for all SVMs, specify the SVM name as "*".
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "applications": [
+    "snapmirror",
+    "flexcache"
+  ],
+  "cluster_peer": {
+    "name": "cluster2",
+    "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|applications
+|array[string]
+a|A list of applications for an SVM peer relationship.
+
+
+|cluster_peer
+|link:#cluster_peer[cluster_peer]
+a|Peer cluster details
+
+
+|svm
+|link:#svm[svm]
+a|Local SVM permitted for peer relationship. To create peer permissions for all SVMs, specify the SVM name as "*".
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "applications": [
+    "snapmirror",
+    "flexcache"
+  ],
+  "cluster_peer": {
+    "name": "cluster2",
+    "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error codes | Description
+
+| 26345572
+| \{field} is a required field.
+
+| 26345573
+| Failed to find the SVM or volume UUID with name.
+
+| 26345574
+| Failed to find the SVM or volume name with UUID.
+
+| 26345575
+| The specified peer cluster name and peer cluster UUID do not match.
+
+| 9896057
+| SVM peer permission already exists.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#cluster_peer]
+[.api-collapsible-fifth-title]
+cluster_peer
+
+Peer cluster details
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Local SVM permitted for peer relationship. To create peer permissions for all SVMs, specify the SVM name as "*".
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#svm_peer_permission]
+[.api-collapsible-fifth-title]
+svm_peer_permission
+
+Manage SVM peer permissions.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|applications
+|array[string]
+a|A list of applications for an SVM peer relationship.
+
+
+|cluster_peer
+|link:#cluster_peer[cluster_peer]
+a|Peer cluster details
+
+
+|svm
+|link:#svm[svm]
+a|Local SVM permitted for peer relationship. To create peer permissions for all SVMs, specify the SVM name as "*".
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

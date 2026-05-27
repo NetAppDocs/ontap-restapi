@@ -1,0 +1,73 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_duo_groups_owner.uuid_name_endpoint_overview.htmll'
+summary: 'Manage Duo groups configured for an SVM or cluster'
+---
+
+= Manage Duo groups configured for an SVM or cluster
+
+
+
+== Overview
+
+This API configures the Duo group for an SVM.
+Specify the owner UUID. The owner UUID corresponds to the UUID of the SVM containing the Duo groups and can be obtained from the response body of the GET request performed on the API "`/api/svm/svms".
+
+== Examples
+
+=== Retrieving the specific configured Duo group(s) of the cluster or SVM
+
+----
+
+# The API:
+GET "/api/security/authentication/duo/groups/{owner.uuid}/{group-name}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/groups/f810005a-d908-11ed-a6e6-0050568e8ef2/test
+
+# the response:
+{
+"owner": {
+"uuid": "f810005a-d908-11ed-a6e6-0050568e8ef2",
+"name": "cluster-1"
+},
+"name": "test",
+"excluded_users": [
+   "tsmith",
+   "msmith"
+],
+"comment": "test group create"
+}
+----
+
+=== Modifying a Duo group
+
+----
+
+# The API:
+PATCH "/api/security/authentication/duo/groups/{owner.uuid}/{group-name}"
+
+# The call:
+curl -k "https://<mgmt-ip>/api/security/authentication/duo/groups/f810005a-d908-11ed-a6e6-0050568e8ef2/test" --request PATCH --data "{\"comment\": \"Testing\"}"
+
+# the response:
+{}
+----
+
+=== Deleting a  Duo group
+
+----
+
+# The API:
+DELETE "/api/security/authentication/duo/groups/{owner.uuid}/{group-name}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/groups/f810005a-d908-11ed-a6e6-0050568e8ef2/test --request DELETE
+
+# the response:
+{}
+----
+
+

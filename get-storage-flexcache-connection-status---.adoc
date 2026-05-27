@@ -1,0 +1,328 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-flexcache-connection-status---.html'
+summary: 'Retrieve connection status between a cache and origin volume'
+---
+
+= Retrieve connection status between a cache and origin volume
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/flexcache/connection-status/{node}/{svm}/{local_fg_msid}/{remote_svm_uuid}/{remote_vol_const_msid}`#
+
+*Introduced In:* 9.18
+
+Retrieves connection status between a cache and origin volume.
+
+== Related ONTAP commands
+
+* `volume flexcache connection-status show`
+
+== Learn more
+
+* link:storage_flexcache_connection-status_endpoint_overview.html[DOC /storage/flexcache/connection-status]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node
+|string
+|path
+|True
+a|Node Name
+
+
+|svm
+|string
+|path
+|True
+a|SVM Name
+
+
+|local_fg_msid
+|integer
+|path
+|True
+a|Local FG MSID
+
+
+|remote_svm_uuid
+|string
+|path
+|True
+a|Remote SVM UUID
+
+
+|remote_vol_const_msid
+|integer
+|path
+|True
+a|Remote Constituent MSID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|conn_state
+|string
+a|Connection Status between the Flexcache and Origin volumes.
+
+
+|last_update_time
+|string
+a|Last update time of the connection status.
+
+
+|local_fg_msid
+|integer
+a|The local volume's Master Set ID.
+
+
+|node
+|string
+a|Name of the node.
+
+
+|remote_cluster
+|string
+a|Remote cluster.
+
+
+|remote_endpoint
+|string
+a|Remote endpoint type.
+
+
+|remote_svm
+|string
+a|Remote volume SVM.
+
+
+|remote_svm_uuid
+|string
+a|Remote SVM UUID.
+
+
+|remote_vol_const_msid
+|integer
+a|Remote volume's Master Set ID.
+
+
+|remote_volume
+|string
+a|Remote Volume name.
+
+
+|svm
+|string
+a|Volume SVM.
+
+
+|svm_uuid
+|string
+a|Local SVM UUID.
+
+
+|volume
+|string
+a|Local Volume name.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "conn_state": "string",
+  "last_update_time": "2018-06-04 19:00:00 +0000",
+  "local_fg_msid": 0,
+  "node": "string",
+  "remote_cluster": "string",
+  "remote_endpoint": "string",
+  "remote_svm": "string",
+  "remote_svm_uuid": "string",
+  "remote_vol_const_msid": 0,
+  "remote_volume": "string",
+  "svm": "string",
+  "svm_uuid": "string",
+  "volume": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

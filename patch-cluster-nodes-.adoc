@@ -1,0 +1,2353 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-cluster-nodes-.html'
+summary: 'Update node information'
+---
+
+= Update node information
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/cluster/nodes/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the node information or performs shutdown/reboot actions on a node.
+
+== Related ONTAP commands
+
+* `cluster ha modify`
+* `storage failover modify`
+* `system node modify`
+* `system node reboot`
+* `system node power off`
+* `system node power on`
+* `system service-processor network modify`
+* `system service-processor reboot-sp`
+* `system service-processor image modify`
+* `system service-processor network auto-configuration enable`
+* `system service-processor network auto-configuration disable`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|* format: uuid
+
+
+|action
+|string
+|query
+|False
+a|The shutdown action shuts the node down and transfers storage control to its HA group if storage failover is enabled.
+The reboot action reboots the node and transfers storage control to its HA group if storage failover is enabled.
+The giveback action transfers storage control back to the owner from its HA group.
+The "power_off" action shuts the node down with the assistance of the service processor.
+The "power_on" action restores power to the node with the assistance of the service processor.
+
+* enum: ["shutdown", "reboot", "giveback", "power_off", "power_on", "takeover_check"]
+
+
+|shutdown_reboot_reason
+|string
+|query
+|False
+a|Indicates the reason for the reboot or shutdown. This only applies when an action of reboot or shutdown is provided.
+
+
+|allow_data_outage
+|boolean
+|query
+|False
+a|This only applies when an action of reboot or shutdown is provided. It allows storage failover to be bypassed along with any failures related to maintaining quorum in the cluster.
+
+* Default value:
+
+
+|service_processor.firmware_image
+|string
+|query
+|False
+a|Service processor image to boot with after a reboot.
+
+* Introduced in: 9.10
+* enum: ["primary", "backup"]
+
+
+|service_processor.action
+|string
+|query
+|False
+a|Action used to reboot the service processor (SP).
+
+* Introduced in: 9.10
+* enum: ["reboot"]
+
+
+|allow_version_mismatch
+|boolean
+|query
+|False
+a|Applies only when a reboot action is provided. It allows storage failover to be bypassed along with any failures related to software version mismatch.
+
+* Introduced in: 9.12
+* Default value:
+
+
+|override_vetoes
+|boolean
+|query
+|False
+a|Applies only when a giveback action is provided. If giveback is vetoed, you must check the EMS messages to determine the cause. Depending on the reason or reasons, you can decide whether you can safely override the vetoes.
+
+* Introduced in: 9.13
+* Default value:
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|anti_ransomware_version
+|string
+a|Anti ransomware version.
+
+
+|cluster_interfaces
+|array[link:#cluster_interfaces[cluster_interfaces]]
+a|
+
+|controller
+|link:#controller[controller]
+a|Controller information
+
+
+|date
+|string
+a|The current or "wall clock" time of the node in ISO-8601 date, time, and time zone format.
+The ISO-8601 date and time are localized based on the ONTAP cluster's timezone setting.
+
+* example: 2019-04-17 11:49:26 -0400
+* format: date-time
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|external_cache
+|link:#external_cache[external_cache]
+a|Cache used for buffer management.
+
+
+|external_cache_bypass
+|link:#external_cache_bypass[external_cache_bypass]
+a|External cache bypass management.
+
+
+|ha
+|link:#ha[ha]
+a|
+
+|is_spares_low
+|boolean
+a|Specifies whether or not the node is in spares low condition.
+
+
+|location
+|string
+a|
+
+|management_interfaces
+|array[link:#management_interfaces[management_interfaces]]
+a|
+
+|membership
+|string
+a|Possible values:
+
+* _available_ - A node is detected on the internal cluster network and can be added to the cluster.  Nodes that have a membership of "available" are not returned when a GET request is called when the cluster exists. Provide a query on the "membership" property for _available_ to scan for nodes on the cluster network. Nodes that have a membership of "available" are returned automatically before a cluster is created.
+* _joining_ - Joining nodes are in the process of being added to the cluster. The node might be progressing through the steps to become a member or might have failed. The job to add the node or create the cluster provides details on the current progress of the node.
+* _member_ - Nodes that are members have successfully joined the cluster.
+
+
+|metrocluster
+|link:#metrocluster[metrocluster]
+a|Metrocluster
+
+
+|model
+|string
+a|
+
+|name
+|string
+a|
+
+|nvlog
+|link:#nvlog[nvlog]
+a|Non-volatile write log settings.
+
+
+|nvram
+|link:#nvram[nvram]
+a|
+
+|owner
+|string
+a|Owner of the node.
+
+
+|serial_number
+|string
+a|
+
+|service_processor
+|link:#service_processor[service_processor]
+a|
+
+|snaplock
+|link:#snaplock[snaplock]
+a|SnapLock-related properties.
+
+
+|state
+|string
+a|State of the node:
+
+* _up_ - Node is up and operational.
+* _booting_ - Node is booting up.
+* _down_ - Node has stopped or is dumping core.
+* _taken_over_ - Node has been taken over by its HA partner and is not yet waiting for giveback.
+* _waiting_for_giveback_ - Node has been taken over by its HA partner and is waiting for the HA partner to giveback disks.
+* _degraded_ - Node has one or more critical services offline.
+* _unknown_ - Node or its HA partner cannot be contacted and there is no information on the node's state.
+
+
+|storage_configuration
+|string
+a|The storage configuration in the system. Possible values:
+
+* _mixed_path_
+* _single_path_
+* _multi_path_
+* _tri_path_
+* _quad_path_
+* _mixed_path_ha_
+* _single_path_ha_
+* _multi_path_ha_
+* _tri_path_ha_
+* _quad_path_ha_
+* _unknown_
+* _virtual_
+
+
+|system_aggregate
+|link:#system_aggregate[system_aggregate]
+a|Aggregate
+
+
+|system_id
+|string
+a|
+
+|system_machine_type
+|string
+a|OEM system machine type.
+
+
+|uptime
+|integer
+a|The total time, in seconds, that the node has been up.
+
+
+|uuid
+|string
+a|
+
+|vendor_serial_number
+|string
+a|OEM vendor serial number.
+
+
+|vm
+|link:#vm[vm]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "anti_ransomware_version": "1.0",
+  "cluster_interfaces": [
+    {
+      "name": "lif1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "controller": {
+    "board": "System Board XXVIII",
+    "cpu": {
+      "count": 20,
+      "firmware_release": "string",
+      "processor": "string"
+    },
+    "failed_fan": {
+      "count": 1,
+      "message": {
+        "code": "111411207",
+        "message": "There are no failed fans."
+      }
+    },
+    "failed_power_supply": {
+      "count": 1,
+      "message": {
+        "code": "111411208",
+        "message": "There are no failed power supplies."
+      }
+    },
+    "flash_cache": [
+      {
+        "capacity": 1024000000000,
+        "device_id": 0,
+        "firmware_file": "X9170_O000Z6300NVM",
+        "firmware_version": "NA05",
+        "hardware_revision": "A1",
+        "model": "X1970A",
+        "part_number": "119-00207",
+        "serial_number": "A22P5061550000187",
+        "slot": "6-1",
+        "state": "string"
+      }
+    ],
+    "frus": [
+      {
+        "id": "string",
+        "state": "string",
+        "type": "string"
+      }
+    ],
+    "memory_size": 1024000000,
+    "over_temperature": "string"
+  },
+  "date": "2019-04-17 11:49:26 -0400",
+  "external_cache": {
+    "is_enabled": 1,
+    "is_hya_enabled": 1,
+    "is_rewarm_enabled": 1
+  },
+  "external_cache_bypass": {
+    "enabled": 1,
+    "large_read_ops_allow_percent": 100,
+    "reset": 1
+  },
+  "ha": {
+    "giveback": {
+      "failure": {
+        "code": 852126,
+        "message": "Failed to initiate giveback. Run the \"storage failover show-giveback\" command for more information."
+      },
+      "state": "failed",
+      "status": [
+        {
+          "aggregate": {
+            "name": "aggr1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "error": {
+            "code": "852126",
+            "message": "string"
+          },
+          "state": "string"
+        }
+      ]
+    },
+    "interconnect": {
+      "adapter": "MVIA-RDMA",
+      "state": "string"
+    },
+    "partners": [
+      {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    ],
+    "ports": [
+      {
+        "number": 0,
+        "state": "active"
+      }
+    ],
+    "takeover": {
+      "failure": {
+        "code": 852130,
+        "message": "Failed to initiate takeover. Run the \"storage failover show-takeover\" command for more information."
+      },
+      "state": "failed"
+    },
+    "takeover_check": {
+      "reasons": [
+        "string"
+      ]
+    },
+    "type": "string"
+  },
+  "location": "rack 2 row 5",
+  "management_interfaces": [
+    {
+      "name": "lif1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "membership": "string",
+  "metrocluster": {
+    "ports": [
+      {
+        "name": "e1b"
+      }
+    ],
+    "type": "string"
+  },
+  "model": "FAS3070",
+  "name": "node-01",
+  "nvlog": {
+    "backing_type": "string",
+    "swap_mode": "string"
+  },
+  "nvram": {
+    "battery_state": "string",
+    "id": 0
+  },
+  "owner": "Example Corp",
+  "serial_number": "4048820-60-9",
+  "service_processor": {
+    "api_service": {
+      "port": 0
+    },
+    "auto_config": {
+      "ipv4_subnet": "ipv4_mgmt",
+      "ipv6_subnet": "ipv6_mgmt"
+    },
+    "backup": {
+      "state": "string",
+      "version": "11.6"
+    },
+    "firmware_version": "string",
+    "ipv4_interface": {
+      "address": "10.10.10.7",
+      "gateway": "10.1.1.1",
+      "netmask": "255.255.0.0",
+      "setup_state": "string"
+    },
+    "ipv6_interface": {
+      "address": "fd20:8b1e:b255:5011:10:141:4:97",
+      "gateway": "fd20:8b1e:b255:5011:10::1",
+      "link_local_ip": "FE80::/10",
+      "netmask": 64,
+      "router_ip": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+      "setup_state": "string"
+    },
+    "last_update_state": "string",
+    "link_status": "string",
+    "mac_address": "string",
+    "primary": {
+      "state": "string",
+      "version": "11.6"
+    },
+    "ssh_info": {
+      "allowed_addresses": [
+        "10.10.10.7/24"
+      ]
+    },
+    "state": "string",
+    "type": "string"
+  },
+  "snaplock": {
+    "compliance_clock_time": "2018-06-04 19:00:00 +0000"
+  },
+  "state": "string",
+  "storage_configuration": "string",
+  "system_aggregate": {
+    "name": "aggr1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "system_id": 92027651,
+  "system_machine_type": "7Y56-CTOWW1",
+  "uptime": 300536,
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+  "vendor_serial_number": 791603000068,
+  "vm": {
+    "provider_type": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 852046
+| HA partner node is not running to do takeover.
+
+| 852115
+| The reboot/shutdown is prevented because LIFs cannot be moved away from the node.
+
+| 852269
+| This operation is not supported on this platform.
+
+| 3604514
+| A reboot or shutdown request is already in progress.
+
+| 3604515
+| Reboot or shutdown of all nodes results in data service failure and client disruption for the entire cluster. Use "allow-data-outage=true" to bypass this check.
+
+| 9240591
+| The name is not valid. The name is already in use by a cluster node, SVM, or it is the name of the local cluster.
+
+| 9240606
+| The reboot/shutdown is prevented due to quorum warnings.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node_setup_ip]
+[.api-collapsible-fifth-title]
+node_setup_ip
+
+The IP configuration for cluster setup.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#cluster_interface]
+[.api-collapsible-fifth-title]
+cluster_interface
+
+The cluster network IP address of the node to be added.
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#cluster_interfaces]
+[.api-collapsible-fifth-title]
+cluster_interfaces
+
+Network interface
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#cpu]
+[.api-collapsible-fifth-title]
+cpu
+
+CPU information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of CPUs on the node.
+
+
+|firmware_release
+|string
+a|Firmware release number. Defined by the CPU manufacturer.
+
+
+|processor
+|string
+a|CPU type on the node.
+
+
+|===
+
+
+[#message]
+[.api-collapsible-fifth-title]
+message
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Error code describing the current condition of chassis fans.
+
+
+|message
+|string
+a|Message describing the current condition of chassis fans. It is only of use when `failed_fan.count` is not zero.
+
+
+|===
+
+
+[#failed_fan]
+[.api-collapsible-fifth-title]
+failed_fan
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Specifies a count of the number of chassis fans that are not operating within the recommended RPM range.
+
+
+|message
+|link:#message[message]
+a|
+
+|===
+
+
+[#message]
+[.api-collapsible-fifth-title]
+message
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Error code describing the current condition of power supply.
+
+
+|message
+|string
+a|Message describing the state of any power supplies that are currently degraded. It is only of use when `failed_power_supply.count` is not zero.
+
+
+|===
+
+
+[#failed_power_supply]
+[.api-collapsible-fifth-title]
+failed_power_supply
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of failed power supply units.
+
+
+|message
+|link:#message[message]
+a|
+
+|===
+
+
+[#flash_cache]
+[.api-collapsible-fifth-title]
+flash_cache
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|capacity
+|integer
+a|Size in bytes
+
+
+|device_id
+|integer
+a|
+
+|firmware_file
+|string
+a|
+
+|firmware_version
+|string
+a|
+
+|hardware_revision
+|string
+a|
+
+|model
+|string
+a|
+
+|part_number
+|string
+a|
+
+|serial_number
+|string
+a|
+
+|slot
+|string
+a|
+
+|state
+|string
+a|
+
+|===
+
+
+[#frus]
+[.api-collapsible-fifth-title]
+frus
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|===
+
+
+[#controller]
+[.api-collapsible-fifth-title]
+controller
+
+Controller information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|board
+|string
+a|Type of the system board. This is defined by vendor.
+
+
+|cpu
+|link:#cpu[cpu]
+a|CPU information.
+
+
+|failed_fan
+|link:#failed_fan[failed_fan]
+a|
+
+|failed_power_supply
+|link:#failed_power_supply[failed_power_supply]
+a|
+
+|flash_cache
+|array[link:#flash_cache[flash_cache]]
+a|A list of Flash-Cache devices. Only returned when requested by name.
+
+
+|frus
+|array[link:#frus[frus]]
+a|List of FRUs on the node. Only returned when requested by name.
+
+
+|memory_size
+|integer
+a|Memory available on the node, in bytes.
+
+
+|over_temperature
+|string
+a|Specifies whether the hardware is currently operating outside of its recommended temperature range. The hardware shuts down if the temperature exceeds critical thresholds.
+
+
+|===
+
+
+[#external_cache]
+[.api-collapsible-fifth-title]
+external_cache
+
+Cache used for buffer management.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_enabled
+|boolean
+a|Indicates whether the external cache is enabled.
+
+
+|is_hya_enabled
+|boolean
+a|Indicates whether HyA caching is enabled.
+
+
+|is_rewarm_enabled
+|boolean
+a|Indicates whether rewarm is enabled.
+
+
+|pcs_size
+|integer
+a|PCS size in gigabytes.
+
+
+|===
+
+
+[#external_cache_bypass]
+[.api-collapsible-fifth-title]
+external_cache_bypass
+
+External cache bypass management.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether external cache bypass is enabled.
+
+
+|large_read_ops_allow_percent
+|integer
+a|External cache bypass allowed operations percentage for large reads.
+
+
+|reset
+|boolean
+a|Initiates an external cache bypass threshold reset action.
+
+
+|===
+
+
+[#failure]
+[.api-collapsible-fifth-title]
+failure
+
+Indicates the failure code and message. This property is not supported on the ASA r2 platform.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Message code
+
+
+|message
+|string
+a|Detailed message based on the state.
+
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+Aggregate name and UUID.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Indicates the failed aggregate giveback code and message.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Message code.
+
+
+|message
+|string
+a|Detailed message based on the state.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|Aggregate name and UUID.
+
+
+|error
+|link:#error[error]
+a|Indicates the failed aggregate giveback code and message.
+
+
+|state
+|string
+a|Giveback state of the aggregate.
+
+Possible values include no aggregates to giveback(nothing_to_giveback), failed to disable background disk firmware update(BDFU) on source node(failed_bdfu_source),
+
+giveback delayed as disk firmware update is in progress on source node(delayed_bdfu_source), performing veto checks(running_checks).
+
+
+|===
+
+
+[#giveback]
+[.api-collapsible-fifth-title]
+giveback
+
+Represents the state of the node that is giving storage back to its HA partner.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|failure
+|link:#failure[failure]
+a|Indicates the failure code and message. This property is not supported on the ASA r2 platform.
+
+
+|state
+|string
+a|
+
+|status
+|array[link:#status[status]]
+a|Giveback status of each aggregate. This property is not supported on the ASA r2 platform.
+
+
+|===
+
+
+[#interconnect]
+[.api-collapsible-fifth-title]
+interconnect
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|adapter
+|string
+a|HA interconnect device name.
+
+
+|state
+|string
+a|Indicates the HA interconnect status.
+
+
+|===
+
+
+[#partners]
+[.api-collapsible-fifth-title]
+partners
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|number
+|integer
+a|HA port number
+
+
+|state
+|string
+a|HA port state:
+
+* _down_ - Logical HA link is down.
+* _initialized_ - Logical HA link is initialized. The physical link is up, but the subnet manager hasn't started to configure the port.
+* _armed_ - Logical HA link is armed. The physical link is up and the subnet manager started but did not yet complete configuring the port.
+* _active_ - Logical HA link is active.
+* _reserved_ - Logical HA link is active, but the physical link is down.
+
+
+|===
+
+
+[#takeover]
+[.api-collapsible-fifth-title]
+takeover
+
+This represents the state of the node that is taking over storage from its HA partner.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|failure
+|link:#failure[failure]
+a|Indicates the failure code and message. This property is not supported on the ASA r2 platform.
+
+
+|state
+|string
+a|
+
+|===
+
+
+[#takeover_check]
+[.api-collapsible-fifth-title]
+takeover_check
+
+The takeover check response.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reasons
+|array[string]
+a|Reasons why the takeover is not possible.
+
+
+|takeover_possible
+|boolean
+a|Indicates whether the takeover is possible.
+
+
+|===
+
+
+[#ha]
+[.api-collapsible-fifth-title]
+ha
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_giveback
+|boolean
+a|Specifies whether giveback is automatically initiated when the node that owns the storage is ready.
+
+
+|enabled
+|boolean
+a|Specifies whether or not storage failover is enabled.
+
+
+|giveback
+|link:#giveback[giveback]
+a|Represents the state of the node that is giving storage back to its HA partner.
+
+
+|interconnect
+|link:#interconnect[interconnect]
+a|
+
+|partners
+|array[link:#partners[partners]]
+a|Nodes in this node's High Availability (HA) group.
+
+
+|ports
+|array[link:#ports[ports]]
+a|
+
+|takeover
+|link:#takeover[takeover]
+a|This represents the state of the node that is taking over storage from its HA partner.
+
+
+|takeover_check
+|link:#takeover_check[takeover_check]
+a|The takeover check response.
+
+
+|type
+|string
+a|Type of storage.
+
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|string
+a|The hardware assist IP address.
+
+
+|port
+|integer
+a|The hardware assist port.
+
+
+|state
+|string
+a|The hardware assist monitor status.
+
+
+|===
+
+
+[#partner]
+[.api-collapsible-fifth-title]
+partner
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|string
+a|The hardware assist IP address.
+
+
+|port
+|integer
+a|The hardware assist port.
+
+
+|state
+|string
+a|The hardware assist monitor status.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether hardware assist is enabled on the node.
+
+
+|===
+
+
+[#hw_assist]
+[.api-collapsible-fifth-title]
+hw_assist
+
+The hardware assist information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|status
+|link:#status[status]
+a|
+
+|===
+
+
+[#management_interface]
+[.api-collapsible-fifth-title]
+management_interface
+
+The management interface of the node to be added. The subnet mask is set based on the management interface of the cluster or the management interfaces of other nodes.
+
+[#management_interfaces]
+[.api-collapsible-fifth-title]
+management_interfaces
+
+Network interface
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+CPU performance for the nodes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|processor_utilization
+|integer
+a|Average CPU Utilization for the node
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#metrocluster]
+[.api-collapsible-fifth-title]
+metrocluster
+
+Metrocluster
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|custom_vlan_capable
+|boolean
+a|Indicates whether the MetroCluster over IP platform supports custom VLAN IDs.
+
+
+|ports
+|array[link:#ports[ports]]
+a|MetroCluster over IP ports.
+
+
+|type
+|string
+a|The Metrocluster configuration type
+
+
+|===
+
+
+[#nvlog]
+[.api-collapsible-fifth-title]
+nvlog
+
+Non-volatile write log settings.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|backing_type
+|string
+a|Indicates the current NVLog journal backing type.
+
+
+|swap_mode
+|string
+a|Indicates the current NVLog journal swap mode.
+
+
+|===
+
+
+[#nvram]
+[.api-collapsible-fifth-title]
+nvram
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|battery_state
+|string
+a|Specifies status of the NVRAM battery. Possible values:
+
+* _battery_ok_
+* _battery_partially_discharged_
+* _battery_fully_discharged_
+* _battery_not_present_
+* _battery_near_end_of_life_
+* _battery_at_end_of_life_
+* _battery_unknown_
+* _battery_over_charged_
+* _battery_fully_charged_
+
+
+|id
+|integer
+a|Vendor specific NVRAM ID of the node.
+
+
+|===
+
+
+[#api_service]
+[.api-collapsible-fifth-title]
+api_service
+
+Provides the properties of the service processor (SP) or baseboard management controller (BMC) API service.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether the SP API service of the SP or BMC is enabled or disabled. When the SP API service is disabled, features such as network-based firmware updates and network-based down node log collection are not available, and the slower serial-interface is used for firmware updates and down node log collection.
+
+
+|limit_access
+|boolean
+a|Restricts SP API service access to cluster nodes only. By default, limit_access is set to true.
+
+
+|port
+|integer
+a|Specifies the port number on the SP or BMC used for the SP API service. By default, port 50000 is used.
+
+
+|===
+
+
+[#auto_config]
+[.api-collapsible-fifth-title]
+auto_config
+
+Provides the properties of the service processor auto configuration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipv4_subnet
+|string
+a|Indicates the service processor auto configuration IPv4 subnet name. To enable IPv4 auto-config give the subnet name, give the value as null or an empty string "" to disable auto-config.
+
+
+|ipv6_subnet
+|string
+a|Indicates the service processor auto configuration IPv6 subnet name. To enable IPv6 auto-config give the subnet name, give the value as null or an empty string "" to disable auto-config.
+
+
+|===
+
+
+[#backup]
+[.api-collapsible-fifth-title]
+backup
+
+Provides the properties of the service processor backup partition.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_current
+|boolean
+a|Indicates whether the service processor is currently booted from the backup partition.
+
+
+|state
+|string
+a|Status of the backup partition.
+
+
+|version
+|string
+a|Firmware version of the backup partition.
+
+
+|===
+
+
+[#ipv4_interface]
+[.api-collapsible-fifth-title]
+ipv4_interface
+
+Object to set up an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 address
+
+
+|enabled
+|boolean
+a|Indicates whether the IPv4 interfaces is enabled. It expects dhcp_enabled as "true" or values for address, netmask and gateway when set to "true".
+
+
+|gateway
+|string
+a|The IPv4 address of the default router.
+
+
+|netmask
+|string
+a|Input as IPv4 mask (255.255.0.0). Output is always the netmask length.
+
+
+|setup_state
+|string
+a|Indicates the setup state of the interface.
+
+
+|===
+
+
+[#ipv6_interface]
+[.api-collapsible-fifth-title]
+ipv6_interface
+
+Object to setup an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv6 address
+
+
+|enabled
+|boolean
+a|Indicates whether the IPv6 interfaces is enabled. It expects values for address, netmask and gateway when set to "true".
+
+
+|gateway
+|string
+a|The IPv6 address of the default router.
+
+
+|is_ipv6_ra_enabled
+|boolean
+a|Indicates whether IPv6 RA is enabled.
+
+
+|link_local_ip
+|string
+a|Link local IP address.
+
+
+|netmask
+|integer
+a|The IPv6 netmask/prefix length. The default value is 64 with a valid range of 1 to 127.
+
+
+|router_ip
+|string
+a|Router assigned IP address.
+
+
+|setup_state
+|string
+a|Indicates the setup state of the interface.
+
+
+|===
+
+
+[#primary]
+[.api-collapsible-fifth-title]
+primary
+
+Provides the properties of the service processor primary partition.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_current
+|boolean
+a|Indicates whether the service processor is currently booted from the primary partition.
+
+
+|state
+|string
+a|Status of the primary partition.
+
+
+|version
+|string
+a|Firmware version of the primary partition.
+
+
+|===
+
+
+[#ssh_info]
+[.api-collapsible-fifth-title]
+ssh_info
+
+Service processor SSH allowed IP address configuration applied across the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allowed_addresses
+|array[string]
+a|Allowed IP addresses
+
+
+|===
+
+
+[#web_service]
+[.api-collapsible-fifth-title]
+web_service
+
+Provides the properties of SP or BMC web service.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether the web service of the SP or BMC is enabled or disabled. When the web service is disabled, features such as network-based firmware updates and network-based down node log collection are not available, and the slower serial-interface is used for firmware updates and down node log collection.
+
+
+|limit_access
+|boolean
+a|Restricts web service access to cluster nodes only. By default, limit_access is set to true.
+
+
+|===
+
+
+[#service_processor]
+[.api-collapsible-fifth-title]
+service_processor
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|api_service
+|link:#api_service[api_service]
+a|Provides the properties of the service processor (SP) or baseboard management controller (BMC) API service.
+
+
+|auto_config
+|link:#auto_config[auto_config]
+a|Provides the properties of the service processor auto configuration.
+
+
+|autoupdate_enabled
+|boolean
+a|Indicates whether the service processor can be automatically updated from ONTAP.
+
+* Introduced in: 9.10
+* x-ntap-readModify: true
+* x-nullable: true
+
+
+|backup
+|link:#backup[backup]
+a|Provides the properties of the service processor backup partition.
+
+
+|dhcp_enabled
+|boolean
+a|Set to "true" to use DHCP to configure an IPv4 interface. Do not provide values for address, netmask and gateway when set to "true".
+
+
+|firmware_version
+|string
+a|The version of firmware installed.
+
+
+|ipv4_interface
+|link:#ipv4_interface[ipv4_interface]
+a|Object to set up an interface along with its default router.
+
+
+|ipv6_interface
+|link:#ipv6_interface[ipv6_interface]
+a|Object to setup an interface along with its default router.
+
+
+|is_ip_configured
+|boolean
+a|Indicates whether the service processor network is configured.
+
+
+|last_update_state
+|string
+a|Provides the "update status" of the last service processor update.
+
+
+|link_status
+|string
+a|
+
+|mac_address
+|string
+a|
+
+|primary
+|link:#primary[primary]
+a|Provides the properties of the service processor primary partition.
+
+
+|ssh_info
+|link:#ssh_info[ssh_info]
+a|Service processor SSH allowed IP address configuration applied across the cluster.
+
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|web_service
+|link:#web_service[web_service]
+a|Provides the properties of SP or BMC web service.
+
+
+|===
+
+
+[#snaplock]
+[.api-collapsible-fifth-title]
+snaplock
+
+SnapLock-related properties.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|compliance_clock_time
+|string
+a|SnapLock compliance clock time.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+Raw CPU performance for the nodes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|processor_utilization_base
+|integer
+a|Base counter for CPU Utilization.
+
+
+|processor_utilization_raw
+|integer
+a|Raw CPU utilization for the node. The change in this value over time should be divided by corresponding change in processor_utilization_base, then multiplied by 100 to calculate the percentage CPU utilization for the node. For example: ((processor_utilization_raw_t2 - processor_utilization_raw_t1) / (processor_utilization_base_t2 - processor_utilization_base_t1)) * 100.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#system_aggregate]
+[.api-collapsible-fifth-title]
+system_aggregate
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#version]
+[.api-collapsible-fifth-title]
+version
+
+This returns the cluster version information.  When the cluster has more than one node, the cluster version is equivalent to the lowest of generation, major, and minor versions on all nodes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|full
+|string
+a|The full cluster version string.
+
+
+|generation
+|integer
+a|The generation portion of the version.
+
+
+|major
+|integer
+a|The major portion of the version.
+
+
+|minor
+|integer
+a|The minor portion of the version.
+
+
+|===
+
+
+[#vm]
+[.api-collapsible-fifth-title]
+vm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|provider_type
+|string
+a|Cloud provider where the VM is hosted.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Complete node information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|anti_ransomware_version
+|string
+a|Anti ransomware version.
+
+
+|cluster_interfaces
+|array[link:#cluster_interfaces[cluster_interfaces]]
+a|
+
+|controller
+|link:#controller[controller]
+a|Controller information
+
+
+|date
+|string
+a|The current or "wall clock" time of the node in ISO-8601 date, time, and time zone format.
+The ISO-8601 date and time are localized based on the ONTAP cluster's timezone setting.
+
+* example: 2019-04-17 11:49:26 -0400
+* format: date-time
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|external_cache
+|link:#external_cache[external_cache]
+a|Cache used for buffer management.
+
+
+|external_cache_bypass
+|link:#external_cache_bypass[external_cache_bypass]
+a|External cache bypass management.
+
+
+|ha
+|link:#ha[ha]
+a|
+
+|is_spares_low
+|boolean
+a|Specifies whether or not the node is in spares low condition.
+
+
+|location
+|string
+a|
+
+|management_interfaces
+|array[link:#management_interfaces[management_interfaces]]
+a|
+
+|membership
+|string
+a|Possible values:
+
+* _available_ - A node is detected on the internal cluster network and can be added to the cluster.  Nodes that have a membership of "available" are not returned when a GET request is called when the cluster exists. Provide a query on the "membership" property for _available_ to scan for nodes on the cluster network. Nodes that have a membership of "available" are returned automatically before a cluster is created.
+* _joining_ - Joining nodes are in the process of being added to the cluster. The node might be progressing through the steps to become a member or might have failed. The job to add the node or create the cluster provides details on the current progress of the node.
+* _member_ - Nodes that are members have successfully joined the cluster.
+
+
+|metrocluster
+|link:#metrocluster[metrocluster]
+a|Metrocluster
+
+
+|model
+|string
+a|
+
+|name
+|string
+a|
+
+|nvlog
+|link:#nvlog[nvlog]
+a|Non-volatile write log settings.
+
+
+|nvram
+|link:#nvram[nvram]
+a|
+
+|owner
+|string
+a|Owner of the node.
+
+
+|serial_number
+|string
+a|
+
+|service_processor
+|link:#service_processor[service_processor]
+a|
+
+|snaplock
+|link:#snaplock[snaplock]
+a|SnapLock-related properties.
+
+
+|state
+|string
+a|State of the node:
+
+* _up_ - Node is up and operational.
+* _booting_ - Node is booting up.
+* _down_ - Node has stopped or is dumping core.
+* _taken_over_ - Node has been taken over by its HA partner and is not yet waiting for giveback.
+* _waiting_for_giveback_ - Node has been taken over by its HA partner and is waiting for the HA partner to giveback disks.
+* _degraded_ - Node has one or more critical services offline.
+* _unknown_ - Node or its HA partner cannot be contacted and there is no information on the node's state.
+
+
+|storage_configuration
+|string
+a|The storage configuration in the system. Possible values:
+
+* _mixed_path_
+* _single_path_
+* _multi_path_
+* _tri_path_
+* _quad_path_
+* _mixed_path_ha_
+* _single_path_ha_
+* _multi_path_ha_
+* _tri_path_ha_
+* _quad_path_ha_
+* _unknown_
+* _virtual_
+
+
+|system_aggregate
+|link:#system_aggregate[system_aggregate]
+a|Aggregate
+
+
+|system_id
+|string
+a|
+
+|system_machine_type
+|string
+a|OEM system machine type.
+
+
+|uptime
+|integer
+a|The total time, in seconds, that the node has been up.
+
+
+|uuid
+|string
+a|
+
+|vendor_serial_number
+|string
+a|OEM vendor serial number.
+
+
+|vm
+|link:#vm[vm]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

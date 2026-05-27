@@ -1,0 +1,281 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-groups--.html'
+summary: 'Update configured group information'
+---
+
+= Update configured group information
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/groups/{owner.uuid}/{name}/{type}`#
+
+*Introduced In:* 9.16
+
+Updates configured group information.
+
+== Related ONTAP commands
+
+* `security login group modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Group owner. Used to identify a cluster or an SVM.
+
+
+|name
+|string
+|path
+|True
+a|Group name.
+
+
+|type
+|string
+|path
+|True
+a|Group type.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Any comment regarding this group entry.
+
+
+|create_time
+|string
+a|Date and time indicating when this group entry was created.
+
+
+|id
+|integer
+a|Group ID which is unique per group across the system. It is a read-only field and it automatically assigns the next available unique number.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|uuid
+|string
+a|Group UUID from external Active Directory.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "Azure Group",
+  "create_time": "string",
+  "id": 0,
+  "scope": "string",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5636235
+| Duplicate UUID.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Group owner. Used to identify a cluster or an SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#security_group]
+[.api-collapsible-fifth-title]
+security_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Any comment regarding this group entry.
+
+
+|create_time
+|string
+a|Date and time indicating when this group entry was created.
+
+
+|id
+|integer
+a|Group ID which is unique per group across the system. It is a read-only field and it automatically assigns the next available unique number.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|uuid
+|string
+a|Group UUID from external Active Directory.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

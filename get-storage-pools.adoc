@@ -1,0 +1,1108 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-pools.html'
+summary: 'Retrieve storage pools for the entire cluster'
+---
+
+= Retrieve storage pools for the entire cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/pools`#
+
+*Introduced In:* 9.11
+
+Retrieves the collection of storage pools for the entire cluster.
+
+== Related ONTAP commands
+
+* `storage pool show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|capacity.disks.disk.name
+|string
+|query
+|False
+a|Filter by capacity.disks.disk.name
+
+
+|capacity.disks.usable_size
+|integer
+|query
+|False
+a|Filter by capacity.disks.usable_size
+
+
+|capacity.disks.total_size
+|integer
+|query
+|False
+a|Filter by capacity.disks.total_size
+
+
+|capacity.spare_allocation_units.syncmirror_pool
+|string
+|query
+|False
+a|Filter by capacity.spare_allocation_units.syncmirror_pool
+
+
+|capacity.spare_allocation_units.size
+|integer
+|query
+|False
+a|Filter by capacity.spare_allocation_units.size
+
+
+|capacity.spare_allocation_units.count
+|integer
+|query
+|False
+a|Filter by capacity.spare_allocation_units.count
+
+
+|capacity.spare_allocation_units.node.name
+|string
+|query
+|False
+a|Filter by capacity.spare_allocation_units.node.name
+
+
+|capacity.spare_allocation_units.node.uuid
+|string
+|query
+|False
+a|Filter by capacity.spare_allocation_units.node.uuid
+
+
+|capacity.spare_allocation_units.available_size
+|integer
+|query
+|False
+a|Filter by capacity.spare_allocation_units.available_size
+
+
+|capacity.disk_count
+|integer
+|query
+|False
+a|Filter by capacity.disk_count
+
+
+|capacity.used_allocation_units.current_usage
+|integer
+|query
+|False
+a|Filter by capacity.used_allocation_units.current_usage
+
+
+|capacity.used_allocation_units.node.name
+|string
+|query
+|False
+a|Filter by capacity.used_allocation_units.node.name
+
+
+|capacity.used_allocation_units.node.uuid
+|string
+|query
+|False
+a|Filter by capacity.used_allocation_units.node.uuid
+
+
+|capacity.used_allocation_units.count
+|integer
+|query
+|False
+a|Filter by capacity.used_allocation_units.count
+
+
+|capacity.used_allocation_units.aggregate.name
+|string
+|query
+|False
+a|Filter by capacity.used_allocation_units.aggregate.name
+
+
+|capacity.used_allocation_units.aggregate.uuid
+|string
+|query
+|False
+a|Filter by capacity.used_allocation_units.aggregate.uuid
+
+
+|capacity.total
+|integer
+|query
+|False
+a|Filter by capacity.total
+
+
+|capacity.remaining
+|integer
+|query
+|False
+a|Filter by capacity.remaining
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|nodes.name
+|string
+|query
+|False
+a|Filter by nodes.name
+
+
+|nodes.uuid
+|string
+|query
+|False
+a|Filter by nodes.uuid
+
+
+|health.is_healthy
+|boolean
+|query
+|False
+a|Filter by health.is_healthy
+
+
+|health.unhealthy_reason.arguments.message
+|string
+|query
+|False
+a|Filter by health.unhealthy_reason.arguments.message
+
+
+|health.unhealthy_reason.arguments.code
+|string
+|query
+|False
+a|Filter by health.unhealthy_reason.arguments.code
+
+
+|health.unhealthy_reason.code
+|string
+|query
+|False
+a|Filter by health.unhealthy_reason.code
+
+
+|health.unhealthy_reason.message
+|string
+|query
+|False
+a|Filter by health.unhealthy_reason.message
+
+
+|health.state
+|string
+|query
+|False
+a|Filter by health.state
+
+
+|storage_type
+|string
+|query
+|False
+a|Filter by storage_type
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|error
+|link:#error[error]
+a|
+
+|num_records
+|integer
+a|Number of shared storage pools in the cluster.
+
+
+|records
+|array[link:#storage_pool[storage_pool]]
+a|
+
+|spares
+|array[link:#storage_pool_show_spares[storage_pool_show_spares]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "capacity": {
+        "disks": [
+          {
+            "disk": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "1.0.1"
+            },
+            "total_size": 0,
+            "usable_size": 0
+          }
+        ],
+        "remaining": 0,
+        "spare_allocation_units": [
+          {
+            "available_size": 0,
+            "node": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "node1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            },
+            "size": 0,
+            "syncmirror_pool": "string"
+          }
+        ],
+        "total": 0,
+        "used_allocation_units": [
+          {
+            "aggregate": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "aggr1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            },
+            "current_usage": 0,
+            "node": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "node1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          }
+        ]
+      },
+      "health": {
+        "state": "string",
+        "unhealthy_reason": {
+          "arguments": [
+            {
+              "code": "string",
+              "message": "string"
+            }
+          ],
+          "code": "4",
+          "message": "entry doesn't exist"
+        }
+      },
+      "name": "string",
+      "nodes": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "storage_type": "string",
+      "uuid": "string"
+    }
+  ],
+  "spares": [
+    {
+      "checksum_style": "string",
+      "disk_class": "solid_state",
+      "disk_type": "string",
+      "nodes": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "size": 10156769280,
+      "syncmirror_pool": "string",
+      "usable": 9
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10944513
+| Unable to retrieve shared disk capability information.
+
+| 10944514
+| Unable to enable shared disk capability.
+
+| 10944527
+| Storage pools are not supported in MetroCluster configurations.
+
+| 10944528
+| Unable to retrieve MetroCluster configuration information.
+
+| 11206662
+| There is no storage pool matching the specified UUID or name.
+
+| 11206667
+| Storage pool feature is not enabled.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#disk]
+[.api-collapsible-fifth-title]
+disk
+
+Reference to the constituent disk object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#storage_pool_disk]
+[.api-collapsible-fifth-title]
+storage_pool_disk
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk
+|link:#disk[disk]
+a|Reference to the constituent disk object.
+
+
+|total_size
+|integer
+a|Raw capacity of the disk, in bytes.
+
+
+|usable_size
+|integer
+a|Usable capacity of this disk, in bytes.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Specifies what node can use this set of allocation units.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pool_spare_allocation_unit]
+[.api-collapsible-fifth-title]
+storage_pool_spare_allocation_unit
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available_size
+|integer
+a|The usable capacity of this set of allocation units.
+
+
+|count
+|integer
+a|The number of spare allocation units on this node.
+
+
+|node
+|link:#node[node]
+a|Specifies what node can use this set of allocation units.
+
+
+|size
+|integer
+a|Size of each allocation unit.
+
+
+|syncmirror_pool
+|string
+a|The RAID SyncMirror Pool to which this allocation unit is assigned.
+
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+The aggregate that is using this cache capacity.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node hosting the aggregate using this set of allocation units.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pool_used_allocation_unit]
+[.api-collapsible-fifth-title]
+storage_pool_used_allocation_unit
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|The aggregate that is using this cache capacity.
+
+
+|count
+|integer
+a|The number of allocation units used by this aggregate.
+
+
+|current_usage
+|integer
+a|The amount of cache space used by this aggregate.
+
+
+|node
+|link:#node[node]
+a|The node hosting the aggregate using this set of allocation units.
+
+
+|===
+
+
+[#capacity]
+[.api-collapsible-fifth-title]
+capacity
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk_count
+|integer
+a|The number of disks in the storage pool.
+
+
+|disks
+|array[link:#storage_pool_disk[storage_pool_disk]]
+a|Properties of each disk used in the shared storage pool.
+
+
+|remaining
+|integer
+a|Remaining usable capacity in the flash pool, in bytes.
+
+
+|spare_allocation_units
+|array[link:#storage_pool_spare_allocation_unit[storage_pool_spare_allocation_unit]]
+a|Properties of spare allocation units.
+
+
+|total
+|integer
+a|Total size of the flash pool, in bytes.
+
+
+|used_allocation_units
+|array[link:#storage_pool_used_allocation_unit[storage_pool_used_allocation_unit]]
+a|Information about the storage pool allocation units participating in the cache tier of an aggregate.
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Indicates why the storage pool is unhealthy. This property is not returned for healthy storage pools.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#health]
+[.api-collapsible-fifth-title]
+health
+
+Properties that outline shared storage pool health.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_healthy
+|boolean
+a|Indicates whether the storage pool is able to participate in provisioning operations.
+
+
+|state
+|string
+a|The state of the shared storage pool.
+
+
+|unhealthy_reason
+|link:#error[error]
+a|Indicates why the storage pool is unhealthy. This property is not returned for healthy storage pools.
+
+
+|===
+
+
+[#node_reference]
+[.api-collapsible-fifth-title]
+node_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pool]
+[.api-collapsible-fifth-title]
+storage_pool
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|capacity
+|link:#capacity[capacity]
+a|
+
+|health
+|link:#health[health]
+a|Properties that outline shared storage pool health.
+
+
+|name
+|string
+a|Storage pool name.
+
+
+|nodes
+|array[link:#node_reference[node_reference]]
+a|Nodes that can use this storage pool for their aggregates.
+
+
+|storage_type
+|string
+a|Storage type for the disks used to create the storage pool.
+
+
+|uuid
+|string
+a|Storage pool UUID.
+
+
+|===
+
+
+[#storage_pool_show_spares]
+[.api-collapsible-fifth-title]
+storage_pool_show_spares
+
+Available spares for stoarge pool.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|checksum_style
+|string
+a|The checksum type that has been assigned to the spares.
+
+
+|disk_class
+|string
+a|Disk class of spares.
+
+
+|disk_type
+|string
+a|Type of disk.
+
+
+|nodes
+|array[link:#node_reference[node_reference]]
+a|Nodes that can use the usable spares for storage pool.
+
+
+|size
+|integer
+a|Usable size of each spare, in bytes.
+
+
+|syncmirror_pool
+|string
+a|SyncMirror spare pool.
+
+
+|usable
+|integer
+a|Total number of usable spares in the bucket. The usable count for each class of spares does not include reserved spare capacity recommended by ONTAP best practices.
+
+* example: 9
+* readOnly: 1
+* Introduced in: 9.12
+* x-nullable: true
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

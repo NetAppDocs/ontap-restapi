@@ -1,0 +1,322 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-name-services-local-hosts.html'
+summary: 'Create a new IP to hostname mapping'
+---
+
+= Create a new IP to hostname mapping
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/name-services/local-hosts`#
+
+*Introduced In:* 9.10
+
+Creates a new cluster-scoped or SVM-scoped IP to hostname mapping. For SVM-scoped mappings, include either the SVM name as owner.name or the SVM UUID as owner.uuid in the request body, along with other necessary parameters. For cluster-scoped mappings, specifying owner.uuid or owner.name is not required.
+
+== Required properties
+
+* `address` - IPv4/IPv6 address in dotted form.
+* `hostname` - Canonical hostname.
+
+== Optional properties
+
+* `owner.uuid` or `owner.name` - Specify the name or UUID of an existing SVM to create an SVM-scoped IP-to-host mapping.
+* `aliases` - The list of aliases.
+
+== Related ONTAP commands
+
+* `vserver services name-service dns hosts create`
+
+== Learn more
+
+* link:name-services_local-hosts_endpoint_overview.html[DOC /name-services/local-hosts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4/IPv6 address in dotted form.
+
+
+|aliases
+|array[string]
+a|The list of aliases.
+
+
+|hostname
+|string
+a|Canonical hostname.
+
+
+|owner
+|link:#owner[owner]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "address": "123.123.123.123",
+  "aliases": [
+    "host1.sales.foo.com",
+    "host2.sakes.foo.com"
+  ],
+  "hostname": "host.sales.foo.com",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "scope": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1377682
+| IPv6 is not enabled in the cluster.
+
+| 1966253
+| IPv6 is not enabled in the cluster. Enable IPv6 using command "network options ipv6 modify -enabled true" and try again.
+
+| 2621706
+| The specified owner UUID is incorrect for the specified owner name.
+
+| 8912896
+| Only admin or data Vservers allowed.
+
+| 23724055
+| Internal error. Configuration for Vserver failed. Verify that the cluster is healthy, then try the command again. For further assistance, contact technical support.
+
+| 23724155
+| The specified IPv4 address is not supported because it is one of the following: multicast, loopback, 0.0.0.0, or broadcast.
+
+| 23724156
+| The specified IPv6 address is not supported because it is one of the following: ::, link-local, multicast, v4-compatible, v4-mapped, or loopback.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_host]
+[.api-collapsible-fifth-title]
+local_host
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4/IPv6 address in dotted form.
+
+
+|aliases
+|array[string]
+a|The list of aliases.
+
+
+|hostname
+|string
+a|Canonical hostname.
+
+
+|owner
+|link:#owner[owner]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

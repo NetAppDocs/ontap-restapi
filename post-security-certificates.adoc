@@ -1,0 +1,1001 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-certificates.html'
+summary: 'Create or install security certificates'
+---
+
+= Create or install security certificates
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/certificates`#
+
+*Introduced In:* 9.6
+
+Creates or installs a certificate or downloads a certificate from Azure Key Vault (AKV) and installs it on the ONTAP cluster.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create or install the certificate.
+* `common_name` - Common name of the certificate. Required when creating a certificate.
+* `type` - Type of certificate.
+* `public_certificate` - Public key certificate in PEM format. Required when installing a certificate.
+* `private_key` - Private key certificate in PEM format. Required when installing a CA-signed certificate.
+
+== Recommended optional properties
+
+* `expiry_time` - Certificate expiration time. Specifying an expiration time is recommended when creating a certificate.
+* `key_size` - Key size of the certificate in bits. Specifying a strong key size is recommended when creating a certificate.
+* `name` - Unique certificate name per SVM or the name of the certificate in AKV, required for downloading AKV certificates. If one is not provided, it is automatically generated.
+
+== AKV required properties for downloading a certificate
+
+* `azure.key_vault` - URI of the Azure Key Vault.
+* `azure.client_id` - Application (client) ID of the deployed Azure application with appropriate access to an AKV.
+* `azure.tenant_id` - Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV.
+* `azure.client_secret` - Secret used by the application to prove its identity to AKV.
+* `azure.client_certificate` - PKCS12 certificate used by the application to prove its identity to AKV.
+
+== AKV optional properties for downloading a certificate
+
+* `azure.oauth_host` - Open authorization server host name.
+* `azure.proxy.type` - Type of proxy (http, https etc.) if proxy configuration is used.
+* `azure.proxy.host` - Proxy hostname if proxy configuration is used.
+* `azure.proxy.port` - Proxy port number if proxy configuration is used.
+* `azure.proxy.username` - Proxy username if proxy configuration is used.
+* `azure.proxy.password` - Proxy password if proxy configuration is used.
+* `azure.timeout` - AKV connection timeout in seconds.
+* `azure.verify_host` - Verify the identity of the AKV host name.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `key_size` - _2048_
+* `expiry_time` - _P365DT_
+* `hash_function` - _sha256_
+
+== Related ONTAP commands
+
+* `security certificate create`
+* `security certificate install`
+* `security certificate azure-install`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authority_key_identifier
+|string
+a|Provides the key identifier of the issuing CA certificate that signed the SSL certificate.
+
+
+|azure
+|link:#azure[azure]
+a|
+
+|ca
+|string
+a|Certificate authority
+
+
+|common_name
+|string
+a|FQDN or custom common name. Provide on POST when creating a self-signed certificate.
+
+
+|expiry_time
+|string
+a|Certificate expiration time, in ISO 8601 duration format or date and time format. Can be provided on POST if creating self-signed certificate. The expiration time range is between 1 day to 10 years.
+
+
+|hash_function
+|string
+a|Hashing function. Can be provided on POST when creating a self-signed certificate. Hash functions md5 and sha1 are not allowed on POST.
+
+
+|intermediate_certificates
+|array[string]
+a|Chain of intermediate Certificates in PEM format. Only valid in POST when installing a certificate.
+
+
+|key_size
+|integer
+a|Key size of requested Certificate in bits. One of 512, 1024, 1536, 2048, 3072. Can be provided on POST if creating self-signed certificate with a minimum permissible value of 2048.
+
+
+|name
+|string
+a|Certificate name or name of the certificate to be downloaded from the Azure Key Vault (AKV). If not provided in POST, a unique name specific to the SVM is automatically generated.
+
+
+|private_key
+|string
+a|Private key Certificate in PEM format. Only valid for create when installing a CA-signed certificate. This is not audited.
+
+
+|public_certificate
+|string
+a|Public key Certificate in PEM format. If this is not provided in POST, a self-signed certificate is created.
+
+
+|serial_number
+|string
+a|Serial number of certificate.
+
+
+|subject_alternatives
+|link:#subject_alternatives[subject_alternatives]
+a|
+
+|subject_key_identifier
+|string
+a|Provides the key identifier used to identify the public key in the SSL certificate.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Type of Certificate. The following types are supported:
+
+* client - a certificate and its private key used by an SSL client in ONTAP.
+* server - a certificate and its private key used by an SSL server in ONTAP.
+* client_ca - a Certificate Authority certificate used by an SSL server in ONTAP to verify an SSL client certificate.
+* server_ca - a Certificate Authority certificate used by an SSL client in ONTAP to verify an SSL server certificate.
+* root_ca - a self-signed certificate used by ONTAP to sign other certificates by acting as a Certificate Authority.
+* enum: ["client", "server", "client_ca", "server_ca", "root_ca"]
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|uuid
+|string
+a|Unique ID that identifies a certificate.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "authority_key_identifier": "26:1F:C5:53:5B:D7:9E:E2:37:74:F4:F4:06:09:03:3D:EB:41:75:D7",
+  "azure": {
+    "client_certificate": "PEM Cert",
+    "client_id": "aaaaaaaa-bbbb-aaaa-bbbb-aaaaaaaaaaaa",
+    "client_secret": "abcdef",
+    "key_vault": "https://kmip-akv-keyvault.vault.azure.net/",
+    "oauth_host": "login.microsoftonline.com",
+    "proxy": {
+      "host": "proxy.eng.com",
+      "password": "proxypassword",
+      "port": 1234,
+      "type": "string",
+      "username": "proxyuser"
+    },
+    "tenant_id": "zzzzzzzz-yyyy-zzzz-yyyy-zzzzzzzzzzzz",
+    "timeout": 25
+  },
+  "ca": "string",
+  "common_name": "test.domain.com",
+  "expiry_time": "2030-01-25 11:20:13 +0000",
+  "hash_function": "string",
+  "intermediate_certificates": [
+    "<CERTIFICATE-CONTENT>"
+  ],
+  "key_size": 512,
+  "name": "string",
+  "private_key": "-----BEGIN PRIVATE KEY-----\\nprivate-key\\n-----END PRIVATE KEY-----\\n",
+  "public_certificate": "<CERTIFICATE-CONTENT>",
+  "serial_number": "string",
+  "subject_alternatives": {
+    "dns": [
+      "*.example.com"
+    ],
+    "email": [
+      "abc@example.com"
+    ],
+    "ip": [
+      "10.225.34.10"
+    ],
+    "uri": [
+      "http://example.com"
+    ]
+  },
+  "subject_key_identifier": "26:1F:C5:53:5B:D7:9E:E2:37:74:F4:F4:06:09:03:3D:EB:41:75:D8",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "string",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#security_certificate[security_certificate]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "authority_key_identifier": "26:1F:C5:53:5B:D7:9E:E2:37:74:F4:F4:06:09:03:3D:EB:41:75:D7",
+      "azure": {
+        "client_certificate": "PEM Cert",
+        "client_id": "aaaaaaaa-bbbb-aaaa-bbbb-aaaaaaaaaaaa",
+        "client_secret": "abcdef",
+        "key_vault": "https://kmip-akv-keyvault.vault.azure.net/",
+        "oauth_host": "login.microsoftonline.com",
+        "proxy": {
+          "host": "proxy.eng.com",
+          "password": "proxypassword",
+          "port": 1234,
+          "type": "string",
+          "username": "proxyuser"
+        },
+        "tenant_id": "zzzzzzzz-yyyy-zzzz-yyyy-zzzzzzzzzzzz",
+        "timeout": 25
+      },
+      "ca": "string",
+      "common_name": "test.domain.com",
+      "expiry_time": "2030-01-25 11:20:13 +0000",
+      "hash_function": "string",
+      "intermediate_certificates": [
+        "<CERTIFICATE-CONTENT>"
+      ],
+      "key_size": 512,
+      "name": "string",
+      "private_key": "-----BEGIN PRIVATE KEY-----\\nprivate-key\\n-----END PRIVATE KEY-----\\n",
+      "public_certificate": "<CERTIFICATE-CONTENT>",
+      "serial_number": "string",
+      "subject_alternatives": {
+        "dns": [
+          "*.example.com"
+        ],
+        "email": [
+          "abc@example.com"
+        ],
+        "ip": [
+          "10.225.34.10"
+        ],
+        "uri": [
+          "http://example.com"
+        ]
+      },
+      "subject_key_identifier": "26:1F:C5:53:5B:D7:9E:E2:37:74:F4:F4:06:09:03:3D:EB:41:75:D8",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "string",
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|3735645  +
+//end row
+//start row
+|Cannot specify a value for serial. It is generated automatically.
+//end row
+//start row
+|
+//end row
+//start row
+|3735622  +
+//end row
+//start row
+|The certificate type is not supported.
+//end row
+//start row
+|
+//end row
+//start row
+|3735664  +
+//end row
+//start row
+|The specified key size is not supported in FIPS mode.
+//end row
+//start row
+|
+//end row
+//start row
+|3735665  +
+//end row
+//start row
+|The specified hash function is not supported in FIPS mode.
+//end row
+//start row
+|
+//end row
+//start row
+|3735553  +
+//end row
+//start row
+|Failed to create self-signed Certificate.
+//end row
+//start row
+|
+//end row
+//start row
+|3735646  +
+//end row
+//start row
+|Failed to store the certificates.
+//end row
+//start row
+|
+//end row
+//start row
+|3735693  +
+//end row
+//start row
+|The certificate installation failed as private key was empty.
+//end row
+//start row
+|
+//end row
+//start row
+|3735618  +
+//end row
+//start row
+|Cannot accept private key for server_ca or client_ca.
+//end row
+//start row
+|
+//end row
+//start row
+|52363365 +
+//end row
+//start row
+|Failed to allocate memory.
+//end row
+//start row
+|
+//end row
+//start row
+|52559975 +
+//end row
+//start row
+|Failed to read the certificate due to incorrect formatting.
+//end row
+//start row
+|
+//end row
+//start row
+|52363366 +
+//end row
+//start row
+|Unsupported key type.
+//end row
+//start row
+|
+//end row
+//start row
+|52560123 +
+//end row
+//start row
+|Failed to read the key due to incorrect formatting.
+//end row
+//start row
+|
+//end row
+//start row
+|52559972 +
+//end row
+//start row
+|The certificates start date is later than the current date.
+//end row
+//start row
+|
+//end row
+//start row
+|52559976 +
+//end row
+//start row
+|The certificate and private key do not match.
+//end row
+//start row
+|
+//end row
+//start row
+|52559973 +
+//end row
+//start row
+|The certificate has expired.
+//end row
+//start row
+|
+//end row
+//start row
+|52363366 +
+//end row
+//start row
+|Logic error: use of a dead object.
+//end row
+//start row
+|
+//end row
+//start row
+|3735696  +
+//end row
+//start row
+|Intermediate certificates are not supported with client_ca and server_ca type certificates.
+//end row
+//start row
+|
+//end row
+//start row
+|52559974 +
+//end row
+//start row
+|The certificate is not supported in FIPS mode.
+//end row
+//start row
+|
+//end row
+//start row
+|3735676  +
+//end row
+//start row
+|Cannot continue the installation without a value for the common name. Since the subject field in the certificate is empty, the field "common_name" must have a value to continue with the installation.
+//end row
+//start row
+|
+//end row
+//start row
+|3735558  +
+//end row
+//start row
+|Failed to extract information about Common Name from the certificate.
+//end row
+//start row
+|
+//end row
+//start row
+|3735588  +
+//end row
+//start row
+|The common name (CN) extracted from the certificate is not valid.
+//end row
+//start row
+|
+//end row
+//start row
+|3735632  +
+//end row
+//start row
+|Failed to extract Certificate Authority Information from the certificate.
+//end row
+//start row
+|
+//end row
+//start row
+|3735700  +
+//end row
+//start row
+|The specified key size is not supported.
+//end row
+//start row
+|
+//end row
+//start row
+|52560173 +
+//end row
+//start row
+|The hash function is not supported for digital signatures.
+//end row
+//start row
+|
+//end row
+//start row
+|3735751  +
+//end row
+//start row
+|Failed to authenticate and fetch the access token from Azure OAuth host.
+//end row
+//start row
+|
+//end row
+//start row
+|3735752  +
+//end row
+//start row
+|Failed to extract the private key from the Azure Key Vault certificate.
+//end row
+//start row
+|3735753  +
+//end row
+//start row
+|Unsupported content_type in the Azure secrets response.
+//end row
+//start row
+|3735754  +
+//end row
+//start row
+|Internal error. Failed to parse the JSON response from Azure Key Vault.
+//end row
+//start row
+|3735755  +
+//end row
+//start row
+|REST call to Azure failed.
+//end row
+//start row
+|3735756  +
+//end row
+//start row
+|Invalid client certificate.
+//end row
+//start row
+|3735757  +
+//end row
+//start row
+|Internal error. Failed to generate client assertion.
+//end row
+//start row
+|3735762  +
+//end row
+//start row
+|Provided Azure Key Vault configuration is incorrect.
+//end row
+//start row
+|3735763  +
+//end row
+//start row
+|Provided Azure Key Vault configuration is incomplete.
+//end row
+//start row
+|3735764  +
+//end row
+//start row
+|Request to Azure failed. Reason - Azure error code and Azure error message.
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#proxy]
+[.api-collapsible-fifth-title]
+proxy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|host
+|string
+a|Proxy host.
+
+
+|password
+|string
+a|Proxy password. Password is not audited.
+
+
+|port
+|integer
+a|Proxy port.
+
+
+|type
+|string
+a|Proxy type.
+
+
+|username
+|string
+a|Proxy username.
+
+
+|===
+
+
+[#azure]
+[.api-collapsible-fifth-title]
+azure
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_certificate
+|string
+a|PKCS12 certificate used by the application to prove its identity to AKV.
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV.
+
+
+|client_secret
+|string
+a|Secret used by the application to prove its identity to AKV.
+
+
+|key_vault
+|string
+a|URI of the deployed AKV that is used by ONTAP for storing keys.
+
+* example: https://kmip-akv-keyvault.vault.azure.net/
+* format: uri
+* x-ntap-createOnly: true
+* Introduced in: 9.14
+* x-nullable: true
+
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|proxy
+|link:#proxy[proxy]
+a|
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV.
+
+
+|timeout
+|integer
+a|AKV connection timeout, in seconds. The allowed range is between 0 to 30 seconds.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the AKV host name. By default, verify_host is set to true.
+
+
+|===
+
+
+[#subject_alternatives]
+[.api-collapsible-fifth-title]
+subject_alternatives
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dns
+|array[string]
+a|A list of DNS names for Subject Alternate name extension.
+
+
+|email
+|array[string]
+a|A list of email addresses for Subject Alternate name extension
+
+
+|ip
+|array[string]
+a|A list of IP addresses for Subject Alternate name extension.
+
+
+|uri
+|array[string]
+a|A list of URIs for Subject Alternate name extension.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#security_certificate]
+[.api-collapsible-fifth-title]
+security_certificate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authority_key_identifier
+|string
+a|Provides the key identifier of the issuing CA certificate that signed the SSL certificate.
+
+
+|azure
+|link:#azure[azure]
+a|
+
+|ca
+|string
+a|Certificate authority
+
+
+|common_name
+|string
+a|FQDN or custom common name. Provide on POST when creating a self-signed certificate.
+
+
+|expiry_time
+|string
+a|Certificate expiration time, in ISO 8601 duration format or date and time format. Can be provided on POST if creating self-signed certificate. The expiration time range is between 1 day to 10 years.
+
+
+|hash_function
+|string
+a|Hashing function. Can be provided on POST when creating a self-signed certificate. Hash functions md5 and sha1 are not allowed on POST.
+
+
+|intermediate_certificates
+|array[string]
+a|Chain of intermediate Certificates in PEM format. Only valid in POST when installing a certificate.
+
+
+|key_size
+|integer
+a|Key size of requested Certificate in bits. One of 512, 1024, 1536, 2048, 3072. Can be provided on POST if creating self-signed certificate with a minimum permissible value of 2048.
+
+
+|name
+|string
+a|Certificate name or name of the certificate to be downloaded from the Azure Key Vault (AKV). If not provided in POST, a unique name specific to the SVM is automatically generated.
+
+
+|private_key
+|string
+a|Private key Certificate in PEM format. Only valid for create when installing a CA-signed certificate. This is not audited.
+
+
+|public_certificate
+|string
+a|Public key Certificate in PEM format. If this is not provided in POST, a self-signed certificate is created.
+
+
+|serial_number
+|string
+a|Serial number of certificate.
+
+
+|subject_alternatives
+|link:#subject_alternatives[subject_alternatives]
+a|
+
+|subject_key_identifier
+|string
+a|Provides the key identifier used to identify the public key in the SSL certificate.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Type of Certificate. The following types are supported:
+
+* client - a certificate and its private key used by an SSL client in ONTAP.
+* server - a certificate and its private key used by an SSL server in ONTAP.
+* client_ca - a Certificate Authority certificate used by an SSL server in ONTAP to verify an SSL client certificate.
+* server_ca - a Certificate Authority certificate used by an SSL client in ONTAP to verify an SSL server certificate.
+* root_ca - a self-signed certificate used by ONTAP to sign other certificates by acting as a Certificate Authority.
+* enum: ["client", "server", "client_ca", "server_ca", "root_ca"]
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|uuid
+|string
+a|Unique ID that identifies a certificate.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

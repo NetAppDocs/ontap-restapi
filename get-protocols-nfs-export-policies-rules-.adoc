@@ -1,0 +1,419 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nfs-export-policies-rules-.html'
+summary: 'Retrieve an export policy rule'
+---
+
+= Retrieve an export policy rule
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nfs/export-policies/{policy.id}/rules/{index}`#
+
+*Introduced In:* 9.6
+
+Retrieves an export policy rule
+
+== Related ONTAP commands
+
+* `vserver export-policy rule show`
+
+== Learn more
+
+* link:protocols_nfs_export-policies_endpoint_overview.html[DOC /protocols/nfs/export-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|policy.id
+|integer
+|path
+|True
+a|Export Policy ID
+
+
+|index
+|integer
+|path
+|True
+a|Export Rule Index
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allow_device_creation
+|boolean
+a|Specifies whether or not device creation is allowed.
+
+
+|allow_suid
+|boolean
+a|Specifies whether or not SetUID bits in SETATTR Op is to be honored.
+
+
+|anonymous_user
+|string
+a|User ID To Which Anonymous Users Are Mapped.
+
+
+|chown_mode
+|string
+a|Specifies who is authorized to change the ownership mode of a file.
+
+
+|clients
+|array[link:#export_clients[export_clients]]
+a|Array of client matches
+
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|ntfs_unix_security
+|string
+a|NTFS export UNIX security options.
+
+
+|policy
+|link:#policy[policy]
+a|
+
+|protocols
+|array[string]
+a|
+
+|ro_rule
+|array[string]
+a|Authentication flavors that the read-only access rule governs
+
+
+|rw_rule
+|array[string]
+a|Authentication flavors that the read/write access rule governs
+
+
+|superuser
+|array[string]
+a|Authentication flavors that the superuser security type governs
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "anonymous_user": "string",
+  "chown_mode": "string",
+  "clients": [
+    {
+      "match": "0.0.0.0/0"
+    }
+  ],
+  "ntfs_unix_security": "string",
+  "policy": {
+    "name": "string"
+  },
+  "protocols": [
+    "string"
+  ],
+  "ro_rule": [
+    "string"
+  ],
+  "rw_rule": [
+    "string"
+  ],
+  "superuser": [
+    "string"
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262197
+| The value provided is invalid for the field
+
+| 6691623
+| User is not authorized
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#export_clients]
+[.api-collapsible-fifth-title]
+export_clients
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|Export policy ID
+
+
+|name
+|string
+a|Export policy name
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,366 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-nfs-tls-interfaces-.html'
+summary: 'Update the properties of an NFS over TLS interface'
+---
+
+= Update the properties of an NFS over TLS interface
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/nfs/tls/interfaces/{interface.uuid}`#
+
+*Introduced In:* 9.15
+
+Updates the properties of an NFS over TLS interface.
+
+== Optional query parameter
+
+* `skip-san-validation` - Specifies whether the server should ignore validating the certificate for Subject Alternate Name.
+
+== Related ONTAP commands
+
+* `vserver nfs tls interface modify`
+* `vserver nfs tls interface enable`
+* `vserver nfs tls interface disable`
+
+== Learn more
+
+* link:protocols_nfs_tls_interfaces_endpoint_overview.html[DOC /protocols/nfs/tls/interfaces]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|interface.uuid
+|string
+|path
+|True
+a|Network interface UUID.
+
+
+|skip_san_validation
+|boolean
+|query
+|False
+a|Indicates whether Subject Alternate Name (SAN) validation has to be skipped.
+
+* Introduced in: 9.17
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#certificate[certificate]
+a|Specifies the certificate that is used for creating NFS over TLS connections.
+
+
+|enabled
+|boolean
+a|Indicates whether NFS over TLS is enabled.
+
+
+|interface
+|link:#interface[interface]
+a|Network interface.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": {
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "interface": {
+    "name": "lif1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error codes | Description
+
+| 2
+| The value provided is an invalid value for field "interface.uuid".
+
+| 4
+| The entry doesn't exist
+
+| 3277204
+| TLS already enabled/disabled on this LIF.
+
+| 3277205
+| Cannot enable TLS because no certificate was provided.
+
+| 3277206
+| The "enabled" is a required field.
+
+| 3277210
+| The FQDN of the LIF IP address and the common name present in the certificate do not match. Update the certificate so that the common name and LIF FQDN match and retry the operation.
+
+| 3277217
+| Failed to enable TLS on LIF on vserver because the certificate does not have LIF as subject alternate name.
+
+| 92405900
+| Certificate not found for the SVM.
+
+| 92406020
+| Only certificates of type 'server' are supported on the SVM.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Specifies the certificate that is used for creating NFS over TLS connections.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+Network interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#nfs_tls_interface]
+[.api-collapsible-fifth-title]
+nfs_tls_interface
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#certificate[certificate]
+a|Specifies the certificate that is used for creating NFS over TLS connections.
+
+
+|enabled
+|boolean
+a|Indicates whether NFS over TLS is enabled.
+
+
+|interface
+|link:#interface[interface]
+a|Network interface.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

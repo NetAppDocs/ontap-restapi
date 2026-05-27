@@ -1,0 +1,99 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_filters_name_rules_index_endpoint_overview.html'
+summary: 'Manage event filter rules'
+---
+
+= Manage event filter rules
+
+
+
+== Overview
+
+Manages a specific instance of a rule within a filter.
+See the documentation for <</docs/support/support_ems_filters,/support/ems/filters>> for details on the various properties in a rule.
+
+== Examples
+
+=== Retrieving a single instance of a rule
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/filters/{name}/rules/{index}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/filters/no-info-debug-events/rules/1" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"name": "no-info-debug-events",
+"index": 1,
+"type": "include",
+"message_criteria": {
+  "name_pattern": "*",
+  "severities": "emergency,alert,error,notice",
+  "snmp_trap_types": "*",
+  "_links": {
+    "self": {
+      "href": "/api/support/ems/messages?name=*&severity=emergency,alert,error,notice&snmp_trap_type=*"
+    }
+  }
+},
+"parameter_criteria": [
+  {
+    "name_pattern": "*",
+    "value_pattern": "*"
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/support/ems/filters/no-info-debug-events/rules/1"
+  }
+}
+}
+----
+
+=== Updating an existing rule to use severity emergency
+
+[,json]
+----
+
+# The API:
+PATCH /api/support/ems/filters/{name}/rules/{index}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/ems/filters/test-filter/rules/1" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_filter_rules_patch.txt"
+test_ems_filter_rules_patch.txt(body):
+{
+"message_criteria": {
+  "severities": "emergency"
+}
+}
+
+# The response:
+200 OK
+----
+
+=== Deleting a rule from an existing filter
+
+[,json]
+----
+
+# The API:
+DELETE /api/support/ems/filters/{name}/rules/{index}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/support/ems/filters/test-filter/rules/1" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+----
+
+

@@ -1,0 +1,275 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_aggregates_aggregate.uuid_plexes_endpoint_overview.html'
+summary: 'Manage storage aggregate plexes'
+---
+
+= Manage storage aggregate plexes
+
+
+
+== Overview
+
+The Storage Aggregate Plex API provides relevant state information for each plex in the aggregate.
+For each plex, details are provided for the RAID groups in the plex and the disks that make up each RAID group.
+
+== Examples
+
+=== Retrieving all aggregates and plexes
+
+The following example shows the response with a list of aggregates and plexes:
+
+----
+
+# the API:
+/storage/aggregates/{aggregate.uuid}/plexes
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/*/plexes" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "aggregate": {
+      "uuid": "04b7296e-a302-42a6-a2a9-dda6be054b29",
+      "name": "test2"
+    },
+    "name": "plex0"
+  },
+  {
+    "aggregate": {
+      "uuid": "04b7296e-a302-42a6-a2a9-dda6be054b29",
+      "name": "test2"
+    },
+    "name": "plex1",
+  },
+  {
+    "aggregate": {
+      "uuid": "66c4b221-65ff-4211-9b58-ada3c6fc41af",
+      "name": "test"
+    },
+    "name": "plex0"
+  },
+  {
+    "aggregate": {
+      "uuid": "66c4b221-65ff-4211-9b58-ada3c6fc41af",
+      "name": "test"
+    },
+    "name": "plex1"
+  },
+  {
+    "aggregate": {
+      "uuid": "7ee89e48-5d81-4609-9e1b-5d8d0995a886",
+      "name": "aggr1",
+    },
+    "name": "plex0",
+  },
+  {
+    "aggregate": {
+      "uuid": "8bb2e3bf-c4f1-4748-9033-ca9231cf1c40",
+      "name": "test3",
+    },
+    "name": "plex0",
+  },
+  {
+    "aggregate": {
+      "uuid": "8bb2e3bf-c4f1-4748-9033-ca9231cf1c40",
+      "name": "test3",
+    },
+    "name": "plex1"
+  },
+  {
+    "aggregate": {
+      "uuid": "8f13de5c-99cf-4ada-884c-3cc32deb304a",
+      "name": "aggr2",
+    },
+    "name": "plex0"
+  }
+],
+"num_records": 8
+}
+----
+
+=== Retrieving a specific plex in all aggregates
+
+The following example shows the response with a list of specific plexes in all aggregates:
+
+----
+
+# the API:
+/storage/aggregates/{aggregate.uuid}/plexes/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/*/plexes/plex0" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "aggregate": {
+      "uuid": "04b7296e-a302-42a6-a2a9-dda6be054b29",
+      "name": "test2"
+    },
+    "name": "plex0"
+  },
+  {
+    "aggregate": {
+      "uuid": "66c4b221-65ff-4211-9b58-ada3c6fc41af",
+      "name": "test"
+    },
+    "name": "plex0"
+  },
+  {
+    "aggregate": {
+      "uuid": "7ee89e48-5d81-4609-9e1b-5d8d0995a886",
+      "name": "aggr1",
+    },
+    "name": "plex0",
+  },
+  {
+    "aggregate": {
+      "uuid": "8bb2e3bf-c4f1-4748-9033-ca9231cf1c40",
+      "name": "test3",
+    },
+    "name": "plex0",
+  },
+  {
+    "aggregate": {
+      "uuid": "8f13de5c-99cf-4ada-884c-3cc32deb304a",
+      "name": "aggr2",
+    },
+    "name": "plex0"
+  }
+],
+"num_records": 8
+}
+----
+
+=== Retrieving the list of plexes in an aggregate
+
+The following example shows the response with the list of plexes in an aggregate:
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}/plexes
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c/plexes" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "plex0",
+  },
+  {
+    "name": "plex4",
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving a specific plex in an aggregate
+
+The following example shows the response when requesting a specific plex of an aggregate:
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}/plexes/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c/plexes/plex0" -H "accept: application/json"
+
+# The response:
+{
+"aggregate": {
+  "uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+  "name": "test1",
+},
+"name": "plex0",
+"online": true,
+"state": "normal",
+"pool": "pool0",
+"resync": {
+  "active": false
+},
+"raid_groups": [
+  {
+    "name": "rg0",
+    "raid_type": "raid_dp",
+    "cache_tier": false,
+    "degraded": false,
+    "recomputing_parity": {
+      "active": false
+    },
+    "reconstruct": {
+      "active": false
+    },
+    "disks": [
+      {
+        "position": "dparity",
+        "state": "normal",
+        "type": "ssd",
+        "usable_size": 86769664,
+        "disk": {
+          "name": "1.1.29",
+        }
+      },
+      {
+        "position": "parity",
+        "state": "normal",
+        "type": "ssd",
+        "usable_size": 86769664,
+        "disk": {
+          "name": "1.1.4",
+        }
+      },
+      {
+        "position": "data",
+        "state": "normal",
+        "type": "ssd",
+        "usable_size": 86769664,
+        "disk": {
+          "name": "1.1.30",
+        }
+      },
+      {
+        "position": "data",
+        "state": "normal",
+        "type": "ssd",
+        "usable_size": 86769664,
+        "disk": {
+          "name": "1.1.5",
+        }
+      },
+      {
+        "position": "data",
+        "state": "normal",
+        "type": "ssd",
+        "usable_size": 86769664,
+        "disk": {
+          "name": "1.1.31",
+        }
+      },
+      {
+        "position": "data",
+        "state": "normal",
+        "type": "ssd",
+        "usable_size": 86769664,
+        "disk": {
+          "name": "1.1.6",
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+

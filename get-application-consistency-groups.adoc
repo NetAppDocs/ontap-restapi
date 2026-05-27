@@ -1,0 +1,6765 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-application-consistency-groups.html'
+summary: 'Retrieve details of a collection or consistency group'
+---
+
+= Retrieve details of a collection or consistency group
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/application/consistency-groups`#
+
+*Introduced In:* 9.10
+
+Retrieve details of a collection or a specific consistency group.
+
+== Notes
+
+When volume granular properties, such as, the storage SLC, Fabric Pool tiering are not the same for all the existing volumes of a consistency group, the corresponding property is not reported at consistency group granularity. It is only reported if all the volumes of the consistency group have the same value for that property.
+
+If this consistency group instance has 1 or more replication relationships, the "replicated" parameter is true.  If there are no associated replication relationships, it is false. This parameter is only included in the output for Single-CG and Parent-CG, not for Child-CG.
+If this consistency group instance has 1 or more replication relationships, the "replication_relationships" parameter is included in the output for Single-CG and Parent-CG instances.  If there are no associated replication relationships, this parameter is not included in the output.
+Note that this parameter is an array and as such it has as many elements as the number of replication relationships associated with this consistency group. Each element of the array describes properties of one replication relationship associated with this consistency group. The "uuid" parameter identifies a specific replication relationship and the "href" parameter is a link to the corresponding SnapMirror relationship. The "is_source" parameter is true if this consistency group is the source in that relationship, otherwise it is false.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[DOC Requesting specific fields]  to learn more.
+
+* `volumes`
+* `luns`
+* `namespaces`
+
+== Related ONTAP commands
+
+* `vserver consistency-group show'
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|application.component_type
+|string
+|query
+|False
+a|Filter by application.component_type
+
+* Introduced in: 9.12
+
+
+|application.type
+|string
+|query
+|False
+a|Filter by application.type
+
+* Introduced in: 9.12
+
+
+|tiering.policy
+|string
+|query
+|False
+a|Filter by tiering.policy
+
+
+|luns.create_time
+|string
+|query
+|False
+a|Filter by luns.create_time
+
+
+|luns.comment
+|string
+|query
+|False
+a|Filter by luns.comment
+
+* maxLength: 254
+* minLength: 0
+
+
+|luns.os_type
+|string
+|query
+|False
+a|Filter by luns.os_type
+
+
+|luns.uuid
+|string
+|query
+|False
+a|Filter by luns.uuid
+
+
+|luns.space.used
+|integer
+|query
+|False
+a|Filter by luns.space.used
+
+
+|luns.space.guarantee.requested
+|boolean
+|query
+|False
+a|Filter by luns.space.guarantee.requested
+
+* Introduced in: 9.11
+
+
+|luns.space.guarantee.reserved
+|boolean
+|query
+|False
+a|Filter by luns.space.guarantee.reserved
+
+* Introduced in: 9.11
+
+
+|luns.space.snapshot.reserve_available
+|integer
+|query
+|False
+a|Filter by luns.space.snapshot.reserve_available
+
+* Introduced in: 9.18
+
+
+|luns.space.snapshot.reserve_percent
+|integer
+|query
+|False
+a|Filter by luns.space.snapshot.reserve_percent
+
+* Introduced in: 9.18
+
+
+|luns.space.snapshot.space_used_percent
+|integer
+|query
+|False
+a|Filter by luns.space.snapshot.space_used_percent
+
+* Introduced in: 9.18
+
+
+|luns.space.snapshot.used
+|integer
+|query
+|False
+a|Filter by luns.space.snapshot.used
+
+* Introduced in: 9.18
+
+
+|luns.space.snapshot.reserve_size
+|integer
+|query
+|False
+a|Filter by luns.space.snapshot.reserve_size
+
+* Introduced in: 9.18
+
+
+|luns.space.snapshot.autodelete.enabled
+|boolean
+|query
+|False
+a|Filter by luns.space.snapshot.autodelete.enabled
+
+* Introduced in: 9.18
+
+
+|luns.space.size
+|integer
+|query
+|False
+a|Filter by luns.space.size
+
+* Max value: 140737488355328
+* Min value: 4096
+
+
+|luns.serial_number
+|string
+|query
+|False
+a|Filter by luns.serial_number
+
+* maxLength: 12
+* minLength: 12
+
+
+|luns.qos.policy.min_throughput_iops
+|integer
+|query
+|False
+a|Filter by luns.qos.policy.min_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
+
+
+|luns.qos.policy.uuid
+|string
+|query
+|False
+a|Filter by luns.qos.policy.uuid
+
+
+|luns.qos.policy.max_throughput_mbps
+|integer
+|query
+|False
+a|Filter by luns.qos.policy.max_throughput_mbps
+
+* Max value: 4194303
+* Min value: 0
+
+
+|luns.qos.policy.name
+|string
+|query
+|False
+a|Filter by luns.qos.policy.name
+
+
+|luns.qos.policy.min_throughput_mbps
+|integer
+|query
+|False
+a|Filter by luns.qos.policy.min_throughput_mbps
+
+* Max value: 4194303
+* Min value: 0
+
+
+|luns.qos.policy.max_throughput_iops
+|integer
+|query
+|False
+a|Filter by luns.qos.policy.max_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
+
+
+|luns.name
+|string
+|query
+|False
+a|Filter by luns.name
+
+
+|luns.enabled
+|boolean
+|query
+|False
+a|Filter by luns.enabled
+
+
+|luns.lun_maps.logical_unit_number
+|integer
+|query
+|False
+a|Filter by luns.lun_maps.logical_unit_number
+
+
+|luns.lun_maps.igroup.igroups.uuid
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.igroups.uuid
+
+
+|luns.lun_maps.igroup.igroups.name
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.igroups.name
+
+* maxLength: 96
+* minLength: 1
+
+
+|luns.lun_maps.igroup.uuid
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.uuid
+
+
+|luns.lun_maps.igroup.protocol
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.protocol
+
+
+|luns.lun_maps.igroup.name
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.name
+
+* maxLength: 96
+* minLength: 1
+
+
+|luns.lun_maps.igroup.os_type
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.os_type
+
+
+|luns.lun_maps.igroup.comment
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.comment
+
+* Introduced in: 9.11
+* maxLength: 254
+* minLength: 0
+
+
+|luns.lun_maps.igroup.initiators.name
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.initiators.name
+
+
+|luns.lun_maps.igroup.initiators.comment
+|string
+|query
+|False
+a|Filter by luns.lun_maps.igroup.initiators.comment
+
+* maxLength: 254
+* minLength: 0
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.13
+
+
+|statistics.used_space
+|integer
+|query
+|False
+a|Filter by statistics.used_space
+
+* Introduced in: 9.13
+
+
+|statistics.throughput_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.other
+
+* Introduced in: 9.13
+
+
+|statistics.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.total
+
+* Introduced in: 9.13
+
+
+|statistics.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.13
+
+
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.13
+
+
+|statistics.status
+|string
+|query
+|False
+a|Filter by statistics.status
+
+* Introduced in: 9.13
+
+
+|statistics.available_space
+|integer
+|query
+|False
+a|Filter by statistics.available_space
+
+* Introduced in: 9.13
+
+
+|statistics.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.other
+
+* Introduced in: 9.13
+
+
+|statistics.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.total
+
+* Introduced in: 9.13
+
+
+|statistics.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.write
+
+* Introduced in: 9.13
+
+
+|statistics.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.read
+
+* Introduced in: 9.13
+
+
+|statistics.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.other
+
+* Introduced in: 9.13
+
+
+|statistics.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.total
+
+* Introduced in: 9.13
+
+
+|statistics.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.write
+
+* Introduced in: 9.13
+
+
+|statistics.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.read
+
+* Introduced in: 9.13
+
+
+|statistics.size
+|integer
+|query
+|False
+a|Filter by statistics.size
+
+* Introduced in: 9.13
+
+
+|snapshot_policy.uuid
+|string
+|query
+|False
+a|Filter by snapshot_policy.uuid
+
+
+|snapshot_policy.name
+|string
+|query
+|False
+a|Filter by snapshot_policy.name
+
+
+|replication_source
+|boolean
+|query
+|False
+a|Filter by replication_source
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|replicated
+|boolean
+|query
+|False
+a|Filter by replicated
+
+
+|clone.guarantee.type
+|string
+|query
+|False
+a|Filter by clone.guarantee.type
+
+* Introduced in: 9.12
+
+
+|clone.parent_snapshot.name
+|string
+|query
+|False
+a|Filter by clone.parent_snapshot.name
+
+* Introduced in: 9.12
+
+
+|clone.parent_snapshot.uuid
+|string
+|query
+|False
+a|Filter by clone.parent_snapshot.uuid
+
+* Introduced in: 9.15
+
+
+|clone.parent_svm.name
+|string
+|query
+|False
+a|Filter by clone.parent_svm.name
+
+* Introduced in: 9.15
+
+
+|clone.parent_svm.uuid
+|string
+|query
+|False
+a|Filter by clone.parent_svm.uuid
+
+* Introduced in: 9.15
+
+
+|clone.volume.suffix
+|string
+|query
+|False
+a|Filter by clone.volume.suffix
+
+* Introduced in: 9.12
+
+
+|clone.volume.prefix
+|string
+|query
+|False
+a|Filter by clone.volume.prefix
+
+* Introduced in: 9.12
+
+
+|clone.split_complete_percent
+|integer
+|query
+|False
+a|Filter by clone.split_complete_percent
+
+* Introduced in: 9.15
+
+
+|clone.parent_consistency_group.name
+|string
+|query
+|False
+a|Filter by clone.parent_consistency_group.name
+
+* Introduced in: 9.12
+
+
+|clone.parent_consistency_group.uuid
+|string
+|query
+|False
+a|Filter by clone.parent_consistency_group.uuid
+
+* Introduced in: 9.12
+
+
+|clone.is_flexclone
+|boolean
+|query
+|False
+a|Filter by clone.is_flexclone
+
+* Introduced in: 9.15
+
+
+|clone.split_initiated
+|boolean
+|query
+|False
+a|Filter by clone.split_initiated
+
+* Introduced in: 9.12
+
+
+|clone.split_estimate
+|integer
+|query
+|False
+a|Filter by clone.split_estimate
+
+* Introduced in: 9.15
+
+
+|metric.size
+|integer
+|query
+|False
+a|Filter by metric.size
+
+* Introduced in: 9.13
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.13
+
+
+|metric.available_space
+|integer
+|query
+|False
+a|Filter by metric.available_space
+
+* Introduced in: 9.13
+
+
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.13
+
+
+|metric.latency.other
+|integer
+|query
+|False
+a|Filter by metric.latency.other
+
+* Introduced in: 9.13
+
+
+|metric.latency.total
+|integer
+|query
+|False
+a|Filter by metric.latency.total
+
+* Introduced in: 9.13
+
+
+|metric.latency.write
+|integer
+|query
+|False
+a|Filter by metric.latency.write
+
+* Introduced in: 9.13
+
+
+|metric.latency.read
+|integer
+|query
+|False
+a|Filter by metric.latency.read
+
+* Introduced in: 9.13
+
+
+|metric.iops.other
+|integer
+|query
+|False
+a|Filter by metric.iops.other
+
+* Introduced in: 9.13
+
+
+|metric.iops.total
+|integer
+|query
+|False
+a|Filter by metric.iops.total
+
+* Introduced in: 9.13
+
+
+|metric.iops.write
+|integer
+|query
+|False
+a|Filter by metric.iops.write
+
+* Introduced in: 9.13
+
+
+|metric.iops.read
+|integer
+|query
+|False
+a|Filter by metric.iops.read
+
+* Introduced in: 9.13
+
+
+|metric.throughput.other
+|integer
+|query
+|False
+a|Filter by metric.throughput.other
+
+* Introduced in: 9.13
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.13
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.13
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.13
+
+
+|metric.timestamp
+|string
+|query
+|False
+a|Filter by metric.timestamp
+
+* Introduced in: 9.13
+
+
+|metric.used_space
+|integer
+|query
+|False
+a|Filter by metric.used_space
+
+* Introduced in: 9.13
+
+
+|consistency_groups.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.uuid
+
+
+|consistency_groups.space.used
+|integer
+|query
+|False
+a|Filter by consistency_groups.space.used
+
+
+|consistency_groups.space.size
+|integer
+|query
+|False
+a|Filter by consistency_groups.space.size
+
+
+|consistency_groups.space.available
+|integer
+|query
+|False
+a|Filter by consistency_groups.space.available
+
+
+|consistency_groups.snapshot_policy.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.snapshot_policy.uuid
+
+
+|consistency_groups.snapshot_policy.name
+|string
+|query
+|False
+a|Filter by consistency_groups.snapshot_policy.name
+
+
+|consistency_groups.luns.create_time
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.create_time
+
+
+|consistency_groups.luns.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.comment
+
+* maxLength: 254
+* minLength: 0
+
+
+|consistency_groups.luns.os_type
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.os_type
+
+
+|consistency_groups.luns.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.uuid
+
+
+|consistency_groups.luns.space.used
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.used
+
+
+|consistency_groups.luns.space.guarantee.requested
+|boolean
+|query
+|False
+a|Filter by consistency_groups.luns.space.guarantee.requested
+
+* Introduced in: 9.11
+
+
+|consistency_groups.luns.space.guarantee.reserved
+|boolean
+|query
+|False
+a|Filter by consistency_groups.luns.space.guarantee.reserved
+
+* Introduced in: 9.11
+
+
+|consistency_groups.luns.space.snapshot.reserve_available
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.snapshot.reserve_available
+
+* Introduced in: 9.18
+
+
+|consistency_groups.luns.space.snapshot.reserve_percent
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.snapshot.reserve_percent
+
+* Introduced in: 9.18
+
+
+|consistency_groups.luns.space.snapshot.space_used_percent
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.snapshot.space_used_percent
+
+* Introduced in: 9.18
+
+
+|consistency_groups.luns.space.snapshot.used
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.snapshot.used
+
+* Introduced in: 9.18
+
+
+|consistency_groups.luns.space.snapshot.reserve_size
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.snapshot.reserve_size
+
+* Introduced in: 9.18
+
+
+|consistency_groups.luns.space.snapshot.autodelete.enabled
+|boolean
+|query
+|False
+a|Filter by consistency_groups.luns.space.snapshot.autodelete.enabled
+
+* Introduced in: 9.18
+
+
+|consistency_groups.luns.space.size
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.space.size
+
+* Max value: 140737488355328
+* Min value: 4096
+
+
+|consistency_groups.luns.serial_number
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.serial_number
+
+* maxLength: 12
+* minLength: 12
+
+
+|consistency_groups.luns.qos.policy.min_throughput_iops
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.qos.policy.min_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
+
+
+|consistency_groups.luns.qos.policy.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.qos.policy.uuid
+
+
+|consistency_groups.luns.qos.policy.max_throughput_mbps
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.qos.policy.max_throughput_mbps
+
+* Max value: 4194303
+* Min value: 0
+
+
+|consistency_groups.luns.qos.policy.name
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.qos.policy.name
+
+
+|consistency_groups.luns.qos.policy.min_throughput_mbps
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.qos.policy.min_throughput_mbps
+
+* Max value: 4194303
+* Min value: 0
+
+
+|consistency_groups.luns.qos.policy.max_throughput_iops
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.qos.policy.max_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
+
+
+|consistency_groups.luns.name
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.name
+
+
+|consistency_groups.luns.enabled
+|boolean
+|query
+|False
+a|Filter by consistency_groups.luns.enabled
+
+
+|consistency_groups.luns.lun_maps.logical_unit_number
+|integer
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.logical_unit_number
+
+
+|consistency_groups.luns.lun_maps.igroup.igroups.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.igroups.uuid
+
+
+|consistency_groups.luns.lun_maps.igroup.igroups.name
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.igroups.name
+
+* maxLength: 96
+* minLength: 1
+
+
+|consistency_groups.luns.lun_maps.igroup.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.uuid
+
+
+|consistency_groups.luns.lun_maps.igroup.protocol
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.protocol
+
+
+|consistency_groups.luns.lun_maps.igroup.name
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.name
+
+* maxLength: 96
+* minLength: 1
+
+
+|consistency_groups.luns.lun_maps.igroup.os_type
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.os_type
+
+
+|consistency_groups.luns.lun_maps.igroup.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.comment
+
+* Introduced in: 9.11
+* maxLength: 254
+* minLength: 0
+
+
+|consistency_groups.luns.lun_maps.igroup.initiators.name
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.initiators.name
+
+
+|consistency_groups.luns.lun_maps.igroup.initiators.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.luns.lun_maps.igroup.initiators.comment
+
+* maxLength: 254
+* minLength: 0
+
+
+|consistency_groups.tiering.policy
+|string
+|query
+|False
+a|Filter by consistency_groups.tiering.policy
+
+
+|consistency_groups.application.type
+|string
+|query
+|False
+a|Filter by consistency_groups.application.type
+
+* Introduced in: 9.12
+
+
+|consistency_groups.application.component_type
+|string
+|query
+|False
+a|Filter by consistency_groups.application.component_type
+
+* Introduced in: 9.12
+
+
+|consistency_groups.name
+|string
+|query
+|False
+a|Filter by consistency_groups.name
+
+
+|consistency_groups.parent_consistency_group.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.parent_consistency_group.uuid
+
+
+|consistency_groups.parent_consistency_group.name
+|string
+|query
+|False
+a|Filter by consistency_groups.parent_consistency_group.name
+
+
+|consistency_groups.volumes.nas.junction_parent.name
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.junction_parent.name
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.junction_parent.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.junction_parent.uuid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.security_style
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.security_style
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.uid
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.uid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.gid
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.gid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.name
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.name
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.index
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.index
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.clients.match
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.clients.match
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.chown_mode
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.chown_mode
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.ntfs_unix_security
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.ntfs_unix_security
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.allow_suid
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.allow_suid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.superuser
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.superuser
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.ro_rule
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.ro_rule
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.protocols
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.protocols
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.anonymous_user
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.anonymous_user
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.allow_device_creation
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.allow_device_creation
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.rules.rw_rule
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.rules.rw_rule
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.export_policy.id
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.export_policy.id
+
+* Introduced in: 9.14
+
+
+|consistency_groups.volumes.nas.cifs.shares.namespace_caching
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.namespace_caching
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.continuously_available
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.continuously_available
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.vscan_profile
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.vscan_profile
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.acls.type
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.acls.type
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.acls.user_or_group
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.acls.user_or_group
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.acls.permission
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.acls.permission
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.acls.win_sid_unix_id
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.acls.win_sid_unix_id
+
+* Introduced in: 9.16
+
+
+|consistency_groups.volumes.nas.cifs.shares.offline_files
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.offline_files
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.home_directory
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.home_directory
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.allow_unencrypted_access
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.allow_unencrypted_access
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.encryption
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.encryption
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.comment
+
+* Introduced in: 9.12
+* maxLength: 256
+* minLength: 1
+
+
+|consistency_groups.volumes.nas.cifs.shares.dir_umask
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.dir_umask
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.oplocks
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.oplocks
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.show_snapshot
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.show_snapshot
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.change_notify
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.change_notify
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.access_based_enumeration
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.access_based_enumeration
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.name
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.name
+
+* Introduced in: 9.12
+* maxLength: 80
+* minLength: 1
+
+
+|consistency_groups.volumes.nas.cifs.shares.file_umask
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.file_umask
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.no_strict_security
+|boolean
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.no_strict_security
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.cifs.shares.unix_symlink
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.cifs.shares.unix_symlink
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.path
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.path
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.nas.unix_permissions
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.nas.unix_permissions
+
+* Introduced in: 9.12
+
+
+|consistency_groups.volumes.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.comment
+
+* maxLength: 1023
+* minLength: 0
+
+
+|consistency_groups.volumes.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.uuid
+
+
+|consistency_groups.volumes.space.available
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.space.available
+
+
+|consistency_groups.volumes.space.size
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.space.size
+
+
+|consistency_groups.volumes.space.used
+|integer
+|query
+|False
+a|Filter by consistency_groups.volumes.space.used
+
+
+|consistency_groups.volumes.snapshot_policy.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.snapshot_policy.uuid
+
+
+|consistency_groups.volumes.snapshot_policy.name
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.snapshot_policy.name
+
+
+|consistency_groups.volumes.tiering.policy
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.tiering.policy
+
+
+|consistency_groups.volumes.qos.policy.name
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.qos.policy.name
+
+
+|consistency_groups.volumes.qos.policy.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.qos.policy.uuid
+
+
+|consistency_groups.volumes.name
+|string
+|query
+|False
+a|Filter by consistency_groups.volumes.name
+
+* maxLength: 203
+* minLength: 1
+
+
+|consistency_groups._tags
+|string
+|query
+|False
+a|Filter by consistency_groups._tags
+
+* Introduced in: 9.15
+
+
+|consistency_groups.qos.policy.name
+|string
+|query
+|False
+a|Filter by consistency_groups.qos.policy.name
+
+
+|consistency_groups.qos.policy.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.qos.policy.uuid
+
+
+|consistency_groups.namespaces.create_time
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.create_time
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.subsystem_map.nsid
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.nsid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.tls.key_type
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.tls.key_type
+
+* Introduced in: 9.16
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.nqn
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.nqn
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.group_size
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.group_size
+
+* Introduced in: 9.14
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.hash_function
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.hash_function
+
+* Introduced in: 9.14
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.mode
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.mode
+
+* Introduced in: 9.16
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.priority
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.priority
+
+* Introduced in: 9.14
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.proximity.local_svm
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.proximity.local_svm
+
+* Introduced in: 9.17
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.name
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.name
+
+* Introduced in: 9.17
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
+
+* Introduced in: 9.17
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.uuid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.comment
+
+* Introduced in: 9.12
+* maxLength: 255
+* minLength: 0
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.os_type
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.os_type
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.subsystem_map.subsystem.name
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.subsystem.name
+
+* Introduced in: 9.12
+* maxLength: 64
+* minLength: 1
+
+
+|consistency_groups.namespaces.subsystem_map.anagrpid
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.subsystem_map.anagrpid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.os_type
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.os_type
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.comment
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.comment
+
+* Introduced in: 9.12
+* maxLength: 254
+* minLength: 0
+
+
+|consistency_groups.namespaces.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.uuid
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.space.snapshot.reserve_available
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.snapshot.reserve_available
+
+* Introduced in: 9.18
+
+
+|consistency_groups.namespaces.space.snapshot.reserve_percent
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.snapshot.reserve_percent
+
+* Introduced in: 9.18
+
+
+|consistency_groups.namespaces.space.snapshot.space_used_percent
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.snapshot.space_used_percent
+
+* Introduced in: 9.18
+
+
+|consistency_groups.namespaces.space.snapshot.used
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.snapshot.used
+
+* Introduced in: 9.18
+
+
+|consistency_groups.namespaces.space.snapshot.reserve_size
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.snapshot.reserve_size
+
+* Introduced in: 9.18
+
+
+|consistency_groups.namespaces.space.snapshot.autodelete.enabled
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.snapshot.autodelete.enabled
+
+* Introduced in: 9.18
+
+
+|consistency_groups.namespaces.space.size
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.size
+
+* Introduced in: 9.12
+* Max value: 140737488355328
+* Min value: 4096
+
+
+|consistency_groups.namespaces.space.guarantee.reserved
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.guarantee.reserved
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.space.guarantee.requested
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.guarantee.requested
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.space.used
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.used
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.space.block_size
+|integer
+|query
+|False
+a|Filter by consistency_groups.namespaces.space.block_size
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.name
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.name
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.auto_delete
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.auto_delete
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.status.container_state
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.status.container_state
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.status.mapped
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.status.mapped
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.status.read_only
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.status.read_only
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.status.state
+|string
+|query
+|False
+a|Filter by consistency_groups.namespaces.status.state
+
+* Introduced in: 9.12
+
+
+|consistency_groups.namespaces.enabled
+|boolean
+|query
+|False
+a|Filter by consistency_groups.namespaces.enabled
+
+* Introduced in: 9.12
+
+
+|consistency_groups.svm.name
+|string
+|query
+|False
+a|Filter by consistency_groups.svm.name
+
+
+|consistency_groups.svm.uuid
+|string
+|query
+|False
+a|Filter by consistency_groups.svm.uuid
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|replication_relationships.is_protected_by_svm_dr
+|boolean
+|query
+|False
+a|Filter by replication_relationships.is_protected_by_svm_dr
+
+* Introduced in: 9.14
+
+
+|replication_relationships.uuid
+|string
+|query
+|False
+a|Filter by replication_relationships.uuid
+
+* Introduced in: 9.13
+
+
+|replication_relationships.is_source
+|boolean
+|query
+|False
+a|Filter by replication_relationships.is_source
+
+* Introduced in: 9.13
+
+
+|space.used
+|integer
+|query
+|False
+a|Filter by space.used
+
+
+|space.size
+|integer
+|query
+|False
+a|Filter by space.size
+
+
+|space.available
+|integer
+|query
+|False
+a|Filter by space.available
+
+
+|qos.policy.name
+|string
+|query
+|False
+a|Filter by qos.policy.name
+
+
+|qos.policy.uuid
+|string
+|query
+|False
+a|Filter by qos.policy.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|namespaces.create_time
+|string
+|query
+|False
+a|Filter by namespaces.create_time
+
+* Introduced in: 9.12
+
+
+|namespaces.subsystem_map.nsid
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.nsid
+
+* Introduced in: 9.12
+
+
+|namespaces.subsystem_map.subsystem.hosts.tls.key_type
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.tls.key_type
+
+* Introduced in: 9.16
+
+
+|namespaces.subsystem_map.subsystem.hosts.nqn
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.nqn
+
+* Introduced in: 9.12
+
+
+|namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.group_size
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.group_size
+
+* Introduced in: 9.14
+
+
+|namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.hash_function
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.hash_function
+
+* Introduced in: 9.14
+
+
+|namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.mode
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.dh_hmac_chap.mode
+
+* Introduced in: 9.16
+
+
+|namespaces.subsystem_map.subsystem.hosts.priority
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.priority
+
+* Introduced in: 9.14
+
+
+|namespaces.subsystem_map.subsystem.hosts.proximity.local_svm
+|boolean
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.proximity.local_svm
+
+* Introduced in: 9.17
+
+
+|namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.name
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.name
+
+* Introduced in: 9.17
+
+
+|namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
+
+* Introduced in: 9.17
+
+
+|namespaces.subsystem_map.subsystem.uuid
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.uuid
+
+* Introduced in: 9.12
+
+
+|namespaces.subsystem_map.subsystem.comment
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.comment
+
+* Introduced in: 9.12
+* maxLength: 255
+* minLength: 0
+
+
+|namespaces.subsystem_map.subsystem.os_type
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.os_type
+
+* Introduced in: 9.12
+
+
+|namespaces.subsystem_map.subsystem.name
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.subsystem.name
+
+* Introduced in: 9.12
+* maxLength: 64
+* minLength: 1
+
+
+|namespaces.subsystem_map.anagrpid
+|string
+|query
+|False
+a|Filter by namespaces.subsystem_map.anagrpid
+
+* Introduced in: 9.12
+
+
+|namespaces.os_type
+|string
+|query
+|False
+a|Filter by namespaces.os_type
+
+* Introduced in: 9.12
+
+
+|namespaces.comment
+|string
+|query
+|False
+a|Filter by namespaces.comment
+
+* Introduced in: 9.12
+* maxLength: 254
+* minLength: 0
+
+
+|namespaces.uuid
+|string
+|query
+|False
+a|Filter by namespaces.uuid
+
+* Introduced in: 9.12
+
+
+|namespaces.space.snapshot.reserve_available
+|integer
+|query
+|False
+a|Filter by namespaces.space.snapshot.reserve_available
+
+* Introduced in: 9.18
+
+
+|namespaces.space.snapshot.reserve_percent
+|integer
+|query
+|False
+a|Filter by namespaces.space.snapshot.reserve_percent
+
+* Introduced in: 9.18
+
+
+|namespaces.space.snapshot.space_used_percent
+|integer
+|query
+|False
+a|Filter by namespaces.space.snapshot.space_used_percent
+
+* Introduced in: 9.18
+
+
+|namespaces.space.snapshot.used
+|integer
+|query
+|False
+a|Filter by namespaces.space.snapshot.used
+
+* Introduced in: 9.18
+
+
+|namespaces.space.snapshot.reserve_size
+|integer
+|query
+|False
+a|Filter by namespaces.space.snapshot.reserve_size
+
+* Introduced in: 9.18
+
+
+|namespaces.space.snapshot.autodelete.enabled
+|boolean
+|query
+|False
+a|Filter by namespaces.space.snapshot.autodelete.enabled
+
+* Introduced in: 9.18
+
+
+|namespaces.space.size
+|integer
+|query
+|False
+a|Filter by namespaces.space.size
+
+* Introduced in: 9.12
+* Max value: 140737488355328
+* Min value: 4096
+
+
+|namespaces.space.guarantee.reserved
+|boolean
+|query
+|False
+a|Filter by namespaces.space.guarantee.reserved
+
+* Introduced in: 9.12
+
+
+|namespaces.space.guarantee.requested
+|boolean
+|query
+|False
+a|Filter by namespaces.space.guarantee.requested
+
+* Introduced in: 9.12
+
+
+|namespaces.space.used
+|integer
+|query
+|False
+a|Filter by namespaces.space.used
+
+* Introduced in: 9.12
+
+
+|namespaces.space.block_size
+|integer
+|query
+|False
+a|Filter by namespaces.space.block_size
+
+* Introduced in: 9.12
+
+
+|namespaces.name
+|string
+|query
+|False
+a|Filter by namespaces.name
+
+* Introduced in: 9.12
+
+
+|namespaces.auto_delete
+|boolean
+|query
+|False
+a|Filter by namespaces.auto_delete
+
+* Introduced in: 9.12
+
+
+|namespaces.status.container_state
+|string
+|query
+|False
+a|Filter by namespaces.status.container_state
+
+* Introduced in: 9.12
+
+
+|namespaces.status.mapped
+|boolean
+|query
+|False
+a|Filter by namespaces.status.mapped
+
+* Introduced in: 9.12
+
+
+|namespaces.status.read_only
+|boolean
+|query
+|False
+a|Filter by namespaces.status.read_only
+
+* Introduced in: 9.12
+
+
+|namespaces.status.state
+|string
+|query
+|False
+a|Filter by namespaces.status.state
+
+* Introduced in: 9.12
+
+
+|namespaces.enabled
+|boolean
+|query
+|False
+a|Filter by namespaces.enabled
+
+* Introduced in: 9.12
+
+
+|_tags
+|string
+|query
+|False
+a|Filter by _tags
+
+* Introduced in: 9.15
+
+
+|volumes.nas.junction_parent.name
+|string
+|query
+|False
+a|Filter by volumes.nas.junction_parent.name
+
+* Introduced in: 9.12
+
+
+|volumes.nas.junction_parent.uuid
+|string
+|query
+|False
+a|Filter by volumes.nas.junction_parent.uuid
+
+* Introduced in: 9.12
+
+
+|volumes.nas.security_style
+|string
+|query
+|False
+a|Filter by volumes.nas.security_style
+
+* Introduced in: 9.12
+
+
+|volumes.nas.uid
+|integer
+|query
+|False
+a|Filter by volumes.nas.uid
+
+* Introduced in: 9.12
+
+
+|volumes.nas.gid
+|integer
+|query
+|False
+a|Filter by volumes.nas.gid
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.name
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.name
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.index
+|integer
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.index
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.clients.match
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.clients.match
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.chown_mode
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.chown_mode
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.ntfs_unix_security
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.ntfs_unix_security
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.allow_suid
+|boolean
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.allow_suid
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.superuser
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.superuser
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.ro_rule
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.ro_rule
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.protocols
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.protocols
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.anonymous_user
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.anonymous_user
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.allow_device_creation
+|boolean
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.allow_device_creation
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.rules.rw_rule
+|string
+|query
+|False
+a|Filter by volumes.nas.export_policy.rules.rw_rule
+
+* Introduced in: 9.12
+
+
+|volumes.nas.export_policy.id
+|integer
+|query
+|False
+a|Filter by volumes.nas.export_policy.id
+
+* Introduced in: 9.14
+
+
+|volumes.nas.cifs.shares.namespace_caching
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.namespace_caching
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.continuously_available
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.continuously_available
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.vscan_profile
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.vscan_profile
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.acls.type
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.acls.type
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.acls.user_or_group
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.acls.user_or_group
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.acls.permission
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.acls.permission
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.acls.win_sid_unix_id
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.acls.win_sid_unix_id
+
+* Introduced in: 9.16
+
+
+|volumes.nas.cifs.shares.offline_files
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.offline_files
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.home_directory
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.home_directory
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.allow_unencrypted_access
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.allow_unencrypted_access
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.encryption
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.encryption
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.comment
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.comment
+
+* Introduced in: 9.12
+* maxLength: 256
+* minLength: 1
+
+
+|volumes.nas.cifs.shares.dir_umask
+|integer
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.dir_umask
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.oplocks
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.oplocks
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.show_snapshot
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.show_snapshot
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.change_notify
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.change_notify
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.access_based_enumeration
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.access_based_enumeration
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.name
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.name
+
+* Introduced in: 9.12
+* maxLength: 80
+* minLength: 1
+
+
+|volumes.nas.cifs.shares.file_umask
+|integer
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.file_umask
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.no_strict_security
+|boolean
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.no_strict_security
+
+* Introduced in: 9.12
+
+
+|volumes.nas.cifs.shares.unix_symlink
+|string
+|query
+|False
+a|Filter by volumes.nas.cifs.shares.unix_symlink
+
+* Introduced in: 9.12
+
+
+|volumes.nas.path
+|string
+|query
+|False
+a|Filter by volumes.nas.path
+
+* Introduced in: 9.12
+
+
+|volumes.nas.unix_permissions
+|integer
+|query
+|False
+a|Filter by volumes.nas.unix_permissions
+
+* Introduced in: 9.12
+
+
+|volumes.comment
+|string
+|query
+|False
+a|Filter by volumes.comment
+
+* maxLength: 1023
+* minLength: 0
+
+
+|volumes.uuid
+|string
+|query
+|False
+a|Filter by volumes.uuid
+
+
+|volumes.space.available
+|integer
+|query
+|False
+a|Filter by volumes.space.available
+
+
+|volumes.space.size
+|integer
+|query
+|False
+a|Filter by volumes.space.size
+
+
+|volumes.space.used
+|integer
+|query
+|False
+a|Filter by volumes.space.used
+
+
+|volumes.snapshot_policy.uuid
+|string
+|query
+|False
+a|Filter by volumes.snapshot_policy.uuid
+
+
+|volumes.snapshot_policy.name
+|string
+|query
+|False
+a|Filter by volumes.snapshot_policy.name
+
+
+|volumes.tiering.policy
+|string
+|query
+|False
+a|Filter by volumes.tiering.policy
+
+
+|volumes.qos.policy.name
+|string
+|query
+|False
+a|Filter by volumes.qos.policy.name
+
+
+|volumes.qos.policy.uuid
+|string
+|query
+|False
+a|Filter by volumes.qos.policy.uuid
+
+
+|volumes.name
+|string
+|query
+|False
+a|Filter by volumes.name
+
+* maxLength: 203
+* minLength: 1
+
+
+|parent_consistency_group.uuid
+|string
+|query
+|False
+a|Filter by parent_consistency_group.uuid
+
+
+|parent_consistency_group.name
+|string
+|query
+|False
+a|Filter by parent_consistency_group.name
+
+
+|vdisk_type
+|string
+|query
+|False
+a|Filter by vdisk_type
+
+* Introduced in: 9.17
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "_tags": [
+        "team:csi",
+        "environment:test"
+      ],
+      "application": {
+        "component_type": "string",
+        "type": "string"
+      },
+      "clone": {
+        "guarantee": {
+          "type": "string"
+        },
+        "parent_consistency_group": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "string",
+          "uuid": "string"
+        },
+        "parent_snapshot": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "this_snapshot",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "parent_svm": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        },
+        "split_complete_percent": 0,
+        "split_estimate": 0,
+        "volume": {
+          "prefix": "string",
+          "suffix": "string"
+        }
+      },
+      "consistency_groups": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "_tags": [
+            "team:csi",
+            "environment:test"
+          ],
+          "application": {
+            "component_type": "string",
+            "type": "string"
+          },
+          "luns": [
+            {
+              "comment": "string",
+              "create_time": "2018-06-04 19:00:00 +0000",
+              "lun_maps": [
+                {
+                  "igroup": {
+                    "comment": "string",
+                    "igroups": [
+                      {
+                        "_links": {
+                          "self": {
+                            "href": "/api/resourcelink"
+                          }
+                        },
+                        "name": "igroup1",
+                        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+                      }
+                    ],
+                    "initiators": [
+                      {
+                        "comment": "my comment",
+                        "name": "iqn.1998-01.com.corp.iscsi:name1"
+                      }
+                    ],
+                    "name": "igroup1",
+                    "os_type": "string",
+                    "protocol": "string",
+                    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+                  }
+                }
+              ],
+              "name": "/vol/volume1/lun1",
+              "os_type": "string",
+              "qos": {
+                "policy": {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "max_throughput_iops": 10000,
+                  "max_throughput_mbps": 500,
+                  "min_throughput_iops": 2000,
+                  "min_throughput_mbps": 500,
+                  "name": "performance",
+                  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+                }
+              },
+              "serial_number": "string",
+              "space": {
+                "size": 1073741824,
+                "used": 0
+              },
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          ],
+          "name": "string",
+          "namespaces": [
+            {
+              "comment": "string",
+              "create_time": "2018-06-04 19:00:00 +0000",
+              "name": "/vol/volume1/qtree1/namespace1",
+              "os_type": "string",
+              "space": {
+                "block_size": 512,
+                "size": 1073741824,
+                "used": 0
+              },
+              "status": {
+                "container_state": "string",
+                "state": "online"
+              },
+              "subsystem_map": {
+                "_links": {
+                  "self": {
+                    "href": "/api/resourcelink"
+                  }
+                },
+                "anagrpid": "00103050h",
+                "nsid": "00000001h",
+                "subsystem": {
+                  "comment": "string",
+                  "hosts": [
+                    {
+                      "dh_hmac_chap": {
+                        "group_size": "string",
+                        "hash_function": "string",
+                        "mode": "bidirectional"
+                      },
+                      "nqn": "nqn.1992-01.example.com:string",
+                      "priority": "string",
+                      "proximity": {
+                        "peer_svms": [
+                          {
+                            "_links": {
+                              "self": {
+                                "href": "/api/resourcelink"
+                              }
+                            },
+                            "name": "peer1",
+                            "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+                          }
+                        ]
+                      },
+                      "tls": {
+                        "key_type": "configured"
+                      }
+                    }
+                  ],
+                  "name": "subsystem1",
+                  "os_type": "string",
+                  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+                }
+              },
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          ],
+          "parent_consistency_group": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "my_consistency_group",
+            "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+          },
+          "qos": {
+            "policy": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "performance",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          },
+          "restore_to": {
+            "snapshot": {
+              "name": "string",
+              "uuid": "string"
+            }
+          },
+          "snapshot_policy": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "default",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "space": {
+            "available": 5737418,
+            "size": 1073741824,
+            "used": 5737418
+          },
+          "svm": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "svm1",
+            "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+          },
+          "tiering": {
+            "object_stores": [
+              {}
+            ],
+            "policy": "string"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+          "volumes": [
+            {
+              "comment": "string",
+              "name": "vol_cs_dept",
+              "nas": {
+                "cifs": {
+                  "shares": [
+                    {
+                      "_links": {
+                        "self": {
+                          "href": "/api/resourcelink"
+                        }
+                      },
+                      "acls": [
+                        {
+                          "_links": {
+                            "self": {
+                              "href": "/api/resourcelink"
+                            }
+                          },
+                          "permission": "string",
+                          "type": "string",
+                          "user_or_group": "ENGDOMAIN\\ad_user",
+                          "win_sid_unix_id": "string"
+                        }
+                      ],
+                      "comment": "HR Department Share",
+                      "dir_umask": 18,
+                      "file_umask": 18,
+                      "name": "HR_SHARE",
+                      "offline_files": "string",
+                      "unix_symlink": "string",
+                      "vscan_profile": "string"
+                    }
+                  ]
+                },
+                "export_policy": {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "id": 0,
+                  "name": "string",
+                  "rules": [
+                    {
+                      "_links": {
+                        "self": {
+                          "href": "/api/resourcelink"
+                        }
+                      },
+                      "anonymous_user": "string",
+                      "chown_mode": "string",
+                      "clients": [
+                        {
+                          "match": "0.0.0.0/0"
+                        }
+                      ],
+                      "ntfs_unix_security": "string",
+                      "protocols": [
+                        "string"
+                      ],
+                      "ro_rule": [
+                        "string"
+                      ],
+                      "rw_rule": [
+                        "string"
+                      ],
+                      "superuser": [
+                        "string"
+                      ]
+                    }
+                  ]
+                },
+                "junction_parent": {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "name": "vs1_root",
+                  "uuid": "75c9cfb0-3eb4-11eb-9fb4-005056bb088a"
+                },
+                "path": "/user/my_volume",
+                "security_style": "string",
+                "unix_permissions": 493
+              },
+              "qos": {
+                "policy": {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "name": "performance",
+                  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+                }
+              },
+              "snapshot_policy": {
+                "_links": {
+                  "self": {
+                    "href": "/api/resourcelink"
+                  }
+                },
+                "name": "default",
+                "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+              },
+              "space": {
+                "available": 0,
+                "used": 0
+              },
+              "tiering": {
+                "object_stores": [
+                  {}
+                ],
+                "policy": "string"
+              },
+              "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+            }
+          ]
+        }
+      ],
+      "luns": [
+        {
+          "comment": "string",
+          "create_time": "2018-06-04 19:00:00 +0000",
+          "lun_maps": [
+            {
+              "igroup": {
+                "comment": "string",
+                "igroups": [
+                  {
+                    "_links": {
+                      "self": {
+                        "href": "/api/resourcelink"
+                      }
+                    },
+                    "name": "igroup1",
+                    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+                  }
+                ],
+                "initiators": [
+                  {
+                    "comment": "my comment",
+                    "name": "iqn.1998-01.com.corp.iscsi:name1"
+                  }
+                ],
+                "name": "igroup1",
+                "os_type": "string",
+                "protocol": "string",
+                "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+              }
+            }
+          ],
+          "name": "/vol/volume1/lun1",
+          "os_type": "string",
+          "qos": {
+            "policy": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "max_throughput_iops": 10000,
+              "max_throughput_mbps": 500,
+              "min_throughput_iops": 2000,
+              "min_throughput_mbps": 500,
+              "name": "performance",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          },
+          "serial_number": "string",
+          "space": {
+            "size": 1073741824,
+            "used": 0
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "metric": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "available_space": 4096,
+        "duration": "PT15S",
+        "iops": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "size": 4096,
+        "status": "ok",
+        "throughput": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000",
+        "used_space": 4096
+      },
+      "name": "string",
+      "namespaces": [
+        {
+          "comment": "string",
+          "create_time": "2018-06-04 19:00:00 +0000",
+          "name": "/vol/volume1/qtree1/namespace1",
+          "os_type": "string",
+          "space": {
+            "block_size": 512,
+            "size": 1073741824,
+            "used": 0
+          },
+          "status": {
+            "container_state": "string",
+            "state": "online"
+          },
+          "subsystem_map": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "anagrpid": "00103050h",
+            "nsid": "00000001h",
+            "subsystem": {
+              "comment": "string",
+              "hosts": [
+                {
+                  "dh_hmac_chap": {
+                    "group_size": "string",
+                    "hash_function": "string",
+                    "mode": "bidirectional"
+                  },
+                  "nqn": "nqn.1992-01.example.com:string",
+                  "priority": "string",
+                  "proximity": {
+                    "peer_svms": [
+                      {
+                        "_links": {
+                          "self": {
+                            "href": "/api/resourcelink"
+                          }
+                        },
+                        "name": "peer1",
+                        "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+                      }
+                    ]
+                  },
+                  "tls": {
+                    "key_type": "configured"
+                  }
+                }
+              ],
+              "name": "subsystem1",
+              "os_type": "string",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "parent_consistency_group": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "my_consistency_group",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "qos": {
+        "policy": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "performance",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      },
+      "replication_relationships": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        }
+      ],
+      "restore_to": {
+        "snapshot": {
+          "name": "string",
+          "uuid": "string"
+        }
+      },
+      "snapshot_policy": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "space": {
+        "available": 5737418,
+        "size": 1073741824,
+        "used": 5737418
+      },
+      "statistics": {
+        "available_space": 4096,
+        "iops_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "latency_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "size": 4096,
+        "status": "ok",
+        "throughput_raw": {
+          "read": 200,
+          "total": 1000,
+          "write": 100
+        },
+        "timestamp": "2017-01-25 11:20:13 +0000",
+        "used_space": 4096
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "tiering": {
+        "object_stores": [
+          {}
+        ],
+        "policy": "string"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+      "vdisk_type": "luns",
+      "volumes": [
+        {
+          "comment": "string",
+          "name": "vol_cs_dept",
+          "nas": {
+            "cifs": {
+              "shares": [
+                {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "acls": [
+                    {
+                      "_links": {
+                        "self": {
+                          "href": "/api/resourcelink"
+                        }
+                      },
+                      "permission": "string",
+                      "type": "string",
+                      "user_or_group": "ENGDOMAIN\\ad_user",
+                      "win_sid_unix_id": "string"
+                    }
+                  ],
+                  "comment": "HR Department Share",
+                  "dir_umask": 18,
+                  "file_umask": 18,
+                  "name": "HR_SHARE",
+                  "offline_files": "string",
+                  "unix_symlink": "string",
+                  "vscan_profile": "string"
+                }
+              ]
+            },
+            "export_policy": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "id": 0,
+              "name": "string",
+              "rules": [
+                {
+                  "_links": {
+                    "self": {
+                      "href": "/api/resourcelink"
+                    }
+                  },
+                  "anonymous_user": "string",
+                  "chown_mode": "string",
+                  "clients": [
+                    {
+                      "match": "0.0.0.0/0"
+                    }
+                  ],
+                  "ntfs_unix_security": "string",
+                  "protocols": [
+                    "string"
+                  ],
+                  "ro_rule": [
+                    "string"
+                  ],
+                  "rw_rule": [
+                    "string"
+                  ],
+                  "superuser": [
+                    "string"
+                  ]
+                }
+              ]
+            },
+            "junction_parent": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "vs1_root",
+              "uuid": "75c9cfb0-3eb4-11eb-9fb4-005056bb088a"
+            },
+            "path": "/user/my_volume",
+            "security_style": "string",
+            "unix_permissions": 493
+          },
+          "qos": {
+            "policy": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "performance",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          },
+          "snapshot_policy": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "default",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "space": {
+            "available": 0,
+            "used": 0
+          },
+          "tiering": {
+            "object_stores": [
+              {}
+            ],
+            "policy": "string"
+          },
+          "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+        }
+      ]
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|component_type
+|string
+a|Nested consistency group tag.
+
+
+|type
+|string
+a|Top level consistency group tag.
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|type
+|string
+a|The type of space guarantee of this volume in the aggregate.
+
+
+|===
+
+
+[#parent_consistency_group]
+[.api-collapsible-fifth-title]
+parent_consistency_group
+
+Consistency group that is to be cloned.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#parent_snapshot]
+[.api-collapsible-fifth-title]
+parent_snapshot
+
+Consistency group that is to be cloned.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#parent_svm]
+[.api-collapsible-fifth-title]
+parent_svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Volume name suffix/prefix for the cloned volumes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|prefix
+|string
+a|Volume name prefix for cloned volumes.
+
+
+|suffix
+|string
+a|Volume name suffix for cloned volumes.
+
+
+|===
+
+
+[#clone]
+[.api-collapsible-fifth-title]
+clone
+
+Creates a clone of an existing consistency group from the current contents or an existing snapshot.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|guarantee
+|link:#guarantee[guarantee]
+a|
+
+|is_flexclone
+|boolean
+a|Specifies if this consistency group is a FlexClone of a consistency group.
+
+
+|parent_consistency_group
+|link:#parent_consistency_group[parent_consistency_group]
+a|Consistency group that is to be cloned.
+
+
+|parent_snapshot
+|link:#parent_snapshot[parent_snapshot]
+a|Consistency group that is to be cloned.
+
+
+|parent_svm
+|link:#parent_svm[parent_svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|split_complete_percent
+|integer
+a|Percentage of FlexClone blocks split from its parent consistency group.
+
+
+|split_estimate
+|integer
+a|Space required to split the FlexClone consistency group.
+
+
+|split_initiated
+|boolean
+a|Splits volumes after cloning. Defaults to false during POST. Only accepts true during a PATCH.
+
+
+|volume
+|link:#volume[volume]
+a|Volume name suffix/prefix for the cloned volumes.
+
+
+|===
+
+
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+The source LUN for a LUN clone operation. This can be specified using property `clone.source.uuid` or `clone.source.name`. If both properties are supplied, they must refer to the same LUN.
+
+Valid in POST to create a new LUN as a clone of the source.
+
+Valid in PATCH to overwrite an existing LUN's data as a clone of another.
+
+[#clone]
+[.api-collapsible-fifth-title]
+clone
+
+This sub-object is used in POST to create a new LUN as a clone of an existing LUN, or PATCH to overwrite an existing LUN as a clone of another. Setting a property in this sub-object indicates that a LUN clone is desired. Consider the following other properties when cloning a LUN: `auto_delete`, `qos_policy`, `space.guarantee.requested` and `space.scsi_thin_provisioning_support_enabled`.
+
+When used in a PATCH, the patched LUN's data is over-written as a clone of the source and the following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `serial_number`, `status.state`, and `uuid`.
+
+Persistent reservations for the patched LUN are also preserved.
+
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#initiators]
+[.api-collapsible-fifth-title]
+initiators
+
+The initiators that are members of the initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|name
+|string
+a|Name of initiator that is a member of the initiator group.
+
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group that directly owns the initiator, which is where modification of the initiator is supported. This property will only be populated when the initiator is a member of a nested initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|The existing initiator groups that are members of the group. Optional in POST.
+
+This property is mutually exclusive with the _initiators_ property during POST.
+
+This array contains only the direct children of the initiator group. If the member initiator groups have further nested initiator groups, those are reported in the `igroups` property of the child initiator group.
+
+Zero or more nested initiator groups can be supplied when the initiator group is created. The initiator group will act as if it contains the aggregation of all initiators in any nested initiator groups.
+
+After creation, nested initiator groups can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/igroups` endpoint. See link:post-protocols-san-igroups-igroups(#-san-igroup-nested-create)anddelete-protocols-san-igroups-igroups-.html<</SAN/igroup_nested_create,POST /protocols/san/igroups/{igroup.uuid}/igroups>> and [DELETE /protocols/san/igroups/{igroup.uuid}/igroups/\{uuid}]  for more details.
+
+
+|initiators
+|array[link:#initiators[initiators]]
+a|The initiators that are members of the group.
+
+
+|name
+|string
+a|The name of the initiator group. Required in POST; optional in PATCH.
+
+
+|os_type
+|string
+a|The host operating system of the initiator group. All initiators in the group should be hosts of the same operating system. Required in POST; optional in PATCH.
+
+
+|protocol
+|string
+a|The protocols supported by the initiator group. This restricts the type of initiators that can be added to the initiator group. Optional in POST; if not supplied, this defaults to _mixed_.
+
+The protocol of an initiator group cannot be changed after creation of the group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#lun_maps]
+[.api-collapsible-fifth-title]
+lun_maps
+
+A LUN map is an association between a LUN and an initiator group.
+
+When a LUN is mapped to an initiator group, the initiator group's initiators are granted access to the LUN. The relationship between a LUN and an initiator group is many LUNs to many initiator groups.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group that directly owns the initiator, which is where modification of the initiator is supported. This property will only be populated when the initiator is a member of a nested initiator group.
+
+
+|logical_unit_number
+|integer
+a|The logical unit number assigned to the LUN when mapped to the specified initiator group. The number is used to identify the LUN to initiators in the initiator group when communicating through the Fibre Channel Protocol or iSCSI. Optional in POST; if no value is provided, ONTAP assigns the lowest available value. This property is not supported when the _provisioning_options.count_ property is 2 or more.
+
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|===
+
+
+[#provisioning_options]
+[.api-collapsible-fifth-title]
+provisioning_options
+
+Options that are applied to the operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Operation to perform
+
+
+|count
+|integer
+a|Number of elements to perform the operation on.
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+The QoS policy
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#qos]
+[.api-collapsible-fifth-title]
+qos
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|link:#policy[policy]
+a|The QoS policy
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+Properties that request and report the space guarantee for the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|requested
+|boolean
+a|The requested space reservation policy for the LUN. If _true_, a space reservation is requested for the LUN; if _false_, the LUN is thin provisioned. Guaranteeing a space reservation request for a LUN requires that the volume in which the LUN resides is also space reserved and that the fractional reserve for the volume is 100%. Valid in POST and PATCH.
+
+
+|reserved
+|boolean
+a|Reports if the LUN is space guaranteed.
+
+If _true_, a space guarantee is requested and the containing volume and aggregate support the request. If _false_, a space guarantee is not requested or a space guarantee is requested and either the containing volume or aggregate do not support the request.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+The storage space related properties of the LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|guarantee
+|link:#guarantee[guarantee]
+a|Properties that request and report the space guarantee for the LUN.
+
+
+|size
+|integer
+a|The total provisioned size of the LUN. The LUN size can be increased but not reduced using the REST interface.
+The maximum and minimum sizes listed here are the absolute maximum and absolute minimum sizes, in bytes. The actual minimum and maximum sizes vary depending on the ONTAP version, ONTAP platform, and the available space in the containing volume and aggregate.
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* example: 1073741824
+* format: int64
+* Max value: 140737488355328
+* Min value: 4096
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|used
+|integer
+a|The amount of space consumed by the main data stream of the LUN.
+
+This value is the total space consumed in the volume by the LUN, including filesystem overhead, but excluding prefix and suffix streams. Due to internal filesystem overhead and the many ways SAN filesystems and applications utilize blocks within a LUN, this value does not necessarily reflect actual consumption/availability from the perspective of the filesystem or application. Without specific knowledge of how the LUN blocks are utilized outside of ONTAP, this property should not be used as an indicator for an out-of-space condition.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* format: int64
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#luns]
+[.api-collapsible-fifth-title]
+luns
+
+A LUN is the logical representation of storage in a storage area network (SAN).
+
+A LUN must be mapped to an initiator group to grant access to the initiator group's initiators (client hosts). Initiators can then access the LUN and perform I/O over a Fibre Channel (FC) fabric using the FC Protocol or a TCP/IP network using iSCSI.
+
+See the LUN object model to learn more about each of the properties supported by the LUN REST API.
+
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<lun>" where the qtree name is optional.
+
+A LUN can be created to a specified size using thin or thick provisioning. A LUN can then be renamed, resized, cloned, moved to a different volume and copied. LUNs support the assignment of a QoS policy for performance management or a QoS policy can be assigned to a volume containing one or more LUNs.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|create_time
+|string
+a|The time the LUN was created.
+
+
+|enabled
+|boolean
+a|The enabled state of the LUN. LUNs can be disabled to prevent access to the LUN. Certain error conditions also cause the LUN to become disabled. If the LUN is disabled, you can consult the `state` property to determine if the LUN is administratively disabled (_offline_) or has become disabled as a result of an error. A LUN in an error condition can be brought online by setting the `enabled` property to _true_ or brought administratively offline by setting the `enabled` property to _false_. Upon creation, a LUN is enabled by default. Valid in PATCH.
+
+
+|lun_maps
+|array[link:#lun_maps[lun_maps]]
+a|An array of LUN maps.
+
+A LUN map is an association between a LUN and an initiator group. When a LUN is mapped to an initiator group, the initiator group's initiators are granted access to the LUN. The relationship between a LUN and an initiator group is many LUNs to many initiator groups.
+
+
+|name
+|string
+a|The fully qualified path name of the LUN composed of the "/vol" prefix, the volume name, the qtree name (optional), and the base name of the LUN. Valid in POST and PATCH.
+
+
+|os_type
+|string
+a|The operating system type of the LUN.
+
+Required in POST when creating a LUN that is not a clone of another. Disallowed in POST when creating a LUN clone.
+
+
+|qos
+|link:#qos[qos]
+a|
+
+|serial_number
+|string
+a|The LUN serial number. The serial number is generated by ONTAP when the LUN is created.
+
+* maxLength: 12
+* minLength: 12
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|space
+|link:#space[space]
+a|The storage space related properties of the LUN.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN. The UUID is generated by ONTAP when the LUN is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+Properties that request and report the space guarantee for the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|requested
+|boolean
+a|The requested space reservation policy for the NVMe namespace. If _true_, a space reservation is requested for the namespace; if _false_, the namespace is thin provisioned. Guaranteeing a space reservation request for a namespace requires that the volume in which the namespace resides also be space reserved and that the fractional reserve for the volume be 100%.
+
+The space reservation policy for an NVMe namespace is determined by ONTAP.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|reserved
+|boolean
+a|Reports if the NVMe namespace is space guaranteed.
+
+This property is _true_ if a space guarantee is requested and the containing volume and aggregate support the request. This property is _false_ if a space guarantee is not requested or if a space guarantee is requested and either the containing volume and aggregate do not support the request.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+The storage space related properties of the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|block_size
+|integer
+a|The size of blocks in the namespace, in bytes.
+
+Valid in POST when creating an NVMe namespace that is not a clone of another. Disallowed in POST when creating a namespace clone.
+ Valid in POST.
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|Properties that request and report the space guarantee for the NVMe namespace.
+
+
+|size
+|integer
+a|The total provisioned size of the NVMe namespace. Valid in POST and PATCH. The NVMe namespace size can be increased but not reduced using the REST interface.
+
+The maximum and minimum sizes listed here are the absolute maximum and absolute minimum sizes, in bytes. The maximum size is variable with respect to large NVMe namespace support in ONTAP. If large namespaces are supported, the maximum size is 128 TB (140737488355328 bytes) and if not supported, the maximum size is just under 16 TB (17557557870592 bytes). The minimum size supported is always 4096 bytes.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* example: 1073741824
+* format: int64
+* Max value: 140737488355328
+* Min value: 4096
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|used
+|integer
+a|The amount of space consumed by the main data stream of the NVMe namespace.
+
+This value is the total space consumed in the volume by the NVMe namespace, including filesystem overhead, but excluding prefix and suffix streams. Due to internal filesystem overhead and the many ways NVMe filesystems and applications utilize blocks within a namespace, this value does not necessarily reflect actual consumption/availability from the perspective of the filesystem or application. Without specific knowledge of how the namespace blocks are utilized outside of ONTAP, this property should not be used as an indicator for an out-of-space condition.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* format: int64
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Status information about the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|container_state
+|string
+a|The state of the volume and aggregate that contain the NVMe namespace. Namespaces are only available when their containers are available.
+
+
+|mapped
+|boolean
+a|Reports if the NVMe namespace is mapped to an NVMe subsystem.
+
+There is an added computational cost to retrieving this property's value. It is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|read_only
+|boolean
+a|Reports if the NVMe namespace allows only read access.
+
+
+|state
+|string
+a|The state of the NVMe namespace. Normal states for a namespace are _online_ and _offline_. Other states indicate errors.
+
+
+|===
+
+
+[#consistency_group_nvme_host_dh_hmac_chap]
+[.api-collapsible-fifth-title]
+consistency_group_nvme_host_dh_hmac_chap
+
+A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group_size
+|string
+a|The Diffie-Hellman group size for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `2048_bit`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|hash_function
+|string
+a|The hash function for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `sha_256`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|mode
+|string
+a|The expected NVMe in-band authentication mode for the host. This property is an indication of which secrets are configured for the host. When set to:
+
+* none: The host has neither the host nor controller secret configured, and no authentication is performed.
+* unidirectional: The host has a host secret configured. The controller will authenticate the host.
+* bidirectional: The host has both a host and controller secret configured. The controller will authenticate the host and the host will authenticate the controller.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the host is proximal to the SVM for which it is configured.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the host is proximal.
+
+
+|===
+
+
+[#tls]
+[.api-collapsible-fifth-title]
+tls
+
+A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_type
+|string
+a|The method by which the TLS pre-shared key (PSK) is configured for the host. Optional in POST.
+
+The values for property `key_type` and property `configured_psk` must logically agree.
+
+Possible values:
+
+* `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
+* `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+
+This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
+
+
+|===
+
+
+[#consistency_group_nvme_host]
+[.api-collapsible-fifth-title]
+consistency_group_nvme_host
+
+The NVMe host provisioned to access NVMe namespaces mapped to a subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dh_hmac_chap
+|link:#consistency_group_nvme_host_dh_hmac_chap[consistency_group_nvme_host_dh_hmac_chap]
+a|A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+|nqn
+|string
+a|The NVMe qualified name (NQN) used to identify the NVMe storage target.
+
+
+|priority
+|string
+a|The host priority setting allocates appropriate NVMe I/O queues (count and depth) for the host to submit I/O commands. Absence of this property in GET implies io_queue count and I/O queue depth are being used.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+|tls
+|link:#tls[tls]
+a|A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+|===
+
+
+[#consistency_group_nvme_subsystem]
+[.api-collapsible-fifth-title]
+consistency_group_nvme_subsystem
+
+An NVMe subsystem maintains configuration state and namespace access control for a set of NVMe-connected hosts.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A configurable comment for the NVMe subsystem. Optional in POST and PATCH.
+
+
+|hosts
+|array[link:#consistency_group_nvme_host[consistency_group_nvme_host]]
+a|The NVMe hosts configured for access to the NVMe subsystem.
+Optional in POST.
+
+
+|name
+|string
+a|The name of the NVMe subsystem. Once created, an NVMe subsystem cannot be renamed. Required in POST.
+
+
+|os_type
+|string
+a|The host operating system of the NVMe subsystem's hosts. Required in POST.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe subsystem.
+
+
+|===
+
+
+[#subsystem_map]
+[.api-collapsible-fifth-title]
+subsystem_map
+
+The NVMe subsystem with which the NVMe namespace is associated. A namespace can be mapped to zero (0) or one (1) subsystems.
+
+There is an added computational cost to retrieving property values for `subsystem_map`.
+They are not populated for either a collection GET or an instance GET unless explicitly requested using the `fields` query parameter.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|anagrpid
+|string
+a|The Asymmetric Namespace Access Group ID (ANAGRPID) of the NVMe namespace.
+
+The format for an ANAGRPID is 8 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|nsid
+|string
+a|The NVMe namespace identifier. This is an identifier used by an NVMe controller to provide access to the NVMe namespace.
+
+The format for an NVMe namespace identifier is 8 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|subsystem
+|link:#consistency_group_nvme_subsystem[consistency_group_nvme_subsystem]
+a|An NVMe subsystem maintains configuration state and namespace access control for a set of NVMe-connected hosts.
+
+
+|===
+
+
+[#namespaces]
+[.api-collapsible-fifth-title]
+namespaces
+
+An NVMe namespace is a collection of addressable logical blocks presented to hosts connected to the storage virtual machine using the NVMe over Fabrics protocol.
+
+An NVMe namespace must be mapped to an NVMe subsystem to grant access to the subsystem's hosts. Hosts can then access the NVMe namespace and perform I/O using the NVMe over Fabrics protocol.
+
+See the NVMe namespace object model to learn more about each of the properties supported by the NVMe namespace REST API.
+
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+An NVMe namespace is created to a specified size using thin or thick provisioning as determined by the volume on which it is created. An NVMe namespace can then be resized or cloned. An NVMe namespace cannot be renamed, or moved to a different volume. NVMe namespaces do not support the assignment of a QoS policy for performance management, but a QoS policy can be assigned to the volume containing the namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_delete
+|boolean
+a|This property marks the NVMe namespace for auto deletion when the volume containing the namespace runs out of space. This is most commonly set on namespace clones.
+
+When set to _true_, the NVMe namespace becomes eligible for automatic deletion when the volume runs out of space. Auto deletion only occurs when the volume containing the namespace is also configured for auto deletion and free space in the volume decreases below a particular threshold.
+
+This property is optional in POST and PATCH. The default value for a new NVMe namespace is _false_.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|comment
+|string
+a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|create_time
+|string
+a|The time the NVMe namespace was created.
+
+
+|enabled
+|boolean
+a|The enabled state of the NVMe namespace. Certain error conditions cause the namespace to become disabled. If the namespace is disabled, check the `status.state` property to determine what error disabled the namespace. An NVMe namespace is enabled automatically when it is created.
+
+
+|name
+|string
+a|The name of the NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+Renaming an NVMe namespace is not supported. Valid in POST.
+
+
+|os_type
+|string
+a|The operating system type of the NVMe namespace.
+
+Required in POST when creating an NVMe namespace that is not a clone of another. Disallowed in POST when creating a namespace clone.
+
+
+|space
+|link:#space[space]
+a|The storage space related properties of the NVMe namespace.
+
+
+|status
+|link:#status[status]
+a|Status information about the NVMe namespace.
+
+
+|subsystem_map
+|link:#subsystem_map[subsystem_map]
+a|The NVMe subsystem with which the NVMe namespace is associated. A namespace can be mapped to zero (0) or one (1) subsystems.
+
+There is an added computational cost to retrieving property values for `subsystem_map`.
+They are not populated for either a collection GET or an instance GET unless explicitly requested using the `fields` query parameter.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#parent_consistency_group]
+[.api-collapsible-fifth-title]
+parent_consistency_group
+
+The parent consistency group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group.
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+Determines the placement of any storage object created during this operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Storage service name. If not specified, the default value is the most performant for the platform.
+
+
+|===
+
+
+[#provisioning_options]
+[.api-collapsible-fifth-title]
+provisioning_options
+
+Options that are applied to the operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Operation to perform
+
+
+|name
+|string
+a|New name for consistency group. Required to resolve naming collisions.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|Determines the placement of any storage object created during this operation.
+
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+The QoS policy
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+A consistency group's snapshot
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the consistency group's snapshot to restore to.
+
+
+|uuid
+|string
+a|The UUID of the consistency group's snapshot to restore to.
+
+
+|===
+
+
+[#restore_to]
+[.api-collapsible-fifth-title]
+restore_to
+
+Use to restore a consistency group to a previous snapshot
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|snapshot
+|link:#snapshot[snapshot]
+a|A consistency group's snapshot
+
+
+|===
+
+
+[#snapshot_policy_reference]
+[.api-collapsible-fifth-title]
+snapshot_policy_reference
+
+This is a reference to the snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+Space information for the consistency group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The amount of space available in the consistency group, in bytes.
+
+
+|size
+|integer
+a|The total provisioned size of the consistency group, in bytes.
+
+
+|used
+|integer
+a|The amount of space consumed in the consistency group, in bytes.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+The Storage Virtual Machine (SVM) in which the consistency group is located.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#object_stores]
+[.api-collapsible-fifth-title]
+object_stores
+[#tiering]
+[.api-collapsible-fifth-title]
+tiering
+
+The tiering placement and policy definitions for volumes in this consistency group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|object_stores
+|array[link:#object_stores[object_stores]]
+a|Object stores to use. Used for placement.
+
+
+|policy
+|string
+a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
+
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+
+all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
+
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+
+none &dash; Volume blocks are not be tiered to the cloud store.
+
+snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+
+The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
+
+
+|===
+
+
+[#acls]
+[.api-collapsible-fifth-title]
+acls
+
+The permissions that users and groups have on a CIFS share.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|permission
+|string
+a|Specifies the access rights that a user or group has on the defined CIFS Share.
+The following values are allowed:
+
+* no_access    - User does not have CIFS share access
+* read         - User has only read access
+* change       - User has change access
+* full_control - User has full_control access
+
+
+|type
+|string
+a|Specifies the type of the user or group to add to the access control
+list of a CIFS share. The following values are allowed:
+
+* windows    - Windows user or group
+* unix_user  - UNIX user
+* unix_group - UNIX group
+
+
+|user_or_group
+|string
+a|Specifies the user or group name to add to the access control list of a CIFS share.
+
+
+|win_sid_unix_id
+|string
+a|Windows SID/UNIX ID depending on access-control type.
+
+
+|===
+
+
+[#consistency_group_cifs_share]
+[.api-collapsible-fifth-title]
+consistency_group_cifs_share
+
+CIFS share is a named access point in a volume. Before users and applications can access data on the CIFS server over SMB,
+a CIFS share must be created with sufficient share permission. CIFS shares are tied to the CIFS server on the SVM.
+When a CIFS share is created, ONTAP creates a default ACL for the share with Full Control permissions for Everyone.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_based_enumeration
+|boolean
+a|Specifies whether all folders inside this share are visible to a user based on that individual user's access right; prevents
+the display of folders or other shared resources that the user does not have access to.
+
+
+|acls
+|array[link:#acls[acls]]
+a|
+
+|allow_unencrypted_access
+|boolean
+a|Specifies whether or not the SMB2 clients are allowed to access the encrypted share.
+
+
+|change_notify
+|boolean
+a|Specifies whether CIFS clients can request for change notifications for directories on this share.
+
+
+|comment
+|string
+a|Specify the CIFS share descriptions.
+
+
+|continuously_available
+|boolean
+a|Specifies whether or not the clients connecting to this share can open files in a persistent manner.
+Files opened in this way are protected from disruptive events, such as, failover and giveback.
+If the Vscan ONTAP feature is used, it is not supported in continuous availability (CA) shares.
+
+* Default value:
+* Introduced in: 9.12
+* x-nullable: true
+
+
+|dir_umask
+|integer
+a|Directory mode creation mask to be viewed as an octal number.
+
+
+|encryption
+|boolean
+a|Specifies whether SMB encryption must be used when accessing this share. Clients that do not support encryption are not
+able to access this share.
+
+
+|file_umask
+|integer
+a|File mode creation mask to be viewed as an octal number.
+
+
+|home_directory
+|boolean
+a|Specifies whether or not the share is a home directory share, where the share and path names are dynamic.
+ONTAP home directory functionality automatically offer each user a dynamic share to their home directory without creating an
+individual SMB share for each user.
+The ONTAP CIFS home directory feature enable us to configure a share that maps to
+different directories based on the user that connects to it. Instead of creating a separate shares for each user,
+a single share with a home directory parameters can be created.
+In a home directory share, ONTAP dynamically generates the share-name and share-path by substituting
+%w, %u, and %d variables with the corresponding Windows user name, UNIX user name, and domain name, respectively.
+
+* Default value:
+* Introduced in: 9.12
+* readCreate: 1
+* x-nullable: true
+
+
+|name
+|string
+a|Specifies the name of the CIFS share that you want to create. If this
+is a home directory share then the share name includes the pattern as
+%w (Windows user name), %u (UNIX user name) and %d (Windows domain name)
+variables in any combination with this parameter to generate shares dynamically.
+
+
+|namespace_caching
+|boolean
+a|Specifies whether or not the SMB clients connecting to this share can cache the directory enumeration
+results returned by the CIFS servers.
+
+
+|no_strict_security
+|boolean
+a|Specifies whether or not CIFS clients can follow Unix symlinks outside the share boundaries.
+
+
+|offline_files
+|string
+a|Offline Files
+The supported values are:
+
+*** none - Clients are not permitted to cache files for offline access.
+
+*** manual - Clients may cache files that are explicitly selected by the user for offline access.
+
+*** documents - Clients may automatically cache files that are used by the user for offline access.
+
+*** programs - Clients may automatically cache files that are used by the user for offline access
+             and may use those files in an offline mode even if the share is available.
+
+
+|oplocks
+|boolean
+a|Specifies whether opportunistic locks are enabled on this share. "Oplocks" allow clients to lock files and cache content locally,
+which can increase performance for file operations.
+
+
+|show_snapshot
+|boolean
+a|Specifies whether or not the snapshots can be viewed and traversed by clients.
+
+
+|unix_symlink
+|string
+a|Controls the access of UNIX symbolic links to CIFS clients.
+The supported values are:
+
+***** local - Enables only local symbolic links which is within the same CIFS share.
+
+***** widelink - Enables both local symlinks and widelinks.
+
+***** disable - Disables local symlinks and widelinks.
+
+
+|vscan_profile
+|string
+a|Vscan File-Operations Profile
+The supported values are:
+
+*** no_scan - Virus scans are never triggered for accesses to this share.
+
+*** standard - Virus scans can be triggered by open, close, and rename operations.
+
+*** strict - Virus scans can be triggered by open, read, close, and rename operations.
+
+*** writes_only - Virus scans can be triggered only when a file that has been modified is closed.
+
+
+|===
+
+
+[#cifs]
+[.api-collapsible-fifth-title]
+cifs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|shares
+|array[link:#consistency_group_cifs_share[consistency_group_cifs_share]]
+a|
+
+|===
+
+
+[#export_clients]
+[.api-collapsible-fifth-title]
+export_clients
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+        following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|===
+
+
+[#export_rules]
+[.api-collapsible-fifth-title]
+export_rules
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allow_device_creation
+|boolean
+a|Specifies whether or not device creation is allowed.
+
+
+|allow_suid
+|boolean
+a|Specifies whether or not SetUID bits in SETATTR Op is to be honored.
+
+
+|anonymous_user
+|string
+a|User ID To Which Anonymous Users Are Mapped.
+
+
+|chown_mode
+|string
+a|Specifies who is authorized to change the ownership mode of a file.
+
+
+|clients
+|array[link:#export_clients[export_clients]]
+a|Array of client matches
+
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|ntfs_unix_security
+|string
+a|NTFS export UNIX security options.
+
+
+|protocols
+|array[string]
+a|
+
+|ro_rule
+|array[string]
+a|Authentication flavors that the read-only access rule governs
+
+
+|rw_rule
+|array[string]
+a|Authentication flavors that the read/write access rule governs
+
+
+|superuser
+|array[string]
+a|Authentication flavors that the superuser security type governs
+
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+The policy associated with volumes to export them for protocol access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|id
+|integer
+a|Identifier for the export policy.
+
+
+|name
+|string
+a|Name of the export policy.
+
+
+|rules
+|array[link:#export_rules[export_rules]]
+a|The set of rules that govern the export policy.
+
+
+|===
+
+
+[#junction_parent]
+[.api-collapsible-fifth-title]
+junction_parent
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the parent volume that contains the junction inode of this volume. The junction parent volume must belong to the same SVM that owns this volume.
+
+
+|uuid
+|string
+a|Unique identifier for the parent volume.
+
+
+|===
+
+
+[#nas]
+[.api-collapsible-fifth-title]
+nas
+
+The CIFS share policy and/or export policies for this volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cifs
+|link:#cifs[cifs]
+a|
+
+|export_policy
+|link:#export_policy[export_policy]
+a|The policy associated with volumes to export them for protocol access.
+
+
+|gid
+|integer
+a|The UNIX group ID of the volume. Valid in POST or PATCH.
+
+
+|junction_parent
+|link:#junction_parent[junction_parent]
+a|
+
+|path
+|string
+a|The fully-qualified path in the owning SVM's namespace at which the volume is mounted. The path is case insensitive and must be unique within an SVM's namespace. Path must begin with '/' and must not end with '/'. Only one volume can be mounted at any given junction path. An empty path in POST creates an unmounted volume. An empty path in PATCH deactivates and unmounts the volume. Taking a volume offline or restricted state removes its junction path. This attribute is reported in GET only when the volume is mounted.
+
+
+|security_style
+|string
+a|Security style associated with the volume. Valid in POST or PATCH.
+mixed &dash; Mixed-style security
+ntfs &dash; NTFS/WIndows-style security
+unified &dash; Unified-style security, unified UNIX, NFS and CIFS permissions
+unix &dash; UNIX-style security.
+
+
+|uid
+|integer
+a|The UNIX user ID of the volume. Valid in POST or PATCH.
+
+
+|unix_permissions
+|integer
+a|UNIX permissions to be viewed as an octal number, consisting of 4 digits derived by adding up bits 4 (read), 2 (write), and 1 (execute). First digit selects the set user ID (4), set group ID (2), and sticky (1) attributes. Second digit selects permission for the owner of the file. Third selects permissions for other users in the same group while the fourth selects permissions for other users not in the group. Valid in POST or PATCH. For security style "mixed" or "unix", the default setting is 0755 in octal (493 in decimal) and for security style "ntfs", the default setting is 0000. In cases where only owner, group, and other permissions are given (as in 755, representing the second, third and fourth digit), the first digit is assumed to be zero.
+
+
+|===
+
+
+[#provisioning_options]
+[.api-collapsible-fifth-title]
+provisioning_options
+
+Options that are applied to the operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|Operation to perform
+
+
+|count
+|integer
+a|Number of elements to perform the operation on.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|Determines the placement of any storage object created during this operation.
+
+
+|===
+
+
+[#qos]
+[.api-collapsible-fifth-title]
+qos
+
+The QoS policy for this volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|link:#policy[policy]
+a|The QoS policy
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The available space, in bytes.
+
+
+|size
+|integer
+a|Total provisioned size, in bytes.
+
+
+|used
+|integer
+a|The virtual space used (includes volume reserves) before storage efficiency, in bytes.
+
+
+|===
+
+
+[#tiering]
+[.api-collapsible-fifth-title]
+tiering
+
+The tiering placement and policy definitions for this volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|object_stores
+|array[link:#object_stores[object_stores]]
+a|Object stores to use. Used for placement.
+
+
+|policy
+|string
+a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
+
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+
+all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
+
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+
+none &dash; Volume blocks are not be tiered to the cloud store.
+
+snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+
+The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
+
+
+|===
+
+
+[#volumes]
+[.api-collapsible-fifth-title]
+volumes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment for the volume. Valid in POST or PATCH.
+
+
+|name
+|string
+a|Volume name. The name of volume must start with an alphabetic character (a to z or A to Z) or an underscore (_). The name must be 197 or fewer characters in length for FlexGroup volumes, and 203 or fewer characters in length for all other types of volumes. Volume names must be unique within an SVM. Required on POST.
+
+
+|nas
+|link:#nas[nas]
+a|The CIFS share policy and/or export policies for this volume.
+
+
+|qos
+|link:#qos[qos]
+a|The QoS policy for this volume.
+
+
+|snapshot_policy
+|link:#snapshot_policy_reference[snapshot_policy_reference]
+a|This is a reference to the snapshot policy.
+
+
+|space
+|link:#space[space]
+a|
+
+|tiering
+|link:#tiering[tiering]
+a|The tiering placement and policy definitions for this volume.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* readOnly: 1
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|===
+
+
+[#consistency_groups]
+[.api-collapsible-fifth-title]
+consistency_groups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|application
+|link:#application[application]
+a|
+
+|luns
+|array[link:#luns[luns]]
+a|The LUNs array can be used to create or modify LUNs in a consistency group on a new or existing volume that is a member of the consistency group. LUNs are considered members of a consistency group if they are located on a volume that is a member of the consistency group.
+The maximum number of items for this array is 16.
+
+
+|name
+|string
+a|Name of the consistency group. The consistency group name must be unique within an SVM.
+
+If not provided and the consistency group contains only one volume, the name will be generated based on the volume name. If the consistency group contains more than one volume, the name is required.
+
+
+|namespaces
+|array[link:#namespaces[namespaces]]
+a|An NVMe namespace is a collection of addressable logical blocks presented to hosts connected to the SVM using the NVMe over Fabrics protocol.
+In ONTAP, an NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+An NVMe namespace is created to a specified size using thin or thick provisioning as determined by the volume on which it is created. NVMe namespaces support being cloned. An NVMe namespace cannot be renamed, resized, or moved to a different volume. NVMe namespaces do not support the assignment of a QoS policy for performance management, but a QoS policy can be assigned to the volume containing the namespace. See the NVMe namespace object model to learn more about each of the properties supported by the NVMe namespace REST API.
+
+An NVMe namespace must be mapped to an NVMe subsystem to grant access to the subsystem's hosts. Hosts can then access the NVMe namespace and perform I/O using the NVMe over Fabrics protocol.
+The maximum number of items for this array is 16.
+
+* minItems: 0
+* uniqueItems: 1
+* Introduced in: 9.10
+
+
+|parent_consistency_group
+|link:#parent_consistency_group[parent_consistency_group]
+a|The parent consistency group.
+
+
+|qos
+|link:#qos[qos]
+a|
+
+|restore_to
+|link:#restore_to[restore_to]
+a|Use to restore a consistency group to a previous snapshot
+
+
+|snapshot_policy
+|link:#snapshot_policy_reference[snapshot_policy_reference]
+a|This is a reference to the snapshot policy.
+
+
+|space
+|link:#space[space]
+a|Space information for the consistency group.
+
+
+|svm
+|link:#svm[svm]
+a|The Storage Virtual Machine (SVM) in which the consistency group is located.
+
+
+|tiering
+|link:#tiering[tiering]
+a|The tiering placement and policy definitions for volumes in this consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group. The UUID is generated by ONTAP when the consistency group is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|volumes
+|array[link:#volumes[volumes]]
+a|A consistency group is a mutually exclusive aggregation of volumes or other consistency groups. A volume can only be associated with one direct parent consistency group.
+
+The volumes array can be used to create new volumes in the consistency group, add existing volumes to the consistency group, or modify existing volumes that are already members of the consistency group.
+
+The total number of volumes across all child consistency groups contained in a consistency group is constrained by the same limit.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency observed at the storage object, in microseconds.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance and capacity numbers, such as, IOPS, latency, throughput, used space, and available space.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|available_space
+|integer
+a|The total space available in the consistency group, in bytes.
+
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency observed at the storage object, in microseconds.
+
+
+|size
+|integer
+a|The total size of the consistency group, in bytes.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance and capacity data.
+
+
+|used_space
+|integer
+a|The total space used in the consistency group, in bytes.
+
+
+|===
+
+
+[#replication_relationships]
+[.api-collapsible-fifth-title]
+replication_relationships
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|is_protected_by_svm_dr
+|boolean
+a|Indicates whether or not this consistency group is protected by SVM DR.
+
+
+|is_source
+|boolean
+a|Indicates whether or not this consistency group is the source for replication.
+
+
+|uuid
+|string
+a|The unique identifier of the SnapMirror relationship.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency observed at the storage object, in microseconds. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance and space numbers, such as, IOPS, latency, throughput, used space, and available space. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available_space
+|integer
+a|The total space available in the consistency group, in bytes.
+
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This can be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency observed at the storage object, in microseconds. This can be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|size
+|integer
+a|The total size of the consistency group, in bytes.
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|used_space
+|integer
+a|The total used space in the consistency group, in bytes.
+
+
+|===
+
+
+[#consistency_group_cifs_share]
+[.api-collapsible-fifth-title]
+consistency_group_cifs_share
+
+CIFS share is a named access point in a volume. Before users and applications can access data on the CIFS server over SMB,
+a CIFS share must be created with sufficient share permission. CIFS shares are tied to the CIFS server on the SVM.
+When a CIFS share is created, ONTAP creates a default ACL for the share with Full Control permissions for Everyone.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_based_enumeration
+|boolean
+a|Specifies whether all folders inside this share are visible to a user based on that individual user's access right; prevents
+the display of folders or other shared resources that the user does not have access to.
+
+
+|acls
+|array[link:#acls[acls]]
+a|
+
+|allow_unencrypted_access
+|boolean
+a|Specifies whether or not the SMB2 clients are allowed to access the encrypted share.
+
+
+|change_notify
+|boolean
+a|Specifies whether CIFS clients can request for change notifications for directories on this share.
+
+
+|comment
+|string
+a|Specify the CIFS share descriptions.
+
+
+|continuously_available
+|boolean
+a|Specifies whether or not the clients connecting to this share can open files in a persistent manner.
+Files opened in this way are protected from disruptive events, such as, failover and giveback.
+If the Vscan ONTAP feature is used, it is not supported in continuous availability (CA) shares.
+
+* Default value: 1
+* Introduced in: 9.12
+* x-nullable: true
+
+
+|dir_umask
+|integer
+a|Directory mode creation mask to be viewed as an octal number.
+
+
+|encryption
+|boolean
+a|Specifies whether SMB encryption must be used when accessing this share. Clients that do not support encryption are not
+able to access this share.
+
+
+|file_umask
+|integer
+a|File mode creation mask to be viewed as an octal number.
+
+
+|home_directory
+|boolean
+a|Specifies whether or not the share is a home directory share, where the share and path names are dynamic.
+ONTAP home directory functionality automatically offer each user a dynamic share to their home directory without creating an
+individual SMB share for each user.
+The ONTAP CIFS home directory feature enable us to configure a share that maps to
+different directories based on the user that connects to it. Instead of creating a separate shares for each user,
+a single share with a home directory parameters can be created.
+In a home directory share, ONTAP dynamically generates the share-name and share-path by substituting
+%w, %u, and %d variables with the corresponding Windows user name, UNIX user name, and domain name, respectively.
+
+* Default value: 1
+* Introduced in: 9.12
+* readCreate: 1
+* x-nullable: true
+
+
+|name
+|string
+a|Specifies the name of the CIFS share that you want to create. If this
+is a home directory share then the share name includes the pattern as
+%w (Windows user name), %u (UNIX user name) and %d (Windows domain name)
+variables in any combination with this parameter to generate shares dynamically.
+
+
+|namespace_caching
+|boolean
+a|Specifies whether or not the SMB clients connecting to this share can cache the directory enumeration
+results returned by the CIFS servers.
+
+
+|no_strict_security
+|boolean
+a|Specifies whether or not CIFS clients can follow Unix symlinks outside the share boundaries.
+
+
+|offline_files
+|string
+a|Offline Files
+The supported values are:
+
+*** none - Clients are not permitted to cache files for offline access.
+
+*** manual - Clients may cache files that are explicitly selected by the user for offline access.
+
+*** documents - Clients may automatically cache files that are used by the user for offline access.
+
+*** programs - Clients may automatically cache files that are used by the user for offline access
+           and may use those files in an offline mode even if the share is available.
+
+
+|oplocks
+|boolean
+a|Specifies whether opportunistic locks are enabled on this share. "Oplocks" allow clients to lock files and cache content locally,
+which can increase performance for file operations.
+
+
+|show_snapshot
+|boolean
+a|Specifies whether or not the snapshots can be viewed and traversed by clients.
+
+
+|unix_symlink
+|string
+a|Controls the access of UNIX symbolic links to CIFS clients.
+The supported values are:
+
+***** local - Enables only local symbolic links which is within the same CIFS share.
+
+***** widelink - Enables both local symlinks and widelinks.
+
+***** disable - Disables local symlinks and widelinks.
+
+
+|vscan_profile
+|string
+a|Vscan File-Operations Profile
+The supported values are:
+
+*** no_scan - Virus scans are never triggered for accesses to this share.
+
+*** standard - Virus scans can be triggered by open, close, and rename operations.
+
+*** strict - Virus scans can be triggered by open, read, close, and rename operations.
+
+*** writes_only - Virus scans can be triggered only when a file that has been modified is closed.
+
+
+|===
+
+
+[#export_clients]
+[.api-collapsible-fifth-title]
+export_clients
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+      following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|_tags
+|array[string]
+a|Tags are an optional way to track the uses of a resource. Tag values must be formatted as key:value strings.
+
+
+|application
+|link:#application[application]
+a|
+
+|clone
+|link:#clone[clone]
+a|Creates a clone of an existing consistency group from the current contents or an existing snapshot.
+
+
+|consistency_groups
+|array[link:#consistency_groups[consistency_groups]]
+a|A consistency group is a mutually exclusive aggregation of volumes or other consistency groups. A consistency group can only be associated with one direct parent consistency group.
+
+
+|luns
+|array[link:#luns[luns]]
+a|The LUNs array can be used to create or modify LUNs in a consistency group on a new or existing volume that is a member of the consistency group. LUNs are considered members of a consistency group if they are located on a volume that is a member of the consistency group.
+The maximum number of items for this array is 16.
+
+
+|metric
+|link:#metric[metric]
+a|Performance and capacity numbers, such as, IOPS, latency, throughput, used space, and available space.
+
+
+|name
+|string
+a|Name of the consistency group. The consistency group name must be unique within an SVM.
+
+If not provided and the consistency group contains only one volume, the name will be generated based on the volume name. If the consistency group contains more than one volume, the name is required.
+
+
+|namespaces
+|array[link:#namespaces[namespaces]]
+a|An NVMe namespace is a collection of addressable logical blocks presented to hosts connected to the SVM using the NVMe over Fabrics protocol.
+In ONTAP, an NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+An NVMe namespace is created to a specified size using thin or thick provisioning as determined by the volume on which it is created. NVMe namespaces support being cloned. An NVMe namespace cannot be renamed, resized, or moved to a different volume. NVMe namespaces do not support the assignment of a QoS policy for performance management, but a QoS policy can be assigned to the volume containing the namespace. See the NVMe namespace object model to learn more about each of the properties supported by the NVMe namespace REST API.
+
+An NVMe namespace must be mapped to an NVMe subsystem to grant access to the subsystem's hosts. Hosts can then access the NVMe namespace and perform I/O using the NVMe over Fabrics protocol.
+The maximum number of items for this array is 16.
+
+* minItems: 0
+* uniqueItems: 1
+* Introduced in: 9.10
+
+
+|parent_consistency_group
+|link:#parent_consistency_group[parent_consistency_group]
+a|The parent consistency group.
+
+
+|qos
+|link:#qos[qos]
+a|
+
+|replicated
+|boolean
+a|Indicates whether or not replication has been enabled on this consistency group.
+
+
+|replication_relationships
+|array[link:#replication_relationships[replication_relationships]]
+a|Indicates the SnapMirror relationship of this consistency group.
+
+
+|replication_source
+|boolean
+a|Since support for this field is to be removed in the next release, use replication_relationships.is_source instead.
+
+
+|restore_to
+|link:#restore_to[restore_to]
+a|Use to restore a consistency group to a previous snapshot
+
+
+|snapshot_policy
+|link:#snapshot_policy_reference[snapshot_policy_reference]
+a|This is a reference to the snapshot policy.
+
+
+|space
+|link:#space[space]
+a|Space information for the consistency group.
+
+
+|statistics
+|link:#statistics[statistics]
+a|These are raw performance and space numbers, such as, IOPS, latency, throughput, used space, and available space. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+|svm
+|link:#svm[svm]
+a|The Storage Virtual Machine (SVM) in which the consistency group is located.
+
+
+|tiering
+|link:#tiering[tiering]
+a|The tiering placement and policy definitions for volumes in this consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group. The UUID is generated by ONTAP when the consistency group is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|vdisk_type
+|string
+a|Type of objects in the consistency group.
+
+
+|volumes
+|array[link:#volumes[volumes]]
+a|A consistency group is a mutually exclusive aggregation of volumes or other consistency groups. A volume can only be associated with one direct parent consistency group.
+
+The volumes array can be used to create new volumes in the consistency group, add existing volumes to the consistency group, or modify existing volumes that are already members of the consistency group.
+
+The total number of volumes across all child consistency groups contained in a consistency group is constrained by the same limit.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

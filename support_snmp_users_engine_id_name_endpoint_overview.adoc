@@ -1,0 +1,77 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_snmp_users_engine_id_name_endpoint_overview.html'
+summary: 'Manage individual SNMP users'
+---
+
+= Manage individual SNMP users
+
+
+
+== Overview
+
+Defines, retrieves, updates and deletes an individual SNMP user.
+
+== Examples
+
+=== Retrieves the details of an SNMP user
+
+----
+
+# The API:
+GET "/api/support/snmp/users/{engine_id}/{name}"
+
+# The call:
+curl -H "accept: application/hal+json" -X GET "https://<mgmt-ip>/api/support/snmp/users/80000315056622e52625a9e911a981005056bb1dcb/snmpv1user2"
+
+# The response:
+{
+"engine_id": "80000315056622e52625a9e911a981005056bb1dcb",
+"name": "snmpv1user2",
+"scope": "cluster",
+"owner": {
+  "name": "cluster-1",
+  "uuid": "26e52266-a925-11e9-a981-005056bb1dcb"
+},
+"authentication_method": "community",
+"_links": {
+  "self": {
+    "href": "/api/support/snmp/users/80000315056622e52625a9e911a981005056bb1dcb/snmpv1user2"
+  }
+}
+}
+----
+
+=== Updates the comment parameter for an individual SNMP user
+
+----
+
+# The API:
+PATCH "/api/support/snmp/users/{engine_id}/{name}"
+
+# The call:
+curl -H "accept: application/json" -H "Content-Type: application/json" -X PATCH "https://<mgmt-ip>/api/support/snmp/users/8000031505b67667a26975e9118a480050568e6f74/public" -d '{"comment":"Default SNMP community"}'
+
+# The response:
+200 OK
+{}
+----
+
+=== Deletes an individual SNMP user in the cluster
+
+----
+
+# The API:
+DELETE "/api/support/snmp/users/{engine_id}/{name}"
+
+# The call:
+curl -H "accept: application/json" -H "Content-Type: application/json" -X DELETE "https://<mgmt-ip>/api/support/snmp/users/8000031505b67667a26975e9118a480050568e6f74/snmpuser"
+
+# The response:
+200 OK
+{}
+----
+
+

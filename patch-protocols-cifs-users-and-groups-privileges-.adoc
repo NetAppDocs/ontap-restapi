@@ -1,0 +1,261 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-users-and-groups-privileges-.html'
+summary: 'Update privileges for a local, or Active Directory user or group and SVM'
+---
+
+= Update privileges for a local, or Active Directory user or group and SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/users-and-groups/privileges/{svm.uuid}/{name}`#
+
+*Introduced In:* 9.10
+
+Updates privileges of the specified local or Active Directory user or group and SVM.
+
+== Important note
+
+* Specified privileges will replace all the existing privileges associated with the user or group.
+* To reset privileges associated with the user or group, specify the privileges list as empty.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups privilege reset-privilege`
+
+== Learn more
+
+* link:protocols_cifs_users-and-groups_privileges_endpoint_overview.html[DOC /protocols/cifs/users-and-groups/privileges]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Local or Active Directory user or group name.
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|privileges
+|array[string]
+a|An array of privileges associated with the local or Active Directory user or group.
+The available values are:
+
+* SeTcbPrivilege              - Allows user to act as part of the operating system
+* SeBackupPrivilege           - Allows user to back up files and directories, overriding any ACLs
+* SeRestorePrivilege          - Allows user to restore files and directories, overriding any ACLs
+* SeTakeOwnershipPrivilege    - Allows user to take ownership of files or other objects
+* SeSecurityPrivilege         - Allows user to manage auditing and viewing/dumping/clearing the security log
+* SeChangeNotifyPrivilege     - Allows user to bypass traverse checking
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "privileges": [
+    "string"
+  ]
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262196
+| Field 'svm.name' is not supported in the body of PATCH request.
+
+| 262203
+| Field 'svm.uuid' is not supported in the body of PATCH request.
+
+| 655673
+| Failed to resolve the user or group.
+
+| 655730
+| The specified local user to which privileges are to be associated to does not exist.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#user_group_privileges]
+[.api-collapsible-fifth-title]
+user_group_privileges
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|privileges
+|array[string]
+a|An array of privileges associated with the local or Active Directory user or group.
+The available values are:
+
+* SeTcbPrivilege              - Allows user to act as part of the operating system
+* SeBackupPrivilege           - Allows user to back up files and directories, overriding any ACLs
+* SeRestorePrivilege          - Allows user to restore files and directories, overriding any ACLs
+* SeTakeOwnershipPrivilege    - Allows user to take ownership of files or other objects
+* SeSecurityPrivilege         - Allows user to manage auditing and viewing/dumping/clearing the security log
+* SeChangeNotifyPrivilege     - Allows user to bypass traverse checking
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

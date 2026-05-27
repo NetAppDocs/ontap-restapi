@@ -1,0 +1,340 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-volume-efficiency-policies-.html'
+summary: 'Update a volume efficiency policy'
+---
+
+= Update a volume efficiency policy
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/volume-efficiency-policies/{uuid}`#
+
+*Introduced In:* 9.8
+
+Updates a volume efficiency policy.
+
+== Related ONTAP commands
+
+* `volume efficiency policy modify`
+
+== Learn more
+
+* link:storage_volume-efficiency-policies_endpoint_overview.html[DOC /storage/volume-efficiency-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Volume efficiency policy UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment associated with the volume efficiency policy.
+
+
+|duration
+|integer
+a|This field is used with the policy type "scheduled" to indicate the allowed duration for a session, in hours. Possible value is a number between 0 and 999 inclusive. Default is unlimited indicated by value 0.
+
+
+|enabled
+|boolean
+a|Is the volume efficiency policy enabled?
+
+
+|qos_policy
+|string
+a|QoS policy for the sis operation. Possible values are background and best_effort. In background, sis operation will run in background with minimal or no impact on data serving client operations. In best_effort, sis operations may have some impact on data serving client operations.
+
+
+|schedule
+|link:#schedule[schedule]
+a|
+
+|start_threshold_percent
+|integer
+a|This field is used with the policy type "threshold" to indicate the threshold percentage for triggering the volume efficiency policy. It is mutually exclusive of the schedule.
+
+
+|type
+|string
+a|Type of volume efficiency policy.
+
+
+|uuid
+|string
+a|Unique identifier of volume efficiency policy.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "qos_policy": "string",
+  "schedule": {
+    "name": "string"
+  },
+  "type": "string",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 918702
+| The specified operation on the volume efficiency policies endpoint is not supported on this platform.
+
+| 6881341
+| Specified schedule not found.
+
+| 6881344
+| Failed to queue specified job.
+
+| 6881351
+| Policy name is too long.
+
+| 6881352
+| Policy name is not valid.
+
+| 6881362
+| Threshold percentage cannot be less than 1 percent.
+
+| 6881433
+| For "threshold" type policy, "schedule and duration" is not supported.
+
+| 6881435
+| Only a policy of type "threshold" can set the "start-threshold-percent" attribute.
+
+| 6881438
+| For "inline-only and auto" policy, modification of attributes is not allowed.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Schedule at which volume efficiency policies are captured on the SVM. Some common schedules already defined in the system are hourly, daily, weekly, at 5 minute intervals, and at 8 hour intervals. Volume efficiency policies with custom schedules can be referenced.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume_efficiency_policy]
+[.api-collapsible-fifth-title]
+volume_efficiency_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment associated with the volume efficiency policy.
+
+
+|duration
+|integer
+a|This field is used with the policy type "scheduled" to indicate the allowed duration for a session, in hours. Possible value is a number between 0 and 999 inclusive. Default is unlimited indicated by value 0.
+
+
+|enabled
+|boolean
+a|Is the volume efficiency policy enabled?
+
+
+|qos_policy
+|string
+a|QoS policy for the sis operation. Possible values are background and best_effort. In background, sis operation will run in background with minimal or no impact on data serving client operations. In best_effort, sis operations may have some impact on data serving client operations.
+
+
+|schedule
+|link:#schedule[schedule]
+a|
+
+|start_threshold_percent
+|integer
+a|This field is used with the policy type "threshold" to indicate the threshold percentage for triggering the volume efficiency policy. It is mutually exclusive of the schedule.
+
+
+|type
+|string
+a|Type of volume efficiency policy.
+
+
+|uuid
+|string
+a|Unique identifier of volume efficiency policy.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

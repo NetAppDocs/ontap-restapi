@@ -1,0 +1,1468 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-volumes-files-.html'
+summary: 'Retrieve files and directories'
+---
+
+= Retrieve files and directories
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/volumes/{volume.uuid}/files/{path}`#
+
+*Introduced In:* 9.7
+
+Retrieves a list of files and directories for a given directory or returns only the properties of a single given directory or file of a volume.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties.  They are not included by default in GET results and must be explicitly requested using the `fields` query property. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+*** `analytics`
+
+*** `qos_policy.name`
+
+*** `qos_policy.uuid`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|volume.uuid
+|string
+|path
+|True
+a|Volume UUID
+
+
+|path
+|string
+|path
+|True
+a|Relative path of a file or directory in the volume. The path field requires using "%2E" to represent "." and "%2F" to represent "/" for the path provided.
+
+
+|byte_offset
+|integer
+|query
+|False
+a|The file offset to start reading from.
+
+* Introduced in: 9.8
+
+
+|length
+|integer
+|query
+|False
+a|Length of the range in bytes.
+
+* Introduced in: 9.8
+
+
+|return_metadata
+|boolean
+|query
+|False
+a|If true, the request returns metadata for the the directory or file specified in the path.
+
+* Introduced in: 9.8
+* Default value:
+
+
+|unix_permissions
+|integer
+|query
+|False
+a|Filter by unix_permissions
+
+
+|creation_time
+|string
+|query
+|False
+a|Filter by creation_time
+
+
+|target
+|string
+|query
+|False
+a|Filter by target
+
+* Introduced in: 9.8
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|inode_number
+|integer
+|query
+|False
+a|Filter by inode_number
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|inode_generation
+|integer
+|query
+|False
+a|Filter by inode_generation
+
+
+|constituent.uuid
+|string
+|query
+|False
+a|Filter by constituent.uuid
+
+* Introduced in: 9.10
+
+
+|constituent.name
+|string
+|query
+|False
+a|Filter by constituent.name
+
+* Introduced in: 9.10
+
+
+|size
+|integer
+|query
+|False
+a|Filter by size
+
+
+|is_empty
+|boolean
+|query
+|False
+a|Filter by is_empty
+
+
+|analytics.by_modified_time.bytes_used.labels
+|string
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.labels
+
+* Introduced in: 9.8
+
+
+|analytics.by_modified_time.bytes_used.newest_label
+|string
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.newest_label
+
+* Introduced in: 9.8
+
+
+|analytics.by_modified_time.bytes_used.oldest_label
+|string
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.oldest_label
+
+* Introduced in: 9.8
+
+
+|analytics.by_modified_time.bytes_used.values
+|integer
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.values
+
+* Introduced in: 9.8
+
+
+|analytics.by_modified_time.bytes_used.aged_data_metric
+|number
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.aged_data_metric
+
+* Introduced in: 9.17
+
+
+|analytics.by_modified_time.bytes_used.percentages
+|number
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.percentages
+
+* Introduced in: 9.8
+
+
+|analytics.subdir_count
+|integer
+|query
+|False
+a|Filter by analytics.subdir_count
+
+* Introduced in: 9.8
+
+
+|analytics.report_time
+|string
+|query
+|False
+a|Filter by analytics.report_time
+
+* Introduced in: 9.17
+
+
+|analytics.by_accessed_time.bytes_used.labels
+|string
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.labels
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.newest_label
+|string
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.newest_label
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.oldest_label
+|string
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.oldest_label
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.values
+|integer
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.values
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.aged_data_metric
+|number
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.aged_data_metric
+
+* Introduced in: 9.17
+
+
+|analytics.by_accessed_time.bytes_used.percentages
+|number
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.percentages
+
+* Introduced in: 9.8
+
+
+|analytics.bytes_used
+|integer
+|query
+|False
+a|Filter by analytics.bytes_used
+
+* Introduced in: 9.8
+
+
+|analytics.incomplete_data
+|boolean
+|query
+|False
+a|Filter by analytics.incomplete_data
+
+* Introduced in: 9.12
+
+
+|analytics.file_count
+|integer
+|query
+|False
+a|Filter by analytics.file_count
+
+* Introduced in: 9.8
+
+
+|is_snapshot
+|boolean
+|query
+|False
+a|Filter by is_snapshot
+
+* Introduced in: 9.8
+
+
+|qos_policy.uuid
+|string
+|query
+|False
+a|Filter by qos_policy.uuid
+
+* Introduced in: 9.8
+
+
+|qos_policy.name
+|string
+|query
+|False
+a|Filter by qos_policy.name
+
+* Introduced in: 9.8
+
+
+|overwrite_enabled
+|boolean
+|query
+|False
+a|Filter by overwrite_enabled
+
+* Introduced in: 9.8
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
+|group_id
+|integer
+|query
+|False
+a|Filter by group_id
+
+
+|bytes_used
+|integer
+|query
+|False
+a|Filter by bytes_used
+
+
+|owner_id
+|integer
+|query
+|False
+a|Filter by owner_id
+
+
+|is_vm_aligned
+|boolean
+|query
+|False
+a|Filter by is_vm_aligned
+
+
+|hard_links_count
+|integer
+|query
+|False
+a|Filter by hard_links_count
+
+
+|unique_bytes
+|integer
+|query
+|False
+a|Filter by unique_bytes
+
+* Introduced in: 9.8
+
+
+|fill_enabled
+|boolean
+|query
+|False
+a|Filter by fill_enabled
+
+* Introduced in: 9.8
+
+
+|changed_time
+|string
+|query
+|False
+a|Filter by changed_time
+
+
+|accessed_time
+|string
+|query
+|False
+a|Filter by accessed_time
+
+
+|modified_time
+|string
+|query
+|False
+a|Filter by modified_time
+
+
+|is_junction
+|boolean
+|query
+|False
+a|Filter by is_junction
+
+
+|analytics.histogram_by_time_labels
+|array[string]
+|query
+|False
+a|Request that returned link:analytics_histogram_by_time.html[analytics_histogram_by_time]  objects including values associated with the specified labels.
+
+As described in the object description, the labels may take the following forms:<ul>
+ _partial-date_
+ +++<tt>+++--+++</tt>+++ _partial-date_
+ _partial-date_ +++<tt>+++--+++</tt>+++
+ _partial-date_+++<tt>+++-+++</tt>+++-_partial-date_
+ +++<tt>+++unknown+++</tt>+++
+
+</ul>Intervals that the system would not normally return may be specified.  In this case, the appropriate values and percentages summarizing all files with a time-based attribute within the indicated period of time are calculated and returned in the response.  However, there are some restrictions:<ul>
+ Any _partial-date_ specified as the beginning or end of an interval must be tracked by the system. Valid __partial-date__s may be determined by making an OPTIONS request to the +++<tt>+++/storage/volumes/{volume.uuid}/files/\{path}+++</tt>+++ endpoint.
+ Intervals may not mix week-based __partial-date__s in the form _yyyy_-W__ww__ with other types of __partial-date__s.
+
+</ul>
+
+* Introduced in: 9.8
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|analytics
+|link:#analytics[analytics]
+a|Additional file system analytics information that is invariant amongst all elements in the collection.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+This analytics object captures properties that are invariant amongst all elements included in the `records` array. The invariant properties are included here, rather than within the information for each element, to avoid returning an excessive amount of duplicated information when the collection is large.
+
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#file_info[file_info]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "analytics": {
+    "by_accessed_time": {
+      "bytes_used": {
+        "labels": [
+          "2019-07",
+          "2019-06",
+          "2019-05",
+          "2019",
+          "2018",
+          "--2017",
+          "unknown"
+        ]
+      }
+    },
+    "by_modified_time": {
+      "bytes_used": {
+        "labels": [
+          "2019-07",
+          "2019-06",
+          "2019-05",
+          "2019",
+          "2018",
+          "--2017",
+          "unknown"
+        ]
+      }
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "metadata": {
+          "href": "/api/resourcelink"
+        },
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "accessed_time": "2019-06-12 11:00:16 -0400",
+      "analytics": {
+        "by_accessed_time": {
+          "bytes_used": {
+            "aged_data_metric": 15.23,
+            "labels": [
+              "2019-07",
+              "2019-06",
+              "2019-05",
+              "2019",
+              "2018",
+              "--2017",
+              "unknown"
+            ],
+            "newest_label": "2019-07",
+            "oldest_label": "2019-07",
+            "percentages": [
+              0.1,
+              11.24,
+              0.18,
+              15.75,
+              0.75,
+              83.5,
+              0
+            ],
+            "values": [
+              15925248,
+              1735569408,
+              27672576,
+              2430595072,
+              116105216,
+              12889948160,
+              0
+            ]
+          }
+        },
+        "by_modified_time": {
+          "bytes_used": {
+            "aged_data_metric": 15.23,
+            "labels": [
+              "2019-07",
+              "2019-06",
+              "2019-05",
+              "2019",
+              "2018",
+              "--2017",
+              "unknown"
+            ],
+            "newest_label": "2019-07",
+            "oldest_label": "2019-07",
+            "percentages": [
+              0.1,
+              11.24,
+              0.18,
+              15.75,
+              0.75,
+              83.5,
+              0
+            ],
+            "values": [
+              15925248,
+              1735569408,
+              27672576,
+              2430595072,
+              116105216,
+              12889948160,
+              0
+            ]
+          }
+        },
+        "bytes_used": 15436648448,
+        "file_count": 21134,
+        "report_time": "string",
+        "subdir_count": 35
+      },
+      "bytes_used": 4096,
+      "changed_time": "2019-06-12 11:00:16 -0400",
+      "constituent": {
+        "name": "fg__0001",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "creation_time": "2019-06-12 11:00:16 -0400",
+      "group_id": 30,
+      "hard_links_count": 1,
+      "inode_generation": 214753547,
+      "inode_number": 1695,
+      "is_junction": "",
+      "is_snapshot": "",
+      "is_vm_aligned": "",
+      "modified_time": "2019-06-12 11:00:16 -0400",
+      "name": "string",
+      "owner_id": 54738,
+      "path": "string",
+      "qos_policy": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "string",
+        "uuid": "string"
+      },
+      "target": "string",
+      "type": "file",
+      "unique_bytes": 4096,
+      "volume": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "volume1",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917752
+| Volume is offline.
+
+| 918235
+| A volume with the specified UUID was not found.
+
+| 6488109
+| Operation not supported on FlexCache volumes.
+
+| 6684674
+| No such file or directory.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|===
+
+
+[#by_accessed_time]
+[.api-collapsible-fifth-title]
+by_accessed_time
+
+File system analytics information, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_used
+|link:#bytes_used[bytes_used]
+a|Number of bytes used on-disk, broken down by date of last access.
+
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|===
+
+
+[#by_modified_time]
+[.api-collapsible-fifth-title]
+by_modified_time
+
+File system analytics information, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_used
+|link:#bytes_used[bytes_used]
+a|Number of bytes used on-disk, broken down by date of last modification.
+
+
+|===
+
+
+[#analytics]
+[.api-collapsible-fifth-title]
+analytics
+
+Additional file system analytics information that is invariant amongst all elements in the collection.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+This analytics object captures properties that are invariant amongst all elements included in the `records` array. The invariant properties are included here, rather than within the information for each element, to avoid returning an excessive amount of duplicated information when the collection is large.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|by_accessed_time
+|link:#by_accessed_time[by_accessed_time]
+a|File system analytics information, broken down by date of last access.
+
+
+|by_modified_time
+|link:#by_modified_time[by_modified_time]
+a|File system analytics information, broken down by date of last modification.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|metadata
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aged_data_metric
+|number
+a|A score summarizing how old the data is. A higher value means the data is older.
+
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|newest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|oldest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|percentages
+|array[number]
+a|Percentages for this histogram
+
+
+|values
+|array[integer]
+a|Values for this histogram
+
+
+|===
+
+
+[#bytes_used]
+[.api-collapsible-fifth-title]
+bytes_used
+
+Number of bytes used on-disk, broken down by date of last modification.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aged_data_metric
+|number
+a|A score summarizing how old the data is. A higher value means the data is older.
+
+
+|labels
+|array[string]
+a|Labels for this histogram
+
+
+|newest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|oldest_label
+|string
+a|Each label indicates the period of time the corresponding data is associated with. A label can take one of the following forms:<ul>
+ a partial date in an extended ISO8601 representation
+ an interval between partial dates in an extended ISO8601 representation, where "--" is used to separate the beginning and end of the interval
+ the string literal "unknown"
+
+</ul>For partial dates and partial date intervals where components of a date are unspecified, the label allows for any valid normalized values the unspecified components might take. For example, the label "2017" allows for any time within the year 2017. Essentially, this is the fully specified interval 2017-01-01T00:00:00--2017-12-31T23:59:59. Similarly, the interval "2018-05--2018-07" allows for any time within the months of May, June, and July in 2018, corresponding to the fully specified interval 2018-05-01T00:00:00--2018-07-31T23:59:59.
+
+The following extensions to ISO8601 are used:<ul>
+ Quarters may be specified. The form _yyyy_-Q__q__ is used to represent the __q__th quarter of the year _yyyy_. Q1 consists of the months January, February, and March; Q2 consists of April, May, and June; Q3 consists of July, August, and September; Q4 consists of October, November, and December. For example, the label "2019-Q2" represents the second quarter of the year 2019, which corresponds to the interval 2019-04-01T00:00:00--2019-06-30T23:59:59.
+ Either the beginning or end of an interval may be omitted. When the beginning is omitted, the interval includes points in time arbitrarily far in the past. When the end is omitted, the interval includes points in time through the end of the current week.
+
+</ul>The "unknown" label tracks data that could not be associated with any other time period. This usually occurs when the data was at some point associated with a time in the future.
+
+
+|percentages
+|array[number]
+a|Percentages for this histogram
+
+
+|values
+|array[integer]
+a|Values for this histogram
+
+
+|===
+
+
+[#analytics]
+[.api-collapsible-fifth-title]
+analytics
+
+Additional file system analytics information summarizing all descendants of a directory.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|by_accessed_time
+|link:#by_accessed_time[by_accessed_time]
+a|File system analytics information, broken down by date of last access.
+
+
+|by_modified_time
+|link:#by_modified_time[by_modified_time]
+a|File system analytics information, broken down by date of last modification.
+
+
+|bytes_used
+|integer
+a|Number of bytes used on-disk
+
+
+|file_count
+|integer
+a|Number of descendants
+
+
+|incomplete_data
+|boolean
+a|Returns true if data collection is incomplete for this directory tree.
+
+
+|report_time
+|string
+a|The date and time analytics information was collected.
+
+
+|subdir_count
+|integer
+a|Number of sub directories
+
+
+|===
+
+
+[#constituent]
+[.api-collapsible-fifth-title]
+constituent
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|FlexGroup volume constituent name.
+
+
+|uuid
+|string
+a|FlexGroup volume constituent UUID.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+The QoS policy for the file. Both traditional and adaptive QoS policies are supported. If both `qos_policy.uuid` and `qos_policy.name` properties are specified in the same request, they must refer to the same QoS policy. To remove the file from a QoS policy, set the property `qos_policy.name` in a PATCH request to an empty string "" or "none".
+
+NOTE: Files which are in use as a LUN cannot be assigned to a QoS policy, instead use PATCH on /storage/luns to assign a QoS policy for such files.
+
+Note that a QoS policy can be set on a file, or a file's volume, but not on both.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the QoS policy. To remove the file from a QoS policy, set this property to an empty string "" or set it to "none" in a PATCH request.
+
+
+|uuid
+|string
+a|The unique identifier of the QoS policy. Valid in PATCH.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#file_info]
+[.api-collapsible-fifth-title]
+file_info
+
+Information about a single file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|accessed_time
+|string
+a|Last access time of the file in date-time format.
+
+
+|analytics
+|link:#analytics[analytics]
+a|Additional file system analytics information summarizing all descendants of a directory.
+
+This property is only populated if file system analytics is enabled on the containing volume.
+
+In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+
+
+|bytes_used
+|integer
+a|The actual number of bytes used on disk by this file. If byte_offset and length parameters are specified, this will return the bytes used by the file within the given range.
+
+
+|changed_time
+|string
+a|Last time data or attributes changed on the file in date-time format.
+
+
+|constituent
+|link:#constituent[constituent]
+a|
+
+|creation_time
+|string
+a|Creation time of the file in date-time format.
+
+
+|fill_enabled
+|boolean
+a|Returns "true" if the space reservation is enabled. The field overwrite_enabled must also be set to the same value as this field.
+
+
+|group_id
+|integer
+a|The integer ID of the group of the file owner.
+
+
+|hard_links_count
+|integer
+a|The number of hard links to the file.
+
+
+|inode_generation
+|integer
+a|Inode generation number.
+
+
+|inode_number
+|integer
+a|The file inode number.
+
+
+|is_empty
+|boolean
+a|Specifies whether or not a directory is empty. A directory is considered empty if it only contains entries for "." and "..". This element is present if the file is a directory. In some special error cases, such as when the volume goes offline or when the directory is moved while retrieving this info, this field might not get set.
+
+
+|is_junction
+|boolean
+a|Returns "true" if the directory is a junction.
+
+
+|is_snapshot
+|boolean
+a|Returns "true" if the directory is a snapshot.
+
+
+|is_vm_aligned
+|boolean
+a|Returns true if the file is vm-aligned. A vm-aligned file is a file that is initially padded with zero-filled data so that its actual data starts at an offset other than zero. The amount by which the start offset is adjusted depends on the vm-align setting of the hosting volume.
+
+
+|modified_time
+|string
+a|Last data modification time of the file in date-time format.
+
+
+|name
+|string
+a|Name of the file.
+
+
+|overwrite_enabled
+|boolean
+a|Returns "true" if the space reservation for overwrites is enabled. The field fill_enabled must also be set to the same value as this field.
+
+
+|owner_id
+|integer
+a|The integer ID of the file owner.
+
+
+|path
+|string
+a|Path of the file.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|The QoS policy for the file. Both traditional and adaptive QoS policies are supported. If both `qos_policy.uuid` and `qos_policy.name` properties are specified in the same request, they must refer to the same QoS policy. To remove the file from a QoS policy, set the property `qos_policy.name` in a PATCH request to an empty string "" or "none".
+
+NOTE: Files which are in use as a LUN cannot be assigned to a QoS policy, instead use PATCH on /storage/luns to assign a QoS policy for such files.
+
+Note that a QoS policy can be set on a file, or a file's volume, but not on both.
+
+
+|size
+|integer
+a|The size of the file, in bytes.
+
+
+|target
+|string
+a|The relative or absolute path contained in a symlink, in the form +++<some>+++/+++<path>+++.+++</path>++++++</some>+++
+
+
+|type
+|string
+a|Type of the file.
+
+
+|unique_bytes
+|integer
+a|Number of bytes uniquely held by this file. If byte_offset and length parameters are specified, this will return bytes uniquely held by the file within the given range.
+
+
+|unix_permissions
+|integer
+a|UNIX permissions to be viewed as an octal number. It consists of 4 digits derived by adding up bits 4 (read), 2 (write), and 1 (execute). The first digit selects the set user ID(4), set group ID (2), and sticky (1) attributes. The second digit selects permissions for the owner of the file; the third selects permissions for other users in the same group; the fourth selects permissions for other users not in the group.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

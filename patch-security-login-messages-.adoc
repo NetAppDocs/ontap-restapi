@@ -1,0 +1,291 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-login-messages-.html'
+summary: 'Update a login message configuration'
+---
+
+= Update a login message configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/login/messages/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the login messages configuration.
+There are no required fields. An empty body makes no modifications.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Login messages configuration UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|banner
+|string
+a|The login banner text. This message is displayed during SSH and console device
+login just before the password prompt displays. When configured, a cluster-level
+login banner is used for every incoming connection. Each data SVM can override
+the cluster-level banner to instead display when you log into the SVM. To restore
+the default setting for a data SVM, set the banner to an empty string.
+New lines are supplied as either LF or CRLF but are always returned as LF.
+Optional in the PATCH body.
+
+
+|message
+|string
+a|The message of the day (MOTD). This message appears just before the clustershell
+prompt after a successful login. When configured, the cluster message
+displays first. If you log in as a data SVM administrator, the
+SVM message is then printed. The cluster-level MOTD can be disabled
+for a given data SVM using the "show_cluster_message" property.
+New lines are supplied as either LF or CRLF but are always returned as LF.
+Optional in the PATCH body.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|show_cluster_message
+|boolean
+a|Specifies whether to show a cluster-level message before the SVM message
+when logging in as an SVM administrator.
+This setting can only be modified by cluster administrators.
+Optional in the PATCH body.
+
+
+|uuid
+|string
+a|The unique identifier (ID) of the login messages configuration.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "banner": "string",
+  "message": "string",
+  "scope": "string",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error codes | Description
+
+| 10225636
+| Only a cluster administrator can modify the `show_cluster_message` property.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#login_messages]
+[.api-collapsible-fifth-title]
+login_messages
+
+The login banner and message of the day (MOTD) configuration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|banner
+|string
+a|The login banner text. This message is displayed during SSH and console device
+login just before the password prompt displays. When configured, a cluster-level
+login banner is used for every incoming connection. Each data SVM can override
+the cluster-level banner to instead display when you log into the SVM. To restore
+the default setting for a data SVM, set the banner to an empty string.
+New lines are supplied as either LF or CRLF but are always returned as LF.
+Optional in the PATCH body.
+
+
+|message
+|string
+a|The message of the day (MOTD). This message appears just before the clustershell
+prompt after a successful login. When configured, the cluster message
+displays first. If you log in as a data SVM administrator, the
+SVM message is then printed. The cluster-level MOTD can be disabled
+for a given data SVM using the "show_cluster_message" property.
+New lines are supplied as either LF or CRLF but are always returned as LF.
+Optional in the PATCH body.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|show_cluster_message
+|boolean
+a|Specifies whether to show a cluster-level message before the SVM message
+when logging in as an SVM administrator.
+This setting can only be modified by cluster administrators.
+Optional in the PATCH body.
+
+
+|uuid
+|string
+a|The unique identifier (ID) of the login messages configuration.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

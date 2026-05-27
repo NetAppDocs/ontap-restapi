@@ -1,0 +1,561 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-fpolicy-engines-.html'
+summary: 'Update a specific FPolicy engine configuration for an SVM'
+---
+
+= Update a specific FPolicy engine configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/engines/{name}`#
+
+*Introduced In:* 9.6
+
+Updates a specific FPolicy engine configuration of an SVM. Modification of an FPolicy engine that is attached to one or more enabled FPolicy policies is not allowed.
+
+== Related ONTAP commands
+
+* `fpolicy policy external-engine modify`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_engines_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/engines]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|buffer_size
+|link:#buffer_size[buffer_size]
+a|Specifies the send and receive buffer size of the connected socket for the FPolicy server.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Provides details about certificate used to authenticate the FPolicy server.
+
+
+|format
+|string
+a|The format for the notification messages sent to the FPolicy servers.
+The possible values are:
+
+***** xml  - Notifications sent to the FPolicy server will be formatted using the XML schema.
+
+***** protobuf - Notifications sent to the FPolicy server will be formatted using Protobuf schema, which is a binary form.
+
+
+|keep_alive_interval
+|string
+a|Specifies the ISO-8601 interval time for a storage appliance to send Keep Alive message to an FPolicy server. The allowed range is between 10 to 600 seconds.
+
+
+|max_connection_retries
+|integer
+a|This parameter specifies the maximum number of attempts to reconnect to the FPolicy server from an SVM. It is used to specify the number of times a broken connection will be retried. The value for this field must be between 0 and 20. By default, it is 5.
+
+
+|max_server_requests
+|integer
+a|Specifies the maximum number of outstanding requests for the FPolicy server. It is used to specify maximum outstanding requests that will be queued up for the FPolicy server. The value for this field must be between 1 and 10000.  The default values are 500, 1000 or 2000 for Low-end(<64 GB memory), Mid-end(>=64 GB memory) and High-end(>=128 GB memory) Platforms respectively.
+
+
+|port
+|integer
+a|Port number of the FPolicy server application.
+
+
+|primary_servers
+|array[string]
+a|
+
+|request_abort_timeout
+|string
+a|Specifies the ISO-8601 timeout duration for a screen request to be aborted by a storage appliance. The allowed range is between 0 to 200 seconds.
+
+
+|request_cancel_timeout
+|string
+a|Specifies the ISO-8601 timeout duration for a screen request to be processed by an FPolicy server. The allowed range is between 0 to 100 seconds.
+
+
+|resiliency
+|link:#resiliency[resiliency]
+a|If all primary and secondary servers are down, or if no response is received from the FPolicy servers, file access events are stored inside the storage controller under the specified resiliency-directory-path.
+
+
+|secondary_servers
+|array[string]
+a|
+
+|server_progress_timeout
+|string
+a|Specifies the ISO-8601 timeout duration in which a throttled FPolicy server must complete at least one screen request. If no request is processed within the timeout, connection to the FPolicy server is terminated. The allowed range is between 0 to 100 seconds.
+
+
+|session_timeout
+|string
+a|This parameter specifies the interval after which a new session ID is sent to the FPolicy server during reconnection attempts. The default value is set to 10 seconds. If the connection between the storage controller and the FPolicy server is terminated and reconnection is made within the -session-timeout interval, the old session ID is sent to the FPolicy server so that it can send responses for old notifications.
+
+
+|ssl_option
+|string
+a|Specifies the SSL option for external communication with the FPolicy server. Possible values include the following:
+
+* no_auth       When set to "no_auth", no authentication takes place.
+* server_auth   When set to "server_auth", only the FPolicy server is authenticated by the SVM. With this option, before creating the FPolicy external engine, the administrator must install the public certificate of the certificate authority (CA) that signed the FPolicy server certificate.
+* mutual_auth   When set to "mutual_auth", mutual authentication takes place between the SVM and the FPolicy server. This means authentication of the FPolicy server by the SVM along with authentication of the SVM by the FPolicy server. With this option, before creating the FPolicy external engine, the administrator must install the public certificate of the certificate authority (CA) that signed the FPolicy server certificate along with the public certificate and key file for authentication of the SVM.
+
+
+|status_request_interval
+|string
+a|Specifies the ISO-8601 interval time for a storage appliance to query a status request from an FPolicy server. The allowed range is between 0 to 50 seconds.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|type
+|string
+a|The notification mode determines what ONTAP does after sending notifications to FPolicy servers.
+The possible values are:
+
+***** synchronous  - After sending a notification, wait for a response from the FPolicy server.
+
+***** asynchronous - After sending a notification, file request processing continues.
+
+* Default value: 1
+* enum: ["synchronous", "asynchronous"]
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": {
+    "ca": "TASample1",
+    "name": "Sample1-FPolicy-Client",
+    "serial_number": "8DDE112A114D1FBC"
+  },
+  "format": "string",
+  "keep_alive_interval": "PT2M",
+  "max_connection_retries": 5,
+  "max_server_requests": 500,
+  "port": 9876,
+  "primary_servers": [
+    "10.132.145.20",
+    "10.140.101.109"
+  ],
+  "request_abort_timeout": "PT40S",
+  "request_cancel_timeout": "PT20S",
+  "resiliency": {
+    "directory_path": "/dir1",
+    "retention_duration": "PT3M"
+  },
+  "secondary_servers": [
+    "10.132.145.20",
+    "10.132.145.21"
+  ],
+  "server_progress_timeout": "PT1M",
+  "session_timeout": "PT10S",
+  "ssl_option": "string",
+  "status_request_interval": "PT10S",
+  "svm": {
+    "uuid": "string"
+  },
+  "type": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 9764922
+| The primary and secondary server has a redundant IP address
+
+| 9764942
+| At least one FPolicy policy is using the FPolicy engine
+
+| 9764886
+| FPolicy engine is a cluster-level FPolicy engine
+
+| 9765011
+| The resiliency feature is not supported with mandatory screening
+
+| 9765012
+| The specified resiliency directory path does not exist
+
+| 9765042
+| The specified send buffer size exceeds the maximum limit
+
+| 9765043
+| The specified receive buffer size exceeds the maximum limit
+
+| 9765063
+| Policy with Persistent Store feature does not support a "synchronous"
+
+| 9765004
+| The specified session timeout exceeds the maximum limit
+
+| 9764935
+| The specified max connection retries exceeds the maximum limit
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#buffer_size]
+[.api-collapsible-fifth-title]
+buffer_size
+
+Specifies the send and receive buffer size of the connected socket for the FPolicy server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|recv_buffer
+|integer
+a|Specifies the receive buffer size of the connected socket for the FPolicy server. Default value is 256KB.
+
+
+|send_buffer
+|integer
+a|Specifies the send buffer size of the connected socket for the FPolicy server. Default value 1MB.
+
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Provides details about certificate used to authenticate the FPolicy server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ca
+|string
+a|Specifies the certificate authority (CA) name of the certificate
+used for authentication if SSL authentication between the SVM and the FPolicy
+server is configured.
+
+
+|name
+|string
+a|Specifies the certificate name as a fully qualified domain
+name (FQDN) or custom common name. The certificate is used if SSL authentication
+between the SVM and the FPolicy server is configured.
+
+
+|serial_number
+|string
+a|Specifies the serial number of the certificate used for
+authentication if SSL authentication between the SVM and the FPolicy
+server is configured.
+
+
+|===
+
+
+[#resiliency]
+[.api-collapsible-fifth-title]
+resiliency
+
+If all primary and secondary servers are down, or if no response is received from the FPolicy servers, file access events are stored inside the storage controller under the specified resiliency-directory-path.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|directory_path
+|string
+a|Specifies the directory path under the SVM namespace,
+where notifications are stored in the files whenever a network outage happens.
+
+
+|enabled
+|boolean
+a|Specifies whether the resiliency feature is enabled or not.
+Default is false.
+
+
+|retention_duration
+|string
+a|Specifies the ISO-8601 duration, for which the notifications are written
+to files inside the storage controller during a network outage. The value for
+this field must be between 0 and 600 seconds. Default is 180 seconds.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#fpolicy_engine]
+[.api-collapsible-fifth-title]
+fpolicy_engine
+
+Defines how ONTAP makes and manages connections to external FPolicy servers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|buffer_size
+|link:#buffer_size[buffer_size]
+a|Specifies the send and receive buffer size of the connected socket for the FPolicy server.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Provides details about certificate used to authenticate the FPolicy server.
+
+
+|format
+|string
+a|The format for the notification messages sent to the FPolicy servers.
+The possible values are:
+
+***** xml  - Notifications sent to the FPolicy server will be formatted using the XML schema.
+
+***** protobuf - Notifications sent to the FPolicy server will be formatted using Protobuf schema, which is a binary form.
+
+
+|keep_alive_interval
+|string
+a|Specifies the ISO-8601 interval time for a storage appliance to send Keep Alive message to an FPolicy server. The allowed range is between 10 to 600 seconds.
+
+
+|max_connection_retries
+|integer
+a|This parameter specifies the maximum number of attempts to reconnect to the FPolicy server from an SVM. It is used to specify the number of times a broken connection will be retried. The value for this field must be between 0 and 20. By default, it is 5.
+
+
+|max_server_requests
+|integer
+a|Specifies the maximum number of outstanding requests for the FPolicy server. It is used to specify maximum outstanding requests that will be queued up for the FPolicy server. The value for this field must be between 1 and 10000.  The default values are 500, 1000 or 2000 for Low-end(<64 GB memory), Mid-end(>=64 GB memory) and High-end(>=128 GB memory) Platforms respectively.
+
+
+|port
+|integer
+a|Port number of the FPolicy server application.
+
+
+|primary_servers
+|array[string]
+a|
+
+|request_abort_timeout
+|string
+a|Specifies the ISO-8601 timeout duration for a screen request to be aborted by a storage appliance. The allowed range is between 0 to 200 seconds.
+
+
+|request_cancel_timeout
+|string
+a|Specifies the ISO-8601 timeout duration for a screen request to be processed by an FPolicy server. The allowed range is between 0 to 100 seconds.
+
+
+|resiliency
+|link:#resiliency[resiliency]
+a|If all primary and secondary servers are down, or if no response is received from the FPolicy servers, file access events are stored inside the storage controller under the specified resiliency-directory-path.
+
+
+|secondary_servers
+|array[string]
+a|
+
+|server_progress_timeout
+|string
+a|Specifies the ISO-8601 timeout duration in which a throttled FPolicy server must complete at least one screen request. If no request is processed within the timeout, connection to the FPolicy server is terminated. The allowed range is between 0 to 100 seconds.
+
+
+|session_timeout
+|string
+a|This parameter specifies the interval after which a new session ID is sent to the FPolicy server during reconnection attempts. The default value is set to 10 seconds. If the connection between the storage controller and the FPolicy server is terminated and reconnection is made within the -session-timeout interval, the old session ID is sent to the FPolicy server so that it can send responses for old notifications.
+
+
+|ssl_option
+|string
+a|Specifies the SSL option for external communication with the FPolicy server. Possible values include the following:
+
+* no_auth       When set to "no_auth", no authentication takes place.
+* server_auth   When set to "server_auth", only the FPolicy server is authenticated by the SVM. With this option, before creating the FPolicy external engine, the administrator must install the public certificate of the certificate authority (CA) that signed the FPolicy server certificate.
+* mutual_auth   When set to "mutual_auth", mutual authentication takes place between the SVM and the FPolicy server. This means authentication of the FPolicy server by the SVM along with authentication of the SVM by the FPolicy server. With this option, before creating the FPolicy external engine, the administrator must install the public certificate of the certificate authority (CA) that signed the FPolicy server certificate along with the public certificate and key file for authentication of the SVM.
+
+
+|status_request_interval
+|string
+a|Specifies the ISO-8601 interval time for a storage appliance to query a status request from an FPolicy server. The allowed range is between 0 to 50 seconds.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|type
+|string
+a|The notification mode determines what ONTAP does after sending notifications to FPolicy servers.
+The possible values are:
+
+***** synchronous  - After sending a notification, wait for a response from the FPolicy server.
+
+***** asynchronous - After sending a notification, file request processing continues.
+
+* Default value: 1
+* enum: ["synchronous", "asynchronous"]
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

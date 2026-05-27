@@ -1,0 +1,197 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-support-configuration-backup.html'
+summary: 'Update cluster configuration backup information'
+---
+
+= Update cluster configuration backup information
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/support/configuration-backup`#
+
+*Introduced In:* 9.6
+
+Updates the cluster configuration backup information.
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|
+
+|rest_method
+|string
+a|The REST API HTTP method (POST/PUT).
+
+
+|url
+|string
+a|An external backup location for the cluster configuration. This is mostly required for single node clusters where node and cluster configuration backups cannot be copied to other nodes in the cluster.
+
+
+|username
+|string
+a|
+
+|validate_certificate
+|boolean
+a|Use this parameter with the value "true" to validate the digital certificate of the remote server. Digital certificate validation is available only when the HTTPS protocol is used in the URL; it is disabled by default.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "password": "yourpassword",
+  "rest_method": "post",
+  "url": "http://10.224.65.198/backups",
+  "username": "me"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 39387137
+| Invalid URL
+
+| 39387138
+| Invalid URL Scheme
+
+| 5963792
+| Using HTTPS for URL requires an effective cluster version of 9.7.0 or later.
+
+| 5963794
+| Validating the certificate is supported for the HTTPS protocol only.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#configuration_backup]
+[.api-collapsible-fifth-title]
+configuration_backup
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|
+
+|rest_method
+|string
+a|The REST API HTTP method (POST/PUT).
+
+
+|url
+|string
+a|An external backup location for the cluster configuration. This is mostly required for single node clusters where node and cluster configuration backups cannot be copied to other nodes in the cluster.
+
+
+|username
+|string
+a|
+
+|validate_certificate
+|boolean
+a|Use this parameter with the value "true" to validate the digital certificate of the remote server. Digital certificate validation is available only when the HTTPS protocol is used in the URL; it is disabled by default.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

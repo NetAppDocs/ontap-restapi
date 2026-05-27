@@ -1,0 +1,370 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_azure-key-vaults_endpoint_overview.html'
+summary: 'Manage Azure Key Vaults'
+---
+
+= Manage Azure Key Vaults
+
+
+
+== Overview
+
+Azure Key Vault (AKV) is a cloud key management service (KMS) that provides a secure store for secrets. This feature
+allows ONTAP to securely store its encryption keys using AKV.
+In order to use AKV with ONTAP, you must first deploy an Azure application with the appropriate access to an AKV and then provide
+ONTAP with the necessary details, such as key vault name, application ID so that ONTAP can communicate with the deployed Azure application.
+The properties "state", "azure_reachability" and "ekmip_reachability" are considered advanced properties and are populated only when explicitly requested.
+
+== Examples
+
+=== Enabling an AKV configuration for an SVM using the certificate authentication method
+
+The example AKV configuration is enabled for a specific SVM. Note the _return_records=true_ query parameter is used to obtain the newly created key-manager keystore configuration.
+
+----
+
+# The API:
+POST /api/security/azure-key-vaults
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/azure-key-vaults?return_records=true' -H 'accept: application/hal+json' -d "{ \"svm\": { \"uuid\": \"4f7abf4c-9a07-11ea-8d52-005056bbeba5\" }, \"client_id\": \"client1\", \"tenant_id\": \"tenant1\", \"name\": \"https:://mykeyvault.vault.azure.net/\", \"key_id\": \"https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74\", \"client_certificate\" : \"<CERTIFICATE-CONTENT>\" }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "024cd3cf-9a08-11ea-8d52-005056bbeba5",
+    "svm": {
+      "uuid": "4f7abf4c-9a07-11ea-8d52-005056bbeba5",
+      "name": "vs0"
+    },
+    "client_id": "client1",
+    "tenant_id": "tenant1",
+    "name": "https:://mykeyvault.vault.azure.net/",
+    "key_id": "https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74",
+    "_links": {
+      "self": {
+        "href": "/api/security/azure-key-vaults/024cd3cf-9a08-11ea-8d52-005056bbeba5"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an inactive AKV configuration for an SVM using the client secret authentication method
+
+The example AKV configuration is created for a specific SVM but is not enabled.
+Note the _create_inactive=true_ parameter that is used to indicate that the configuration should be created but not enabled.
+Note the _return_records=true_ query parameter is used to obtain the newly created key-manager keystore configuration.
+
+----
+
+# The API:
+POST /api/security/azure-key-vaults
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/azure-key-vaults?create_inactive=true&return_records=true' -H 'accept: application/hal+json' -d "{ \"svm\": { \"uuid\": \"4f7abf4c-9a07-11ea-8d52-005056bbeba5\" }, \"configuration\": {\"name\": \"myConfiguration\"}, \"client_id\": \"client1\", \"tenant_id\": \"tenant1\", \"name\": \"https:://mykeyvault.vault.azure.net/\", \"key_id\": \"https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74\", \"client_secret\" : \"myclientPwd\" }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+    "configuration": {"name": "myConfiguration"},
+    "client_id": "client1",
+    "tenant_id": "tenant1",
+    "name": "https:://mykeyvault.vault.azure.net/",
+    "key_id": "https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74",
+    "_links": {
+      "self": {
+        "href": "/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving the AKVs configured for all clusters and SVMs
+
+The following example shows how to retrieve all configured AKVs along with their configurations.
+
+----
+
+# The API:
+GET /api/security/azure-key-vaults
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/azure-key-vaults?fields=*'
+
+# The response:
+{
+"records": [
+  {
+    "configuration": {
+      "uuid": "024cd3cf-9a08-11ea-8d52-005056bbeba5",
+      "name" : "default"
+    },
+    "uuid": "024cd3cf-9a08-11ea-8d52-005056bbeba5",
+    "scope": "svm",
+    "svm": {
+      "uuid": "4f7abf4c-9a07-11ea-8d52-005056bbeba5",
+      "name": "vs0"
+    },
+    "client_id": "client1",
+    "tenant_id": "tenant1",
+    "name": "https:://mykeyvault.vault.azure.net/",
+    "key_id": "https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74",
+    "authentication_method": "client_secret",
+    "enabled": true,
+    "_links": {
+      "self": {
+        "href": "/api/security/azure-key-vaults/024cd3cf-9a08-11ea-8d52-005056bbeba5"
+      }
+    }
+  },
+  {
+    "configuration": {
+      "uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+      "name" : "new-config"
+    },
+    "uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+    "scope": "cluster",
+    "client_id": "client1",
+    "tenant_id": "tenant1",
+    "name": "https:://mykeyvault.vault.azure.net/",
+    "key_id": "https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74",
+    "authentication_method": "certificate",
+    "enabled": false,
+    "_links": {
+      "self": {
+        "href": "/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/azure-key-vaults?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific AKV configuration
+
+The following example retrieves a specific AKV configuration.
+
+----
+
+# The API:
+GET /api/security/azure-key-vaults
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5?fields=*'
+
+# The response:
+{
+"configuration": {
+  "uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+  "name" : "default"
+},
+"uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+"scope": "cluster",
+"client_id": "client1",
+"tenant_id": "tenant1",
+"name": "https:://mykeyvault.vault.azure.net/",
+"key_id": "https://keyvault-test.vault.azure.net/keys/key1/a8e619fd8f234db3b0b95c59540e2a74",
+"authentication_method": "client_secret",
+"enabled": true,
+"_links": {
+  "self": {
+    "href": "/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the advanced properties of a specific, enabled AKV configuration
+
+The following example retrieves the advanced properties of a specific enabled AKV configuration (inactive AKV configurations do not have these advanced properties).
+
+----
+
+# The API:
+GET /api/security/azure-key-vaults
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5?fields=state,azure_reachability,ekmip_reachability"'
+{
+"configuration": {
+  "uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+  "name" : "default"
+},
+"uuid": "85619643-9a06-11ea-8d52-005056bbeba5",
+"name": "https://10.234.237.18",
+"state": {
+  "cluster_state": true,
+  "message": "",
+  "code": "0"
+},
+"azure_reachability": {
+  "reachable": true,
+  "message": "",
+  "code": "0"
+},
+"ekmip_reachability": [
+  {
+    "node": {
+        "uuid": "d208115f-7721-11eb-bf83-005056bb150e",
+        "name": "node1",
+        "_links": {
+            "self": {
+            "href": "/api/cluster/nodes/d208115f-7721-11eb-bf83-005056bb150e"
+            }
+        }
+    },
+    "reachable": true,
+    "message": "",
+    "code": "0"
+  },
+  {
+    "node": {
+        "uuid": "e208115f-7721-11eb-bf83-005056bb150e",
+        "name": "node2",
+        "_links": {
+            "self": {
+            "href": "/api/cluster/nodes/e208115f-7721-11eb-bf83-005056bb150e"
+            }
+        }
+    },
+    "reachable": true,
+    "message": "",
+    "code": "0"
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the client secret of a specific AKV configuration
+
+The following example updates the client secret of a specific AKV configuration.
+
+----
+
+# The API:
+PATCH /api/security/azure-key-vaults
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5' -d "{ \"client_secret\": \"<NEW-SECRET>\" }"
+----
+
+'''
+
+=== Updating the client certificate and key of a specific AKV configuration
+
+The following example updates the client certificate and key of a configured AKV for a specific AKV configuration.
+
+----
+
+# The API:
+PATCH /api/security/azure-key-vaults
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5' -d "{ \"client_certificate\": \"<CERTIFICATE-CONTENT>\" }"
+----
+
+'''
+
+=== Deleting a specific AKV configuration
+
+The following example deletes a specific, enabled AKV.
+
+----
+
+# The API:
+DELETE /api/security/azure-key-vaults
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5'
+----
+
+'''
+
+=== Restoring the keys for a specific AKV configuration
+
+The following example restores all the keys of a specific AKV configuration.
+
+----
+
+# The API:
+POST security/azure-key-vaults/{uuid}/restore
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5/restore'
+
+# The response:
+{
+"job": {
+  "uuid": "6ab6946f-9a0c-11ea-8d52-005056bbeba5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/6ab6946f-9a0c-11ea-8d52-005056bbeba5"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Rekeying the internal key for a specific AKV configuration
+
+The following example rekeys the internal key of a specific AKV configuration.
+
+----
+
+# The API:
+POST security/azure-key-vaults/{uuid}/rekey-internal
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/azure-key-vaults/85619643-9a06-11ea-8d52-005056bbeba5/rekey-internal'
+
+# The response:
+{
+"job": {
+  "uuid": "6ab6946f-9a0c-11ea-8d52-005056bbeba5",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/6ab6946f-9a0c-11ea-8d52-005056bbeba5"
+    }
+  }
+}
+}
+----
+
+'''
+
+

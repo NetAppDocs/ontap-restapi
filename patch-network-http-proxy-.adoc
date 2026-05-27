@@ -1,0 +1,330 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-network-http-proxy-.html'
+summary: 'Update proxy server, port, username, and password parameters'
+---
+
+= Update proxy server, port, username, and password parameters
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/network/http-proxy/{uuid}`#
+
+*Introduced In:* 9.7
+
+Updates the proxy server, port, username, and password parameters.
+Important notes:
+
+* IPv6 must be enabled if IPv6 family addresses are specified in the "server" field.
+* The server and the port combination specified using the "server" and "port" fields is validated during this operation. The validation will fail in the following scenarios:
+
+*** The HTTP proxy service is not configured on the server.
+
+*** The HTTP proxy service is not running on the specified port.
+
+*** The server is unreachable.
+
+== Related ONTAP commands
+
+* `vserver http-proxy modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|HTTP proxy UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_enabled
+|boolean
+a|Specifies whether or not authentication with the HTTP proxy server is enabled.
+
+
+|password
+|string
+a|Password to authenticate with the HTTP proxy server when authentication_enabled is set to "true".
+
+
+|port
+|integer
+a|The port number on which the HTTP proxy service is configured on the
+proxy server.
+
+
+|scope
+|string
+a|Set to "`svm`" for HTTP proxy owned by an SVM. Otherwise, set to "cluster".
+
+
+|server
+|string
+a|Fully qualified domain name (FQDN) or IP address of the HTTP proxy server.
+
+
+|username
+|string
+a|Username to authenticate with the HTTP proxy server when authentication_enabled is set to "true".
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the HTTP proxy.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "password": "string",
+  "port": 3128,
+  "scope": "string",
+  "server": "string",
+  "username": "string",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 26214473
+| The HTTP proxy configuration is not valid.
+
+| 23724130
+| Cannot use an IPv6 name server address because there are no IPv6 interfaces.
+
+| 26214481
+| Username and password cannot be empty when HTTP proxy authentication is enabled.
+
+| 26214482
+| Username and password cannot be specified when HTTP proxy authentication is disabled.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Applies to both SVM and cluster-scoped objects. Either the UUID or name is supplied on input. This is mutually exclusive with SVM during POST and PATCH.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+This is mutually exclusive with IPspace during POST and PATCH.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#network_http_proxy]
+[.api-collapsible-fifth-title]
+network_http_proxy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_enabled
+|boolean
+a|Specifies whether or not authentication with the HTTP proxy server is enabled.
+
+
+|password
+|string
+a|Password to authenticate with the HTTP proxy server when authentication_enabled is set to "true".
+
+
+|port
+|integer
+a|The port number on which the HTTP proxy service is configured on the
+proxy server.
+
+
+|scope
+|string
+a|Set to "`svm`" for HTTP proxy owned by an SVM. Otherwise, set to "cluster".
+
+
+|server
+|string
+a|Fully qualified domain name (FQDN) or IP address of the HTTP proxy server.
+
+
+|username
+|string
+a|Username to authenticate with the HTTP proxy server when authentication_enabled is set to "true".
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the HTTP proxy.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,161 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_fpolicy_svm.uuid_persistent-stores_endpoint_overview.html'
+summary: 'Manage FPolicy persistent store configuration'
+---
+
+= Manage FPolicy persistent store configuration
+
+
+
+== Overview
+
+* The FPolicy Persistent Store feature enables the configuration of a Persistent Store.
+This includes:
+* setting up a store to retain event notifications
+* specifying the volume created for FPolicy Persistent Store
+* defining the size of the volume
+* defining the autosize mode for the volume.
+* Each SVM can only have one Persistent Store. The same Persistent Store can be used by multiple policies within the same SVM. Once a Persistent Store is created, it can be utilized in the FPolicy policy configuration for the async and non-mandatory engine.
+
+== Examples
+
+=== Creating an FPolicy Persistent Store with all required parameters
+
+'''
+
+----
+
+# The API:
+POST /protocols/fpolicy/{svm.uuid}/persistent-stores
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/fpolicy/4f643fb4-fd21-11e8-ae49-0050568e2c1e/persistent-stores?return_records=true" -H "accept: application/json" -d "{\"name\": \"ps1\", \"volume\": \"psvol\", \"size\": 1073741824, \"autosize_mode\": \"off\"}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "ps1",
+    "volume": "psvol",
+    "size": 1073741824,
+    "autosize_mode": "off"
+  }
+]
+}
+----
+
+'''
+
+=== Creating an FPolicy Persistent Store with the minimum required fields
+
+'''
+
+----
+
+# The API:
+POST /protocols/fpolicy/{svm.uuid}/persistent-stores
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/fpolicy/4f643fb4-fd21-11e8-ae49-0050568e2c1e/persistent-stores?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"name\": \"ps1\", \"volume\": \"psvol\", \"size\": 1073741824 }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "ps1",
+    "volume": "psvol",
+    "size": 1073741824
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving an FPolicy Persistent Store configuration for a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /protocols/fpolicy/{svm.uuid}/persistent-stores
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/fpolicy/4f643fb4-fd21-11e8-ae49-0050568e2c1e/persistent-stores/?return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "ps1"
+  }
+],
+"num_records": 1
+}
+----
+
+'''
+
+=== Retrieving a specific FPolicy Persistent Store configuration for a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /protocols/fpolicy/{svm.uuid}/persistent-stores/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/fpolicy/4f643fb4-fd21-11e8-ae49-0050568e2c1e/persistent-stores/persistent_fpolicy?fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "4f643fb4-fd21-11e8-ae49-0050568e2c1e"
+},
+"name": "ps1",
+"volume": "psvol",
+"size": 1073741824,
+"autosize_mode": "off"
+}
+----
+
+'''
+
+=== Updating an FPolicy Persistent Store for an SVM
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/fpolicy/{svm.uuid}/persistent-stores/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/fpolicy/4f643fb4-fd21-11e8-ae49-0050568e2c1e/persistent-stores/persistent_fpolicy" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"volume\": \"psvol\" , \"size\": 1073741824}"
+----
+
+'''
+
+=== Deleting a specific FPolicy Persistent Store configuration for a specific SVM
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/fpolicy/{svm.uuid}/persistent-stores/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/fpolicy/4f643fb4-fd21-11e8-ae49-0050568e2c1e/persistent-stores/persistent_fpolicy" -H "accept: application/json"
+----
+
+'''
+
+

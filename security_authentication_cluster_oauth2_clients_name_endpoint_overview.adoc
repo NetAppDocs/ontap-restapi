@@ -1,0 +1,82 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_cluster_oauth2_clients_name_endpoint_overview.html'
+summary: 'View and delete an OAuth 2.0 configuration'
+---
+
+= View and delete an OAuth 2.0 configuration
+
+
+
+== Overview
+
+This API is used to retrieve and delete the OAuth 2.0 configuration in the cluster. The GET request retrieves the OAuth 2.0 configuration. The DELETE request removes the OAuth 2.0 configuration.  Various responses are shown in the examples below.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving the OAuth 2.0 configuration in the cluster
+
+The following output shows the OAuth 2.0 configuration in the cluster.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/oauth2/clients/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/authentication/cluster/oauth2/clients/auth0" -H "accept: application/hal+json"
+
+# The response:
+{
+"name": "auth0",
+"application": "http",
+"issuer": "https://examplelab.customer.com",
+"audience": "aud",
+"client_id": "client_id",
+"hashed_client_secret": "<HASHED-CLIENT-SECRET>",
+"introspection": {
+  "endpoint_uri": "https://examplelab.customer.com/server/endpoint",
+  "interval": "PT1H"
+},
+"remote_user_claim": "user_claim",
+"jwks": {
+  "provider_uri": "https://examplelab.customer.com/pf/JWKS",
+  "refresh_interval": "PT1H"
+},
+"use_local_roles_if_present": false,
+"outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080",
+"_links": {
+  "self": {
+    "href": "/api/security/authentication/cluster/oauth2/clients"
+  }
+},
+"use_mutual_tls": "required"
+}
+----
+
+'''
+
+=== Deleting the OAuth 2.0 configuration
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/oauth2/clients/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/authentication/cluster/oauth2/clients/auth0"
+----
+
+'''
+
+

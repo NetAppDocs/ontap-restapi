@@ -1,0 +1,769 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-tape-devices.html'
+summary: 'Retrieve tape devices'
+---
+
+= Retrieve tape devices
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/tape-devices`#
+
+*Introduced In:* 9.9
+
+Retrieves a collection of tape devices.
+
+== Related ONTAP commands
+
+* `storage tape show`
+
+== Learn more
+
+* link:storage_tape-devices_endpoint_overview.html[DOC /storage/tape-devices]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|wwnn
+|string
+|query
+|False
+a|Filter by wwnn
+
+
+|alias.mapping
+|string
+|query
+|False
+a|Filter by alias.mapping
+
+
+|alias.name
+|string
+|query
+|False
+a|Filter by alias.name
+
+
+|residual_count
+|integer
+|query
+|False
+a|Filter by residual_count
+
+
+|aliases.mapping
+|string
+|query
+|False
+a|Filter by aliases.mapping
+
+* Introduced in: 9.11
+
+
+|aliases.name
+|string
+|query
+|False
+a|Filter by aliases.name
+
+* Introduced in: 9.11
+
+
+|reservation_type
+|string
+|query
+|False
+a|Filter by reservation_type
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|wwpn
+|string
+|query
+|False
+a|Filter by wwpn
+
+
+|density
+|string
+|query
+|False
+a|Filter by density
+
+* Introduced in: 9.11
+
+
+|description
+|string
+|query
+|False
+a|Filter by description
+
+
+|device_id
+|string
+|query
+|False
+a|Filter by device_id
+
+
+|device_state
+|string
+|query
+|False
+a|Filter by device_state
+
+
+|interface
+|string
+|query
+|False
+a|Filter by interface
+
+
+|online
+|boolean
+|query
+|False
+a|Filter by online
+
+* Introduced in: 9.11
+
+
+|device_names.rewind_device
+|string
+|query
+|False
+a|Filter by device_names.rewind_device
+
+
+|device_names.unload_reload_device
+|string
+|query
+|False
+a|Filter by device_names.unload_reload_device
+
+
+|device_names.no_rewind_device
+|string
+|query
+|False
+a|Filter by device_names.no_rewind_device
+
+
+|block_number
+|integer
+|query
+|False
+a|Filter by block_number
+
+
+|formats
+|string
+|query
+|False
+a|Filter by formats
+
+
+|storage_port.name
+|string
+|query
+|False
+a|Filter by storage_port.name
+
+
+|file_number
+|integer
+|query
+|False
+a|Filter by file_number
+
+
+|serial_number
+|string
+|query
+|False
+a|Filter by serial_number
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#tape_device[tape_device]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "alias": {
+        "mapping": "SN[10WT000933]",
+        "name": "st6"
+      },
+      "aliases": [
+        {
+          "mapping": "SN[10WT000933]",
+          "name": "st6"
+        }
+      ],
+      "block_number": 0,
+      "density": "low",
+      "description": "QUANTUM LTO-8 ULTRIUM",
+      "device_id": "1a.0",
+      "device_names": [
+        {
+          "no_rewind_device": "nrst6l",
+          "rewind_device": "rst6l",
+          "unload_reload_device": "urst6l"
+        }
+      ],
+      "device_state": "read_write_enabled",
+      "file_number": 0,
+      "formats": [
+        "LTO-7 6TB",
+        "LTO-7 15TB Compressed",
+        "LTO-8 12TB",
+        "LTO-8 30TB Compressed"
+      ],
+      "interface": "sas",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "position": {
+        "count": 5,
+        "operation": "rewind"
+      },
+      "reservation_type": "off",
+      "residual_count": 0,
+      "serial_number": "10WT00093",
+      "storage_port": {
+        "name": "2b"
+      },
+      "type": "tape",
+      "wwnn": "500507631295741c",
+      "wwpn": "500507631295741c"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#alias]
+[.api-collapsible-fifth-title]
+alias
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mapping
+|string
+a|This field will no longer be supported in a future release. Use aliases.mapping instead.
+
+
+|name
+|string
+a|This field will no longer be supported in a future release. Use aliases.name instead.
+
+
+|===
+
+
+[#aliases]
+[.api-collapsible-fifth-title]
+aliases
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mapping
+|string
+a|Alias mapping.
+
+
+|name
+|string
+a|Alias name.
+
+
+|===
+
+
+[#device_names]
+[.api-collapsible-fifth-title]
+device_names
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|no_rewind_device
+|string
+a|Device name for no rewind.
+
+
+|rewind_device
+|string
+a|Device name for rewind.
+
+
+|unload_reload_device
+|string
+a|Device name for unload or reload operations.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#position]
+[.api-collapsible-fifth-title]
+position
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of times to run position operation.
+
+
+|operation
+|string
+a|Position operation.
+
+
+|===
+
+
+[#storage_port]
+[.api-collapsible-fifth-title]
+storage_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Initiator port.
+
+
+|===
+
+
+[#tape_device]
+[.api-collapsible-fifth-title]
+tape_device
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|link:#alias[alias]
+a|
+
+|aliases
+|array[link:#aliases[aliases]]
+a|
+
+|block_number
+|integer
+a|Block number.
+
+
+|density
+|string
+a|Density.
+
+
+|description
+|string
+a|
+
+|device_id
+|string
+a|
+
+|device_names
+|array[link:#device_names[device_names]]
+a|
+
+|device_state
+|string
+a|Operational state of the device.
+
+
+|file_number
+|integer
+a|File number.
+
+
+|formats
+|array[string]
+a|Tape cartridge format.
+
+
+|interface
+|string
+a|Device interface type.
+
+
+|node
+|link:#node[node]
+a|
+
+|online
+|boolean
+a|
+
+|position
+|link:#position[position]
+a|
+
+|reservation_type
+|string
+a|
+
+|residual_count
+|integer
+a|Residual count of the last I/O operation.
+
+
+|serial_number
+|string
+a|
+
+|storage_port
+|link:#storage_port[storage_port]
+a|
+
+|type
+|string
+a|Device type.
+
+
+|wwnn
+|string
+a|World Wide Node Name.
+
+
+|wwpn
+|string
+a|World Wide Port Name.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

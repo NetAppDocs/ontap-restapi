@@ -1,0 +1,378 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-s3-services-policies-.html'
+summary: 'Update an S3 policy configuration'
+---
+
+= Update an S3 policy configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/policies/{name}`#
+
+*Introduced In:* 9.8
+
+Updates the S3 policy configuration of an SVM.
+
+== Important notes
+
+* The following fields can be modified for a policy:
+
+*** `comment` - Any information related to the policy.
+
+*** `statements` - Specifies the array of policy statements.
+
+== Related ONTAP commands
+
+* `vserver object-store-server policy modify`
+* `vserver object-store-server policy modify-statement`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_policies_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|Policy name
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Can contain any additional information about the S3 policy.
+
+
+|read-only
+|boolean
+a|Specifies whether or not the s3 policy is read only. This parameter should not be specified in the POST method.
+
+
+|statements
+|array[link:#s3_policy_statement[s3_policy_statement]]
+a|Specifies the policy statements.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "S3 policy.",
+  "statements": [
+    {
+      "actions": [
+        "*"
+      ],
+      "effect": "allow",
+      "index": 0,
+      "resources": [
+        "bucket1",
+        "bucket1/*"
+      ],
+      "sid": "FullAccessToBucket1"
+    }
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2__,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|92405906 +
+//end row
+//start row
+|The specified action name is invalid.
+//end row
+//start row
+|92405963 +
+//end row
+//start row
+|Failed to create s3 policy statements "{policy name}". Reason: "{reason of failure}". Resolve all issues and retry the operation.
+//end row
+//start row
+|92405953 +
+//end row
+//start row
+|Object store server read-only policies do not support create, modify, delete, add-statement, remove-statement and modify-statement operations.
+//end row
+//start row
+|92406075 +
+//end row
+//start row
+|Failed to modify policy statement for policy "{policy name}". Reason: "{reason of failure}". Valid ways to specify a resource are "__", "\{bucket-name}", "\{bucket-name}/.../...".".
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#s3_policy_statement]
+[.api-collapsible-fifth-title]
+s3_policy_statement
+
+Specifies information about a single access policy statement.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|actions
+|array[string]
+a|For each resource, S3 supports a set of operations. The resource operations allowed or denied are identified by an action list:
+
+* GetObject - retrieves objects from a bucket.
+* PutObject - puts objects in a bucket.
+* DeleteObject - deletes objects from a bucket.
+* ListBucket - lists the objects in a bucket.
+* GetBucketAcl - retrieves the access control list (ACL) of a bucket.
+* GetObjectAcl - retrieves the access control list (ACL) of an object.
+* ListAllMyBuckets - lists all of the buckets in a server.
+* ListBucketMultipartUploads - lists the multipart uploads in progress for a bucket.
+* ListMultipartUploadParts - lists the parts in a multipart upload.
+* CreateBucket - creates a new bucket.
+* DeleteBucket - deletes an existing bucket.
+* GetObjectTagging - retrieves the tag set of an object.
+* PutObjecttagging - sets the tag set for an object.
+* DeleteObjectTagging - deletes the tag set of an object.
+* GetBucketLocation - retrieves the location of a bucket.
+* GetBucketVersioning - retrieves the versioning configuration of a bucket.
+* PutBucketVersioning - modifies the versioning configuration of a bucket.
+* ListBucketVersions - lists the object versions in a bucket.
+* PutBucketPolicy - puts bucket policy on the bucket specified.
+* GetBucketPolicy - retrieves the bucket policy of a bucket.
+* DeleteBucketPolicy - deletes the policy created for a bucket.
+The wildcard character "*" can be used to form a regular expression for specifying actions.
+
+
+|effect
+|string
+a|Specifies whether access is allowed or denied. If access (to allow) is not granted explicitly to a resource, access is implicitly denied. Access can also be denied explicitly to a resource, in order to make sure that a user cannot access it, even if a different policy grants access.
+
+
+|index
+|integer
+a|Specifies a unique statement index used to identify a particular statement. This parameter should not be specified in the POST method. A statement index is automatically generated. It is not retrieved in the GET method.
+
+
+|resources
+|array[string]
+a|
+
+|sid
+|string
+a|Specifies the statement identifier which contains additional information about the statement.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#s3_policy]
+[.api-collapsible-fifth-title]
+s3_policy
+
+An S3 policy is an object. It defines resource (bucket, folder or object) permissions. These policies get evaluated when an object store user user makes a request. Permissions in the policies determine whether the request is allowed or denied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Can contain any additional information about the S3 policy.
+
+
+|read-only
+|boolean
+a|Specifies whether or not the s3 policy is read only. This parameter should not be specified in the POST method.
+
+
+|statements
+|array[link:#s3_policy_statement[s3_policy_statement]]
+a|Specifies the policy statements.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

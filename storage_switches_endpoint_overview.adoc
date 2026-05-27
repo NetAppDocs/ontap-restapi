@@ -1,0 +1,394 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_switches_endpoint_overview.html'
+summary: 'Manage storage switches'
+---
+
+= Manage storage switches
+
+
+
+== Retrieving storage switch information
+
+The storage switch GET API retrieves all of the switches in the cluster.
+
+'''
+
+== Examples
+
+=== 1) Retrieves a list of storage switches from the cluster
+
+==== The following example shows the response with a list of storage switches in the cluster:
+
+'''
+
+----
+
+# The API:
+/api/storage/switches
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/switches" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "Brocade_10.226.57.206",
+    "_links": {
+      "self": {
+        "href": "/api/storage/switches/Brocade_10.226.57.206"
+      }
+    }
+  },
+  {
+    "name": "Brocade_10.226.57.207",
+    "_links": {
+      "self": {
+        "href": "/api/storage/switches/Brocade_10.226.57.207"
+      }
+    }
+  },
+  {
+    "name": "Brocade_10.226.57.208",
+    "_links": {
+      "self": {
+        "href": "/api/storage/switches/Brocade_10.226.57.208"
+      }
+    }
+  },
+  {
+    "name": "Brocade_10.226.57.209",
+    "_links": {
+      "self": {
+        "href": "/api/storage/switches/Brocade_10.226.57.209"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/storage/switches/"
+  }
+}
+}
+----
+
+'''
+
+=== 2) Retrieves a specific storage switch from the cluster
+
+==== The following example shows the response of the requested storage switch. If there is no storage switch with the requested name, an error is returned.
+
+'''
+
+----
+
+# The API:
+/api/storage/switches/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/switches/Brocade_10.226.57.206" -H "accept: application/hal+json"
+
+# The response:
+{
+"name": "Brocade_10.226.57.206",
+"domain_id": 5,
+"switch_fabric_name": "100050eb1a238892",
+"fw_version": "v7.2.1c1",
+"ip_address": "10.226.57.206",
+"is_director_class": false,
+"local": false,
+"monitoring_enabled": true,
+"model": "Brocade6510",
+"role": "subordinate",
+"state": "ok",
+"symbolic_name": "rtp-fc01-41kk11",
+"vendor": "brocade",
+"wwn": "100050eb1a1ef7d7",
+"power_supply_units": [
+  {
+    "name": "Power Supply #1",
+    "state": "ok"
+  },
+  {
+    "name": "Power Supply #2",
+    "state": "ok"
+  }
+],
+"temperature_sensors": [
+  {
+    "name": "SLOT #0: TEMP #1",
+    "reading": 52,
+    "state": "ok"
+  }
+],
+"ports": [
+  {
+    "name": "FC port 0/0",
+    "mode": "f_port",
+    "wwn": "200050eb1a1ef7d7",
+    "enabled": true,
+    "state": "online",
+    "speed": 16,
+    "sfp": {
+      "type": "small_form_factor",
+      "transmitter_type": "short_wave_laser",
+      "serial_number": "HAA2140310058E5"
+    }
+  },
+  {
+    "name": "FC port 0/1",
+    "mode": "f_port",
+    "wwn": "200050eb1a1ef2d7",
+    "enabled": true,
+    "state": "online",
+    "speed": 16,
+    "sfp": {
+      "type": "small_form_factor",
+      "transmitter_type": "short_wave_laser",
+      "serial_number": "HAA2140310058E5"
+    }
+  },
+  {
+    "name": "FC port 0/2",
+    "mode": "f_port",
+    "wwn": "200050eb1a1ef7d0",
+    "enabled": true,
+    "state": "online",
+    "speed": 16,
+    "sfp": {
+      "type": "small_form_factor",
+      "transmitter_type": "short_wave_laser",
+      "serial_number": "HAA2140310058E5"
+    }
+  },
+  {
+    "name": "FC port 0/3",
+    "mode": "f_port",
+    "wwn": "200050eb1a1ef7d7",
+    "enabled": true,
+    "state": "online",
+    "speed": 16,
+    "sfp": {
+      "type": "small_form_factor",
+      "transmitter_type": "short_wave_laser",
+      "serial_number": "HAA2140310058E5"
+    }
+  },
+  {
+    "name": "FC port 0/4",
+    "mode": "f_port",
+    "wwn": "200050eb1a1ef2d7",
+    "enabled": true,
+    "state": "online",
+    "speed": 16,
+    "sfp": {
+      "type": "small_form_factor",
+      "transmitter_type": "short_wave_laser",
+      "serial_number": "HAA2140310058E5"
+    }
+  },
+  {
+    "name": "FC port 0/5",
+    "mode": "f_port",
+    "wwn": "200050eb1a1ef7d0",
+    "enabled": true,
+    "state": "online",
+    "speed": 16,
+    "sfp": {
+      "type": "small_form_factor",
+      "transmitter_type": "short_wave_laser",
+      "serial_number": "HAA2140310058E5"
+    }
+  }
+],
+"connections": [
+  {
+    "source_port": {
+      "name": "FC port 0/0",
+      "wwn": "200050eb1a236efd",
+      "mode": "f_port"
+    },
+    "peer_port": {
+      "wwn": "2100000e1e30ac5f",
+      "connection": "sti8020mcc-htp-006:fcvi_device_1",
+      "type": "fcvi_adapter",
+      "unique_id": "38993dc0-4ea1-11eb-9331-00a0985bd455"
+    }
+  },
+  {
+    "source_port": {
+      "name": "FC port 0/1",
+      "wwn": "200150eb1a236efd",
+      "mode": "f_port"
+    },
+    "peer_port": {
+      "wwn": "21000024ff72c0c9",
+      "connection": "sti8020mcc-htp-006:2b",
+      "type": "fcp_adapter",
+      "unique_id": "38993dc0-4ea1-11eb-9331-00a0985bd455"
+    }
+  },
+  {
+    "source_port": {
+      "name": "FC port 0/2",
+      "wwn": "200250eb1a236efd",
+      "mode": "f_port"
+    },
+    "peer_port": {
+      "wwn": "21000024ff72c0cb",
+      "connection": "sti8020mcc-htp-006:2d",
+      "type": "fcp_adapter",
+      "unique_id": "38993dc0-4ea1-11eb-9331-00a0985bd455"
+    }
+  }
+],
+"fans": [
+  {
+    "name": "FAN #1",
+    "speed": 7336,
+    "state": "ok"
+  },
+  {
+    "name": "FAN #2",
+    "speed": 7336,
+    "state": "ok"
+  }
+],
+"paths": [
+     {
+       "adapter": {
+         "name": "2a",
+         "wwn": "21000024ff6c4bc0",
+         "type": "fcp_initiator"
+       },
+       "port": {
+         "name": "FC port 0/4",
+         "speed": 8
+       },
+       "node": {
+         "name": "sti8020mcc-htp-005",
+         "uuid": "382cb083-4416-11eb-ad1d-00a0985bd455",
+         "_links": {
+           "self": {
+             "href": "/api/cluster/nodes/382cb083-4416-11eb-ad1d-00a0985bd455"
+           }
+         }
+       },
+       "_links": {
+         "self": {
+           "href": "/api/storage/ports/382cb083-4416-11eb-ad1d-00a0985bd455/2a"
+         }
+       }
+     },
+     {
+       "adapter": {
+         "name": "2c",
+         "wwn": "21000024ff6c4bc2",
+         "type": "fcp_initiator"
+       },
+       "port": {
+         "name": "FC port 0/5",
+         "speed": 8
+       },
+       "node": {
+         "name": "sti8020mcc-htp-005",
+         "uuid": "382cb083-4416-11eb-ad1d-00a0985bd455",
+         "_links": {
+           "self": {
+             "href": "/api/cluster/nodes/382cb083-4416-11eb-ad1d-00a0985bd455"
+           }
+         }
+       },
+       "_links": {
+         "self": {
+           "href": "/api/storage/ports/382cb083-4416-11eb-ad1d-00a0985bd455/2c"
+         }
+       }
+     },
+     {
+       "adapter": {
+         "name": "fcvi_device_0",
+         "wwn": "2100000e1e09d5d2",
+         "type": "fc_vi"
+       },
+       "port": {
+         "name": "FC port 0/3",
+         "speed": 16
+       },
+       "node": {
+         "name": "sti8020mcc-htp-005",
+         "uuid": "382cb083-4416-11eb-ad1d-00a0985bd455",
+         "_links": {
+           "self": {
+             "href": "/api/cluster/nodes/382cb083-4416-11eb-ad1d-00a0985bd455"
+           }
+         }
+       }
+     },
+     {
+       "adapter": {
+         "name": "2a",
+         "wwn": "21000024ff72c0c8",
+         "type": "fcp_initiator"
+       },
+       "port": {
+         "name": "FC port 0/1",
+         "speed": 8
+       },
+       "node": {
+         "name": "sti8020mcc-htp-006",
+         "uuid": "364fbba8-4416-11eb-8e72-00a098431045",
+         "_links": {
+           "self": {
+             "href": "/api/cluster/nodes/364fbba8-4416-11eb-8e72-00a098431045"
+           }
+         }
+       },
+       "_links": {
+         "self": {
+           "href": "/api/storage/ports/364fbba8-4416-11eb-8e72-00a098431045/2a"
+         }
+       }
+     },
+     {
+       "adapter": {
+         "name": "2c",
+         "wwn": "21000024ff72c0ca",
+         "type": "fcp_initiator"
+       },
+       "port": {
+       "name": "FC port 0/2",
+       "speed": 8
+       },
+       "node": {
+         "name": "sti8020mcc-htp-006",
+         "uuid": "364fbba8-4416-11eb-8e72-00a098431045",
+         "_links": {
+           "self": {
+             "href": "/api/cluster/nodes/364fbba8-4416-11eb-8e72-00a098431045"
+           }
+         }
+       },
+       "_links": {
+         "self": {
+           "href": "/api/storage/ports/364fbba8-4416-11eb-8e72-00a098431045/2c"
+         }
+       }
+     }
+],
+"_links": {
+  "self": {
+    "href": "/api/storage/switches/Brocade_10.226.57.206"
+  }
+}
+}
+----
+
+'''
+
+

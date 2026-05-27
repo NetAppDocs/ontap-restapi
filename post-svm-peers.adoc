@@ -1,0 +1,488 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-svm-peers.html'
+summary: 'Create a new SVM peer relationship'
+---
+
+= Create a new SVM peer relationship
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/svm/peers`#
+
+*Introduced In:* 9.6
+
+Creates a new SVM peer relationship.
+
+== Important notes
+
+*** The create request accepts peer SVM name as input instead of peer SVM UUID as the local cluster cannot validate peer SVM based on UUID.
+
+*** The input parameter `name` refers to the local name of the peer SVM. The `peer cluster name` parameter is optional for creating intracluster SVM peer relationships.
+
+== Required properties
+
+* `svm.name` or `svm.uuid` - SVM name or SVM UUID
+* `peer.svm.name` or `peer.svm.uuid` - Peer SVM name or Peer SVM UUID
+* `peer.cluster.name` or `peer.cluster.uuid` - Peer cluster name or peer cluster UUID
+* `applications` - Peering applications
+
+== Related ONTAP commands
+
+* `vserver peer create`
+
+== Example
+
+Creates a new SVM peer relationship.
+
+----
+POST "/api/svm/peers" '{"svm":{"name":"vs1"}, "peer.cluster.name":"cluster2", "peer.svm.name":"VS1", "applications":["snapmirror"]}'
+----
+
+== Learn more
+
+* link:svm_peers_endpoint_overview.html[DOC /svm/peers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|applications
+|array[string]
+a|A list of applications for an SVM peer relationship.
+
+
+|force
+|boolean
+a|Use this to suspend, resume or delete the SVM peer relationship even if the remote cluster is not accessible due to, for example, network connectivity issues.
+
+
+|name
+|string
+a|A peer SVM alias name to avoid a name conflict on the local cluster.
+
+
+|peer
+|link:#peer[peer]
+a|Details for a peer SVM object.
+
+
+|svm
+|link:#svm[svm]
+a|Local SVM details
+
+
+|uuid
+|string
+a|SVM peer relationship UUID
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "applications": [
+    "snapmirror",
+    "lun_copy"
+  ],
+  "name": "string",
+  "peer": {
+    "cluster": {
+      "name": "cluster2",
+      "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+    },
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    }
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error codes | Description
+
+| 13434889
+| Internal error. Wait and retry.
+
+| 26345575
+| The specified peer cluster name and peer cluster UUID do not match.
+
+| 26345579
+| The specified field is invalid.
+
+| 26345580
+| SVM name or SVM UUID must be provided.
+
+| 9896086
+| Peer SVM name conflicts with one of the following: a peer SVM in an existing SVM peer relationship, a local SVM, or an IPSpace. Use the "name" property to uniquely specify the peer SVM alias name.
+
+| 9895996
+| Cannot specify lun-copy as an inter-cluster application.
+
+| 9896093
+| The flexcache application is not supported on this platform.
+
+| 9896095
+| SVM name is in use by a peer Vserver in a Vserver peer relationship.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#peer]
+[.api-collapsible-fifth-title]
+peer
+
+Details for a peer SVM object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Local SVM details
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#svm_peer]
+[.api-collapsible-fifth-title]
+svm_peer
+
+An SVM peer relationship object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|applications
+|array[string]
+a|A list of applications for an SVM peer relationship.
+
+
+|force
+|boolean
+a|Use this to suspend, resume or delete the SVM peer relationship even if the remote cluster is not accessible due to, for example, network connectivity issues.
+
+
+|name
+|string
+a|A peer SVM alias name to avoid a name conflict on the local cluster.
+
+
+|peer
+|link:#peer[peer]
+a|Details for a peer SVM object.
+
+
+|svm
+|link:#svm[svm]
+a|Local SVM details
+
+
+|uuid
+|string
+a|SVM peer relationship UUID
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,672 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-chassis.html'
+summary: 'Retrieve a collection of chassis'
+---
+
+= Retrieve a collection of chassis
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/chassis`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of chassis.
+
+== Related ONTAP commands
+
+* `system chassis show`
+* `system chassis fru show`
+
+== Learn more
+
+* link:cluster_chassis_endpoint_overview.html[DOC /cluster/chassis]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|frus.id
+|string
+|query
+|False
+a|Filter by frus.id
+
+
+|frus.type
+|string
+|query
+|False
+a|Filter by frus.type
+
+
+|frus.state
+|string
+|query
+|False
+a|Filter by frus.state
+
+
+|nodes.position
+|string
+|query
+|False
+a|Filter by nodes.position
+
+* Introduced in: 9.8
+
+
+|nodes.usbs.ports.connected
+|boolean
+|query
+|False
+a|Filter by nodes.usbs.ports.connected
+
+* Introduced in: 9.9
+
+
+|nodes.usbs.enabled
+|boolean
+|query
+|False
+a|Filter by nodes.usbs.enabled
+
+* Introduced in: 9.9
+
+
+|nodes.usbs.supported
+|boolean
+|query
+|False
+a|Filter by nodes.usbs.supported
+
+* Introduced in: 9.9
+
+
+|nodes.name
+|string
+|query
+|False
+a|Filter by nodes.name
+
+
+|nodes.pcis.cards.slot
+|string
+|query
+|False
+a|Filter by nodes.pcis.cards.slot
+
+* Introduced in: 9.9
+
+
+|nodes.pcis.cards.device
+|string
+|query
+|False
+a|Filter by nodes.pcis.cards.device
+
+* Introduced in: 9.9
+
+
+|nodes.pcis.cards.info
+|string
+|query
+|False
+a|Filter by nodes.pcis.cards.info
+
+* Introduced in: 9.9
+
+
+|nodes.uuid
+|string
+|query
+|False
+a|Filter by nodes.uuid
+
+
+|id
+|string
+|query
+|False
+a|Filter by id
+
+
+|shelves.uid
+|string
+|query
+|False
+a|Filter by shelves.uid
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#chassis[chassis]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "frus": [
+        {
+          "id": "string",
+          "state": "string",
+          "type": "string"
+        }
+      ],
+      "id": "021352005981",
+      "nodes": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "pcis": {
+            "cards": [
+              {
+                "device": "Intel Lewisburg series chipset SATA Controller",
+                "info": "Additional Info: 0 (0xaaf00000)   SHM2S86Q120GLM22NP FW1146 114473MB 512B/sect (SPG190108GW)",
+                "slot": "0"
+              }
+            ]
+          },
+          "position": "top",
+          "usbs": {
+            "ports": [
+              {}
+            ]
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "shelves": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "uid": "7777841915827391056"
+        }
+      ],
+      "state": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#frus]
+[.api-collapsible-fifth-title]
+frus
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cards]
+[.api-collapsible-fifth-title]
+cards
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|device
+|string
+a|The description of the PCI card.
+
+
+|info
+|string
+a|The info string from the device driver of the PCI card.
+
+
+|slot
+|string
+a|The slot where the PCI card is placed. This can sometimes take the form of "6-1" to indicate slot and subslot.
+
+
+|===
+
+
+[#pcis]
+[.api-collapsible-fifth-title]
+pcis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cards
+|array[link:#cards[cards]]
+a|
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connected
+|boolean
+a|Indicates whether or not the USB port has a device connected to it.
+
+
+|===
+
+
+[#usbs]
+[.api-collapsible-fifth-title]
+usbs
+
+The status of the USB ports on the controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not the USB ports are enabled.
+
+
+|ports
+|array[link:#ports[ports]]
+a|
+
+|supported
+|boolean
+a|Indicates whether or not USB ports are supported on the current platform.
+
+
+|===
+
+
+[#nodes]
+[.api-collapsible-fifth-title]
+nodes
+
+List of nodes in chassis.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|pcis
+|link:#pcis[pcis]
+a|
+
+|position
+|string
+a|The position of the node in the chassis, when viewed from the rear of the system.
+
+
+|usbs
+|link:#usbs[usbs]
+a|The status of the USB ports on the controller.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#shelf_reference]
+[.api-collapsible-fifth-title]
+shelf_reference
+
+Shelf
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uid
+|string
+a|
+
+|===
+
+
+[#chassis]
+[.api-collapsible-fifth-title]
+chassis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|frus
+|array[link:#frus[frus]]
+a|List of FRUs in the chassis.
+
+
+|id
+|string
+a|
+
+|nodes
+|array[link:#nodes[nodes]]
+a|List of nodes in the chassis.
+
+
+|shelves
+|array[link:#shelf_reference[shelf_reference]]
+a|List of shelves in chassis.
+
+
+|state
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

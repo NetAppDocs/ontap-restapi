@@ -1,0 +1,474 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-lun-maps--reporting-nodes.html'
+summary: 'Retrieve LUN map reporting nodes'
+---
+
+= Retrieve LUN map reporting nodes
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes`#
+
+*Introduced In:* 9.10
+
+Retrieves LUN map reporting nodes.
+
+== Related ONTAP commands
+
+* `lun mapping show`
+
+== Learn more
+
+* link:protocols_san_lun-maps_lun.uuid_igroup.uuid_reporting-nodes_endpoint_overview.html[DOC /protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|lun.uuid
+|string
+|path
+|True
+a|The unique identifier of the LUN.
+
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the igroup.
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#lun_map_reporting_node[lun_map_reporting_node]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "node": {
+          "href": "/api/resourcelink"
+        },
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "igroup": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "lun": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "node1",
+      "uuid": "5ac8eb9c-4e32-dbaa-57ca-fb905976f54e"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374875
+| The specified LUN does not exist or is not accessible to the caller.
+
+| 5374878
+| The specified initiator group does not exist, is not accessible to the caller, or is not in the same SVM as the specified LUN.
+
+| 5374922
+| The specified LUN map does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group of the LUN map of the reporting node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN of the LUN map of the reporting node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_map_reporting_node]
+[.api-collapsible-fifth-title]
+lun_map_reporting_node
+
+A cluster node from which network paths to the LUN are advertised by ONTAP via the SAN protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group of the LUN map of the reporting node.
+
+
+|lun
+|link:#lun[lun]
+a|The LUN of the LUN map of the reporting node.
+
+
+|name
+|string
+a|The name of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|uuid
+|string
+a|The unique identifier of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

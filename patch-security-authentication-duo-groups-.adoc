@@ -1,0 +1,237 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-authentication-duo-groups-.html'
+summary: 'Update a Duo group configured for an SVM or cluster'
+---
+
+= Update a Duo group configured for an SVM or cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/authentication/duo/groups/{owner.uuid}/{name}`#
+
+*Introduced In:* 9.14
+
+Updates a configured Duo group for a cluster or SVM.
+
+== Related ONTAP commands
+
+* `security login duo group modify`
+
+== Learn more
+
+* link:security_authentication_duo_groups_owner.uuid_name_endpoint_overview.htmll[DOC /security/authentication/duo/groups/{owner.uuid}/\{name}]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Account owner UUID
+
+
+|name
+|string
+|path
+|True
+a|Group name.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Comment for the Duo group.
+
+
+|excluded_users
+|array[string]
+a|List of excluded users.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "excluded_users": [
+    "user1",
+    "user2"
+  ]
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+SVM name and UUID for which the Duo group profile is configured.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#duogroup]
+[.api-collapsible-fifth-title]
+duogroup
+
+Group profile to include in Duo authentication.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Comment for the Duo group.
+
+
+|excluded_users
+|array[string]
+a|List of excluded users.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,175 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-nfs-services-.html'
+summary: 'Delete NFS configuration for an SVM'
+---
+
+= Delete NFS configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/nfs/services/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Deletes the NFS configuration of an SVM.
+
+== Related ONTAP commands
+
+* `vserver nfs delete`
+
+== Learn more
+
+* link:protocols_nfs_services_endpoint_overview.html[DOC /protocols/nfs/services]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 3276916
+| Vserver is not running
+
+| 3277008
+| NFS Kerberos must be disabled on all LIFs of Vserver before deleting the NFS configuration. When all LIFs are disabled, try the operation
+
+| 3277009
+| NFS Kerberos realms associated with the Vserver are deleted
+
+| 3277111
+| Internal error. Failed to remove NFS-specific security trace filter for Vserver
+
+| 3277112
+| Internal error. Failed to modify the protocols field of a security trace filter for Vserver
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

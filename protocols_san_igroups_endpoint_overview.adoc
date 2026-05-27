@@ -1,0 +1,753 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_san_igroups_endpoint_overview.html'
+summary: 'Manage SAN igroups'
+---
+
+= Manage SAN igroups
+
+
+
+== Overview
+
+An initiator group (igroup) is a collection of Fibre Channel (FC) world wide port names (WWPNs), and/or iSCSI Qualified Names (IQNs), and/or iSCSI EUIs (Extended Unique Identifiers) that identify host endpoints.
+
+Initiator groups are used to control which hosts can access specific LUNs. To grant access to a LUN from one or more hosts, create an initiator group containing the host initiator names, then create a LUN map that associates the initiator group with the LUN.
+
+An initiator group may contain either initiators or other initiator groups, but not both simultaneously. When a parent initiator group is mapped, it inherits all of the initiators of any initiator groups nested below it. If any nested initiator group is modified to contain different initiators, the parent initiator groups inherit the change. A parent can have many nested initiator groups and an initiator group can be nested under multiple parents. Initiators can only be added or removed from the initiator group that directly contains them. The maximum supported depth of nesting is three layers.
+
+Best practice when using nested initiator groups is to match host hierarchies. A single initiator group should correspond to a single host. If a LUN needs to be mapped to multiple hosts, the initiator groups representing those hosts should be aggregated into a parent initiator group and the LUN should be mapped to that initiator group. For multi-ported hosts, initiators have a comment property where the port corresponding to the initiator can be documented.
+
+The initiator group REST API allows you to create, update, delete, and discover initiator groups, and to add and remove initiators that can access the target and associated LUNs.
+
+An initiator can appear in multiple initiator groups. An initiator group can be mapped to multiple LUNs. A specific initiator can be mapped to a specific LUN only once. With the introduction of nestable initiator groups, best practice is to use the hierarchy such that an initiator is only a direct member of a single initiator group, and that initiator group can then be referenced by other initiator groups. This avoid needing to update multiple initiator groups when initiators change.
+
+All initiators or nested initiator groups in an initiator group must be from the same operating system. The initiator group's operating system is specified when the initiator group is created.
+
+When an initiator group is created, the `protocol` property is used to restrict member initiators to Fibre Channel (_fcp_), iSCSI (_iscsi_), or both (_mixed_). Initiator groups within a nested hierarchy may not have conflicting protocols.
+
+Zero or more initiators or nested initiator groups can be supplied when the initiator group is created. After creation, initiators can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/initiators` endpoint. Initiator groups containing other initiator groups report the aggregated list of initiators from all nested initiator groups, but modifications of the initiator list must be performed on the initiator group that directly contains the initiators. See link:post-protocols-san-igroups-initiators(#-san-igroup-initiator-create)anddelete-protocols-san-igroups-initiators-.html<</SAN/igroup_initiator_create,POST /protocols/san/igroups/{igroup.uuid}/initiators>> and [DELETE /protocols/san/igroups/{igroup.uuid}/initiators/\{name}]  for more details.
+
+An FC WWPN consists of 16 hexadecimal digits grouped as 8 pairs separated by colons. The format for an iSCSI IQN is _iqn.yyyy-mm.reverse_domain_name:any_. The iSCSI EUI format consists of the _eui._ prefix followed by 16 hexadecimal characters.
+
+== Examples
+
+=== Creating an initiator group with no initiators
+
+The example initiator group used here is for Linux iSCSI initiators only. Note that the `return_records` query parameter is used to obtain the newly created initiator group in the response.
+
+----
+
+# The API:
+POST /api/protocols/san/igroups
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "name": "igroup1", "os_type": "linux", "protocol": "iscsi" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "8f249e7d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup1",
+    "protocol": "iscsi",
+    "os_type": "linux",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an initiator group with initiators
+
+The example initiator group used here is for Windows. FC Protocol and iSCSI initiators are allowed. Note that the `return_records` query parameter is used to obtain the newly created initiator group in the response.
+
+----
+
+# The API:
+POST /api/protocols/san/igroups
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "name": "igroup2", "os_type": "windows", "protocol": "mixed", "initiators": [ { "name": "20:01:00:50:56:bb:70:72" }, { "name": "iqn.1991-05.com.ms:host1" } ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup2",
+    "protocol": "mixed",
+    "os_type": "windows",
+    "initiators": [
+      {
+        "name": "20:01:00:50:56:bb:70:72",
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/20:01:00:50:56:bb:70:72"
+          }
+        }
+      },
+      {
+        "name": "iqn.1991-05.com.ms:host1",
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/iqn.1991-05.com.ms:host1"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an initiator group with nested initiator groups
+
+The example initiator group used here is for Windows. FC Protocol and iSCSI initiators are allowed. Note that the `return_records` query parameter is used to obtain the newly created initiator group in the response. The new initiator group is create so as to contain the initiator group created in the previous example. The initiators list reports all initiators nested below this initiator group, and note that the href link for the initiators refers to the initiator group that directly owns the initiator, not this initiator group.
+
+----
+
+# The API:
+POST /api/protocols/san/igroups
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "name": "igroup3", "os_type": "windows", "protocol": "mixed", "igroups": [ { "name": "igroup2" } ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7073",
+    "name": "igroup3",
+    "protocol": "mixed",
+    "os_type": "windows",
+    "igroups": [
+      {
+        "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+        "name": "igroup2",
+        "_links": { "self": { "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072" } }
+      }
+    ],
+    "initiators": [
+      {
+        "name": "20:01:00:50:56:bb:70:72",
+        "igroup": {
+          "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+          "name": "igroup2",
+          "_links": { "self": { "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072" } }
+        },
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/20:01:00:50:56:bb:70:72"
+          }
+        }
+      },
+      {
+        "name": "iqn.1991-05.com.ms:host1",
+        "igroup": {
+          "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+          "name": "igroup2",
+          "_links": { "self": { "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072" } }
+        },
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/iqn.1991-05.com.ms:host1"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7073"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving all initiator groups
+
+----
+
+# The API:
+GET /api/protocols/san/igroups
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/igroups' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "8f249e7d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup1",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup2",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7073",
+    "name": "igroup3",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7073"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/igroups"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all properties of all initiator groups
+
+The `fields` query parameter is used to request all initiator group
+properties. Note that the nested and parent initiator groups are considered
+expensive properties and will only be returned if explicitly requested.
+
+----
+
+# The API:
+GET /api/protocols/san/igroups
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/igroups?fields=*,igroups,parent_igroups' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "8f249e7d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup1",
+    "protocol": "iscsi",
+    "os_type": "linux",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup2",
+    "parent_igroups": [
+      {
+        "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7073",
+        "name": "igroup3",
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7073"
+          }
+        }
+      }
+    ],
+    "protocol": "mixed",
+    "os_type": "windows",
+    "initiators": [
+      {
+        "name": "20:01:00:50:56:bb:70:72",
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/20:01:00:50:56:bb:70:72"
+          }
+        }
+      },
+      {
+        "name": "iqn.1991-05.com.ms:host1",
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/iqn.1991-05.com.ms:host1"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7073",
+    "name": "igroup3",
+    "protocol": "mixed",
+    "os_type": "windows",
+    "igroups": [
+      {
+        "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+        "name": "igroup2",
+        "_links": { "self": { "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072" } }
+      }
+    ],
+    "initiators": [
+      {
+        "name": "20:01:00:50:56:bb:70:72",
+        "igroup": {
+          "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+          "name": "igroup2",
+          "_links": { "self": { "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072" } }
+        },
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/20:01:00:50:56:bb:70:72"
+          }
+        }
+      },
+      {
+        "name": "iqn.1991-05.com.ms:host1",
+        "igroup": {
+          "uuid": "abf9c39d-ab9f-11e8-b8a3-005056bb7072",
+          "name": "igroup2",
+          "_links": { "self": { "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072" } }
+        },
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072/initiators/iqn.1991-05.com.ms:host1"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7073"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/igroups?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all initiator groups for Linux
+
+The `os_type` query parameter is used to perform the query.
+
+----
+
+# The API:
+GET /api/protocols/san/igroups
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/igroups?os_type=linux' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+        }
+      }
+    },
+    "uuid": "8f249e7d-ab9f-11e8-b8a3-005056bb7072",
+    "name": "igroup1",
+    "os_type": "linux",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/igroups?os_type=linux"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific initiator group
+
+----
+
+# The API:
+GET /api/protocols/san/igroups/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"svm": {
+  "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+    }
+  }
+},
+"uuid": "8f249e7d-ab9f-11e8-b8a3-005056bb7072",
+"name": "igroup1",
+"protocol": "iscsi",
+"os_type": "linux",
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving LUNs mapped to a specific initiator group
+
+The `fields` parameter is used to specify the desired properties.
+
+----
+
+# The API:
+GET /api/protocols/san/igroups
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072?fields=lun_maps' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"svm": {
+  "uuid": "02b0dfff-aa28-11e8-a653-005056bb7072",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/02b0dfff-aa28-11e8-a653-005056bb7072"
+    }
+  }
+},
+"uuid": "8f249e7d-ab9f-11e8-b8a3-005056bb7072",
+"name": "igroup1",
+"lun_maps": [
+  {
+    "logical_unit_number": 0,
+    "lun": {
+      "name": "/vol/vol1/lun1",
+      "uuid": "4b33ba57-c4e0-4dbb-bc47-214800d18a71",
+      "node": {
+        "name": "node1",
+        "uuid": "f17182af-223f-4d51-8197-2cb2146d5c4c",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/f17182af-223f-4d51-8197-2cb2146d5c4c"
+          }
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "/api/storage/luns/4b33ba57-c4e0-4dbb-bc47-214800d18a71"
+        }
+      }
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072"
+  }
+}
+}
+----
+
+'''
+
+=== Renaming an initiator group
+
+Note that renaming an initiator group must be done in a PATCH request separate from any other modifications.
+
+----
+
+# The API:
+PATCH /api/protocols/san/igroups/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072' -H 'Accept: application/hal+json' -d '{ "name": "igroup1_newName" }'
+----
+
+'''
+
+=== Changing the operating system type of an initiator group
+
+----
+
+# The API:
+PATCH /api/protocols/san/igroups/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072' -H 'Accept: application/hal+json' -d '{ "os_type": "aix" }'
+----
+
+'''
+
+=== Adding an initiator to an initiator group
+
+----
+
+# The API:
+POST /api/protocols/san/igroups/{igroup.uuid}/initiators
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/initiators' -H 'Accept: application/hal+json' -d '{ "name": "iqn.1991-05.com.ms:host2" }'
+----
+
+'''
+
+=== Adding multiple initiators to an initiator group
+
+Note the use of the `records` property to add multiple initiators to the initiator group in a single API call.
+
+----
+
+# The API:
+POST /api/protocols/san/igroups/{igroup.uuid}/initiators
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/initiators' -H 'Accept: application/hal+json' -d '{ "records": [ { "name": "iqn.1991-05.com.ms:host3" }, { "name": "iqn.1991-05.com.ms:host4" } ] }'
+----
+
+'''
+
+=== Removing an initiator from an initiator group
+
+----
+
+# The API:
+DELETE /api/protocols/san/igroups/{igroup.uuid}/initiators/iqn.1991-05.com.ms:host3
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/initiators/iqn.1991-05.com.ms:host3' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Removing an initiator from a mapped initiator group
+
+Normally, removing an initiator from an initiator group that is mapped to a LUN is not allowed. The removal can be forced using the `allow_delete_while_mapped` query parameter.
+
+----
+
+# The API:
+DELETE /api/protocols/san/igroups/{igroup.uuid}/initiators/iqn.1991-05.com.ms:host4
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/initiators/iqn.1991-05.com.ms:host4?allow_delete_while_mapped=true' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Adding a nested initiator group to an initiator group
+
+----
+
+# The API:
+POST /api/protocols/san/igroups/{igroup.uuid}/igroups
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/igroups' -H 'Accept: application/hal+json' -d '{ "name": "host2_igroup" }'
+----
+
+'''
+
+=== Adding multiple nested initiator groups to an initiator group
+
+Note the use of the `records` property to add multiple nested initiator groups to the initiator group in a single API call.
+
+----
+
+# The API:
+POST /api/protocols/san/igroups/{igroup.uuid}/igroups
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/igroups' -H 'Accept: application/hal+json' -d '{ "records": [ { "name": "host3_igroup" }, { "uuid": "c439efc8-0a70-11eb-adc1-0242ac120002" } ] }'
+----
+
+'''
+
+=== Removing a nested initiator group from an initiator group
+
+----
+
+# The API:
+DELETE /api/protocols/san/igroups/{igroup.uuid}/igroups/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/igroups/c439efc8-0a70-11eb-adc1-0242ac120002' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Removing a nested initiator group from a mapped initiator group
+
+Normally, removing a nested initiator group from an initiator group that is mapped to a LUN is not allowed. The removal can be forced using the `allow_delete_while_mapped` query parameter.
+
+----
+
+# The API:
+DELETE /api/protocols/san/igroups/{igroup.uuid}/igroups/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/igroups/8f249e7d-ab9f-11e8-b8a3-005056bb7072/igroups/c439efc8-0a70-11eb-adc1-0242ac120002?allow_delete_while_mapped=true' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Deleting an initiator group
+
+----
+
+# The API:
+DELETE /api/protocols/san/igroups/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Deleting a mapped initiator group
+
+Normally, deleting an initiator group that is mapped to a LUN is not allowed. The deletion can be forced using the `allow_delete_while_mapped` query parameter.
+
+----
+
+# The API:
+DELETE /api/protocols/san/igroups/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/igroups/abf9c39d-ab9f-11e8-b8a3-005056bb7072?allow_delete_while_mapped=true' -H 'Accept: application/hal+json'
+----
+
+

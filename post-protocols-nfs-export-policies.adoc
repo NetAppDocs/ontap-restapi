@@ -1,0 +1,564 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-nfs-export-policies.html'
+summary: 'Create an export policy'
+---
+
+= Create an export policy
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/nfs/export-policies`#
+
+*Introduced In:* 9.6
+
+Creates an export policy. An SVM can have any number of export policies to define rules for which clients can access data exported by the SVM. A policy with no rules prohibits access.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create an export policy.
+* `name`  - Name of the export policy.
+
+== Recommended optional properties
+
+* `rules`  - Rule(s) of an export policy. Used to create the export rule and populate the export policy with export rules in a single request.
+* `rules[].index` - If you specify an index number that already matches a rule, the index number of the existing rule is incremented, as are the index numbers of all subsequent rules, either to the end of the list or to an open space in the list. If you do not specify an index number, the new rule is placed at the end of the policy's list.
+
+== Related ONTAP commands
+
+* `vserver export-policy create`
+* `vserver export-policy rule create`
+
+== Learn more
+
+* link:protocols_nfs_export-policies_endpoint_overview.html[DOC /protocols/nfs/export-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|are_rules_truncated
+|boolean
+a|Indicates whether or not export-policy rules are truncated.
+
+
+|id
+|integer
+a|Export Policy ID
+
+
+|name
+|string
+a|Export Policy Name
+
+
+|rules
+|array[link:#export_rules[export_rules]]
+a|Rules of the Export Policy.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "id": 0,
+  "name": "string",
+  "rules": [
+    {
+      "anonymous_user": "string",
+      "chown_mode": "string",
+      "clients": [
+        {
+          "match": "0.0.0.0/0"
+        }
+      ],
+      "ntfs_unix_security": "string",
+      "protocols": [
+        "string"
+      ],
+      "ro_rule": [
+        "string"
+      ],
+      "rw_rule": [
+        "string"
+      ],
+      "superuser": [
+        "string"
+      ]
+    }
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|The number of export policy records
+
+
+|records
+|array[link:#export_policy[export_policy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "id": 0,
+      "name": "string",
+      "rules": [
+        {
+          "anonymous_user": "string",
+          "chown_mode": "string",
+          "clients": [
+            {
+              "match": "0.0.0.0/0"
+            }
+          ],
+          "ntfs_unix_security": "string",
+          "protocols": [
+            "string"
+          ],
+          "ro_rule": [
+            "string"
+          ],
+          "rw_rule": [
+            "string"
+          ],
+          "superuser": [
+            "string"
+          ]
+        }
+      ],
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1703952
+| Invalid ruleset name provided. No spaces allowed in a ruleset name
+
+| 1703954
+| Export policy does not exist
+
+| 1704036
+| Invalid clientmatch:  missing domain name
+
+| 1704037
+| Invalid clientmatch:  missing network name
+
+| 1704038
+| Invalid clientmatch:  missing netgroup name
+
+| 1704039
+| Invalid clientmatch
+
+| 1704040
+| Invalid clientmatch: address bytes masked out by netmask are non-zero
+
+| 1704041
+| Invalid clientmatch: address bytes masked to zero by netmask
+
+| 1704042
+| Invalid clientmatch: too many bits in netmask
+
+| 1704043
+| Invalid clientmatch: invalid netmask
+
+| 1704044
+| Invalid clientmatch: invalid characters in host name
+
+| 1704045
+| Invalid clientmatch: invalid characters in domain name
+
+| 1704047
+| The export policy name cannot be longer than 256 characters
+
+| 1704049
+| Invalid clientmatch: clientmatch lists require an effective cluster version of Data ONTAP 9.0 or later. Upgrade all nodes to Data ONTAP 9.0 or above to use features that operate on lists of clientmatch strings in export-policy rules
+
+| 1704050
+| Invalid clientmatch: clientmatch list contains a duplicate string. Duplicate strings in a clientmatch list are not supported
+
+| 1704054
+| Invalid clientmatch: invalid characters in netgroup name. Valid characters for a netgroup name are 0-9, A-Z, a-z, ".", "_" and "-"
+
+| 1704055
+| Export policies are only supported for data Vservers
+
+| 1704064
+| Clientmatch host name too long
+
+| 1704065
+| Clientmatch domain name too long
+
+| 1704071
+| The export policy was not created because of duplicate export policy rules present in the request
+
+| 2621462
+| The specified SVM name does not exist
+
+| 2621519
+| SVM name is invalid. The SVM name must begin with a letter or an underscore. If the SVM is of type "sync-source", the maximum supported length is 41. Otherwise, the maximum supported length is 47
+
+| 2621643
+| The specified SVM name is too long
+
+| 2621685
+| SVM name length cannot be zero
+
+| 2621706
+| The specified SVM UUID is incorrect for the specified SVM name
+
+| 3277000
+| Upgrade all nodes to ONTAP 9.0.0 or above to use krb5p as a security flavor in export-policy rules
+
+| 3277083
+| User ID is not valid. Enter a value for User ID from 0 to 4294967295
+
+| 3277149
+| The "Anon" field cannot be an empty string
+
+| 6691623
+| User is not authorized
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#export_clients]
+[.api-collapsible-fifth-title]
+export_clients
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|===
+
+
+[#export_rules]
+[.api-collapsible-fifth-title]
+export_rules
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allow_device_creation
+|boolean
+a|Specifies whether or not device creation is allowed.
+
+
+|allow_suid
+|boolean
+a|Specifies whether or not SetUID bits in SETATTR Op is to be honored.
+
+
+|anonymous_user
+|string
+a|User ID To Which Anonymous Users Are Mapped.
+
+
+|chown_mode
+|string
+a|Specifies who is authorized to change the ownership mode of a file.
+
+
+|clients
+|array[link:#export_clients[export_clients]]
+a|Array of client matches
+
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|ntfs_unix_security
+|string
+a|NTFS export UNIX security options.
+
+
+|protocols
+|array[string]
+a|
+
+|ro_rule
+|array[string]
+a|Authentication flavors that the read-only access rule governs
+
+
+|rw_rule
+|array[string]
+a|Authentication flavors that the read/write access rule governs
+
+
+|superuser
+|array[string]
+a|Authentication flavors that the superuser security type governs
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|are_rules_truncated
+|boolean
+a|Indicates whether or not export-policy rules are truncated.
+
+
+|id
+|integer
+a|Export Policy ID
+
+
+|name
+|string
+a|Export Policy Name
+
+
+|rules
+|array[link:#export_rules[export_rules]]
+a|Rules of the Export Policy.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

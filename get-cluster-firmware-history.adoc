@@ -1,0 +1,574 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-firmware-history.html'
+summary: 'Retrieve history details for firmware update requests'
+---
+
+= Retrieve history details for firmware update requests
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/firmware/history`#
+
+*Introduced In:* 9.8
+
+Retrieves the history details for firmware update requests.
+
+== Learn more
+
+* link:cluster_firmware_history_endpoint_overview.html[DOC /cluster/firmware/history]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|update_status.worker.node.name
+|string
+|query
+|False
+a|Filter by update_status.worker.node.name
+
+
+|update_status.worker.node.uuid
+|string
+|query
+|False
+a|Filter by update_status.worker.node.uuid
+
+
+|update_status.worker.error.code
+|integer
+|query
+|False
+a|Filter by update_status.worker.error.code
+
+
+|update_status.worker.error.message
+|string
+|query
+|False
+a|Filter by update_status.worker.error.message
+
+
+|update_status.worker.state
+|string
+|query
+|False
+a|Filter by update_status.worker.state
+
+
+|fw_update_state
+|string
+|query
+|False
+a|Filter by fw_update_state
+
+
+|end_time
+|string
+|query
+|False
+a|Filter by end_time
+
+
+|job.uuid
+|string
+|query
+|False
+a|Filter by job.uuid
+
+
+|start_time
+|string
+|query
+|False
+a|Filter by start_time
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|fw_file_name
+|string
+|query
+|False
+a|Filter by fw_file_name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#firmware_history[firmware_history]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "end_time": "2019-02-02 19:00:00 +0000",
+      "fw_file_name": "all_disk_fw.zip",
+      "fw_update_state": "string",
+      "job": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "uuid": "string"
+      },
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "start_time": "2019-02-02 19:00:00 +0000",
+      "update_status": [
+        {
+          "worker": {
+            "error": {
+              "code": 2228325,
+              "message": "Cannot open local staging ZIP file disk_firmware.zip"
+            },
+            "node": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "node1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            },
+            "state": "waiting_to_retry"
+          }
+        }
+      ]
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#firmware_history_update_state_error]
+[.api-collapsible-fifth-title]
+firmware_history_update_state_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message.
+
+
+|message
+|string
+a|Error message returned when a firmware update job fails.
+
+
+|===
+
+
+[#worker]
+[.api-collapsible-fifth-title]
+worker
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#firmware_history_update_state_error[firmware_history_update_state_error]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|state
+|string
+a|The state of each worker that a node is controlling.
+
+
+|===
+
+
+[#firmware_history_update_state]
+[.api-collapsible-fifth-title]
+firmware_history_update_state
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|worker
+|link:#worker[worker]
+a|
+
+|===
+
+
+[#firmware_history]
+[.api-collapsible-fifth-title]
+firmware_history
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|end_time
+|string
+a|End time of this update request.
+
+
+|fw_file_name
+|string
+a|Name of the firmware file.
+
+
+|fw_update_state
+|string
+a|
+
+|job
+|link:#job_link[job_link]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|start_time
+|string
+a|Start time of this update request.
+
+
+|update_status
+|array[link:#firmware_history_update_state[firmware_history_update_state]]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

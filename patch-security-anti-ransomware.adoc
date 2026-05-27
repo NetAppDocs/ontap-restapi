@@ -1,0 +1,315 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-anti-ransomware.html'
+summary: 'Update the anti-ransomware package on the cluster'
+---
+
+= Update the anti-ransomware package on the cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/anti-ransomware`#
+
+*Introduced In:* 9.16
+
+Updates the anti-ransomware package on the cluster.
+
+== Required properties
+
+* `uri` - URI of the anti-ransomware package
+
+== Related ONTAP commands
+
+* `security anti-ransomware update-package-from-uri`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|nodes
+|array[link:#anti_ransomware_node[anti_ransomware_node]]
+a|
+
+|uri
+|string
+a|URI of the anti-ransomware package through a server
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "nodes": [
+    {
+      "name": "node1",
+      "version": "1.0"
+    }
+  ],
+  "uri": "http://server/package"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 203161684
+| Autonomous Ransomware Protection (ARP) package file must be either a .tar or .tgz file.
+
+| 203161685
+| Autonomous Ransomware Protection (ARP) package file download failed.
+
+| 203161686
+| Autonomous Ransomware Protection (ARP) package file unzip failed.
+
+| 203161687
+| Autonomous Ransomware Protection (ARP) package file untar failed.
+
+| 203161688
+| Autonomous Ransomware Protection (ARP) package archive invalid. No ARP version file found.
+
+| 203161689
+| Internal error. Filesystem error while installing Autonomous Ransomware Protection (ARP) package file.
+
+| 203161690
+| Autonomous Ransomware Protection (ARP) package update requires an effective cluster version of 9.16.1 or later.
+
+| 203161691
+| Autonomous Ransomware Protection (ARP) package file is invalid. The checksum verification of the ARP configuration files failed.
+
+| 203161692
+| Autonomous Ransomware Protection (ARP) package update failed because one or more nodes are not healthy.
+
+| 203161694
+| Failed to update the Autonomous Ransomware Protection (ARP) package file because the `uri` property was not specified.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#anti_ransomware_node]
+[.api-collapsible-fifth-title]
+anti_ransomware_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the node.
+
+
+|version
+|string
+a|Anti-ransomware version.
+
+
+|===
+
+
+[#anti_ransomware]
+[.api-collapsible-fifth-title]
+anti_ransomware
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|nodes
+|array[link:#anti_ransomware_node[anti_ransomware_node]]
+a|
+
+|uri
+|string
+a|URI of the anti-ransomware package through a server
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,482 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-configuration-backup-backups.html'
+summary: 'Retrieve configuration backup files'
+---
+
+= Retrieve configuration backup files
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/configuration-backup/backups`#
+
+*Introduced In:* 9.7
+
+Retrieves a list of configuration backup files.
+
+== Related ONTAP commands
+
+* `system configuration backup show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|size
+|integer
+|query
+|False
+a|Filter by size
+
+
+|auto
+|boolean
+|query
+|False
+a|Filter by auto
+
+
+|time
+|string
+|query
+|False
+a|Filter by time
+
+
+|version
+|string
+|query
+|False
+a|Filter by version
+
+
+|backup_nodes.name
+|string
+|query
+|False
+a|Filter by backup_nodes.name
+
+
+|download_link
+|string
+|query
+|False
+a|Filter by download_link
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#configuration_backup_file[configuration_backup_file]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "backup_nodes": [
+        {
+          "name": "string"
+        }
+      ],
+      "download_link": "https://10.224.65.198/backups/backup_file.7z",
+      "name": "backup_file.7z",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "size": 4787563,
+      "time": "2019-02-04 13:33:48 -0500",
+      "type": "string",
+      "version": "9.7.0"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#backup_node]
+[.api-collapsible-fifth-title]
+backup_node
+
+The node name in the backup.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node that owns the configuration backup.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#configuration_backup_file]
+[.api-collapsible-fifth-title]
+configuration_backup_file
+
+The configuration backup file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto
+|boolean
+a|Indicates if the backup was created automatically.
+
+
+|backup_nodes
+|array[link:#backup_node[backup_node]]
+a|The list of nodes included in the backup.
+
+
+|download_link
+|string
+a|The link to download the backup file.
+
+
+|name
+|string
+a|The backup name.
+
+
+|node
+|link:#node[node]
+a|The node that owns the configuration backup.
+
+
+|size
+|integer
+a|The size of the backup in bytes.
+
+
+|time
+|string
+a|The backup creation time.
+
+
+|type
+|string
+a|The backup type.
+
+
+|version
+|string
+a|The software version.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

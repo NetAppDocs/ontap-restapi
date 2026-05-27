@@ -1,0 +1,85 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_duo_profiles_endpoint_overview.html'
+summary: 'View and create a Duo profile'
+---
+
+= View and create a Duo profile
+
+
+
+== Overview
+
+This API configures the Duo profile for secure shell (SSH).
+
+== Examples
+
+=== Creating a Duo profile
+
+Specify the integration key, secret key, API host, and other necessary information in the body of the POST request. The owner.uuid or owner.name are not required for a cluster-scoped account.
+
+----
+
+# The API:
+POST "/api/security/authentication/duo/profiles"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/profiles --request POST --data '{"api_host": "api-******.duosecurity.com",  "comment": "test post",  "fail_mode": "safe",  "integration_key": "<INTEGRATION-KEY>", "secret_key": "<SECRET-KEY>"}'
+
+# The response:
+{
+}
+----
+
+=== Creating a Duo profile for an SVM-scoped account
+
+For an SVM-scoped account, specify either the SVM name as the owner.name or the SVM UUID as the owner.uuid along with other parameters for the Duo profile. These parameters indicate the SVM that the Duo profile is being created on and can be obtained from the response body of the GET request performed on the API "/api/svm/svms".
+
+----
+
+# The API:
+POST "/api/security/authentication/duo/profiles"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/profiles --request POST --data '{"api_host": "api-******.duosecurity.com",  "comment": "test post",  "fail_mode": "safe",  "integration_key": "<INTEGRATION-KEY>", "secret_key": "<SECRET-KEY>", "owner.name":"vs0" }'
+
+# The response:
+{
+}
+----
+
+=== Retrieving the configured Duo profile(s)
+
+Retrieves the Duo profiles associated with the owners or filtered list (for a specific SVM and so on).
+
+----
+
+# The API:
+GET "/api/security/authentication/duo/profiles"
+
+# The call to retrieve Duo profiles associated with Duo configured cluster or SVM:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/profiles
+
+# the response:
+{
+"records": [
+{
+  "owner": {
+  "uuid": "5f618c80-d90a-11ed-a6e6-0050568e8ef2",
+  "name": "vs0"
+}
+},
+{
+"owner": {
+"uuid": "f810005a-d908-11ed-a6e6-0050568e8ef2",
+"name": "tsmithcluster-1"
+}
+}
+],
+"num_records": 2
+}
+----
+
+

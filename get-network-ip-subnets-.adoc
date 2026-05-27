@@ -1,0 +1,434 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-ip-subnets-.html'
+summary: 'Retrieve IP subnet details'
+---
+
+= Retrieve IP subnet details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ip/subnets/{uuid}`#
+
+*Introduced In:* 9.11
+
+Retrieves details for a specific IP subnet.
+
+== Related ONTAP commands
+
+* `network subnet show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|IP subnet UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|available_count
+|integer
+a|
+
+|available_ip_ranges
+|array[link:#ip_address_range[ip_address_range]]
+a|
+
+|broadcast_domain
+|link:#broadcast_domain[broadcast_domain]
+a|The broadcast domain that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+|gateway
+|string
+a|The IP address of the gateway for this subnet.
+
+
+|ip_ranges
+|array[link:#ip_address_range[ip_address_range]]
+a|
+
+|ipspace
+|link:#ipspace[ipspace]
+a|The IPspace that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+|name
+|string
+a|Subnet name
+
+
+|subnet
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|total_count
+|integer
+a|
+
+|used_count
+|integer
+a|
+
+|uuid
+|string
+a|The UUID that uniquely identifies the subnet.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "available_count": 0,
+  "available_ip_ranges": [
+    {
+      "end": "10.10.10.7",
+      "family": "string",
+      "start": "10.10.10.7"
+    }
+  ],
+  "broadcast_domain": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "bd1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "fail_if_lifs_conflict": true,
+  "gateway": "10.1.1.1",
+  "ip_ranges": [
+    {
+      "end": "10.10.10.7",
+      "family": "string",
+      "start": "10.10.10.7"
+    }
+  ],
+  "ipspace": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "subnet1",
+  "subnet": {
+    "address": "10.10.10.7",
+    "family": "string",
+    "netmask": "24"
+  },
+  "total_count": 0,
+  "used_count": 0,
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ip_address_range]
+[.api-collapsible-fifth-title]
+ip_address_range
+
+IP address range
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|end
+|string
+a|IPv4 or IPv6 address
+
+
+|family
+|string
+a|IPv4 or IPv6
+
+
+|start
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+The broadcast domain that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+The IPspace that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#ip_info]
+[.api-collapsible-fifth-title]
+ip_info
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|family
+|string
+a|IPv4 or IPv6
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,80 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_jit-privilege-users_endpoint_overview.html'
+summary: 'Manage JIT privilege user configurations'
+---
+
+= Manage JIT privilege user configurations
+
+
+
+== Overview
+
+This API is used to create, retrieve, and delete relevant information related to user-specific JIT privilege session configurations.
+Prerequisites:
+  You must create a user that has a JIT supported login method configured on the SVM that you want to create the elevated session configurations.
+
+== Examples
+
+=== Creating the JIT session configuration for a user
+
+----
+
+# The API:
+POST "/api/security/jit-privilege-users"
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/jit-privilege-users?return_records=true" -H "accept: application/hal+json" -d '{ "owner": { "name": "Cserver"} , "account": { "name": "joe"}, "application": "ssh","role": {"name": "admin"},"session_validity": "PT30M","jit_validity": "PT2H10M20S"}'
+
+# The response:
+{}
+----
+
+=== Retrieving the configured JIT privilege sessions for users
+
+Retrieves the JIT privilege user session configurations or a filtered list (for a specific SVM, user, etc).
+
+----
+
+# The API:
+GET "/api/security/jit-privilege-users"
+
+# The call:
+curl -X GET  "https://<mgmt-ip>/api/security/jit-privilege-users" -H "accept: application/hal+json"
+
+# The response:
+{
+  "records": [
+    {
+      "owner": {
+        "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+        "name": "Cserver",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/b009a9e7-4081-b576-7575-ada21efcaf16"
+          }
+        }
+      },
+      "account": {
+        "name": "testUser"
+      },
+      "application": "ssh",
+        "_links": {
+          "self": {
+            "href": "/api/security/jit-privilege-users/b009a9e7-4081-b576-7575-ada21efcaf16/testUser/ssh"
+          }
+        }
+    }
+  ],
+  "num_records": 1,
+  "_links": {
+    "self": {
+      "href": "/api/security/jit-privilege-users"
+    }
+  }
+}
+----
+
+

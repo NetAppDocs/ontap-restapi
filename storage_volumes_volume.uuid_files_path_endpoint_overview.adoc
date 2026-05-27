@@ -1,0 +1,1126 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_volumes_volume.uuid_files_path_endpoint_overview.html'
+summary: 'Manage files and directories'
+---
+
+= Manage files and directories
+
+
+
+== Overview
+
+This API is used to read a file, write to a file, retrieve a list of files and directories, and retrieve or modify certain properties of files and directories. The path field is used to specify the path to the directory or file to be acted on. The path field requires using "%2E" to represent "." and "%2F" to represent "/" for the path provided.
+
+== File data
+
+Read and write data from/to a named file. To read a file, the Accept request HTTP header must be specified as multipart/form-data, and a value for the `length` query property, which represents the number of bytes to be read, must be specified. The API will fail if the length of data being read/written exceeds 1 MB. This API should only be used on normal files or streams associated with files. The results for other file types, such as LUNs is undefined.
+
+To write to an existing file or create a new file, the user must specify Content-Type as "`multipart/form-data`". The "`application/json`" Content-Type is supported for the files endpoint for file metadata operations. POST, PATCH and GET operations with "`application/json`" can be used to create a directory, modify metadata fields on a file, and get directory or file metadata information. POST and PATCH operations created with the Content-Type set to 'application/json' are not supported for use with the _data_ field.
+The following APIs are used to read or write data to a file:
+
+&ndash; GET     /api/storage/volumes/{volume.uuid}/files/\{path}?byte_offset=0&length=40 -H "Accept: multipart/form-data"
+
+&ndash; POST    /api/storage/volumes/{volume.uuid}/files/\{path} -H "Content-Type: multipart/form-data" --form "file=the data to be written to the new file"
+
+&ndash; PATCH   /api/storage/volumes/{volume.uuid}/files/\{path}?byte_offset=10 -H "Content-Type: multipart/form-data" --form "file=the new data to be written or overwritten to the existing file starting at byte_offset"
+
+== Listing directories and files
+
+A list of files and directories and their properties can be retrieved for a specified path.
+
+The following APIs are used to view a list of files and directories:
+
+&ndash; GET       /api/storage/volumes/{volume.uuid}/files
+
+&ndash; GET       /api/storage/volumes/{volume.uuid}/files/\{path}
+
+&ndash; GET       /api/storage/volumes/{volume.uuid}/files/\{path}?fields=*
+
+== File information
+
+The metadata and detailed information about a single directory or file can be retrieved by setting the `return_metadata` query property to `true`. The information returned includes type, creation_time, modified_time, changed_time, accessed_time, unix_permissions, owner_id, group_id, size, hard_links_count, inode_number, is_empty, bytes_used, inode_generation, is_vm_aligned, is_junction, links, and analytics (if requested).
+
+The following API is used to view the properties of a single file or directory:
+
+&ndash; GET       /api/storage/volumes/{volume.uuid}/files/\{path}?return_metadata=true
+
+== File usage
+
+Custom details about the usage of a file can be retrieved by specifying a value for the `byte_offset` and `length` query properties.
+
+The following API is used to view the bytes used, by a file based on the range defined by `byte_offset` and `length`:
+
+&ndash; GET       /api/storage/volumes/{volume.uuid}/files/\{path}?return_metadata=true&byte_offset=\{int}&length=\{int}
+
+== Create a directory
+
+The following API is used to create a directory:
+
+&ndash; POST    /api/storage/volumes/{volume.uuid}/files/\{path} -d '{ "type" : "directory", "unix-permissions" : "644"}'
+
+== Delete an entire directory
+
+A directory can be deleted. The behavior of this call is equivalent to rm -rf.
+
+The following API is used to delete an entire directory:
+
+&ndash; DELETE    /api/storage/volumes/{volume.uuid}/files/\{path}?recurse=true
+
+== Delete a file or an empty directory
+
+The following API is used to delete a file or an empty directory:
+
+&ndash; DELETE    /api/storage/volumes/{volume.uuid}/files/\{path}
+
+&ndash; DELETE    /api/storage/volumes/{volume.uuid}/files/\{path}?recurse=false
+
+== File system analytics
+
+File system analytics provide a quick method for obtaining information summarizing properties of all files within any directory tree of a volume. When file system analytics are enabled on a volume, `analytics.+*+` fields may be requested, and will be populated in the response records corresponding to directories. The API does not support file system analytics for requests that are made beyond the boundary of the specified `volume.uuid`.
+
+The following APIs are used to obtain analytics information for a directory:
+
+&ndash; GET    /api/storage/volumes/{volume.uuid}/files/\{path}?fields=analytics
+
+&ndash; GET    /api/storage/volumes/{volume.uuid}/files/\{path}?fields=**
+
+== QoS
+
+QoS policies and settings enforce Service Level Objectives (SLO) on a file. A pre-created QoS policy can be used by specifying the `qos.name` or `qos.uuid` properties.
+
+The following APIs are used to assign a QoS policy to a file:
+
+&ndash; PATCH   /api/storage/volumes/{volume.uuid}/files/\{path} -d '{ "qos_policy.name" : "policy" }'
+
+&ndash; PATCH   /api/storage/volumes/{volume.uuid}/files/\{path} -d '{ "qos_policy.uuid" : "b89bc5dd-94a3-11e8-a7a3-0050568edf84" }'
+
+== Symlinks
+
+The following APIs are used to create a symlink and read the contents of a symlink:
+
+&ndash; POST   /api/storage/volumes/{volume.uuid}/files/\{path}  -d '{ "target" : "directory2/file1" }'
+
+&ndash; GET    /api/storage/volumes/{volume.uuid}/files/\{path}?return_metadata=true&fields=target
+
+== Rename a file or a directory
+
+The following API can be used to rename a file or a directory. Note that you need to provide the path relative to the root of the volume in the `path` body parameter.
+
+&ndash; PATCH   /api/storage/volumes/{volume.uuid}/files/\{path} -d '{ "path" : "directory1/directory2" }'
+
+&ndash; PATCH   /api/storage/volumes/{volume.uuid}/files/\{path} -d '{ "path" : "directory1/directory2/file1" }'
+
+== Examples
+
+=== Writing to a new file
+
+----
+
+# The API:
+POST /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/storage/volumes/54c06ce2-5430-11ea-90f9-005056a73aff/files/aNewFile" -H "Content-Type: multipart/form-data" --form "file=the data to be written to the new file"
+----
+
+=== Writing to an existing file
+
+----
+
+# The API:
+PATCH /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/volumes/54c06ce2-5430-11ea-90f9-005056a73aff/files/aNewFile?byte_offset=39" -H "Content-Type: multipart/form-data" --form "file=*here is a little more data"
+----
+
+=== Reading a file
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/54c06ce2-5430-11ea-90f9-005056a73aff/files/aNewFile?byte_offset=0&length=100" -H "Accept: multipart/form-data"
+
+# Response for file data:
+--ec51b3541741ade7
+Content-Disposition: form-data; name="bytes_read"
+Content-Type: text/plain
+66
+--ec51b3541741ade7
+Content-Disposition: form-data; filename="aNewFile"
+Content-Type: application/octet-stream
+the data to be written to the new file*here is a little more data
+--ec51b3541741ade7--
+----
+
+=== Creating a directory
+
+You can use the POST request to create a directory.
+
+----
+
+# The API:
+POST /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/dir1"  -H 'accept: application/hal+json' -d '{ "type" : "directory", "unix_permissions" : "644" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "path": "dir1",
+    "type": "directory",
+    "unix_permissions": 644
+  }
+]
+ }
+----
+
+=== Creating a stream on a file
+
+----
+
+# The API:
+POST /api/storage/volumes/{volume.uuid}/files/{path}?overwrite=true
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/storage/volumes/54c06ce2-5430-11ea-90f9-005056a73aff/files/aNewFile?overwrite=true&byte_offset=-1&stream_name=someStream" -H "Content-Type: multipart/form-data" --form "file=the data to be written to the new file"
+----
+
+=== Retrieving the list of files in a directory
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/d1%2Fd2%2Fd3"
+
+# Response for file records:
+{
+"records": [
+  {
+    "path": "d1/d2/d3",
+    "name": ".",
+    "type": "directory",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3%2F%2E"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2F%2E?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d1/d2/d3",
+    "name": "..",
+    "type": "directory",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3%2F%2E%2E"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2F%2E%2E?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d1/d2/d3",
+    "name": "f1",
+    "type": "file",
+    "_links": {
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2File1?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d1/d2/d3",
+    "name": "d5",
+    "type": "directory",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3%2Fd5"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2Fd5?return_metadata=true"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3"
+  }
+}
+}
+----
+
+=== Retrieving a list of files based on file type
+
+You can filter the list of files you retrieve based on multiple file types by including a query parameter in the following format type="file\|symlink"
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/d1%2Fd2%2Fd3?type=file&#124;directory"
+
+# Response for file records:
+{
+"records": [
+  {
+    "path": "d1/d2/d3",
+    "name": ".",
+    "type": "directory",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3%2F%2E"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2F%2E?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d1/d2/d3",
+    "name": "..",
+    "type": "directory",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3%2F%2E%2E"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2F%2E%2E?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d1/d2/d3",
+    "name": "f1",
+    "type": "file",
+    "_links": {
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2File1?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d1/d2/d3",
+    "name": "d5",
+    "type": "directory",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3%2Fd5"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/e8274d79-3bba-11ea-b780-005056a7d72a/files/d1%2Fd2%2Fd3%2Fd5?return_metadata=true"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d1%2Fd2%2Fd3"
+  }
+}
+}
+----
+
+=== Retrieving the properties of a directory or a file
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}?return_metadata=true
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/d1%2Fd2%2Fd3%2Ff1?return_metadata=true"
+
+# Response for file properties:
+{
+"records": [
+  {
+    "path": "d1/d2/d3/f1",
+    "name": "",
+    "type": "file",
+    "creation_time": "2019-06-12T21:27:28-04:00",
+    "modified_time": "2019-06-12T21:27:28-04:00",
+    "changed_time": "2019-06-12T21:27:28-04:00",
+    "accessed_time": "2019-06-12T21:27:28-04:00",
+    "unix_permissions": 644,
+    "owner_id": 54738,
+    "group_id": 30,
+    "size": 200,
+    "hard_links_count": 1,
+    "inode_number": 1233,
+    "bytes_used": 4096,
+    "inode_generation": 214488325,
+    "is_vm_aligned": false,
+    "is_junction": false
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/da8bb06c-823e-11e9-b790-005056acdcb0/files/d1%2Fd2%2Fd3%2Ff1?return_metadata=true"
+  }
+}
+}
+----
+
+=== Creating a symlink to a relative path
+
+You can use the POST request to create a symlink.
+
+----
+
+# The API:
+POST /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/symlink1"  -H 'accept: application/hal+json' -d '{ "target" : "d1/f1"}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "path": "symlink1",
+    "target": "d1/f1"
+  }
+]
+}
+----
+
+=== Retrieving the target of a symlink
+
+You can use the GET request to view the target of a symlink.
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/symlink1?return_metadata=true&fields=target"
+
+# The response:
+{
+"records": [
+  {
+    "path": "symlink1",
+    "target": "d1/f1"
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/54c06ce2-5430-11ea-90f9-005056a73aff/files/symlink1?return_metadata=true&fields=target"
+  }
+}
+}
+----
+
+=== Retrieving the usage information for a file
+
+You can use the GET request to retrieve the bytes used in a file with or without specifying the offset.
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/f1?return_metadata=true&byte_offset=100&length=200"
+
+# The response:
+{
+"records": [
+  {
+    "path": "d1/d2/d3/f1",
+    "type": "file",
+    "creation_time": "2019-06-12T21:27:28-04:00",
+    "modified_time": "2019-06-12T21:27:28-04:00",
+    "changed_time": "2019-06-12T21:27:28-04:00",
+    "accessed_time": "2019-06-12T21:27:28-04:00",
+    "unix_permissions": 644,
+    "owner_id": 54738,
+    "group_id": 30,
+    "size": 200,
+    "hard_links_count": 1,
+    "inode_number": 1233,
+    "bytes_used": 4096,
+    "inode_generation": 214488325,
+    "is_vm_aligned": false,
+    "is_junction": false
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/cb6b139-8d21-11e9-b926-05056aca658/files/f1?return_metadata=true&byte_offset=100&length=200"
+  }
+}
+}
+----
+
+=== Retrieving all information (including analytics) for a directory
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/1ef5d1b2-f9d7-11e9-8043-00505682f860/files/d1?return_metadata=true&fields=**"
+
+# Response for all fields of the directory:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "58a996a2-f9d5-11e9-8043-00505682f860",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/58a996a2-f9d5-11e9-8043-00505682f860"
+        }
+      }
+    },
+    "volume": {
+        "uuid": "1ef5d1b2-f9d7-11e9-8043-00505682f860",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/1ef5d1b2-f9d7-11e9-8043-00505682f860"
+          }
+      }
+    },
+    "path": "d1",
+    "type": "directory",
+    "creation_time": "2019-10-28T23:04:13+00:00",
+    "modified_time": "2019-10-28T23:10:30+00:00",
+    "changed_time": "2019-10-28T23:10:30+00:00",
+    "accessed_time": "2019-10-28T23:10:38+00:00",
+    "unix_permissions": 755,
+    "owner_id": 1002,
+    "group_id": 65533,
+    "size": 4096,
+    "hard_links_count": 5,
+    "inode_number": 96,
+    "is_empty": false,
+    "bytes_used": 4096,
+    "inode_generation": 214514951,
+    "is_vm_aligned": false,
+    "is_junction": false,
+    "analytics": {
+      "file_count": 668,
+      "bytes_used": 209657856,
+      "subdir_count": 18,
+      "by_modified_time": {
+        "bytes_used": {
+          "values": [
+            0,
+            0,
+            0,
+            0,
+            3112960,
+            0,
+            14041088,
+            20545536,
+            0,
+            57933824,
+            61947904,
+            68804608,
+            188686336,
+            0,
+            0,
+            0,
+            20971520,
+            0
+          ],
+          "percentages": [
+            0,
+            0,
+            0,
+            0,
+            1.48,
+            0,
+            6.7,
+            9.8,
+            0,
+            27.63,
+            29.55,
+            32.82,
+            90,
+            0,
+            0,
+            0,
+            10,
+            0
+          ],
+          "labels": [
+            "2019-W42",
+            "2019-W41",
+            "2019-W40",
+            "2019-W39",
+            "2019-W38",
+            "2019-10",
+            "2019-09",
+            "2019-08",
+            "2019-Q4",
+            "2019-Q3",
+            "2019-Q2",
+            "2019-Q1",
+            "2019",
+            "2018",
+            "2017",
+            "2016",
+            "--2015",
+            "unknown"
+          ]
+        }
+      },
+      "by_accessed_time": {
+        "bytes_used": {
+          "values": [
+            102760448,
+            1867776,
+            1245184,
+            2179072,
+            1556480,
+            105873408,
+            9027584,
+            8093696,
+            105873408,
+            23969792,
+            32382976,
+            26460160,
+            188686336,
+            0,
+            0,
+            0,
+            20971520,
+            0
+          ],
+          "percentages": [
+            49.01,
+            0.89,
+            0.59,
+            1.04,
+            0.74,
+            50.5,
+            4.31,
+            3.86,
+            50.5,
+            11.43,
+            15.45,
+            12.62,
+            90,
+            0,
+            0,
+            0,
+            10,
+            0
+          ],
+          "labels": [
+            "2019-W42",
+            "2019-W41",
+            "2019-W40",
+            "2019-W39",
+            "2019-W38",
+            "2019-10",
+            "2019-09",
+            "2019-08",
+            "2019-Q4",
+            "2019-Q3",
+            "2019-Q2",
+            "2019-Q1",
+            "2019",
+            "2018",
+            "2017",
+            "2016",
+            "--2015",
+            "unknown"
+          ]
+        }
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/1ef5d1b2-f9d7-11e9-8043-00505682f860/files/d1?return_metadata=true&fields=**"
+  }
+}
+}
+----
+
+=== Retrieving file system analytics information for a set of histogram buckets
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/d3?type=directory&fields=analytics&analytics.histogram_by_time_labels=2019-Q3,2019-Q2,2019-Q1,2018-Q4"
+
+# Response with analytics data
+{
+"records": [
+  {
+    "path": "d3",
+    "name": ".",
+    "type": "directory",
+    "analytics": {
+      "file_count": 44,
+      "bytes_used": 244240384,
+      "subdir_count": 14,
+      "by_modified_time": {
+        "bytes_used": {
+          "values": [
+            57344,
+            29720576,
+            196141056,
+            57344
+          ],
+          "percentages": [
+            0.02,
+            12.17,
+            80.31,
+            0.02
+          ]
+        }
+      },
+      "by_accessed_time": {
+        "bytes_used": {
+          "values": [
+            69632,
+            244170752,
+            0,
+            0
+          ],
+          "percentages": [
+            0.03,
+            99.97,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3%2F%2E"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3%2F%2E?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d3",
+    "name": "..",
+    "type": "directory",
+    "analytics": {
+      "file_count": 515,
+      "bytes_used": 3034574848,
+      "subdir_count": 23,
+      "by_modified_time": {
+        "bytes_used": {
+          "values": [
+            61440,
+            1756479488,
+            214622208,
+            1191936
+          ],
+          "percentages": [
+            0,
+            57.88,
+            7.07,
+            0.04
+          ]
+        }
+      },
+      "by_accessed_time": {
+        "bytes_used": {
+          "values": [
+            282624,
+            3034292224,
+            0,
+            0
+          ],
+          "percentages": [
+            0.01,
+            99.99,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3%2F%2E%2E"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3%2F%2E%2E?return_metadata=true"
+      }
+    }
+  },
+  {
+    "path": "d3",
+    "name": "d5",
+    "type": "directory",
+    "analytics": {
+      "file_count": 10,
+      "bytes_used": 47648768,
+      "subdir_count": 4,
+      "by_modified_time": {
+        "bytes_used": {
+          "values": [
+            0,
+            29638656,
+            0,
+            0
+          ],
+          "percentages": [
+            0,
+            62.20,
+            0,
+            0
+          ]
+        }
+      },
+      "by_accessed_time": {
+        "bytes_used": {
+          "values": [
+            0,
+            47648768,
+            0,
+            0
+          ],
+          "percentages": [
+            0,
+            100,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3%2Fd5"
+      },
+      "metadata": {
+        "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3%2Fd5?return_metadata=true"
+      }
+    }
+  }
+],
+"num_records": 3,
+"analytics": {
+  "by_modified_time": {
+    "bytes_used": {
+      "labels": [
+        "2019-Q3",
+        "2019-Q2",
+        "2019-Q1",
+        "2018-Q4"
+      ]
+    }
+  },
+  "by_accessed_time": {
+    "bytes_used": {
+      "labels": [
+        "2019-Q3",
+        "2019-Q2",
+        "2019-Q1",
+        "2018-Q4"
+      ]
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/cb6b1b39-8d21-11e9-b926-005056aca658/files/d3?type=directory&fields=analytics&analytics.histogram_by_time_labels=2019-Q3,2019-Q2,2019-Q1,2018-Q4"
+  }
+}
+}
+----
+
+=== Identifying the largest subdirectories
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/1ef5d1b2-f9d7-11e9-8043-00505682f860/files/d1?fields=analytics.bytes_used&type=directory&order_by=analytics.bytes_used%20desc"
+
+# Response with the largest subdirectories sorted by their usage:
+{
+"records": [
+  {
+    "path": "d1",
+    "name": "..",
+    "type": "directory",
+    "analytics": {
+      "bytes_used": 56623104
+    }
+  },
+  {
+    "path": "d1",
+    "name": ".",
+    "type": "directory",
+    "analytics": {
+      "bytes_used": 35651584
+    }
+  },
+  {
+    "path": "d1",
+    "name": "biggest",
+    "type": "directory",
+    "analytics": {
+      "bytes_used": 17825792
+    }
+  },
+  {
+    "path": "d1",
+    "name": "bigger",
+    "type": "directory",
+    "analytics": {
+      "bytes_used": 10485760
+    }
+  },
+  {
+    "path": "d1",
+    "name": "big",
+    "type": "directory",
+    "analytics": {
+      "bytes_used": 5242880
+    }
+  }
+],
+"num_records": 5,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/1ef5d1b2-f9d7-11e9-8043-00505682f860/files/d1?fields=analytics.bytes_used&type=directory&order_by=analytics.bytes_used%20desc"
+  }
+}
+}
+----
+
+=== Assigning a QoS policy to a file
+
+You can use the PATCH request to assign a QoS policy to a file.
+
+----
+
+# The API:
+PATCH /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Ffile1" -d '{ "qos_policy": { "name": "policy" }}'
+
+# The response:
+{}
+----
+
+=== Retrieving QoS information for a file
+
+You can use the GET request for all fields with return_metadata="true" to retrieve QoS information for the file.
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/file?return_metadata=true&fields=**"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+     "uuid": "42ee3002-67dd-11ea-8508-005056a7b8ac"
+    },
+    "volume": {
+      "uuid": "c05eb66a-685f-11ea-8508-005056a7b8ac"
+    },
+    "path": "file",
+    "type": "lun",
+    "creation_time": "2020-03-17T10:58:40-04:00",
+    "modified_time": "2020-03-24T18:15:40-04:00",
+    "changed_time": "2020-03-24T18:15:40-04:00",
+    "accessed_time": "2020-03-24T18:15:40-04:00",
+    "unix_permissions": 644,
+    "owner_id": 0,
+    "group_id": 0,
+    "size": 1048576,
+    "hard_links_count": 2,
+    "inode_number": 96,
+    "bytes_used": 1056768,
+    "inode_generation": 219748425,
+    "is_vm_aligned": false,
+    "is_junction": false,
+    "is_snapshot": false,
+    "qos_policy": {
+      "name": "pg1",
+      "uuid": "00725264-688f-11ea-8f10-005056a7b8ac"
+    }
+  }
+] ,
+"num_records": 1
+}
+----
+
+=== Deleting an entire directory
+
+You can use the DELETE request to remove an entire directory recursively.
+
+----
+
+# The API:
+DELETE /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Fdirectory2?recurse=true"
+
+# The response:
+{
+"job": {
+  "uuid": "27d287e8-fcd4-11e9-b8a4-005056a7b97b",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/27d287e8-fcd4-11e9-b8a4-005056a7b97b"
+    }
+  }
+}
+}
+----
+
+=== Deleting an entire directory with specified throttling threshold
+
+You can specify the maximum number of directory delete operations per second when removing an entire directory recursively.
+
+----
+
+# The API:
+DELETE /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Fdirectory2?recurse=true&throttle_deletion=100"
+
+# The response:
+{
+"job": {
+  "uuid": "27d287e8-fcd4-11e9-b8a4-005056a7b97b",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/27d287e8-fcd4-11e9-b8a4-005056a7b97b"
+    }
+  }
+}
+}
+----
+
+=== Deleting an empty directory
+
+You can use the DELETE request to remove an empty directory.
+
+----
+
+# The API:
+DELETE /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Fdirectory2"
+
+# The response:
+{}
+----
+
+=== Deleting a file
+
+You can use the DELETE request to remove a file.
+
+----
+
+# The API:
+DELETE /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Ffile2"
+
+# The response:
+{}
+----
+
+=== Renaming a file
+
+You can use the PATCH request to rename a file.
+
+----
+
+# The API:
+PATCH /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Fdirectory2%2Ffile1" -d '{ "path": "directory1/file2" }'
+
+# The response:
+{}
+----
+
+=== File truncating
+
+You can use the PATCH request to change the size of a file.
+
+----
+
+# The API:
+PATCH /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/abc.txt" -d '{ "size":100 }'
+
+# The response:
+{}
+----
+
+=== Renaming a directory
+
+You can use the PATCH request to rename a directory.
+
+----
+
+# The API:
+PATCH /api/storage/volumes/{volume.uuid}/files/{path}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/volumes/cb6b1b39-8d21-11e9-b926-05056aca658/files/directory1%2Fdirectory2" -d '{ "path": "d3/d4" }'
+
+# The response:
+{}
+----
+
+

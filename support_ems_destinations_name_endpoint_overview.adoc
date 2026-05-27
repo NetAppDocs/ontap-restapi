@@ -1,0 +1,164 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_destinations_name_endpoint_overview.html'
+summary: 'Manage an event destination instance'
+---
+
+= Manage an event destination instance
+
+
+
+== Overview
+
+Manages a specific instance of a destination. There are limits to the information that you can modify after a destination is created. For example, you cannot change a destination's type, but you can modify the underlying details of the type.
+
+NOTE: The system defines default destinations that cannot be removed or modified. These destinations are specified by setting the "system_defined" field to "true".
+
+See the documentation for <</docs/support/support_ems_destinations,/support/ems/destinations>> for details on the various properties in a destination.
+
+== Connectivity Test
+
+Optionally, you can request the connectivity object by specifically requesting the object in the fields query. This will perform an additional test to determine the state of the destination. The state response can include one of the following values:
+
+* success
+* fail
+* not_supported
+
+=== success
+
+If the connectivity object indicates a state of 'success', then the destination check passed.
+
+NOTE: Currently, only the 'rest_api' destination type is supported. A successful result indicates that the server received the event.
+
+=== fail
+
+If the connectivity object indicates a state of 'fail', then the destination check has not passed. The object will contain a 'error' object with additional information regarding the failure.
+
+=== not_supported
+
+If the connectivity object indicates a state of 'not_supported', then the destination check is not available for the indicated destination type. This is not considered a failure condition.
+
+NOTE: Currently, only the 'rest_api' destination type is supported for connectivity testing.
+
+== Examples
+
+=== Retrieving a specific destination instance
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/destinations/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/destinations/snmp-traphost" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"name": "snmp-traphost",
+"type": "snmp",
+"destination": "",
+"filters": [
+  {
+    "name": "default-trap-events",
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/filters/default-trap-events"
+      }
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/support/ems/destinations/snmp-traphost"
+  }
+}
+}
+----
+
+=== Check whether a destination passes connectivity tests
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/destinations/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/destinations/rest-api-destination?fields=name,connectivity.*" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"name": "rest-api-destination",
+"connectivity": {
+  "state": "fail",
+  "errors": [
+    {
+      "message": {
+        "message": "Cannot reach host mail@mail.com.",
+        "code": "4",
+        "arguments": [
+          {
+            "code": "5",
+            "message": "mail@mail.com"
+          }
+        ],
+      },
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ]
+},
+"_links": {
+  "self": {
+    "href": "/api/support/ems/destinations/rest-api-destination?fields=name,connectivity.*"
+  }
+}
+}
+----
+
+=== Updating an existing destination (change of email address)
+
+[,json]
+----
+
+# The API:
+PATCH /api/support/ems/destinations/{name}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/destinations/test-destination" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_destinations_patch.txt"
+test_ems_destinations_patch.txt(body):
+{
+"destination": "support@mycompany.com"
+}
+
+# The response:
+200 OK
+----
+
+=== Deleting an existing destination
+
+[,json]
+----
+
+# The API:
+DELETE /api/support/ems/destinations/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/support/ems/destinations/test-destination" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+----
+
+

@@ -1,0 +1,104 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_cluster_nis_endpoint_overview.html'
+summary: 'Manage NIS configuration'
+---
+
+= Manage NIS configuration
+
+
+
+== Overview
+
+NIS servers are used to authenticate user and client computers. NIS domain name and NIS server information is required to configure NIS. This API retrieves and manages NIS server configurations.
+
+== Examples
+
+=== Retrieving cluster NIS information
+
+The cluster NIS GET request retrieves the NIS configuration of the cluster.
+
+The following example shows how a GET request is used to retrieve the cluster NIS configuration:
+
+----
+
+# The API:
+/security/authentication/cluster/nis
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/authentication/cluster/nis" -H "accept: application/hal+json"
+
+# The response:
+{
+"domain": "domainA.example.com",
+"servers": [
+  "10.10.10.10",
+  "example.com"
+],
+"bound_servers": [
+  "10.10.10.10"
+]
+}
+----
+
+=== Creating the cluster NIS configuration
+
+The cluster NIS POST request creates a NIS configuration for the cluster.
+
+The following example shows how a POST request is used to create a cluster NIS configuration:
+
+----
+
+# The API:
+/security/authentication/cluster/nis
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/authentication/cluster/nis" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"domain\": \"domainA.example.com\", \"servers\": [ \"10.10.10.10\",\"example.com\" ]}"
+----
+
+=== Updating the cluster NIS configuration
+
+The cluster NIS PATCH request updates the NIS configuration of the cluster.
+
+The following example shows how to update the domain:
+
+----
+
+# The API:
+/security/authentication/cluster/nis
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/authentication/cluster/nis" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"domain\": \"domainC.example.com\", \"servers\": [ \"13.13.13.13\" ]}"
+----
+
+The following example shows how to update the server:
+
+----
+
+# The API:
+/security/authentication/cluster/nis
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/authentication/cluster/nis" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"servers\": [ \"14.14.14.14\" ]}"
+----
+
+== Deleting the cluster NIS configuration
+
+The cluster NIS DELETE request deletes the NIS configuration of the cluster.
+
+The following example shows how a DELETE request is used to delete the cluster NIS configuration:
+
+----
+
+# The API:
+/security/authentication/cluster/nis
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/authentication/cluster/nis" -H "accept: application/hal+json"
+----
+
+'''
+
+

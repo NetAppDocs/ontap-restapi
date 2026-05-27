@@ -1,0 +1,123 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_cache_host_settings_endpoint_overview.html'
+summary: 'Manage host cache settings'
+---
+
+= Manage host cache settings
+
+
+
+== Overview
+
+This API is used to retrieve and manage hosts cache settings.
+
+== Examples
+
+=== Retrieving hosts cache settings
+
+'''
+
+The following examples shows how to use the cache host settings GET endpoint to retrieve host cache settings.
+
+----
+
+# The API:
+GET /api/name-services/cache/host/settings
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/cache/host/settings?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "8a1a8730-2036-11ec-8457-005056bbcfdb",
+    "svm": {
+      "uuid": "8a1a8730-2036-11ec-8457-005056bbcfdb",
+      "name": "vs43"
+    },
+    "enabled": true,
+    "negative_cache_enabled": true,
+    "ttl": "P1D",
+    "negative_ttl": "PT1M",
+    "dns_ttl_enabled": true
+  },
+  {
+    "uuid": "951e8676-2035-11ec-bfe2-005056bb6bef",
+    "enabled": true,
+    "negative_cache_enabled": true,
+    "ttl": "P1D",
+    "negative_ttl": "PT1M",
+    "dns_ttl_enabled": true
+  },
+  {
+    "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+    "svm": {
+      "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+      "name": "vs34"
+    },
+    "enabled": true,
+    "negative_cache_enabled": true,
+    "ttl": "P1D",
+    "negative_ttl": "PT1M",
+    "dns_ttl_enabled": true
+  }
+],
+"num_records": 3
+}
+----
+
+'''
+
+=== Retrieving host cache settings for a given SVM
+
+'''
+
+The following examples shows how to use the cache hosts settings GET endpoint to retrieve hosts cache settings for a specific SVM.
+
+----
+
+# The API:
+GET /api/name-services/cache/host/settings/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/cache/host/settings/dc458b2f-2035-11ec-bfe2-005056bb6bef" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+"svm": {
+  "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+  "name": "vs34"
+},
+"enabled": false,
+"negative_cache_enabled": true,
+"ttl": "P1D",
+"negative_ttl": "PT1M",
+"dns_ttl_enabled": true
+}
+----
+
+'''
+
+=== Updating a hosts cache setting
+
+'''
+
+The following example shows how to use the cache host settings PATCH endpoint to update a host cache setting.
+
+----
+
+# The API:
+PATCH /api/name-services/cache/host/settings/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/cache/host/settings/02c9e252-41be-11e9-81d5-00a0986138f9" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"ttl\": \"PT2H\", \"negative_ttl\": \"PT2M\" }"
+----
+
+'''
+
+

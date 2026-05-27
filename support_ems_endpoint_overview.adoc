@@ -1,0 +1,67 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_endpoint_overview.html'
+summary: 'Manage EMS configuration'
+---
+
+= Manage EMS configuration
+
+
+
+== Overview
+
+This endpoint is used to configure general parameters of the Event Management System (EMS).
+
+== Examples
+
+=== Configuring the system-wide email parameters
+
+[,json]
+----
+
+# The API:
+PATCH /support/ems
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/ems" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_config_patch.txt"
+test_ems_config_patch.txt(body):
+{
+"mail_from": "administrator@mycompany.com",
+"mail_server": "mycompany.com",
+"mail_server_user": "smtp"
+}
+
+# The response:
+200 OK
+----
+
+=== Retrieving the EMS configuration
+
+The following example retrieves EMS configuration for the cluster.
+
+[,json]
+----
+
+# The API:
+GET /support/ems
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+{
+"mail_from": "admin@localhost",
+"mail_server": "localhost",
+"pubsub_enabled": true,
+"_links": {
+  "self": {
+    "href": "/api/support/ems"
+  }
+}
+}
+----
+
+

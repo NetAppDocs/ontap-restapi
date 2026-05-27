@@ -1,0 +1,275 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-auto-update.html'
+summary: 'Retrieve the current status of an automatic update feature'
+---
+
+= Retrieve the current status of an automatic update feature
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/auto-update`#
+
+*Introduced In:* 9.10
+
+Retrieves the current status of the automatic update feature and the End User License Agreement (EULA).
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|enabled
+|boolean
+a|Flag indicating feature state.
+
+
+|eula
+|link:#eula[eula]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    }
+  },
+  "enabled": 1,
+  "eula": {
+    "accepted": 1,
+    "accepted_ip_address": "192.168.1.125",
+    "accepted_timestamp": "2020-12-01 09:12:23 -0400",
+    "user_id_accepted": "admin"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self]
+[.api-collapsible-fifth-title]
+self
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#self[self]
+a|
+
+|===
+
+
+[#eula]
+[.api-collapsible-fifth-title]
+eula
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|accepted
+|boolean
+a|Flag indicating the End User License Agreement (EULA) acceptance. When the feature is enabled, it is assumed that the EULA is accepted.
+
+
+|accepted_ip_address
+|string
+a|IP Address from where the EULA was accepted.
+
+
+|accepted_timestamp
+|string
+a|Date and time when the EULA was accepted.
+
+
+|user_id_accepted
+|string
+a|User ID that provided the EULA acceptance.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

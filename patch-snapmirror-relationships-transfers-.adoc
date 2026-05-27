@@ -1,0 +1,575 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-snapmirror-relationships-transfers-.html'
+summary: 'Cancel an ongoing SnapMirror transfer'
+---
+
+= Cancel an ongoing SnapMirror transfer
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/snapmirror/relationships/{relationship.uuid}/transfers/{uuid}`#
+
+*Introduced In:* 9.6
+
+Aborts an ongoing SnapMirror transfer. This operation is applicable on asynchronous SnapMirror relationships.
+
+== Related ONTAP commands
+
+* `snapmirror abort`
+
+== Example
+
+----
+PATCH "/api/snapmirror/relationships/293baa53-e63d-11e8-bff1-005056a793dd/transfers/293baa53-e63d-11e8-bff1-005056a793dd" '{"state":"aborted"}'
+----
+
+== Learn more
+
+* link:snapmirror_relationships_relationship.uuid_transfers_endpoint_overview.html[DOC /snapmirror/relationships/{relationship.uuid}/transfers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|relationship.uuid
+|string
+|path
+|True
+a|SnapMirror relationship UUID
+
+
+|uuid
+|string
+|path
+|True
+a|SnapMirror transfer UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_transferred
+|integer
+a|Bytes transferred
+
+
+|checkpoint_size
+|integer
+a|Amount of data transferred in bytes as recorded in the restart checkpoint.
+
+
+|end_time
+|string
+a|End time of the transfer.
+
+
+|error_info
+|link:#error_info[error_info]
+a|Error information for the transfer.
+
+
+|last_updated_time
+|string
+a|Last updated time of the bytes transferred in an active transfer.
+
+
+|network_compression_ratio
+|string
+a|Specifies the compression ratio achieved for the data sent over the wire with network compression enabled. This property is only valid for active transfers.
+
+
+|on_demand_attrs
+|string
+a|Specifies whether or not an on-demand restore is being carried out. This is only supported for the transfer of restore relationships for entire volumes from the object store. A value for read_write_with_user_data_pull should be provided to start an on-demand restore. A file restore from the object store does not support this option.
+
+
+|relationship
+|link:#relationship[relationship]
+a|
+
+|snapshot
+|string
+a|Name of snapshot being transferred.
+
+
+|state
+|string
+a|Status of the transfer. Set PATCH state to "aborted" to abort the transfer. Set PATCH state to "hard_aborted" to abort the transfer and discard the restart checkpoint. To find "queued" transfers refer to relationships GET API.
+
+
+|total_duration
+|string
+a|Elapsed transfer time.
+
+
+|uuid
+|string
+a|Unique identifier of the SnapMirror transfer.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "bytes_transferred": 0,
+  "checkpoint_size": 0,
+  "end_time": "2020-12-02 18:36:19 -0800",
+  "error_info": {
+    "code": 6620046,
+    "message": "Transfer aborted"
+  },
+  "last_updated_time": "2023-09-15 16:58:39 -0700",
+  "network_compression_ratio": 61,
+  "on_demand_attrs": "read_write_with_user_data_pull",
+  "relationship": {
+    "destination": {
+      "cluster": {
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "luns": {
+        "name": "/vol/volume1/lun1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "path": "svm1:volume1",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    },
+    "uuid": "d2d7ceea-ab52-11e8-855e-00505682a4c7"
+  },
+  "snapshot": "string",
+  "state": "string",
+  "storage_efficiency_enabled": true,
+  "total_duration": "PT28M41S",
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13303848
+| Abort of sync SnapMirror is not allowed
+
+| 13303849
+| SnapMirror transfer state is invalid
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#error_info]
+[.api-collapsible-fifth-title]
+error_info
+
+Error information for the transfer.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#files]
+[.api-collapsible-fifth-title]
+files
+
+Specifies a file or LUN consisting of a source_path and an optional destination_path. If not specified, the destination_path is the same as the source_path. File restore is not supported if the source_path or destination_path contains commas in its directory or file name.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination_path
+|string
+a|
+
+|source_path
+|string
+a|
+
+|===
+
+
+[#options]
+[.api-collapsible-fifth-title]
+options
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#consistency_group_volumes]
+[.api-collapsible-fifth-title]
+consistency_group_volumes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume.
+
+
+|===
+
+
+[#luns]
+[.api-collapsible-fifth-title]
+luns
+
+Optional property for a SnapMirror endpoint. Specifies the list of source LUNs and optionally list of destination LUNs during SnapMirror Consistency Group LUN restore operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#snapmirror_endpoint]
+[.api-collapsible-fifth-title]
+snapmirror_endpoint
+
+Endpoint of a SnapMirror relationship. For a GET request, the property "cluster" is populated when the endpoint is on a remote cluster. A POST request to create the destination SVM endpoint or to establish an SVM DR relationship must have the property "cluster" populated with the remote cluster details. A POST request to create the destination FlexVol volume, FlexGroup volume, Consistency Group, ONTAP S3 bucket and NON-ONTAP object-store endpoints can optionally specify the "cluster" property when the source SVM and the destination SVM are peered. A POST request to establish a SnapMirror relationship between the source endpoint and destination endpoint and when the source SVM and the destination SVM are not peered, must specify the "cluster" property for the remote endpoint.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|luns
+|link:#luns[luns]
+a|Optional property for a SnapMirror endpoint. Specifies the list of source LUNs and optionally list of destination LUNs during SnapMirror Consistency Group LUN restore operation.
+
+
+|path
+|string
+a|ONTAP FlexVol/FlexGroup - svm1:volume1
+ONTAP SVM               - svm1:
+ONTAP Consistency Group - svm1:/cg/cg_name
+ONTAP S3                - svm1:/bucket/bucket1
+NON-ONTAP               - objstore1:/objstore
+
+* example: svm1:volume1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#relationship]
+[.api-collapsible-fifth-title]
+relationship
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#snapmirror_endpoint[snapmirror_endpoint]
+a|Endpoint of a SnapMirror relationship. For a GET request, the property "cluster" is populated when the endpoint is on a remote cluster. A POST request to create the destination SVM endpoint or to establish an SVM DR relationship must have the property "cluster" populated with the remote cluster details. A POST request to create the destination FlexVol volume, FlexGroup volume, Consistency Group, ONTAP S3 bucket and NON-ONTAP object-store endpoints can optionally specify the "cluster" property when the source SVM and the destination SVM are peered. A POST request to establish a SnapMirror relationship between the source endpoint and destination endpoint and when the source SVM and the destination SVM are not peered, must specify the "cluster" property for the remote endpoint.
+
+* Introduced in: 9.6
+
+
+|restore
+|boolean
+a|Is the relationship for restore?
+
+
+|uuid
+|string
+a|Unique identifier of the SnapMirror relationship.
+
+
+|===
+
+
+[#snapmirror_transfer]
+[.api-collapsible-fifth-title]
+snapmirror_transfer
+
+SnapMirror transfer information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bytes_transferred
+|integer
+a|Bytes transferred
+
+
+|checkpoint_size
+|integer
+a|Amount of data transferred in bytes as recorded in the restart checkpoint.
+
+
+|end_time
+|string
+a|End time of the transfer.
+
+
+|error_info
+|link:#error_info[error_info]
+a|Error information for the transfer.
+
+
+|last_updated_time
+|string
+a|Last updated time of the bytes transferred in an active transfer.
+
+
+|network_compression_ratio
+|string
+a|Specifies the compression ratio achieved for the data sent over the wire with network compression enabled. This property is only valid for active transfers.
+
+
+|on_demand_attrs
+|string
+a|Specifies whether or not an on-demand restore is being carried out. This is only supported for the transfer of restore relationships for entire volumes from the object store. A value for read_write_with_user_data_pull should be provided to start an on-demand restore. A file restore from the object store does not support this option.
+
+
+|relationship
+|link:#relationship[relationship]
+a|
+
+|snapshot
+|string
+a|Name of snapshot being transferred.
+
+
+|state
+|string
+a|Status of the transfer. Set PATCH state to "aborted" to abort the transfer. Set PATCH state to "hard_aborted" to abort the transfer and discard the restart checkpoint. To find "queued" transfers refer to relationships GET API.
+
+
+|total_duration
+|string
+a|Elapsed transfer time.
+
+
+|uuid
+|string
+a|Unique identifier of the SnapMirror transfer.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

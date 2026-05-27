@@ -1,0 +1,671 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_vscan_endpoint_overview.html'
+summary: 'View and create Vscan configuration'
+---
+
+= View and create Vscan configuration
+
+
+
+== Overview
+
+Use Vscan to protect data from being compromised by viruses or other malicious code. Vscan combines best-in-class third party antivirus software with ONTAP features that give you the flexibility you need to control which files get scanned and when. Storage systems offload scanning operations to external servers hosting antivirus software from third party vendors. An Antivirus Connector on the external server handles communications between the storage system and the antivirus software. Vscan is not supported on continuous availability (CA) shares.
+
+== Examples
+
+=== Retrieving all of the Vscan configurations
+
+----
+
+# The API:
+/api/protocols/vscan
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan?fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "03ce5c36-f269-11e8-8852-0050568e5298",
+      "name": "vs1"
+    },
+    "enabled": true,
+    "scanner_pools": [
+      {
+        "name": "scanner-1",
+        "servers": [
+          "1.1.1.1",
+          "10.72.204.27"
+        ],
+        "privileged_users": [
+          "cifs\\u1",
+          "cifs\\u2"
+        ],
+        "role": "primary",
+        "cluster": {
+          "name": "Cluster1",
+          "uuid": "0228714d-f268-11e8-8851-0050568e5298"
+        }
+      },
+      {
+        "name": "scanner-2",
+        "servers": [
+          "1.1.1.1",
+          "10.72.204.27"
+        ],
+        "privileged_users": [
+          "cifs\\u1",
+          "cifs\\u2"
+        ],
+        "role": "primary",
+        "cluster": {
+          "name": "Cluster1",
+          "uuid": "0228714d-f268-11e8-8851-0050568e5298"
+        }
+      }
+    ],
+    "on_access_policies": [
+      {
+        "name": "default_CIFS",
+        "vsName": "vs1",
+        "enabled": true,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 2147483648,
+          "include_extensions": [
+            "*"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        },
+        "protocol": "CIFS",
+        "owner": "cluster"
+      },
+      {
+        "name": "on-access-test1",
+        "vsName": "vs1",
+        "enabled": false,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 10000,
+          "exclude_paths": [
+            "\\dir"
+          ],
+          "include_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "exclude_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        },
+        "protocol": "CIFS",
+        "owner": "vserver"
+      },
+      {
+        "name": "on-access-test2",
+        "vsName": "vs1",
+        "enabled": false,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 10000,
+          "exclude_paths": [
+            "\\dir"
+          ],
+          "include_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "exclude_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        },
+        "protocol": "CIFS",
+        "owner": "vserver"
+      }
+    ],
+    "on_demand_policies": [
+      {
+        "name": "task-1",
+        "scan_paths": [
+          "/vol1"
+        ],
+        "log_path": "/vol1",
+        "scope": {
+          "max_file_size": 10000,
+          "exclude_paths": [
+            "/vol1"
+          ],
+          "include_extensions": [
+            "vmdk",
+            "mp*"
+          ],
+          "exclude_extensions": [
+            "mp3",
+            "mp4"
+          ],
+          "scan_without_extension": true
+        }
+      },
+      {
+        "name": "task-2",
+        "scan_paths": [
+          "/vol1"
+        ],
+        "log_path": "/vol2",
+        "scope": {
+          "max_file_size": 10000,
+          "exclude_paths": [
+            "/vol2"
+          ],
+          "include_extensions": [
+            "vmdk",
+            "mp*"
+          ],
+          "exclude_extensions": [
+            "mp3",
+            "mp4"
+          ],
+          "scan_without_extension": true
+        }
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "24c2567a-f269-11e8-8852-0050568e5298",
+      "name": "vs2"
+    },
+    "enabled": false,
+    "scanner_pools": [
+      {
+        "name": "sp2",
+        "servers": [
+          "1.1.1.1"
+        ],
+        "privileged_users": [
+          "cifs\\u1"
+        ],
+        "role": "idle"
+      }
+    ],
+    "on_access_policies": [
+      {
+        "name": "default_CIFS",
+        "vsName": "vs2",
+        "enabled": true,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 2147483648,
+          "include_extensions": [
+            "*"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        }
+      },
+      {
+        "name": "ap1",
+        "vsName": "vs2",
+        "enabled": false,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 2147483648,
+          "include_extensions": [
+            "*"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        }
+      }
+    ],
+    "on_demand_policies": [
+      {
+        "name": "t1",
+        "scan_paths": [
+          "/vol1"
+        ],
+        "log_path": "/vol1",
+        "scope": {
+          "max_file_size": 10737418240,
+          "include_extensions": [
+            "*"
+          ],
+          "scan_without_extension": true
+        }
+      }
+    ]
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving all Vscan configurations for a particular SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/24c2567a-f269-11e8-8852-0050568e5298?fields=*" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "24c2567a-f269-11e8-8852-0050568e5298",
+  "name": "vs2"
+},
+"enabled": false,
+"scanner_pools": [
+  {
+    "name": "sp2",
+    "servers": [
+      "1.1.1.1"
+    ],
+    "privileged_users": [
+      "cifs\\u1"
+    ],
+    "role": "idle"
+  }
+],
+"on_access_policies": [
+  {
+    "name": "default_CIFS",
+    "vsName": "vs2",
+    "enabled": true,
+    "mandatory": true,
+    "scope": {
+      "max_file_size": 2147483648,
+      "include_extensions": [
+        "*"
+      ],
+      "scan_without_extension": true,
+      "scan_readonly_volumes": false,
+      "only_execute_access": false
+    },
+    "protocol": "CIFS",
+    "owner": "cluster"
+  },
+  {
+    "name": "ap1",
+    "vsName": "vs2",
+    "enabled": false,
+    "mandatory": true,
+    "scope": {
+      "max_file_size": 2147483648,
+      "include_extensions": [
+        "*"
+      ],
+      "scan_without_extension": true,
+      "scan_readonly_volumes": false,
+      "only_execute_access": false
+    },
+    "protocol": "CIFS",
+    "owner": "vserver"
+  }
+],
+"on_demand_policies": [
+  {
+    "name": "t1",
+    "scan_paths": [
+      "/vol1"
+    ],
+    "log_path": "/vol1",
+    "scope": {
+      "max_file_size": 10737418240,
+      "include_extensions": [
+        "*"
+      ],
+      "scan_without_extension": true
+    }
+  }
+]
+}
+----
+
+=== Creating a Vscan configuration
+
+----
+
+# The API:
+/api/protocols/vscan
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"enabled\": true, \"on_access_policies\": [ { \"enabled\": true, \"mandatory\": true, \"name\": \"on-access-test\", \"scope\": { \"exclude_extensions\": [ \"mp*\", \"txt\" ], \"exclude_paths\": [ \"\\\\vol\" ], \"include_extensions\": [ \"mp*\", \"txt\" ], \"max_file_size\": 21474, \"only_execute_access\": false, \"scan_readonly_volumes\": false, \"scan_without_extension\": true } } ], \"on_demand_policies\": [ { \"log_path\": \"/vol\", \"name\": \"task-1\", \"scan_paths\": [ \"/vol\" ], \"schedule\": { \"name\": \"daily\", \"uuid\": \"d4984822-17b7-11e9-b450-0050568ecd85\" }, \"scope\": { \"exclude_extensions\": [ \"mp3\", \"mp4\" ], \"exclude_paths\": [ \"/vol\" ], \"include_extensions\": [ \"vmdk\", \"mp*\" ], \"max_file_size\": 10737, \"scan_without_extension\": true } } ], \"scanner_pools\": [ { \"cluster\": { \"name\": \"Cluster1\", \"uuid\": \"ab746d77-17b7-11e9-b450-0050568ecd85\" }, \"name\": \"scanner-1\", \"privileged_users\": [ \"cifs\\\\u1\", \"cifs\\\\u2\" ], \"role\": \"primary\", \"servers\": [ \"1.1.1.1\", \"10.72.204.27\" ] } ], \"svm\": { \"name\": \"vs1\", \"uuid\": \"b103be27-17b8-11e9-b451-0050568ecd85\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+    "uuid": "b103be27-17b8-11e9-b451-0050568ecd85",
+    "name": "vs1"
+    },
+    "enabled": true,
+    "scanner_pools": [
+      {
+        "name": "scanner-1",
+        "servers": [
+          "1.1.1.1",
+          "10.72.204.27"
+        ],
+        "privileged_users": [
+          "cifs\\u1",
+          "cifs\\u2"
+        ],
+        "role": "primary",
+        "cluster": {
+          "name": "Cluster1",
+          "uuid": "ab746d77-17b7-11e9-b450-0050568ecd85"
+        }
+      }
+    ],
+    "on_access_policies": [
+      {
+        "name": "on-access-test",
+        "enabled": true,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 21474,
+          "exclude_paths": [
+            "\\vol"
+          ],
+          "include_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "exclude_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        }
+      }
+    ],
+    "on_demand_policies": [
+      {
+        "name": "task-1",
+        "scan_paths": [
+          "/vol"
+        ],
+        "log_path": "/vol",
+        "schedule": {
+          "uuid": "d4984822-17b7-11e9-b450-0050568ecd85",
+          "name": "daily"
+        },
+        "scope": {
+          "max_file_size": 10737,
+          "exclude_paths": [
+            "//"
+          ],
+          "include_extensions": [
+            "vmdk",
+            "mp*"
+          ],
+          "exclude_extensions": [
+            "mp3",
+            "mp4"
+          ],
+          "scan_without_extension": true
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Creating multiple Vscan scanner-pools for the specified SVM
+
+----
+
+# The API:
+/api/protocols/vscan
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"scanner_pools\": [ { \"cluster\": { \"name\": \"Cluster1\", \"uuid\": \"ab746d77-17b7-11e9-b450-0050568ecd85\" }, \"name\": \"scanner-1\", \"privileged_users\": [ \"cifs\\\\u1\", \"cifs\\\\u2\" ], \"role\": \"primary\", \"servers\": [ \"1.1.1.1\", \"10.72.204.27\" ] }, { \"cluster\": { \"name\": \"Cluster1\", \"uuid\": \"ab746d77-17b7-11e9-b450-0050568ecd85\" }, \"name\": \"scanner-2\", \"privileged_users\": [ \"cifs\\\\u3\", \"cifs\\\\u4\" ], \"role\": \"primary\", \"servers\": [ \"1.1.1.5\", \"10.72.3.27\" ] } ], \"svm\": { \"name\": \"vs1\", \"uuid\": \"b103be27-17b8-11e9-b451-0050568ecd85\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+    "uuid": "b103be27-17b8-11e9-b451-0050568ecd85",
+    "name": "vs1"
+    },
+    "scanner_pools": [
+      {
+        "name": "scanner-1",
+        "servers": [
+          "1.1.1.1",
+          "10.72.204.27"
+        ],
+        "privileged_users": [
+          "cifs\\u1",
+          "cifs\\u2"
+        ],
+        "role": "primary",
+        "cluster": {
+          "name": "Cluster1",
+          "uuid": "ab746d77-17b7-11e9-b450-0050568ecd85"
+        }
+      },
+      {
+        "name": "scanner-2",
+        "servers": [
+          "1.1.1.5",
+          "10.72.3.27"
+        ],
+        "privileged_users": [
+          "cifs\\u3",
+          "cifs\\u4"
+        ],
+        "role": "primary",
+        "cluster": {
+          "name": "Cluster1",
+          "uuid": "ab746d77-17b7-11e9-b450-0050568ecd85"
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Creating multiple Vscan On-access policies for a specified SVM
+
+----
+
+# The API:
+/api/protocols/vscan
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"on_access_policies\": [ { \"enabled\": false, \"mandatory\": true, \"name\": \"on-access-test11\", \"scope\": { \"exclude_extensions\": [ \"mp*\", \"txt\" ], \"exclude_paths\": [ \"\\\\vol\" ], \"include_extensions\": [ \"mp*\", \"txt\" ], \"max_file_size\": 214748, \"only_execute_access\": false, \"scan_readonly_volumes\": false, \"scan_without_extension\": true } }, { \"enabled\": false, \"mandatory\": true, \"name\": \"on-access-test10\", \"scope\": { \"exclude_extensions\": [ \"mp*\", \"txt\" ], \"exclude_paths\": [ \"\\\\vol\" ], \"include_extensions\": [ \"mp*\", \"txt\" ], \"max_file_size\": 21474, \"only_execute_access\": false, \"scan_readonly_volumes\": false, \"scan_without_extension\": true } } ], \"svm\": { \"name\": \"vs1\", \"uuid\": \"b103be27-17b8-11e9-b451-0050568ecd85\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "b103be27-17b8-11e9-b451-0050568ecd85",
+      "name": "vs1"
+    },
+    "on_access_policies": [
+      {
+        "name": "on-access-test11",
+        "enabled": false,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 214748,
+          "exclude_paths": [
+            "\\vol"
+          ],
+          "include_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "exclude_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        }
+      },
+      {
+        "name": "on-access-test10",
+        "enabled": false,
+        "mandatory": true,
+        "scope": {
+          "max_file_size": 21474,
+          "exclude_paths": [
+            "\\vol"
+          ],
+          "include_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "exclude_extensions": [
+            "mp*",
+            "txt"
+          ],
+          "scan_without_extension": true,
+          "scan_readonly_volumes": false,
+          "only_execute_access": false
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Creating multiple Vscan On-demand policies for a specified SVM
+
+----
+
+# The API:
+/api/protocols/vscan
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"on_demand_policies\": [ { \"log_path\": \"/vol\", \"name\": \"task-1\", \"scan_paths\": [ \"/vol\" ], \"schedule\": { \"name\": \"daily\", \"uuid\": \"d4984822-17b7-11e9-b450-0050568ecd85\" }, \"scope\": { \"exclude_extensions\": [ \"mp3\", \"mp4\" ], \"exclude_paths\": [ \"/vol1\" ], \"include_extensions\": [ \"vmdk\", \"mp*\" ], \"max_file_size\": 107374, \"scan_without_extension\": true } }, { \"log_path\": \"/vol\", \"name\": \"task-2\", \"scan_paths\": [ \"/vol\" ], \"scope\": { \"exclude_extensions\": [ \"mp3\", \"mp4\" ], \"exclude_paths\": [ \"/vol1\" ], \"include_extensions\": [ \"vmdk\", \"mp*\" ], \"max_file_size\": 107374, \"scan_without_extension\": true } } ], \"svm\": { \"name\": \"vs1\", \"uuid\": \"b103be27-17b8-11e9-b451-0050568ecd85\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "b103be27-17b8-11e9-b451-0050568ecd85",
+      "name": "vs1"
+    },
+    "on_demand_policies": [
+      {
+        "name": "task-1",
+        "scan_paths": [
+          "/vol"
+        ],
+        "log_path": "/vol",
+        "schedule": {
+          "uuid": "d4984822-17b7-11e9-b450-0050568ecd85",
+          "name": "daily"
+        },
+        "scope": {
+          "max_file_size": 107374,
+          "exclude_paths": [
+            "/vol1"
+          ],
+          "include_extensions": [
+            "vmdk",
+            "mp*"
+          ],
+          "exclude_extensions": [
+            "mp3",
+            "mp4"
+          ],
+          "scan_without_extension": true
+        }
+      },
+      {
+        "name": "task-2",
+        "scan_paths": [
+          "/vol"
+        ],
+        "log_path": "/vol",
+        "scope": {
+          "max_file_size": 107374,
+          "exclude_paths": [
+            "/vol1"
+          ],
+          "include_extensions": [
+            "vmdk",
+            "mp*"
+          ],
+          "exclude_extensions": [
+            "mp3",
+            "mp4"
+          ],
+          "scan_without_extension": true
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Enabling Vscan for a specified SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/vscan/03ce5c36-f269-11e8-8852-0050568e5298" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"enabled\": true}"
+----
+
+=== Clearing the Vscan cache for the specified SVM
+
+----
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/vscan/03ce5c36-f269-11e8-8852-0050568e5298" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"cache_clear\": true}"
+----
+
+=== Deleting the Vscan configuration for a specified SVM
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/vscan/03ce5c36-f269-11e8-8852-0050568e5298" -H "accept: application/json"
+----
+
+

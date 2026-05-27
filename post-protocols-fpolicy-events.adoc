@@ -1,0 +1,610 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-fpolicy-events.html'
+summary: 'Create the FPolicy event configuration for an SVM'
+---
+
+= Create the FPolicy event configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/events`#
+
+*Introduced In:* 9.6
+
+Creates an FPolicy event configuration for a specified SVM. FPolicy event creation is allowed only on data SVMs. When a protocol is specified, you must specify a file operation or a file operation and filters. When FPolicy event is configured to monitor failed file operations, you must specify protocol and file operations. Filters are not supported when failed file operations are monitored.
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the FPolicy event.
+* `name` - Name of the FPolicy event.
+
+== Recommended optional properties
+
+* `file-operations` - List of file operations to monitor.
+* `protocol` - Protocol for which the file operations should be monitored.
+* `filters` - List of filters for the specified file operations.
+* `monitor-fileop-failure` - Enabled monitoring of failed file operations.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `file_operations.+*+` - _false_
+* `filters.+*+` - _false_
+* `volume-monitoring` - _false_
+* `monitor-fileop-failure` - _false_
+
+== Related ONTAP commands
+
+* `fpolicy policy event create`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_events_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/events]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_operations
+|link:#file_operations[file_operations]
+a|Specifies the file operations for the FPolicy event. You must specify a valid protocol in the protocol parameter.
+The event will check the operations specified from all client requests using the protocol.
+
+
+|filters
+|link:#filters[filters]
+a|Specifies the list of filters for a given file operation for the specified protocol.
+When you specify the filters, you must specify the valid protocols and a valid file operations.
+
+
+|monitor_fileop_failure
+|boolean
+a|Specifies whether failed file operations monitoring is required.
+
+
+|name
+|string
+a|Specifies the name of the FPolicy event.
+
+
+|protocol
+|string
+a|Protocol for which event is created. If you specify protocol, then you
+must also specify a valid value for the file operation parameters.
+The value of this parameter must be one of the following:
+
+***** cifs  - for the CIFS protocol.
+
+***** nfsv3 - for the NFSv3 protocol.
+
+***** nfsv4 - for the NFSv4 protocol.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|volume_monitoring
+|boolean
+a|Specifies whether volume operation monitoring is required.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "name": "event_cifs",
+  "protocol": "string",
+  "svm": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#fpolicy_event[fpolicy_event]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "name": "event_cifs",
+      "protocol": "string",
+      "svm": {
+        "uuid": "string"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+|===
+| Error Code | Description
+
+| 9764929
+| The file operation is not supported by the protocol
+
+| 9764955
+| The filter is not supported by the protocol
+
+| 9764930
+| The filter is not supported by any of the file operations
+
+| 9764946
+| The protocol is specified without a file operation or a file operation and filter pair
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#file_operations]
+[.api-collapsible-fifth-title]
+file_operations
+
+Specifies the file operations for the FPolicy event. You must specify a valid protocol in the protocol parameter.
+The event will check the operations specified from all client requests using the protocol.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|boolean
+a|Access operations
+
+
+|close
+|boolean
+a|File close operations
+
+
+|create
+|boolean
+a|File create operations
+
+
+|create_dir
+|boolean
+a|Directory create operations
+
+
+|delete
+|boolean
+a|File delete operations
+
+
+|delete_dir
+|boolean
+a|Directory delete operations
+
+
+|getattr
+|boolean
+a|Get attribute operations
+
+
+|link
+|boolean
+a|Link operations
+
+
+|lookup
+|boolean
+a|Lookup operations
+
+
+|open
+|boolean
+a|File open operations
+
+
+|read
+|boolean
+a|File read operations
+
+
+|rename
+|boolean
+a|File rename operations
+
+
+|rename_dir
+|boolean
+a|Directory rename operations
+
+
+|setattr
+|boolean
+a|Set attribute operations
+
+
+|symlink
+|boolean
+a|Symbolic link operations
+
+
+|write
+|boolean
+a|File write operations
+
+
+|===
+
+
+[#filters]
+[.api-collapsible-fifth-title]
+filters
+
+Specifies the list of filters for a given file operation for the specified protocol.
+When you specify the filters, you must specify the valid protocols and a valid file operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|close_with_modification
+|boolean
+a|Filter the client request for close with modification.
+
+
+|close_with_read
+|boolean
+a|Filter the client request for close with read.
+
+
+|close_without_modification
+|boolean
+a|Filter the client request for close without modification.
+
+
+|exclude_directory
+|boolean
+a|Filter the client requests for directory operations. When this filter is specified directory operations are not monitored.
+
+
+|first_read
+|boolean
+a|Filter the client requests for the first-read.
+
+
+|first_write
+|boolean
+a|Filter the client requests for the first-write.
+
+
+|monitor_ads
+|boolean
+a|Filter the client request for alternate data stream.
+
+
+|offline_bit
+|boolean
+a|Filter the client request for offline bit set. FPolicy server receives notification only when offline files are accessed.
+
+
+|open_with_delete_intent
+|boolean
+a|Filter the client request for open with delete intent.
+
+
+|open_with_write_intent
+|boolean
+a|Filter the client request for open with write intent.
+
+
+|setattr_with_access_time_change
+|boolean
+a|Filter the client setattr requests for changing the access time of a file or directory.
+
+
+|setattr_with_allocation_size_change
+|boolean
+a|Filter the client setattr requests for changing the allocation size of a file.
+
+
+|setattr_with_creation_time_change
+|boolean
+a|Filter the client setattr requests for changing the creation time of a file or directory.
+
+
+|setattr_with_dacl_change
+|boolean
+a|Filter the client setattr requests for changing dacl on a file or directory.
+
+
+|setattr_with_group_change
+|boolean
+a|Filter the client setattr requests for changing group of a file or directory.
+
+
+|setattr_with_mode_change
+|boolean
+a|Filter the client setattr requests for changing the mode bits on a file or directory.
+
+
+|setattr_with_modify_time_change
+|boolean
+a|Filter the client setattr requests for changing the modification time of a file or directory.
+
+
+|setattr_with_owner_change
+|boolean
+a|Filter the client setattr requests for changing owner of a file or directory.
+
+
+|setattr_with_sacl_change
+|boolean
+a|Filter the client setattr requests for changing sacl on a file or directory.
+
+
+|setattr_with_size_change
+|boolean
+a|Filter the client setattr requests for changing the size of a file.
+
+
+|write_with_size_change
+|boolean
+a|Filter the client request for write with size change.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#fpolicy_event]
+[.api-collapsible-fifth-title]
+fpolicy_event
+
+The information that a FPolicy process needs to determine what file access operations to monitor and for which of the monitored events notifications should be sent to the external FPolicy server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_operations
+|link:#file_operations[file_operations]
+a|Specifies the file operations for the FPolicy event. You must specify a valid protocol in the protocol parameter.
+The event will check the operations specified from all client requests using the protocol.
+
+
+|filters
+|link:#filters[filters]
+a|Specifies the list of filters for a given file operation for the specified protocol.
+When you specify the filters, you must specify the valid protocols and a valid file operations.
+
+
+|monitor_fileop_failure
+|boolean
+a|Specifies whether failed file operations monitoring is required.
+
+
+|name
+|string
+a|Specifies the name of the FPolicy event.
+
+
+|protocol
+|string
+a|Protocol for which event is created. If you specify protocol, then you
+must also specify a valid value for the file operation parameters.
+The value of this parameter must be one of the following:
+
+***** cifs  - for the CIFS protocol.
+
+***** nfsv3 - for the NFSv3 protocol.
+
+***** nfsv4 - for the NFSv4 protocol.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|volume_monitoring
+|boolean
+a|Specifies whether volume operation monitoring is required.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

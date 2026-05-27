@@ -1,0 +1,154 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_key-manager-configs_endpoint_overview.html'
+summary: 'View and update key manager configurations'
+---
+
+= View and update key manager configurations
+
+
+
+== Overview
+
+Retrieves or modifies the key management configuration options. The following operations are supported:
+
+* GET
+* PATCH
+
+== Examples
+
+=== Retrieving cluster-level key manager configurations
+
+The following example shows how to retrieve cluster-level manager configurations.
+
+----
+
+# The API:
+GET /api/security/key-manager-configs
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-manager-configs' -H 'accept: application/hal+json'
+
+# The response:
+{
+"cc_mode_enabled": false,
+"health_monitor_polling_interval": 15,
+"cloud_kms_retry_count": 3,
+"health_monitor_policy": {
+  "akv": {
+    "enabled": true,
+    "manage_volume_offline": true
+  },
+  "gcp": {
+    "enabled": true,
+    "manage_volume_offline": true
+  },
+  "aws": {
+    "enabled": true,
+    "manage_volume_offline": true
+  },
+  "ikp": {
+    "enabled": true,
+    "manage_volume_offline": true
+  },
+  "okm": {
+    "enabled": true,
+    "manage_volume_offline": true
+  },
+  "kmip": {
+    "enabled": true,
+    "manage_volume_offline": true
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/security/key-manager-configs"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the cluster-level key manager configurations
+
+The following example shows how to modify the "health_monitor_polling_interval" and "cloud_kms_retry_count" fields.
+
+----
+
+# The API:
+PATCH /api/security/key-manager-configs
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-manager-configs' -H 'accept: application/hal+json' -d "{ \"health_monitor_polling_interval\" : \"20\", \"cloud_kms_retry_count\" : \"5\" }"
+----
+
+'''
+
+=== Updating the cluster-level key manager configurations
+
+The following example shows how to modify the "cc_mode" and "passphrase" fields.
+
+----
+
+# The API:
+PATCH /api/security/key-manager-configs
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-manager-configs' -H 'accept: application/hal+json' -d "{ \"cc_mode_enabled\" : \"true\", \"passphrase\": \"current_passphrase\" }"
+----
+
+'''
+
+=== Shows the keystore level health monitor policy
+
+The following example shows how to retrieve the health monitor policies for Amazon Web Services and Google Cloud.
+
+----
+
+# The API:
+GET /api/security/key-manager-configs
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-manager-configs?fields=health_monitor_policy.aws,health_monitor_policy.gcp' -H 'accept: application/hal+json'
+
+# The response:
+{
+"health_monitor_policy": {
+  "gcp": {
+    "enabled": false,
+    "manage_volume_offline": false
+  },
+  "aws": {
+    "enabled": false,
+    "manage_volume_offline": false
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/security/key-manager-configs"
+  }
+}
+}
+----
+
+'''
+
+=== Updates the keytore level health monitor policy
+
+The following example shows how to modify the Amazon Web Services "enabled" field and the Google Cloud "manage_volume_offline" field of the health monitor policy.
+
+----
+
+# The API:
+PATCH /api/security/key-manager-configs
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-manager-configs' -H 'accept: application/hal+json' -d '{"health_monitor_policy": {"aws": {"enabled": "false"}, "gcp": {"manage_volume_offline": "false"}}}'
+----
+
+'''
+
+

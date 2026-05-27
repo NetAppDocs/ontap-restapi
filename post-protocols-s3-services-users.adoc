@@ -1,0 +1,494 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-s3-services-users.html'
+summary: 'Create an S3 user configuration'
+---
+
+= Create an S3 user configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/users`#
+
+*Introduced In:* 9.7
+
+Creates the S3 user configuration.
+
+== Important notes
+
+* Each SVM can have one or more user configurations.
+* If the user is a member of Active directory, the user name takes the format "user@FQDN". For example, "user1@domain1.com".
+* If user creation is successful, a user access_key and secret_key is returned as part of the response.
+* If user keys have expiry configuration, then "key_expiry_time" is also returned as part of the response.
+* User access and secret keys can be specified in the input. If not specified, keys are generated automatically.
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the user configuration.
+* `name` - User name that is to be created.
+
+== Default property values
+
+* `comment` - ""
+
+== Related ONTAP commands
+
+* `vserver object-store-server user create`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_users_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/users]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|comment
+|string
+a|Can contain any additional information about the user being created or modified.
+
+
+|key_expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|key_time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys won't expire.
+
+
+|name
+|string
+a|Specifies the name of the user. A user name length can range from 1 to 64 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-".
+
+
+|secret_key
+|string
+a|Specifies the secret key for the user.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "access_key": "<AWS-ACCESS-KEY-ID>",
+  "comment": "S3 user",
+  "key_expiry_time": "2024-01-01 00:00:00 +0000",
+  "key_time_to_live": "PT6H3M",
+  "name": "user-1",
+  "secret_key": "<AWS-SECRET-ACCESS-KEY>",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#s3_service_user_post_response[s3_service_user_post_response]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "access_key": "<AWS-ACCESS-KEY-ID>",
+      "key_expiry_time": "2024-01-01 00:00:00 +0000",
+      "name": "user-1",
+      "secret_key": "<AWS-SECRET-ACCESS-KEY>"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|92405787 +
+//end row
+//start row
+|User name "User#1" contains invalid characters. Valid characters for a user name are 0-9, A-Z, a-z, "_", "+", "=", ",", ".", "@", and "-".
+//end row
+//start row
+|92405788 +
+//end row
+//start row
+|User name "User0123456789012345678901234567890123456789012345678901234567890123456789012345" is not valid. User names must have between 1 and 64 characters.
+//end row
+//start row
+|92405791 +
+//end row
+//start row
+|Failed to create access-key and secret-key.
+//end row
+//start row
+|92405817 +
+//end row
+//start row
+|SVM "{non-data SVM name}" is not a data SVM. Specify a data SVM.
+//end row
+//start row
+|92406083 +
+//end row
+//start row
+|The maximum supported value for user key expiry configuration is "1095" days.
+//end row
+//start row
+|92406096 +
+//end row
+//start row
+|The user does not have permission to access the requested resource "\{0}".
+//end row
+//start row
+|92406097 +
+//end row
+//start row
+|Internal error. The operation configuration is not correct.
+//end row
+//start row
+|92406196 +
+//end row
+//start row
+|The specified value for the "key_time_to_live" field cannot be greater than the maximum limit specified for the "max_key_time_to_live" field in the object store server.
+//end row
+//start row
+|92406197 +
+//end row
+//start row
+|Object store user "user-2" must have a non-zero value for the "key_time_to_live" field because the maximum limit specified for the "max_key_time_to_live" field in the object store server is not zero.
+//end row
+//start row
+|92406200 +
+//end row
+//start row
+|An object store user with the same access-key already exists.
+//end row
+//start row
+|92406201 +
+//end row
+//start row
+|Missing access-key or secret-key. Either provide both of the keys or none. If not provided, keys are generated automatically.
+//end row
+//start row
+|92406205 +
+//end row
+//start row
+|The object store user access key contains invalid characters. Valid characters are 0-9 and A-Z.
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#s3_user]
+[.api-collapsible-fifth-title]
+s3_user
+
+This is a container of S3 users.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|comment
+|string
+a|Can contain any additional information about the user being created or modified.
+
+
+|key_expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|key_time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys won't expire.
+
+
+|name
+|string
+a|Specifies the name of the user. A user name length can range from 1 to 64 characters and can only contain the following combination of characters 0-9, A-Z, a-z, "_", "+", "=", ",", ".","@", and "-".
+
+
+|secret_key
+|string
+a|Specifies the secret key for the user.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+[#s3_service_user_post_response]
+[.api-collapsible-fifth-title]
+s3_service_user_post_response
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|key_expiry_time
+|string
+a|Specifies the date and time after which the keys expire and are no longer valid.
+
+
+|name
+|string
+a|The name of the user.
+
+
+|secret_key
+|string
+a|Specifies the secret key for the user.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

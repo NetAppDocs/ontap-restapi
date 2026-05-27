@@ -1,0 +1,644 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-gcp-kms-.html'
+summary: 'Update the Google Cloud KMS configuration'
+---
+
+= Update the Google Cloud KMS configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/gcp-kms/{uuid}`#
+
+*Introduced In:* 9.9
+
+Updates the Google Cloud KMS configuration.
+
+== Optional properties
+
+* `application_credentials` - New credentials used to verify the application's identity to the Google Cloud KMS.
+* `proxy_type` - Type of proxy (http/https) if proxy configuration is used.
+* `proxy_host` - Proxy hostname if proxy configuration is used.
+* `proxy_port` - Proxy port number if proxy configuration is used.
+* `port` - Authorization server and Google Cloud KMS port number.
+* `proxy_username` - Proxy username if proxy configuration is used.
+* `proxy_password` - Proxy password if proxy configuration is used.
+* `project_id` - Google Cloud project (application) ID of the deployed Google Cloud application with appropriate access to the Google Cloud KMS.
+* `key_ring_name` - Google Cloud KMS key ring name of the deployed Google Cloud application with appropriate access to the specified Google Cloud KMS.
+* `key_ring_location` - Google Cloud KMS key ring location.
+* `cloudkms_host` - Google Cloud KMS host subdomain.
+* `oauth_host` - Open authorization server host name.
+* `oauth_url` - Open authorization URL for the access token.
+* `verify_host` - Verify the identity of the Google Cloud KMS host name.
+* `verify_ip ` - Verify identity of Google Cloud KMS IP address.
+* `privileged_account` - Account used to impersonate Google Cloud KMS requests.
+* `authentication_method` - The authentication method to use for retrieving short lived authentication tokens.
+* `gce_metadata_server` - A custom metadata server URL used for retrieving short lived authentication tokens if the default service account is not used. This is only applicable when the `authentication_method` is set to `sa_credentials_attachment`.
+
+== Related ONTAP commands
+
+* `security key-manager external gcp update-credentials`
+* `security key-manager external gcp update-config`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Google Cloud KMS UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application_credentials
+|string
+a|The Google Cloud application's service account credentials required to access the specified KMS. The client_email and private_key fields of the service account holder are required. The credentials are required if the `authentication_method` is set to `application_credentials_key`.
+
+
+|authentication_method
+|string
+a|Google Cloud KMS authentication method.
+
+
+|caller_account
+|string
+a|Google Cloud KMS caller account email
+
+
+|cloudkms_host
+|string
+a|Google Cloud KMS host subdomain.
+
+
+|ekmip_reachability
+|array[link:#ekmip_reachability[ekmip_reachability]]
+a|
+
+|gce_metadata_server
+|string
+a|A custom metadata server URL used for retrieving short lived authentication tokens if the default service account is not used. This is only applicable when the `authentication_method` is set to `sa_credentials_attachment`.
+
+
+|google_reachability
+|link:#google_reachability[google_reachability]
+a|Indicates whether or not the Google Cloud KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|oauth_url
+|string
+a|Open authorization URL for the access token.
+
+
+|port
+|integer
+a|Authorization server and Google Cloud KMS port number.
+
+
+|privileged_account
+|string
+a|Google Cloud KMS account to impersonate.
+
+
+|proxy_host
+|string
+a|Proxy host name.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port number.
+
+
+|proxy_type
+|string
+a|Type of proxy.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|state
+|link:#state[state]
+a|Google Cloud Key Management Services is a cloud key management service (KMS) that provides a secure store for encryption keys. This object indicates whether or not the Google Cloud KMS key protection is available on all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|uuid
+|string
+a|A unique identifier for the Google Cloud KMS.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the Google Cloud KMS host name.
+
+
+|verify_ip
+|boolean
+a|Verify the identity of the Google Cloud KMS IP address.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "application_credentials": "{\"private_key\":\"ValidPrivateKey\",\"client_email\":\"my@account.email.com\"}",
+  "authentication_method": "application_credentials_key",
+  "caller_account": "myaccount@myproject.com",
+  "cloudkms_host": "cloudkms.googleapis.com",
+  "ekmip_reachability": [
+    {
+      "code": "346758",
+      "message": "embedded KMIP server status unavailable on node.",
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "gce_metadata_server": "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token",
+  "google_reachability": {
+    "code": "346758",
+    "message": "Google Cloud KMS is not reachable from all nodes - <reason>."
+  },
+  "oauth_host": "oauth2.googleapis.com",
+  "oauth_url": "https://oauth2.googleapis.com/token",
+  "port": 443,
+  "privileged_account": "myserviceaccount@myproject.iam.gserviceaccount.com",
+  "proxy_host": "proxy.eng.com",
+  "proxy_password": "proxypassword",
+  "proxy_port": 1234,
+  "proxy_type": "http",
+  "proxy_username": "proxyuser",
+  "scope": "string",
+  "state": {
+    "code": "346758",
+    "message": "Top-level internal key protection key (KEK) is unavailable on the following nodes with the associated reasons: Node: node1. Reason: No volumes created yet for the SVM. Wrapped KEK status will be available after creating encrypted volumes."
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65537541
+| No inputs were provided for the patch request.
+
+| 65537547
+| One or more volume encryption keys for encrypted volumes of this data SVM are stored in the key manager configured for the admin SVM. Use the REST API POST method to migrate this data SVM's keys from the admin SVM's key manager to this data SVM's key manager before running the rekey operation.
+
+| 65537605
+| Failed to establish connectivity with the cloud key management service.
+
+| 65537713
+| Internal Error. Failed to store the application credentials.
+
+| 65537714
+| The "application_credentials" field must be specified.
+
+| 65537721
+| The Google Cloud Key Management Service is not configured for the SVM.
+
+| 65537724
+| Failed to update the Google Cloud Key Management Service because invalid application credentials were provided.
+
+| 65537757
+| The "key_name", "project_id", "key_ring_name" and "key_ring_location" fields cannot be modified directly. Use the REST API POST method "/api/security/gcp-kms/\{uuid}/rekey-external" to modify these fields.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ekmip_reachability]
+[.api-collapsible-fifth-title]
+ekmip_reachability
+
+Provides the connectivity status for the given SVM on the given node to all EKMIP servers configured on all nodes of the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if a given SVM is able to communicate to the EKMIP servers of all of the nodes in the cluster.
+
+
+|message
+|string
+a|Error message set when cluster-wide EKMIP server availability from the given SVM and node is false.
+
+
+|node
+|link:#node[node]
+a|
+
+|reachable
+|boolean
+a|Set to true if the given SVM on the given node is able to communicate to all EKMIP servers configured on all nodes in the cluster.
+
+
+|===
+
+
+[#google_reachability]
+[.api-collapsible-fifth-title]
+google_reachability
+
+Indicates whether or not the Google Cloud KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if Google Cloud KMS is reachable from all nodes in the cluster.
+
+
+|message
+|string
+a|Set to the error message when 'reachable' is false.
+
+
+|reachable
+|boolean
+a|Set to true if the Google Cloud KMS is reachable from all nodes of the cluster.
+
+
+|===
+
+
+[#state]
+[.api-collapsible-fifth-title]
+state
+
+Google Cloud Key Management Services is a cloud key management service (KMS) that provides a secure store for encryption keys. This object indicates whether or not the Google Cloud KMS key protection is available on all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_state
+|boolean
+a|Set to true when Google Cloud KMS key protection is available on all nodes of the cluster.
+
+
+|code
+|string
+a|Error code corresponding to the status message. Returns 0 if Google Cloud KMS key protection is available in all nodes of the cluster.
+
+
+|message
+|string
+a|Error message set when top-level internal key protection key (KEK) availability on cluster is false.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#gcp_kms]
+[.api-collapsible-fifth-title]
+gcp_kms
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application_credentials
+|string
+a|The Google Cloud application's service account credentials required to access the specified KMS. The client_email and private_key fields of the service account holder are required. The credentials are required if the `authentication_method` is set to `application_credentials_key`.
+
+
+|authentication_method
+|string
+a|Google Cloud KMS authentication method.
+
+
+|caller_account
+|string
+a|Google Cloud KMS caller account email
+
+
+|cloudkms_host
+|string
+a|Google Cloud KMS host subdomain.
+
+
+|ekmip_reachability
+|array[link:#ekmip_reachability[ekmip_reachability]]
+a|
+
+|gce_metadata_server
+|string
+a|A custom metadata server URL used for retrieving short lived authentication tokens if the default service account is not used. This is only applicable when the `authentication_method` is set to `sa_credentials_attachment`.
+
+
+|google_reachability
+|link:#google_reachability[google_reachability]
+a|Indicates whether or not the Google Cloud KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|oauth_url
+|string
+a|Open authorization URL for the access token.
+
+
+|port
+|integer
+a|Authorization server and Google Cloud KMS port number.
+
+
+|privileged_account
+|string
+a|Google Cloud KMS account to impersonate.
+
+
+|proxy_host
+|string
+a|Proxy host name.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port number.
+
+
+|proxy_type
+|string
+a|Type of proxy.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|state
+|link:#state[state]
+a|Google Cloud Key Management Services is a cloud key management service (KMS) that provides a secure store for encryption keys. This object indicates whether or not the Google Cloud KMS key protection is available on all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|uuid
+|string
+a|A unique identifier for the Google Cloud KMS.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the Google Cloud KMS host name.
+
+
+|verify_ip
+|boolean
+a|Verify the identity of the Google Cloud KMS IP address.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

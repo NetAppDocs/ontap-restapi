@@ -1,0 +1,268 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-snaplock-compliance-clocks.html'
+summary: 'Initialize a SnapLock ComplianceClock'
+---
+
+= Initialize a SnapLock ComplianceClock
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/snaplock/compliance-clocks`#
+
+*Introduced In:* 9.10
+
+Initializes the SnapLock ComplianceClock.
+
+== Required properties
+
+* `node.name` or `node.uuid` - Name or UUID of the node.
+
+== Related ONTAP commands
+
+* `snaplock compliance-clock initialize`
+
+== Learn more
+
+* link:storage_snaplock_compliance-clocks_endpoint_overview.html[DOC /storage/snaplock/compliance-clocks]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|
+
+|time
+|string
+a|Compliance clock time
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "time": "2018-06-04 19:00:00 +0000"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13763062
+| Compliance Clock already initialized
+
+| 13763084
+| ComplianceClock re-initialization failed as it requires that all nodes in the cluster are healthy, all volumes are in online state, no volumes are present in the volume recovery queue and there are no SnapLock volumes or volumes with "snapshot-locking-enabled" set to true or S3 buckets with object locking enabled.
+
+| 13763085
+| ComplianceClock re-initialization supported on effective cluster version of ONTAP 9.14.1 or later.
+
+| 14090240
+| Node with the specified UUID does not exist
+
+| 14090241
+| The specified node name and node UUID refer to different nodes
+
+| 14090343
+| Invalid field
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#snaplock_compliance_clock]
+[.api-collapsible-fifth-title]
+snaplock_compliance_clock
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|
+
+|time
+|string
+a|Compliance clock time
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

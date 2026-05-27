@@ -1,0 +1,61 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_snaplock_event-retention_operations_endpoint_overview.html'
+summary: 'Manage event based retention operations'
+---
+
+= Manage event based retention operations
+
+
+
+Use this API to display all Event Based Retention (EBR) operations and to apply an EBR policy on a specified volume or path within the volume. Only a user with security login role vsadmin-snaplock can perform the operation.
+
+=== Examples
+
+. Displays all of the EBR operations:
+
+----
+ GET "/api/storage/snaplock/event-retention/operations"
+----
+
+. Displays all completed EBR operations:
+
+----
+ GET "/api/storage/snaplock/event-retention/operations?state=completed"
+----
+
+. Displays all completed EBR operations with filter set as volume.uuid:
+
+----
+ GET "/api/storage/snaplock/event-retention/operations?volume.uuid=b96f976e-404b-11e9-bff2-0050568e4dbe"
+----
+
+. Displays all of the EBR operations with filter set as volume.name:
+
+----
+ GET "/api/storage/snaplock/event-retention/operations?volume.name=SLCVOL"
+----
+
+=== Examples
+
+. Applies an EBR policy on a specific path:
+
+----
+ POST "/api/storage/snaplock/event-retention/operations" '{"volume.name":"SLCVOL", "policy.name":"p1day", "path":"/dir1/file.txt"}'
+----
+
+. Applies an EBR policy on the complete volume:
+
+----
+ POST "/api/storage/snaplock/event-retention/operations" '{"volume.name":"SLCVOL", "policy.name":"p1day", "path":"/"}'
+----
+
+=== Example
+
+----
+DELETE "/api/storage/snaplock/event-retention/operations/16842999"
+----
+
+

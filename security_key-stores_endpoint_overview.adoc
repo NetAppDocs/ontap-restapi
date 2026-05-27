@@ -1,0 +1,141 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_key-stores_endpoint_overview.html'
+summary: 'Manage keystores'
+---
+
+= Manage keystores
+
+
+
+== Overview
+
+A keystore describes a key-manager configuration, specifically the type of key-manager and whether the configuration is currently enabled for the configured SVM.
+
+== Examples
+
+'''
+
+=== Retrieving information for all configured key managers
+
+The following example shows how to retrieve information about all configured key managers.
+
+----
+
+# The API:
+GET /api/security/key-stores
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-stores?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "type": "okm",
+    "configuration": {
+      "name": "default",
+      "uuid": "ec8711c9-4e9f-11ef-b477-005056bb677e"
+    },
+    "uuid": "ec8711c9-4e9f-11ef-b477-005056bb677e",
+    "enabled": true,
+    "location": "onboard",
+    "scope": "cluster",
+    "state": "active"
+  },
+  {
+    "type": "kmip",
+    "configuration": {
+      "name": "default",
+      "uuid": "d81f43cd-4e9f-11ef-b477-005056bb677e"
+    },
+    "uuid": "d81f43cd-4e9f-11ef-b477-005056bb677e",
+    "enabled": false,
+    "location": "external",
+    "scope": "cluster"
+  },
+  {
+    "type": "kmip",
+    "configuration": {
+      "name": "default",
+      "uuid": "7da22185-4ea0-11ef-b477-005056bb677e"
+    },
+    "uuid": "7da22185-4ea0-11ef-b477-005056bb677e",
+    "enabled": true,
+    "location": "external",
+    "scope": "svm",
+    "svm": {
+      "name": "vs0",
+      "uuid": "3cbe691b-4ea0-11ef-b477-005056bb677e"
+    },
+    "state": "active"
+  }
+],
+"num_records": 3
+}
+----
+
+'''
+
+=== Retrieving a specific keystore by its UUID
+
+The following example shows how to retrieve information about a specific keystore.
+
+----
+
+# The API:
+GET /api/security/key-stores/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-stores/33421d82-0a8d-11ec-ae88-005056bb5955?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"type": "okm",
+"configuration": {
+  "name": "default",
+  "uuid": "ec8711c9-4e9f-11ef-b477-005056bb677e"
+},
+"uuid": "ec8711c9-4e9f-11ef-b477-005056bb677e",
+"enabled": true,
+"location": "onboard",
+"scope": "cluster",
+"state": "active"
+}
+----
+
+'''
+
+=== Enabling a specific keystore configuration
+
+The following example shows how to enable a specific keystore configuration.
+
+----
+
+# The API:
+PATCH /api/security/key-stores/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-stores/33421d82-0a8d-11ec-ae88-005056bb5955' -H 'accept: application/hal+json' -d "{ \"enabled\": true }"
+----
+
+'''
+
+=== Deleting a specific keystore configuration
+
+The following example shows how to delete a specific keystore configuration. Only an inactive configuration can be deleted.
+
+----
+
+# The API:
+DELETE /api/security/key-stores/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/security/key-stores/33421d82-0a8d-11ec-ae88-005056bb5955' -H 'accept: application/hal+json'
+----
+
+'''
+
+

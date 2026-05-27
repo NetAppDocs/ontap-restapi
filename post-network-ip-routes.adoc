@@ -1,0 +1,543 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-network-ip-routes.html'
+summary: 'Create a cluster-scoped or SVM-scoped static route'
+---
+
+= Create a cluster-scoped or SVM-scoped static route
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/network/ip/routes`#
+
+*Introduced In:* 9.6
+
+Creates a Cluster-scoped or SVM-scoped static route.
+
+== Required properties
+
+* `gateway` - IP address to route packets to.
+* SVM-scoped routes
+
+*** `svm.name` or `svm.uuid` - SVM that route is applied to.
+
+* cluster-scoped routes
+
+*** There are no additional required fields for Cluster-scoped routes.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `destination` - _0.0.0.0/0_ for IPv4 or _::/0_ for IPv6.
+* `ipspace.name`
+
+*** _Default_ for Cluster-scoped routes.
+
+*** Name of the SVM's IPspace for SVM-scoped routes.
+
+* `metric` - 20.
+
+== Related ONTAP commands
+
+* `network route create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|gateway
+|string
+a|The IP address of the gateway router leading to the destination.
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|IP interfaces on the same subnet as the gateway.
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+|metric
+|integer
+a|Indicates a preference order between several routes to the same destination.  With typical usage, the default metrics provided are adequate, there is no need to specify a metric in the route creation.
+
+
+|svm
+|link:#svm[svm]
+a|Applies only to SVM-scoped objects. Either the UUID or name must be supplied.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the route.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "destination": {
+    "address": "10.10.10.7",
+    "netmask": "24"
+  },
+  "gateway": "10.1.1.1",
+  "interfaces": [
+    {
+      "name": "lif1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "ipspace": {
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#network_route[network_route]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "destination": {
+        "address": "10.10.10.7",
+        "netmask": "24"
+      },
+      "gateway": "10.1.1.1",
+      "interfaces": [
+        {
+          "name": "lif1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "ipspace": {
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1966265
+| The destination and gateway must belong to the same IP address family.
+
+| 1966345
+| Duplicate route exists.
+
+| 1966505
+| The gateway address cannot be the same as a LIF address. A LIF is already configured with that IP address.
+
+| 1967080
+| The destination.address is missing.
+
+| 1967081
+| The specified SVM must exist in the specified IPspace.
+
+| 1967082
+| The specified ipspace.uuid and ipspace.name refer to different IPspaces.
+
+| 1967146
+| The specified svm.name is not valid.
+
+| 2621462
+| The specified SVM does not exist.
+
+| 2621574
+| This operation is not permitted on an SVM that is configured as the destination of a MetroCluster SVM relationship.
+
+| 2621706
+| The specified UUID and name refer to different SVMs.
+
+| 53282375
+| The specified destination is invalid.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ip_info]
+[.api-collapsible-fifth-title]
+ip_info
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#interfaces]
+[.api-collapsible-fifth-title]
+interfaces
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Applies only to SVM-scoped objects. Either the UUID or name must be supplied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#network_route]
+[.api-collapsible-fifth-title]
+network_route
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|gateway
+|string
+a|The IP address of the gateway router leading to the destination.
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|IP interfaces on the same subnet as the gateway.
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name may be supplied on input.
+
+
+|metric
+|integer
+a|Indicates a preference order between several routes to the same destination.  With typical usage, the default metrics provided are adequate, there is no need to specify a metric in the route creation.
+
+
+|svm
+|link:#svm[svm]
+a|Applies only to SVM-scoped objects. Either the UUID or name must be supplied.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the route.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

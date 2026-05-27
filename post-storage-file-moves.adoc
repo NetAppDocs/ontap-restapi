@@ -1,0 +1,1109 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-file-moves.html'
+summary: 'Start a file move operation'
+---
+
+= Start a file move operation
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/file/moves`#
+
+*Introduced In:* 9.11
+
+Starts a file move operation. This API can be used to move files from one FlexVol volume to another FlexVol volume or within a FlexGroup volume for capacity rebalancing.
+For a FlexGroup volume file move operation, only one source file can be specified in files_to_move. The source volume is the FlexGroup volume. The destination volume is the destination FlexGroup volume constituent to move the file to. When `automatic` is true, destination volume is not required. The source path is the path to the file to be moved within the FlexGroup volume. If the destination path is specified, it must be the same as the source path.
+
+== Required properties for file move operation
+
+* `files_to_move` - List of files with the destination they are to be moved to.
+
+== Optional properties for file move operation
+
+* `reference` - The source reference file for moving multiple files.
+
+== Default property values
+
+* `max_throughput` - _0_
+* `max_cutover_time` - _10_
+* `reference.max_cutover_time` - _10_
+
+== Related ONTAP commands
+
+* `volume file move start`
+* `volume rebalance file-move start`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|force
+|boolean
+|query
+|False
+a|If true, the FlexGroup volume file move operation breaks the existing lock state on the file being moved. Breaking the lock state may cause a disruption for some client applications.
+
+* Default value:
+
+
+|automatic
+|boolean
+|query
+|False
+a|If true, the FlexGroup volume file move operation selects the destination constituent automatically.
+
+* Default value:
+
+
+|disruptive
+|boolean
+|query
+|False
+a|If true, the FlexGroup volume file move operation is disruptive to the clients. The file handle of the file being moved changes. If false, the file handle remains the same. The non-disruptive file move operation is only available on FlexGroup volumes with granular data property enabled.
+
+* Default value:
+* Introduced in: 9.12
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_time
+|integer
+a|Time that the file move operation takes before cutover completes, in seconds.
+
+
+|destination
+|link:#destination[destination]
+a|Destination file information.
+
+
+|elapsed_time
+|integer
+a|Time elapsed since the start of the file move operation, in seconds.
+
+
+|files_to_move
+|link:#files_to_move[files_to_move]
+a|A list of source files along with the destination file they are moved to. If the terminal path component of the destination is a directory, then the source file's basename is replicated in that directory. This is only used for FlexVol volume file move operations.
+
+
+|index
+|integer
+a|An additional unique element identifying one file among many that could possibly be moved as part of a job. File index is an identifier ordered by the file path arrays provided during create. For file move operations that involve only one file, the file-index value of zero is always correct.
+
+
+|is_destination_ready
+|boolean
+a|Indicates whether the destination file is ready for use.
+
+
+|is_flexgroup
+|boolean
+a|Indicates whether this is a FlexGroup file move operation.
+
+
+|is_snapshot_fenced
+|boolean
+a|Indicates whether snapshots are fenced.
+
+
+|max_cutover_time
+|integer
+a|The maximum amount of time, in seconds that the source can be quiesced before a destination file must be made available for read-write traffic. Not supported in FlexGroup volume file move operations.
+
+
+|max_throughput
+|integer
+a|Maximum amount of data, in bytes that can be transferred per second in support of this operation. A non-zero value less than 1 MB/s is set to 1 MB/s. A non-zero value greater than 1 MB/s is truncated to the nearest integral megabyte value. If unspecified, the default value is "0" which means no range is set for the data transfer.
+
+
+|node
+|link:#node[node]
+a|Node hosting the destination of this move operation.
+
+
+|reference
+|link:#reference[reference]
+a|Reference file information.
+
+
+|scanner
+|link:#scanner[scanner]
+a|
+
+|source
+|link:#source[source]
+a|Source file information.
+
+
+|svm
+|link:#svm[svm]
+a|SVM of the FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+|uuid
+|string
+a|The UUID which uniquely identifies the job that started this move operation.
+
+
+|volume
+|link:#volume[volume]
+a|FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "cutover_time": 8,
+  "destination": {
+    "path": "d1/d2/file1",
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "elapsed_time": 100,
+  "files_to_move": {
+    "destinations": [
+      {
+        "path": "d1/d2/file1",
+        "svm": {
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        },
+        "volume": {
+          "name": "volume1",
+          "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "path": "d1/d2/file1",
+        "svm": {
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        },
+        "volume": {
+          "name": "volume1",
+          "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+        }
+      }
+    ]
+  },
+  "index": 0,
+  "max_cutover_time": 10,
+  "max_throughput": 250000,
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "reference": {
+    "max_cutover_time": 5,
+    "path": "string",
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "scanner": {
+    "percent": 80,
+    "progress": 80000,
+    "state": "string",
+    "total": 100000
+  },
+  "source": {
+    "path": "d1/d2/file1",
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+    "volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "4fcb3159-a4ee-42b5-bb16-f752f2c430fc",
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 918236
+| The specified "volume.uuid" and "volume.name" do not refer to the same volume.
+
+| 2621462
+| SVM `svm.name` does not exist.
+
+| 2621706
+| The specified "svm.uuid" and "svm.name" do not refer to the same SVM.
+
+| 7012352
+| File locations are inconsistent. All files must be on the same volume.
+
+| 7012353
+| Exceeded the file operations supported number of files.
+
+| 7012354
+| Unable to pair the number of source files to destination files.
+
+| 7012357
+| Cannot start a file operation until all cluster nodes support the file operations capability.
+
+| 7012358
+| The specified source path is invalid.
+
+| 7012359
+| The specified destination path is invalid.
+
+| 7012360
+| The SVMs are not in an intracluster peering relationship.
+
+| 7012361
+| The SVMs peering relationship does not include application "file-move".
+
+| 7012362
+| The SVMs are not yet in a peered state.
+
+| 7012363
+| Cannot move files. All file operations must be managed by the destination SVM's administrator.
+
+| 7012364
+| Cannot move file from SVM "svm.name" to SVM "svm.name". Moving a file between SVMs is not supported.
+
+| 7012365
+| Copying a file between clusters is not supported.
+
+| 7012367
+| A reference path may only be specified if multiple source paths are specified.
+
+| 7012368
+| The reference path must have a matching source path.
+
+| 7012371
+| The reference cutover time exceeds the maximum allowable time.
+
+| 7012374
+| Source volume and destination volume have different home clusters.
+
+| 7012376
+| Operation not allowed on a volume that is part of a SnapMirror Synchronous relationship.
+
+| 7012377
+| Cannot start a file move operation on the volume because an active volume conversion is in progress.
+
+| 7013352
+| One or more source files must be specified in "files_to_move.sources".
+
+| 7013353
+| One or more destination files or directories must be specified in "files_to_move.destinations".
+
+| 7013354
+| "path" must be specified.
+
+| 7013355
+| Moving files between FlexVol volumes and FlexGroup volumes or constituents is not supported.
+
+| 7013356
+| Moving files between FlexVol volumes and FlexGroup constituents is not supported.
+
+| 7013357
+| The specified volume could not be found.
+
+| 7013358
+| The specified SVM or volume UUID could not be found.
+
+| 7013359
+| The SVM and volume must both be provided.
+
+| 7018861
+| Cannot start the file operation. The volume is offline.
+
+| 7018877
+| Maximum combined total (50) of file and LUN copy and move operations reached. When one or more of the operations has completed, try the command again.
+
+| 7018937
+| The file is already on the destination constituent.
+
+| 13107222
+| Internal error.
+
+| 13107415
+| Failed to lookup a volume property.
+
+| 13107431
+| Failed to lookup an SVM property.
+
+| 13109260
+| Failed to enable granular data on the volume.
+
+| 144179201
+| The file move start operation failed.
+
+| 144179206
+| Source file does not exist.
+
+| 144179207
+| Volume capacity balancing requires an effective cluster version of 9.10.1 or later.
+
+| 144180200
+| Destination constituent not a member of FlexGroup volume.
+
+| 144180201
+| Destination constituent not properly configured.
+
+| 144180203
+| Volume capacity rebalancing is not supported on FlexCache volumes.
+
+| 144180204
+| Volume capacity rebalancing is not supported on object store volumes.
+
+| 144180205
+| The system is busy.
+
+| 144180207
+| Volume capacity rebalancing is not supported on inactive MetroCluster configurations.
+
+| 144180208
+| Disruptive file movement is not supported when granular data is enabled on the volume. Try the operation again using "disruptive=false".
+
+| 144181200
+| Too many source or destination files are specified for a file move within a FlexGroup volume. There must be one source file identifying a file on a FlexGroup volume and either zero or one destination files identifying the destination constituent.
+
+| 144181201
+| For a file move within a FlexGroup volume, the source volume must be a FlexGroup volume, and the destination volume must be a constituent.
+
+| 144181202
+| The specified source volume UUID is for a constituent. For a file move within a FlexGroup volume, the source volume must be a FlexGroup volume, and the destination volume must be a constituent.
+
+| 144181203
+| A destination constituent must be provided in "files_to_move.destinations" if it is not being selected automatically. Use the "automatic" query to enable automatic destination constituent selection.
+
+| 144181204
+| A destination constituent is provided while automatic destination constituent selection is enabled with the "automatic" query.
+
+| 144181205
+| The destination volume is not a constituent. For a file move within a FlexGroup volume, the destination volume must be a constituent of the source FlexGroup volume.
+
+| 144181207
+| The destination constituent SVM is not the same as the source SVM. For a file move within a FlexGroup volume, the destination constituent must be a constituent of the source FlexGroup volume.
+
+| 144181208
+| The destination file path is different from the source file path. For a file move within a FlexGroup volume, the path of the source file does not change.
+
+| 144181209
+| The specified SVM for the destination constituent differs from the SVM of the source FlexGroup volume. For a file move within a FlexGroup volume, the destination constituent must be a constituent of the source FlexGroup volume.
+
+| 144181210
+| The "force" parameter is not supported unless the "disruptive" parameter is specified as "true".
+
+| 144182201
+| Volume capacity rebalancing using non-disruptive file move operations and granular data requires an effective cluster version of 9.11.1 or later.
+
+| 144182228
+| Operation is not supported on FlexGroup volumes with only one constituent.
+
+| 196608143
+| Cannot start the operation. The volume is undergoing a secure purge operation.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#destination]
+[.api-collapsible-fifth-title]
+destination
+
+Destination file information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Contains the most recent failure reason for move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#destinations]
+[.api-collapsible-fifth-title]
+destinations
+
+Path for file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#sources]
+[.api-collapsible-fifth-title]
+sources
+
+Path for file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#files_to_move]
+[.api-collapsible-fifth-title]
+files_to_move
+
+A list of source files along with the destination file they are moved to. If the terminal path component of the destination is a directory, then the source file's basename is replicated in that directory. This is only used for FlexVol volume file move operations.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destinations
+|array[link:#destinations[destinations]]
+a|The destination file information.
+
+
+|sources
+|array[link:#sources[sources]]
+a|The source file information.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node hosting the destination of this move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM of the source reference file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Volume of the source reference file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#reference]
+[.api-collapsible-fifth-title]
+reference
+
+Reference file information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_cutover_time
+|integer
+a|The maximum amount of time, in seconds that the source reference file can be quiesced before the corresponding destination file must be made available for read-write traffic. Not supported in FlexGroup volume file move operations.
+
+
+|path
+|string
+a|The source reference file. If a reference file is specified, data for other files being moved will be transferred as a difference from the reference file. This can save bandwidth and destination storage if the specified source files share blocks. If provided, this input must match one of the source file paths. This input need not be provided if only one source file is specified. Not supported in FlexGroup volume file move operations.
+
+
+|svm
+|link:#svm[svm]
+a|SVM of the source reference file.
+
+
+|volume
+|link:#volume[volume]
+a|Volume of the source reference file.
+
+
+|===
+
+
+[#scanner]
+[.api-collapsible-fifth-title]
+scanner
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|percent
+|integer
+a|Scanner progress, as a percentage.
+
+
+|progress
+|integer
+a|Scanner progress, in bytes scanned.
+
+
+|state
+|string
+a|Status of the file move scanner.
+
+
+|total
+|integer
+a|Total bytes to be scanned.
+
+
+|===
+
+
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+Source file information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM of the FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#file_move]
+[.api-collapsible-fifth-title]
+file_move
+
+Details of a file move operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_time
+|integer
+a|Time that the file move operation takes before cutover completes, in seconds.
+
+
+|destination
+|link:#destination[destination]
+a|Destination file information.
+
+
+|elapsed_time
+|integer
+a|Time elapsed since the start of the file move operation, in seconds.
+
+
+|files_to_move
+|link:#files_to_move[files_to_move]
+a|A list of source files along with the destination file they are moved to. If the terminal path component of the destination is a directory, then the source file's basename is replicated in that directory. This is only used for FlexVol volume file move operations.
+
+
+|index
+|integer
+a|An additional unique element identifying one file among many that could possibly be moved as part of a job. File index is an identifier ordered by the file path arrays provided during create. For file move operations that involve only one file, the file-index value of zero is always correct.
+
+
+|is_destination_ready
+|boolean
+a|Indicates whether the destination file is ready for use.
+
+
+|is_flexgroup
+|boolean
+a|Indicates whether this is a FlexGroup file move operation.
+
+
+|is_snapshot_fenced
+|boolean
+a|Indicates whether snapshots are fenced.
+
+
+|max_cutover_time
+|integer
+a|The maximum amount of time, in seconds that the source can be quiesced before a destination file must be made available for read-write traffic. Not supported in FlexGroup volume file move operations.
+
+
+|max_throughput
+|integer
+a|Maximum amount of data, in bytes that can be transferred per second in support of this operation. A non-zero value less than 1 MB/s is set to 1 MB/s. A non-zero value greater than 1 MB/s is truncated to the nearest integral megabyte value. If unspecified, the default value is "0" which means no range is set for the data transfer.
+
+
+|node
+|link:#node[node]
+a|Node hosting the destination of this move operation.
+
+
+|reference
+|link:#reference[reference]
+a|Reference file information.
+
+
+|scanner
+|link:#scanner[scanner]
+a|
+
+|source
+|link:#source[source]
+a|Source file information.
+
+
+|svm
+|link:#svm[svm]
+a|SVM of the FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+|uuid
+|string
+a|The UUID which uniquely identifies the job that started this move operation.
+
+
+|volume
+|link:#volume[volume]
+a|FlexGroup volume in file move operation. Only used in a FlexGroup volume file move operation.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,525 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-cifs-users-and-groups-bulk-import-.html'
+summary: 'Load CIFS local users, groups and group membership files from a URL'
+---
+
+= Load CIFS local users, groups and group membership files from a URL
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}`#
+
+*Introduced In:* 9.11
+
+Loads CIFS local users,groups and group memberships file from the specified URL.
+
+== Important notes
+
+Existing CIFS local users, groups, and group memberships will be replaced with the contents of the file.
+
+== Required properties
+
+* import_uri.path
+* decryption_password
+
+== Optional properties
+
+* import_uri.username
+* import_uri.password
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups import load-from-uri`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|decryption_password
+|string
+a|Password to decrypt the compressed file.
+
+
+|elements_ignored
+|integer
+a|Number of elements ignored.
+
+
+|elements_imported
+|integer
+a|Number of elements successfully imported.
+
+
+|import_uri
+|link:#import_uri[import_uri]
+a|
+
+|state
+|string
+a|Operation status.
+
+
+|status_uri
+|link:#status_uri[status_uri]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "decryption_password": "string",
+  "elements_ignored": 0,
+  "elements_imported": 0,
+  "import_uri": {
+    "password": "string",
+    "path": "http://web.sample.com/web1/file1.7z",
+    "username": "user1"
+  },
+  "state": "string",
+  "status_uri": {
+    "password": "string",
+    "path": "http://web.sample.com/web1/file1.7z",
+    "username": "user1"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655688
+| Invalid file decryption password. Valid password characters are: a-z, A-Z, and 0-9.
+
+| 655660
+| This operation is only permitted on data SVMs.
+
+| 655661
+| URI username, URI password and the file decryption password cannot exceed 128 characters.
+
+| 655689
+| File decryption password cannot be empty.
+
+| 655399
+| CIFS server does not exist.
+
+| 655683
+| Domain Security Identifier is already present in Active Directory.
+
+| 655685
+| Cluster is busy processing a local users and groups transition task.
+
+| 655687
+| Unknown file schema version.
+
+| 655690
+| Processing the import file failed. Check the file decryption password, compression format and content.
+
+| 655691
+| Error occurred before processing the file. Verify the input parameters.
+
+| 655692
+| Domain name that qualifies the local users and groups must match the CIFS server name.
+
+| 655693
+| All local users and local groups must be prefixed with the NetBIOS domain name.
+
+| 655693
+| Well-known user of group will not be present in this SVM.
+
+| 655695
+| Group membership of the specified user will not be created.
+
+| 655697
+| Failed processing a line of the bulk import file.
+
+| 655698
+| Failed to parse a line of the bulk import file. Check the syntax and contents.
+
+| 655699
+| Invalid number of elements in a line of the bulk import file.
+
+| 655700
+| Failed processing a field index of a line in the input bulk import file.
+
+| 655701
+| Unknown element type.
+
+| 655702
+| Invalid URI.
+
+| 655703
+| Failed to download the import file. Network error occurred.
+
+| 655709
+| Failed to queue CIFS local users and groups import job since a similar job already exists. Retry the operation after some time.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#detailed_status]
+[.api-collapsible-fifth-title]
+detailed_status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the import status failure.
+
+
+|message
+|string
+a|Detailed description of the import status.
+
+
+|===
+
+
+[#import_uri]
+[.api-collapsible-fifth-title]
+import_uri
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|Password of the specified URI.
+
+
+|path
+|string
+a|URI from which to load the input file containing the CIFS local users and groups. The file must be encrypted using the 7zip utility. URI can be FTP or HTTP.
+
+
+|username
+|string
+a|Username of the specified URI.
+
+
+|===
+
+
+[#status_uri]
+[.api-collapsible-fifth-title]
+status_uri
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|Password of the specified URI.
+
+
+|path
+|string
+a|URI from which to load the input file containing the CIFS local users and groups. The file must be encrypted using the 7zip utility. URI can be FTP or HTTP.
+
+
+|username
+|string
+a|Username of the specified URI.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_cifs_users_and_groups_import]
+[.api-collapsible-fifth-title]
+local_cifs_users_and_groups_import
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|decryption_password
+|string
+a|Password to decrypt the compressed file.
+
+
+|elements_ignored
+|integer
+a|Number of elements ignored.
+
+
+|elements_imported
+|integer
+a|Number of elements successfully imported.
+
+
+|import_uri
+|link:#import_uri[import_uri]
+a|
+
+|state
+|string
+a|Operation status.
+
+
+|status_uri
+|link:#status_uri[status_uri]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

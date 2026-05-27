@@ -1,0 +1,763 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-metrocluster.html'
+summary: 'Retrieve MetroCluster status and configuration details'
+---
+
+= Retrieve MetroCluster status and configuration details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/metrocluster`#
+
+*Introduced In:* 9.8
+
+Retrieves MetroCluster status and configuration details.
+
+== Related ONTAP commands
+
+* `metrocluster show`
+* `metrocluster node show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|configuration_type
+|string
+a|Displays the MetroCluster configuration type.
+
+
+|encryption_enabled
+|boolean
+a|Indicates if the encryption for NVLog and storage traffic is enabled.
+
+
+|local
+|link:#local[local]
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "configuration_type": "string",
+  "local": {
+    "automatic_uso_failure_domain": "string",
+    "cluster": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "cluster1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "configuration_state": "string",
+    "mode": "string"
+  },
+  "remote": {
+    "automatic_uso_failure_domain": "string",
+    "cluster": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "cluster1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "configuration_state": "string",
+    "mode": "string"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Local node of the DR Group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#partner]
+[.api-collapsible-fifth-title]
+partner
+
+Partner node of the DR Group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#dr_pairs]
+[.api-collapsible-fifth-title]
+dr_pairs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|Local node of the DR Group.
+
+
+|partner
+|link:#partner[partner]
+a|Partner node of the DR Group.
+
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|automatic_uso_failure_domain
+|string
+a|This parameter specifies the configuration of automatic switchover.
+The valid values for the parameter are ':'
+cluster':' triggers an unplanned switchover if all nodes in a DR cluster are down.
+dr_group':' triggers an unplanned switchover if both nodes of a DR group are down.
+disabled':' automatic switchover is disabled.
+If the cluster is not reachable due to errors, the parameter value will be set to
+not_reachable. This value is read only.
+If the cluster configuration is unknown, the parameter value will be set to
+unknown and the value is read only.
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|configuration_state
+|string
+a|Indicates the state of the local cluster configuration.
+
+
+|mode
+|string
+a|Specifies the mode of operation of the local cluster.
+
+
+|partner_cluster_reachable
+|boolean
+a|Specifies whether the partner cluster is reachable from the local cluster.
+
+
+|periodic_check_enabled
+|boolean
+a|Indicates whether or not a periodic check is enabled on the local cluster.
+
+
+|===
+
+
+[#ipv4_interface]
+[.api-collapsible-fifth-title]
+ipv4_interface
+
+Object to setup an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|gateway
+|string
+a|The IPv4 or IPv6 address of the default router.
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#l3_config]
+[.api-collapsible-fifth-title]
+l3_config
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipv4_interface
+|link:#ipv4_interface[ipv4_interface]
+a|Object to setup an interface along with its default router.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#mccip_ports]
+[.api-collapsible-fifth-title]
+mccip_ports
+
+Port configuration specification.
+l3_config information is only needed when configuring a MetroCluster IP for use in a layer 3 network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|l3_config
+|link:#l3_config[l3_config]
+a|
+
+|name
+|string
+a|Port name
+
+
+|node
+|link:#node[node]
+a|Node information
+
+
+|uuid
+|string
+a|Port UUID
+
+
+|vlan_id
+|integer
+a|VLAN ID
+
+
+|===
+
+
+[#dr_group]
+[.api-collapsible-fifth-title]
+dr_group
+
+DR group reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|DR Group ID
+
+
+|===
+
+
+[#peer_cluster]
+[.api-collapsible-fifth-title]
+peer_cluster
+
+The peer cluster that the mediator service is used for.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#mediator]
+[.api-collapsible-fifth-title]
+mediator
+
+Mediator information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dr_group
+|link:#dr_group[dr_group]
+a|DR group reference.
+
+
+|ip_address
+|string
+a|The IP address of the mediator.
+
+
+|local_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the local cluster. Possible values are connected, unreachable, unusable and down-high-latency. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|peer_cluster
+|link:#peer_cluster[peer_cluster]
+a|The peer cluster that the mediator service is used for.
+
+
+|peer_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the peer cluster. Possible values are connected, unreachable, unknown and down-high-latency.
+
+
+|port
+|integer
+a|The REST server's port number on the mediator.
+
+
+|reachable
+|boolean
+a|Indicates the connectivity status of the mediator.
+
+
+|strict_cert_validation
+|boolean
+a|Indicates if strict validation of certificates is performed while making REST API calls to the mediator. This field is only applicable to the ONTAP Cloud Mediator.
+
+* Default value:
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|type
+|string
+a|Mediator type. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|use_http_proxy_local
+|boolean
+a|Indicates if the local cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value:
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|uuid
+|string
+a|The unique identifier for the mediator service.
+
+
+|===
+
+
+[#partner_cluster]
+[.api-collapsible-fifth-title]
+partner_cluster
+
+Partner cluster information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|automatic_uso_failure_domain
+|string
+a|This parameter specifies the configuration of automatic switchover.
+The valid values for the parameter are ':'
+cluster':' triggers an unplanned switchover if all nodes in a DR cluster are down.
+dr_group':' triggers an unplanned switchover if both nodes of a DR group are down.
+disabled':' automatic switchover is disabled.
+If the cluster is not reachable due to errors, the parameter value will be set to
+not_reachable. This value is read only.
+If the cluster configuration is unknown, the parameter value will be set to
+unknown and the value is read only.
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|configuration_state
+|string
+a|Indicates the state of the remote cluster configuration.
+
+
+|mode
+|string
+a|Specifies the mode of operation of the remote cluster.
+
+
+|periodic_check_enabled
+|boolean
+a|Indicates whether or not a periodic check is enabled on the remote cluster.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

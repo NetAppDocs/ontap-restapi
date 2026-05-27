@@ -1,0 +1,292 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_local-users_endpoint_overview.html'
+summary: 'Manage local users'
+---
+
+= Manage local users
+
+
+
+== Overview
+
+The CIFS server can use local users for CIFS authentication. The local users can also be used for authorization when determining both share and file/directory access rights to data residing on the storage virtual machine (SVM).
+You can use this API to display local user information and to control local user configurations.
+
+== Retrieving local user information
+
+You can use the local user GET endpoint to retrieve all of the local user configurations for data SVMs.
+
+== Examples
+
+=== Retrieving all of the fields for local user configurations for all SVMs
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-users
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/local-users?fields=**" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-500",
+    "name": "CIFS_SERVER1\\Administrator",
+    "full_name": "",
+    "description": "Built-in administrator account",
+    "account_disabled": false,
+    "membership": [
+      {
+        "name": "BUILTIN\\Administrators",
+        "sid": "S-1-5-32-544"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+    "name": "CIFS_SERVER1\\user1",
+    "full_name": "local user1",
+    "description": "This is CIFS local user",
+    "account_disabled": false
+  },
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-1002",
+    "name": "CIFS_SERVER1\\user2",
+    "full_name": "local user2",
+    "description": "This is CIFS local user",
+    "account_disabled": false,
+    "membership": [
+      {
+        "name": "CIFS_SERVER1\\grp1",
+        "sid": "S-1-5-21-256008430-3394229847-3930036330-1001"
+      },
+      {
+        "name": "CIFS_SERVER1\\grp2",
+        "sid": "S-1-5-21-256008430-3394229847-3930036330-1002"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "3f479a01-2971-11eb-88e1-0050568eefd4",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-21-1625922807-3304708894-3529444428-500",
+    "name": "CIFS_SERVER2\\Administrator",
+    "full_name": "",
+    "description": "Built-in administrator account",
+    "account_disabled": false,
+    "membership": [
+      {
+        "name": "BUILTIN\\Administrators",
+        "sid": "S-1-5-32-544"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "3f479a01-2971-11eb-88e1-0050568eefd4",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-21-1625922807-3304708894-3529444428-1001",
+    "name": "CIFS_SERVER2\\user1",
+    "full_name": "local user1",
+    "description": "This is CIFS local user",
+    "account_disabled": false
+  }
+],
+"num_records": 5
+}
+----
+
+'''
+
+=== Retrieving the local user configuration of a specific SVM
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-users
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/local-users?svm.uuid=25b363a6-2971-11eb-88e1-0050568eefd4&fields=**" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-500",
+    "name": "CIFS_SERVER1\\Administrator",
+    "full_name": "",
+    "description": "Built-in administrator account",
+    "account_disabled": false,
+    "membership": [
+      {
+        "name": "BUILTIN\\Administrators",
+        "sid": "S-1-5-32-544"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+    "name": "CIFS_SERVER1\\user1",
+    "full_name": "local user1",
+    "description": "This is CIFS local user",
+    "account_disabled": false
+  },
+  {
+    "svm": {
+      "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-1002",
+    "name": "CIFS_SERVER1\\user2",
+    "full_name": "local user2",
+    "description": "This is CIFS local user",
+    "account_disabled": false,
+    "membership": [
+      {
+        "name": "CIFS_SERVER1\\grp1",
+        "sid": "S-1-5-21-256008430-3394229847-3930036330-1001"
+      },
+      {
+        "name": "CIFS_SERVER1\\grp2",
+        "sid": "S-1-5-21-256008430-3394229847-3930036330-1002"
+      }
+    ]
+  },
+],
+"num_records": 3
+}
+----
+
+'''
+
+=== Retrieving a local user configuration of a specific SVM and user
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-users/{svm.uuid}/{sid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/local-users/25b363a6-2971-11eb-88e1-0050568eefd4/S-1-5-21-1625922807-3304708894-3529444428-1001" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+  "name": "vs1"
+},
+"sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+"name": "CIFS_SERVER1\\user1",
+"full_name": "local user1",
+"description": "This is CIFS local user",
+"account_disabled": false
+}
+----
+
+'''
+
+== Creating a local user configuration
+
+The local user POST endpoint creates a local user configuration for the specified SVM.
+
+== Examples
+
+=== Creating a local user configuration with all fields specified
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-users
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/local-users" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"account_disabled\": false, \"description\": \"This is local user.\", \"full_name\": \"user name\", \"name\": \"SMB_SERVER01\\\\user\", \"password\": \"netapp1N\", \"svm\": { \"name\": \"vs1\", \"uuid\": \"25b363a6-2971-11eb-88e1-0050568eefd4\" }}"
+----
+
+'''
+
+=== Creating a local user configuration with only mandatory fields specified
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-users
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/local-users" -H "accept: application/json" -d "{ \"name\": \"user1\", \"password\": \"netapp1N\", \"svm\": { \"uuid\": \"25b363a6-2971-11eb-88e1-0050568eefd4\" }}"
+----
+
+'''
+
+== Updating a local user configuration
+
+The local user PATCH endpoint updates the local user configuration for the specified user and SVM.
+
+=== Updating a local user name and password
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-users/{svm.uuid}/{sid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/local-users/25b363a6-2971-11eb-88e1-0050568eefd4/S-1-5-21-1625922807-3304708894-3529444428-1001" -H "accept: application/json" -d "{ \"name\": \"new_user1\", \"password\": \"netapp1Net\" }"
+----
+
+'''
+
+== Deleting a local user configuration
+
+The local user DELETE endpoint deletes the specified local user for the specified SVM. The following example shows a DELETE operation:
+
+----
+
+# The API:
+/api/protocols/cifs/local-users/{svm.uuid}/{sid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/local-users/25b363a6-2971-11eb-88e1-0050568eefd4/S-1-5-21-1625922807-3304708894-3529444428-1001" -H "accept: application/json"
+----
+
+'''
+
+

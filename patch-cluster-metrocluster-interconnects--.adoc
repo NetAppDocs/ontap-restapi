@@ -1,0 +1,459 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-cluster-metrocluster-interconnects--.html'
+summary: 'Update a MetroCluster interconnect interface'
+---
+
+= Update a MetroCluster interconnect interface
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/cluster/metrocluster/interconnects/{node.uuid}/{partner_type}/{adapter}`#
+
+*Introduced In:* 9.10
+
+Updates a MetroCluster interconnect interface.
+
+== Related ONTAP commands
+
+* `metrocluster configuration-settings interface modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+
+|partner_type
+|string
+|path
+|True
+a|DR Partner type
+
+
+|adapter
+|string
+|path
+|True
+a|Interconnect adapter
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|adapter
+|string
+a|Adapter
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|List of objects which contain interface information such as its IP address, netmask and gateway.
+
+
+|mirror
+|link:#mirror[mirror]
+a|
+
+|multipath_policy
+|string
+a|Displays the NVRAM mirror multipath policy for the nodes configured in a MetroCluster.
+
+
+|node
+|link:#node[node]
+a|
+
+|partner_type
+|string
+a|Partner type
+
+
+|state
+|string
+a|Adapter status
+
+
+|type
+|string
+a|Adapter type
+
+
+|vlan_id
+|integer
+a|VLAN ID
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "adapter": "string",
+  "interfaces": [
+    {
+      "address": "10.10.10.7",
+      "gateway": "10.1.1.1",
+      "netmask": "24"
+    }
+  ],
+  "mirror": {
+    "state": "string"
+  },
+  "multipath_policy": "string",
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "partner_type": "string",
+  "state": "string",
+  "type": "string",
+  "vlan_id": 0
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2425734
+| An internal error has occurred. Wait a few minutes, and try the operation again. For further assistance, contact technical support.
+
+| 2430347
+| The interface is already configured for port "adapter" with IP address "interfaces.address" on node "node.name". To configure a new IP address, run the "metrocluster configuration-settings interface delete" command to delete this interface and then run the "metrocluster configuration-settings interface create" command with the new IP address.
+
+| 2430348
+| The interface is already configured for port "adapter" with gateway "interfaces.gateway" on node "node.name". To configure a new gateway or no gateway, run the "metrocluster configuration-settings interface delete" command to delete this interface and then run the "metrocluster configuration-settings interface create" command with the new gateway or no gateway.
+
+| 2430352
+| The interface is already configured for port "adapter" with netmask "interfaces.netmask" on node "node.name". To configure a new netmask, run the "metrocluster configuration-settings interface delete" command to delete this interface and then run the "metrocluster configuration-settings interface create" command with the new netmask.
+
+| 2430445
+| Configuration for the interface "port" on node "node.name" in cluster "cluster" does not exist. Use the "metrocluster configuration-settings interface show" command to list the valid interfaces configured for MetroCluster over IP.
+
+| 2432885
+| Unable to modify the interface for adapter "port". Reason&#58; At least one interface parameter is required to modify the interface.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#interfaces]
+[.api-collapsible-fifth-title]
+interfaces
+
+Object to setup an interface along with its default router.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|gateway
+|string
+a|The IPv4 or IPv6 address of the default router.
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#mirror]
+[.api-collapsible-fifth-title]
+mirror
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies the administrative state of the NVRAM mirror between partner nodes.
+
+
+|state
+|string
+a|Specifies the operational state of the NVRAM mirror between partner nodes.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#metrocluster_interconnect]
+[.api-collapsible-fifth-title]
+metrocluster_interconnect
+
+Data for a MetroCluster interconnect. REST: /api/cluster/metrocluster/interconnects
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|adapter
+|string
+a|Adapter
+
+
+|interfaces
+|array[link:#interfaces[interfaces]]
+a|List of objects which contain interface information such as its IP address, netmask and gateway.
+
+
+|mirror
+|link:#mirror[mirror]
+a|
+
+|multipath_policy
+|string
+a|Displays the NVRAM mirror multipath policy for the nodes configured in a MetroCluster.
+
+
+|node
+|link:#node[node]
+a|
+
+|partner_type
+|string
+a|Partner type
+
+
+|state
+|string
+a|Adapter status
+
+
+|type
+|string
+a|Adapter type
+
+
+|vlan_id
+|integer
+a|VLAN ID
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

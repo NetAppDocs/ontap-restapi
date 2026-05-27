@@ -1,0 +1,1318 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-services-.html'
+summary: 'Update CIFS mandatory and optional parameters'
+---
+
+= Update CIFS mandatory and optional parameters
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/services/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Updates both the mandatory and optional parameters of the CIFS configuration. Ensure the CIFS server is administratively disabled when renaming the CIFS server or modifying the _ad_domain_ properties.
+
+== Related ONTAP commands
+
+* `vserver cifs server modify`
+* `vserver cifs server options modify`
+* `vserver cifs security modify`
+* `vserver cifs server add-netbios-aliases`
+* `vserver cifs server remove-netbios-aliases`
+* `vserver cifs group-policy modify`
+
+== Learn more
+
+* link:protocols_cifs_services_endpoint_overview.html[DOC /protocols/cifs/services]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|force
+|boolean
+|query
+|False
+a|If this is set and a machine account with the same name as specified in 'cifs-server name' exists in the Active Directory, existing machine account will be overwritten and reused. The default value for this field is false.
+
+* Introduced in: 9.11
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|link:#ad_domain[ad_domain]
+a|
+
+|auth-style
+|string
+a|Authentication type.
+
+
+|auth_user_type
+|string
+a|Specifies the type of user who can access the SMB Volume. The default is domain_user. In the case of a hybrid-user, ONTAP won't contact on-premise ADDS.
+
+* enum: ["domain_user", "hybrid_user"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|authentication_method
+|string
+a|Specifies the authentication method.
+The available values are:
+
+*** client_secret
+
+*** certificate
+
+
+|client_certificate
+|string
+a|PKCS12 certificate used by the application to prove its identity to AKV.
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|client_secret
+|string
+a|Secret used by the application to prove its identity to AKV.
+
+
+|comment
+|string
+a|A descriptive text comment for the CIFS server. SMB clients can see the CIFS server comment when browsing servers on the network. If there is a space in the comment, you must enclose the entire string in quotation marks.
+
+
+|default_unix_user
+|string
+a|Specifies the UNIX user to which any authenticated CIFS user is mapped to, if the normal user mapping rules fails.
+
+
+|enabled
+|boolean
+a|Specifies if the CIFS service is administratively enabled.
+
+
+|group_policy_object_enabled
+|boolean
+a|If set to true, group policies will be applied to the SVM.
+
+
+|key_vault_uri
+|string
+a|URI of the deployed AKV that is used by ONTAP for storing keys.
+
+* example: https://kmip-akv-keyvault.vault.azure.net/
+* format: uri
+* Introduced in: 9.15
+* x-nullable: true
+
+
+|name
+|string
+a|The name of the CIFS server.
+
+
+|netbios
+|link:#cifs_netbios[cifs_netbios]
+a|
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|options
+|link:#cifs_service_options[cifs_service_options]
+a|
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|security
+|link:#cifs_service_security[cifs_service_security]
+a|
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|timeout
+|integer
+a|AKV connection timeout, in seconds. The allowed range is between 0 to 30 seconds.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the AKV host name. By default, verify_host is set to true.
+
+
+|workgroup
+|string
+a|The workgroup name.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "ad_domain": {
+    "default_site": "string",
+    "fqdn": "example.com",
+    "organizational_unit": "string",
+    "password": "string",
+    "user": "string"
+  },
+  "auth-style": "domain",
+  "auth_user_type": "string",
+  "authentication_method": "string",
+  "client_certificate": "PEM Cert",
+  "client_id": "e959d1b5-5a63-4284-9268-851e30e3eceb",
+  "client_secret": "<APPLICATION-CLIENT-SECRET-FOR-AKV>",
+  "comment": "This CIFS Server Belongs to CS Department",
+  "default_unix_user": "string",
+  "key_vault_uri": "https://kmip-akv-keyvault.vault.azure.net/",
+  "name": "CIFS1",
+  "netbios": {
+    "aliases": [
+      "ALIAS_1",
+      "ALIAS_2",
+      "ALIAS_3"
+    ],
+    "wins_servers": [
+      "10.224.65.20",
+      "10.224.65.21"
+    ]
+  },
+  "oauth_host": "login.microsoftonline.com",
+  "options": {
+    "max_connections_per_session": 32,
+    "max_lifs_per_session": 256,
+    "max_opens_same_file_per_tree": 1000,
+    "max_same_tree_connect_per_session": 5000,
+    "max_same_user_sessions_per_connection": 2500,
+    "max_watches_set_per_tree": 500,
+    "null_user_windows_name": "string",
+    "smb_credits": 128,
+    "widelink_reparse_versions": [
+      "smb1"
+    ]
+  },
+  "proxy_host": "proxy.eng.com",
+  "proxy_password": "proxypassword",
+  "proxy_port": 1234,
+  "proxy_type": "string",
+  "proxy_username": "proxyuser",
+  "security": {
+    "advertised_kdc_encryptions": [
+      "string"
+    ],
+    "lm_compatibility_level": "string",
+    "restrict_anonymous": "string",
+    "session_security": "string"
+  },
+  "tenant_id": "c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe",
+  "timeout": 25,
+  "workgroup": "workgrp1"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 3735751
+| Failed to authenticate and retrieve the access token from the Azure OAuth host.
+
+| 3735752
+| Failed to extract the private key from the Azure Key Vault certificate.
+
+| 3735753
+| Unsupported content_type in the Azure secrets response.
+
+| 3735754
+| Failed to parse the JSON response from Azure Key Vault.
+
+| 3735755
+| REST API call to Azure failed.
+
+| 3735756
+| Invalid client certificate.
+
+| 3735757
+| Failed to generate client assertion.
+
+| 3735762
+| The provided Azure Key Vault configuration is incorrect.
+
+| 3735763
+| The provided Azure Key Vault configuration is incomplete.
+
+| 3735764
+| Request to Azure failed. Reason - Azure error code and Azure error message.
+
+| 655390
+| Failed to modify the CIFS server. Failure can occur due to multiple reasons. For example: STARTTLS and LDAPS cannot be used together or the group policy is already enabled for the SVM.
+
+| 655562
+| NetBIOS name is longer than 15 characters.
+
+| 655538
+| Unable to modify the CIFS server. The server name is already used by another SVM.
+
+| 655563
+| NetBIOS name contains characters that are not allowed.
+
+| 655771
+| The number of NetBIOS aliases cannot exceed the maximum supported number of '200'.
+
+| 655923
+| Retrieving credentials from AKV is not supported because the effective cluster version is not ONTAP 9.15.0 or later.
+
+| 656473
+| Fields security.kdc_encryption and security.advertised_kdc_encryptions are mutually exclusive. Specify only one of the two.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ad_domain]
+[.api-collapsible-fifth-title]
+ad_domain
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_site
+|string
+a|The default site used by LIFs that do not have a site membership.
+
+
+|fqdn
+|string
+a|The fully qualified domain name of the Windows Active Directory to which this CIFS server belongs. A CIFS server appears as a member of Windows server object in the Active Directory store. POST and PATCH only.
+
+
+|organizational_unit
+|string
+a|Specifies the organizational unit within the Active Directory domain to associate with the CIFS server. POST and PATCH only.
+
+
+|password
+|string
+a|The account password used to add this CIFS server to the Active Directory. This is not audited.
+
+
+|user
+|string
+a|The user account used to add this CIFS server to the Active Directory.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS latency and throughput, for SVM protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#cifs_netbios]
+[.api-collapsible-fifth-title]
+cifs_netbios
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aliases
+|array[string]
+a|
+
+|enabled
+|boolean
+a|Specifies whether NetBios name service (NBNS) is enabled for the CIFS. If this service is enabled, the CIFS server will start sending the broadcast for name registration.
+
+
+|wins_servers
+|array[string]
+a|
+
+|===
+
+
+[#cifs_service_options]
+[.api-collapsible-fifth-title]
+cifs_service_options
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|admin_to_root_mapping
+|boolean
+a|Specifies whether or not Administrator can be mapped to the UNIX user "root".
+
+
+|advanced_sparse_file
+|boolean
+a|Specifies whether or not the CIFS server supports the advanced sparse file capabilities. This allows
+CIFS clients to query the allocated ranges of a file and to write zeroes or free data blocks for ranges
+of a file.
+
+
+|backup_symlink_enabled
+|boolean
+a|Specifies whether or not to preserve UNIX symlinks during backup through SMB.
+
+
+|client_dup_detection_enabled
+|boolean
+a|Specifies whether or not client duplicate session detection is enabled for CIFS.
+
+
+|client_version_reporting_enabled
+|boolean
+a|Specifies whether or not client version reporting is enabled for CIFS.
+
+
+|copy_offload
+|boolean
+a|Specifies whether or not to enable the Copy Offload feature. This feature enables direct
+data transfers within or between compatible storage devices without transferring the data
+through the host computer.
+
+Note that this will also enable/disable the direct copy feature accordingly.
+
+
+|dac_enabled
+|boolean
+a|Specifies whether or not the Dynamic Access Control (DAC) feature is enabled for the CIFS server.
+
+
+|export_policy_enabled
+|boolean
+a|Specifies whether or not export policies are enabled for CIFS.
+
+
+|fake_open
+|boolean
+a|Specifies whether or not fake open support is enabled. This parameter allows you to optimize the
+open and close requests coming from SMB 2 clients.
+
+
+|fsctl_trim
+|boolean
+a|Specifies whether or not the trim requests (FSCTL_FILE_LEVEL_TRIM) are supported on the CIFS server.
+
+
+|junction_reparse
+|boolean
+a|Specifies whether or not the reparse point support is enabled. When enabled the CIFS server
+exposes junction points to Windows clients as reparse points. This parameter is only active
+if the client has negotiated use of the SMB 2 or SMB 3 protocol. This parameter is not supported
+for SVMs with Infinite Volume.
+
+
+|large_mtu
+|boolean
+a|Specifies whether or not SMB clients can send reads up to 1 MB in size.
+
+
+|max_connections_per_session
+|integer
+a|Specifies the maximum number of connections allowed per multichannel session.
+
+
+|max_lifs_per_session
+|integer
+a|Specifies the maximum number of LIFs advertised per multichannel session.
+
+
+|max_opens_same_file_per_tree
+|integer
+a|Specifies the maximum number of opens on the same file per tree.
+
+
+|max_same_tree_connect_per_session
+|integer
+a|Specifies the maximum number of same tree connections per session.
+
+
+|max_same_user_sessions_per_connection
+|integer
+a|Specifies the maximum number of same user sessions per connection.
+
+
+|max_watches_set_per_tree
+|integer
+a|Specifies the maximum number of watches set per tree.
+
+
+|multichannel
+|boolean
+a|Specifies whether or not the CIFS server supports Multichannel.
+
+
+|null_user_windows_name
+|string
+a|Specifies a Windows User or Group name that should be mapped in case of a NULL user
+value.
+
+
+|path_component_cache
+|boolean
+a|Specifies whether or not the path component cache is enabled on the CIFS server.
+
+
+|referral
+|boolean
+a|Specifies whether or not to refer clients to more optimal LIFs. When enabled, it automatically
+refers clients to a data LIF local to the node which hosts the root of the requested share.
+
+
+|shadowcopy
+|boolean
+a|Specifies whether or not to enable the Shadowcopy Feature. This feature enables
+to take share-based backup copies of data that is in a data-consistent state at
+a specific point in time where the data is accessed over SMB 3.0 shares.
+
+
+|shadowcopy_dir_depth
+|integer
+a|Specifies the maximum level of subdirectories on which ONTAP should create shadow copies.
+
+* Default value: 5
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|smb_credits
+|integer
+a|Specifies the maximum number of outstanding requests on a CIFS connection.
+
+
+|trusted_domain_enum_search_enabled
+|boolean
+a|Specifies whether or not to enable trusted domain search.
+
+* If this parameter is set to true, it displays CIFS options only for CIFS servers
+that support enumeration of bidirectional trusted domains and that support searching in
+all bidirectional trusted domains when performing Windows user lookups for UNIX user to
+Windows user name mapping.
+* If set to false, it displays CIFS options for CIFS servers that do not support enumeration
+of bidirectional trusted domains.
+
+
+|widelink_reparse_versions
+|array[string]
+a|Specifies the CIFS protocol versions for which the widelink is reported as reparse point.
+
+
+|===
+
+
+[#cifs_service_security]
+[.api-collapsible-fifth-title]
+cifs_service_security
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|advertised_kdc_encryptions
+|array[string]
+a|
+
+|aes_netlogon_enabled
+|boolean
+a|Specifies whether or not an AES session key is enabled for the Netlogon channel.
+
+
+|encrypt_dc_connection
+|boolean
+a|Specifies whether encryption is required for domain controller connections.
+
+
+|kdc_encryption
+|boolean
+a|IMPORTANT: This attribute has been deprecated. Use "security.advertised_kdc_encryptions" to specify the encryption type to use.
+Specifies whether AES-128 and AES-256 encryption is enabled for all Kerberos-based communication with the Active Directory KDC.
+To take advantage of the strongest security with Kerberos-based communication, AES-256 and AES-128 encryption can be enabled on the CIFS server.
+Kerberos-related communication for CIFS is used during CIFS server creation on the SVM, as well
+as during the SMB session setup phase.
+The CIFS server supports the following encryption types for Kerberos communication:
+
+***** RC4-HMAC
+
+***** DES
+
+***** AES
+When the CIFS server is created, the domain controller creates a computer machine account in
+Active Directory. After a newly created machine account authenticates, the KDC and the CIFS server
+negotiates encryption types. At this time, the KDC becomes aware of the encryption capabilities of
+the particular machine account and uses those capabilities in subsequent communication with the
+CIFS server.
+In addition to negotiating encryption types during CIFS server creation, the encryption types are
+renegotiated when a machine account password is reset.
+
+
+|ldap_referral_enabled
+|boolean
+a|Specifies whether or not LDAP referral chasing is enabled for AD LDAP connections.
+
+
+|lm_compatibility_level
+|string
+a|It is CIFS server minimum security level, also known as the LMCompatibilityLevel. The minimum security level is the minimum level of the security tokens that        the CIFS server accepts from SMB clients.
+The available values are:
+
+* lm_ntlm_ntlmv2_krb          Accepts LM, NTLM, NTLMv2 and Kerberos
+* ntlm_ntlmv2_krb             Accepts NTLM, NTLMv2 and Kerberos
+* ntlmv2_krb                  Accepts NTLMv2 and Kerberos
+* krb                         Accepts Kerberos only
+
+
+|restrict_anonymous
+|string
+a|Specifies what level of access an anonymous user is granted. An anonymous user (also known as a "null user") can list or enumerate certain types of system information from Windows hosts on the network, including user names and details, account policies, and share names. Access for the anonymous user can be controlled by specifying one of three access restriction settings.
+ The available values are:
+
+** no_restriction   - No access restriction for an anonymous user.
+
+** no_enumeration   - Enumeration is restricted for an anonymous user.
+
+** no_access        - All access is restricted for an anonymous user.
+
+
+|session_security
+|string
+a|Specifies client session security for AD LDAP connections.
+The available values are:
+
+*** none - No Signing or Sealing.
+
+*** sign - Sign LDAP traffic.
+
+*** seal - Seal and Sign LDAP traffic
+
+
+|smb_encryption
+|boolean
+a|Specifies whether encryption is required for incoming CIFS traffic.
+
+
+|smb_signing
+|boolean
+a|Specifies whether signing is required for incoming CIFS traffic. SMB signing helps to ensure that network traffic between the CIFS server and the client is not compromised.
+
+
+|try_ldap_channel_binding
+|boolean
+a|Specifies whether or not channel binding is attempted in the case of TLS/LDAPS.
+
+
+|use_ldaps
+|boolean
+a|Specifies whether or not to use use LDAPS for secure Active Directory LDAP connections
+by using the TLS/SSL protocols.
+
+
+|use_start_tls
+|boolean
+a|Specifies whether or not to use SSL/TLS for allowing secure LDAP communication with
+Active Directory LDAP servers.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance numbers, such as IOPS latency and throughput for SVM protocols. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_service]
+[.api-collapsible-fifth-title]
+cifs_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|link:#ad_domain[ad_domain]
+a|
+
+|auth-style
+|string
+a|Authentication type.
+
+
+|auth_user_type
+|string
+a|Specifies the type of user who can access the SMB Volume. The default is domain_user. In the case of a hybrid-user, ONTAP won't contact on-premise ADDS.
+
+* enum: ["domain_user", "hybrid_user"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|authentication_method
+|string
+a|Specifies the authentication method.
+The available values are:
+
+*** client_secret
+
+*** certificate
+
+
+|client_certificate
+|string
+a|PKCS12 certificate used by the application to prove its identity to AKV.
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|client_secret
+|string
+a|Secret used by the application to prove its identity to AKV.
+
+
+|comment
+|string
+a|A descriptive text comment for the CIFS server. SMB clients can see the CIFS server comment when browsing servers on the network. If there is a space in the comment, you must enclose the entire string in quotation marks.
+
+
+|default_unix_user
+|string
+a|Specifies the UNIX user to which any authenticated CIFS user is mapped to, if the normal user mapping rules fails.
+
+
+|enabled
+|boolean
+a|Specifies if the CIFS service is administratively enabled.
+
+
+|group_policy_object_enabled
+|boolean
+a|If set to true, group policies will be applied to the SVM.
+
+
+|key_vault_uri
+|string
+a|URI of the deployed AKV that is used by ONTAP for storing keys.
+
+* example: https://kmip-akv-keyvault.vault.azure.net/
+* format: uri
+* Introduced in: 9.15
+* x-nullable: true
+
+
+|name
+|string
+a|The name of the CIFS server.
+
+
+|netbios
+|link:#cifs_netbios[cifs_netbios]
+a|
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|options
+|link:#cifs_service_options[cifs_service_options]
+a|
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|security
+|link:#cifs_service_security[cifs_service_security]
+a|
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|timeout
+|integer
+a|AKV connection timeout, in seconds. The allowed range is between 0 to 30 seconds.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the AKV host name. By default, verify_host is set to true.
+
+
+|workgroup
+|string
+a|The workgroup name.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

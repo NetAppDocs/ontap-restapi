@@ -1,0 +1,171 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_login_totps_endpoint_overview.html'
+summary: 'View and create TOTP profiles'
+---
+
+= View and create TOTP profiles
+
+
+
+== Overview
+
+This API configures the TOTP(Time based OTP) profile for user accounts for secure shell (SSH) access.
+Prerequisites:
+  You must configure TOTP as a secondary authentication method in /security/accounts when creating users.
+  You must have a TOTP application that you can use to get TOTP keys.
+  You are only allowed to create a TOTP profile for yourself, not for others.
+  Admin cannot create TOTP profiles for any users.
+
+== Examples
+
+=== Creating a TOTP profile for cluster-scoped user accounts
+
+Specify the user account name and comment in the body of the POST request. The owner.uuid or owner.name are not required for a cluster-scoped user account.
+
+----
+
+# The API:
+POST "/api/security/login/totps"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/login/totps --request POST --data '{ "account": { "name": "pubuser2" },"comment": "Cserver-Creation"}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+{
+  "owner": {
+    "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+    "name": "Default",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/b009a9e7-4081-b576-7575-ada21efcaf16"
+      }
+    }
+  },
+  "account": {
+    "name": "pubuser2"
+  },
+  "secret_key": "<ACCOUNT-TOTP-SECRET-KEY>"
+  "install_url": "https://www.google.com/chart?chs=200x200&chld=M&#124;0&cht=qr&chl=otpauth://totp/root@node1%3Fsecret%3DDRY5CAJGTQCL5TV4D3UAMYXJFM%26issuer%3Dnode1",
+  "verification_code": "946090",
+  "emergency_codes": [
+    "54200192",
+    "10418385",
+    "52726505",
+    "41704451",
+    "20744310"
+  ],
+  "_links": {
+    "self": {
+      "href": "/api/security/login/totps/b009a9e7-4081-b576-7575-ada21efcaf16/pubuser2"
+    }
+  }
+}
+ ]
+}
+----
+
+=== Creating a TOTP profile for SVM-scoped user accounts
+
+For an SVM-scoped account, specify either the SVM name as the owner.name or the SVM UUID as the owner.uuid along with other parameters for the user account. These parameters indicate the SVM that contains the user account for the TOTP profile being created and can be obtained from the response body of the GET request performed on the API "/api/svm/svms".
+
+----
+
+# The API:
+POST "/api/security/login/totps"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/login/totps --request POST --data '{ "account": { "name": "pubuser4" },"comment": "Vserver-Creation","owner.name":"vs0" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+{
+  "owner": {
+    "uuid": "b019a9e7-4081-b576-7575-ada21efcaf16",
+    "name": "vs0",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/b019a9e7-4081-b576-7575-ada21efcaf16"
+      }
+    }
+  },
+  "account": {
+    "name": "pubuser4"
+  },
+  "secret_key": "<ACCOUNT-TOTP-SECRET-KEY>",
+  "install_url": "https://www.google.com/chart?chs=200x200&chld=M&#124;0&cht=qr&chl=otpauth://totp/root@node1%3Fsecret%3DDRY5CAJGTQCL5TV4D3UAMYXJFM%26issuer%3Dnode1",
+  "verification_code": "946090",
+  "emergency_codes": [
+    "54200192",
+    "10418385",
+    "52726505",
+    "41704451",
+    "20744310"
+  ],
+  "_links": {
+    "self": {
+      "href": "/api/security/login/totps/b019a9e7-4081-b576-7575-ada21efcaf16/pubuser4"
+    }
+  }
+}
+ ]
+}
+----
+
+=== Retrieving the configured TOTP profile for user accounts
+
+Retrieves the TOTP profiles associated with the user accounts or a filtered list (for a specific user account name, a specific SVM and so on).
+
+----
+
+# The API:
+GET "/api/security/login/totps"
+
+# The call to retrieve TOTP profiles associated with TOTP configured user accounts in the cluster:
+curl -k https://<mgmt-ip>/api/security/login/totps
+
+# the response:
+{
+"records": [
+{
+  "owner": {
+    "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+    "name": "Default",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/b009a9e7-4081-b576-7575-ada21efcaf16"
+      }
+    }
+  },
+  "account": {
+    "name": "pubuser2",
+    "_links": {
+      "self": {
+        "href": "/api/security/accounts/b009a9e7-4081-b576-7575-ada21efcaf16/pubuser2"
+      }
+    }
+  },
+  "_links": {
+    "self": {
+      "href": "/api/security/login/totps/b009a9e7-4081-b576-7575-ada21efcaf16/pubuser2"
+    }
+  }
+}
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/login/totps"
+  }
+}
+}
+----
+
+

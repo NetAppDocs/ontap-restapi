@@ -1,0 +1,1633 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nfs-services-.html'
+summary: 'Retrieve NFS configuration for an SVM'
+---
+
+= Retrieve NFS configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nfs/services/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves the NFS configuration of an SVM.
+
+== Related ONTAP commands
+
+* `vserver nfs show`
+* `vserver nfs status`
+
+== Learn more
+
+* link:protocols_nfs_services_endpoint_overview.html[DOC /protocols/nfs/services]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_cache_config
+|link:#access_cache_config[access_cache_config]
+a|
+
+|auth_sys_extended_groups_enabled
+|boolean
+a|Specifies whether or not extended groups support over AUTH_SYS is enabled.
+
+
+|credential_cache
+|link:#credential_cache[credential_cache]
+a|
+
+|enabled
+|boolean
+a|Specifies if the NFS service is administratively enabled.
+
+
+|exports
+|link:#exports[exports]
+a|
+
+|extended_groups_limit
+|integer
+a|Specifies the maximum auxiliary groups supported over AUTH_SYS and RPCSEC_GSS.
+
+
+|file_session_io_grouping_count
+|integer
+a|Number of I/O operations on a file to be grouped and considered as one session for event generation applications, such as FPolicy.
+
+
+|file_session_io_grouping_duration
+|integer
+a|The duration for which I/O operations on a file will be grouped and considered as one session for event generation applications, such as FPolicy.
+
+
+|metric
+|link:#metric[metric]
+a|Historical performance numbers, such as IOPS latency and throughput, for SVM-NFS protocol.
+
+
+|protocol
+|link:#protocol[protocol]
+a|
+
+|protocol_access_rules
+|link:#protocol_access_rules[protocol_access_rules]
+a|
+
+|qtree
+|link:#qtree[qtree]
+a|
+
+|root
+|link:#root[root]
+a|
+
+|rquota_enabled
+|boolean
+a|Specifies whether or not the remote quota feature is enabled.
+
+
+|security
+|link:#security[security]
+a|
+
+|showmount_enabled
+|boolean
+a|Specifies whether or not the showmount feature is enabled.
+
+
+|state
+|string
+a|Specifies the state of the NFS service on the SVM. The following values are supported:
+
+***** online - NFS server is ready to accept client requests.
+
+***** offline - NFS server is not ready to accept client requests.
+
+
+|statistics
+|link:#statistics[statistics]
+a|Realtime performance numbers, such as IOPS latency and throughput, for SVM-NFS protocol.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|transport
+|link:#transport[transport]
+a|
+
+|vstorage_enabled
+|boolean
+a|Specifies whether or not the VMware vstorage feature is enabled.
+
+
+|windows
+|link:#windows[windows]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "access_cache_config": {
+    "harvest_timeout": 3600,
+    "ttl_failure": 1,
+    "ttl_negative": 30,
+    "ttl_positive": 60
+  },
+  "credential_cache": {
+    "harvest_timeout": 86400000,
+    "negative_ttl": 3600000,
+    "positive_ttl": 3600000,
+    "transient_error_ttl": 30000
+  },
+  "exports": {
+    "name_service_lookup_protocol": "string"
+  },
+  "extended_groups_limit": 32,
+  "file_session_io_grouping_count": 5000,
+  "file_session_io_grouping_duration": 120,
+  "metric": {
+    "v3": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "duration": "PT15S",
+      "iops": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "throughput": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    },
+    "v4": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "duration": "PT15S",
+      "iops": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "throughput": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    },
+    "v41": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "duration": "PT15S",
+      "iops": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "throughput": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    }
+  },
+  "protocol": {
+    "v40_features": {
+      "acl_max_aces": 500
+    },
+    "v41_features": {
+      "implementation_domain": "string",
+      "implementation_name": "string"
+    },
+    "v4_id_domain": "string"
+  },
+  "protocol_access_rules": {
+    "cifs_access_type": "string",
+    "nfs3_access_type": "string",
+    "nfs4_access_type": "string"
+  },
+  "security": {
+    "chown_mode": "string",
+    "ntfs_unix_security": "string",
+    "permitted_encryption_types": [
+      "string"
+    ]
+  },
+  "state": "string",
+  "statistics": {
+    "v3": {
+      "iops_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "throughput_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    },
+    "v4": {
+      "iops_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "throughput_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    },
+    "v41": {
+      "iops_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "latency_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "status": "ok",
+      "throughput_raw": {
+        "read": 200,
+        "total": 1000,
+        "write": 100
+      },
+      "timestamp": "2017-01-25 11:20:13 +0000"
+    }
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "transport": {
+    "tcp_max_transfer_size": 16384
+  },
+  "windows": {
+    "default_user": "string"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#access_cache_config]
+[.api-collapsible-fifth-title]
+access_cache_config
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|harvest_timeout
+|integer
+a|Specifies the time after which an entry is deleted from the access cache, if unused.
+
+
+|isDnsTTLEnabled
+|boolean
+a|Specifies whether Dns TTL is enabled.
+
+
+|ttl_failure
+|integer
+a|Specifies the time to live value for entries for which a failure was encountered, in seconds.
+
+
+|ttl_negative
+|integer
+a|Specifies the time to live value of a negative access cache, in seconds.
+
+
+|ttl_positive
+|integer
+a|Specifies the time to live value of a positive access cache, in seconds.
+
+
+|===
+
+
+[#credential_cache]
+[.api-collapsible-fifth-title]
+credential_cache
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|harvest_timeout
+|integer
+a|Specifies the age of the unused cached entries, in milliseconds, after which they are cleared from the cache.
+
+
+|negative_ttl
+|integer
+a|Specifies the age in milliseconds, of the negative cached credentials after which they are cleared from the cache.
+
+
+|positive_ttl
+|integer
+a|Specifies the age in milliseconds, of the positive cached credentials after which they are cleared from the cache.
+
+
+|transient_error_ttl
+|integer
+a|Specifies the age in milliseconds, of the cached entries during a transient error situation.
+
+
+|===
+
+
+[#exports]
+[.api-collapsible-fifth-title]
+exports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name_service_lookup_protocol
+|string
+a|Specifies the protocol to use for doing name service lookups.
+
+
+|netgroup_trust_any_nsswitch_no_match
+|boolean
+a|Specifies if you can consider a no-match result from any of the netgroup ns-switch sources to be authoritative. If this option is enabled, then a no-match response from any of the netgroup ns-switch sources is deemed conclusive even if other sources could not be searched.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#v3]
+[.api-collapsible-fifth-title]
+v3
+
+The NFSv3 operations
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#v4]
+[.api-collapsible-fifth-title]
+v4
+
+The NFSv4 operations
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#v41]
+[.api-collapsible-fifth-title]
+v41
+
+The NFSv4.1 operations
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Historical performance numbers, such as IOPS latency and throughput, for SVM-NFS protocol.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|v3
+|link:#v3[v3]
+a|The NFSv3 operations
+
+
+|v4
+|link:#v4[v4]
+a|The NFSv4 operations
+
+
+|v41
+|link:#v41[v41]
+a|The NFSv4.1 operations
+
+
+|===
+
+
+[#v3_features]
+[.api-collapsible-fifth-title]
+v3_features
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connection_drop
+|boolean
+a|Specifies whether the dropping of a connection when an NFSv3 request is dropped is enabled.
+
+
+|ejukebox_enabled
+|boolean
+a|Specifies whether NFSv3 EJUKEBOX error is enabled.
+
+
+|fsid_change
+|boolean
+a|Specifies whether the change in FSID as NFSv3 clients traverse filesystems should be shown.
+
+
+|hide_snapshot_enabled
+|boolean
+a|Specifies whether hiding a snapshot directory under a NFSv3 mount point is enabled.
+
+
+|mount_daemon_port
+|integer
+a|Specifies which port the NFS mount daemon (mountd) uses.
+
+
+|mount_root_only
+|boolean
+a|Specifies whether the SVM allows MOUNT protocol calls only from privileged ports (port numbers less than 1024).
+
+
+|network_lock_manager_port
+|integer
+a|Specifies which port the Network lock manager uses.
+
+
+|network_status_monitor_port
+|integer
+a|Specifies which port the Network status monitor port uses.
+
+
+|rquota_daemon_port
+|integer
+a|Specifies which port the NFS quota daemon port uses.
+
+
+|===
+
+
+[#v40_features]
+[.api-collapsible-fifth-title]
+v40_features
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|acl_enabled
+|boolean
+a|Specifies whether NFSv4.0 ACLs is enabled.
+
+
+|acl_max_aces
+|integer
+a|Specifies the maximum number of aces in a NFSv4.0 ACL.
+
+
+|acl_preserve
+|boolean
+a|Specifies if the NFSv4 ACL is preserved or dropped when chmod is performed. In unified security style, this parameter also specifies if NTFS file permissions are preserved or dropped when chmod, chgrp, or chown are performed.
+
+
+|read_delegation_enabled
+|boolean
+a|Specifies whether NFSv4.0 Read Delegation is enabled.
+
+
+|referrals_enabled
+|boolean
+a|Specifies whether NFSv4.0 referrals is enabled.
+
+
+|write_delegation_enabled
+|boolean
+a|Specifies whether NFSv4.0 Write Delegation is enabled.
+
+
+|===
+
+
+[#v41_features]
+[.api-collapsible-fifth-title]
+v41_features
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|acl_enabled
+|boolean
+a|Specifies whether NFSv4.1 or later ACLs is enabled.
+
+
+|implementation_domain
+|string
+a|Specifies the NFSv4.1 or later implementation ID domain.
+
+
+|implementation_name
+|string
+a|Specifies the NFSv4.1 or later implementation ID name.
+
+
+|pnfs_enabled
+|boolean
+a|Specifies whether NFSv4.1 or later Parallel NFS is enabled.
+
+
+|read_delegation_enabled
+|boolean
+a|Specifies whether NFSv4.1 or later Read Delegation is enabled.
+
+
+|referrals_enabled
+|boolean
+a|Specifies whether NFSv4.1 referrals is enabled.
+
+
+|trunking_enabled
+|boolean
+a|Specifies whether NFSv4.1 or later trunking is enabled.
+
+
+|write_delegation_enabled
+|boolean
+a|Specifies whether NFSv4.1 or later Write Delegation is enabled.
+
+
+|===
+
+
+[#v42_features]
+[.api-collapsible-fifth-title]
+v42_features
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|seclabel_enabled
+|boolean
+a|Specifies whether NFSv4.2 or later security label is enabled.
+
+
+|sparsefile_ops_enabled
+|boolean
+a|Specifies whether NFSv4.2 or later sparsefile operation is enabled.
+
+
+|xattrs_enabled
+|boolean
+a|Specifies whether NFSv4.2 or later extended attributes is enabled.
+
+
+|===
+
+
+[#protocol]
+[.api-collapsible-fifth-title]
+protocol
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|v3_64bit_identifiers_enabled
+|boolean
+a|Specifies whether 64-bit support for NFSv3 FSIDs and file IDs is enabled.
+
+
+|v3_enabled
+|boolean
+a|Specifies whether NFSv3 protocol is enabled.
+
+
+|v3_features
+|link:#v3_features[v3_features]
+a|
+
+|v40_enabled
+|boolean
+a|Specifies whether NFSv4.0 protocol is enabled.
+
+
+|v40_features
+|link:#v40_features[v40_features]
+a|
+
+|v41_enabled
+|boolean
+a|Specifies whether NFSv4.1 or later protocol is enabled.
+
+
+|v41_features
+|link:#v41_features[v41_features]
+a|
+
+|v42_features
+|link:#v42_features[v42_features]
+a|
+
+|v4_64bit_identifiers_enabled
+|boolean
+a|Specifies whether 64-bit support for NFSv4.x FSIDs and file IDs is enabled.
+
+
+|v4_fsid_change
+|boolean
+a|Specifies whether the change in FSID when NFSv4 clients traverse file systems is displayed.
+
+
+|v4_grace_seconds
+|integer
+a|Specifies the grace period for clients to reclaim file locks after a server failure.
+
+
+|v4_id_domain
+|string
+a|Specifies the domain portion of the string form of user and group
+names as defined by the NFSv4 protocol.
+
+
+|v4_lease_seconds
+|integer
+a|Specifies the lease seconds of the NFSv4 clients. If it is inactive for more than the time displayed, all of the file lock states on a node might be lost.
+
+
+|v4_session_slot_reply_cache_size
+|integer
+a|Specifies the number of bytes of the reply that is cached in each NFSv4.x session slot.
+
+
+|v4_session_slots
+|integer
+a|Specifies the number of entries in NFSv4.x session slot table.
+
+
+|v4_subnet_filter_enabled
+|boolean
+a|Specifies whether NFSv4 subnet filtering is enabled.
+
+
+|===
+
+
+[#protocol_access_rules]
+[.api-collapsible-fifth-title]
+protocol_access_rules
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cifs_access_type
+|string
+a|Access available for the CIFS protocol.
+
+
+|nfs3_access_type
+|string
+a|Access available for the NFSv3 protocol.
+
+
+|nfs4_access_type
+|string
+a|Access available for the NFSv4 protocol.
+
+
+|===
+
+
+[#qtree]
+[.api-collapsible-fifth-title]
+qtree
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|export_enabled
+|boolean
+a|Specifies whether qtree export is enabled.
+
+
+|validate_export
+|boolean
+a|Specifies whether qtree export validation is enabled.
+
+
+|===
+
+
+[#root]
+[.api-collapsible-fifth-title]
+root
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ignore_nt_acl
+|boolean
+a|Specifies whether Windows ACLs affect root access from NFS. If this option is enabled, root access from NFS ignores the NT ACL set on the file or directory.
+
+
+|skip_write_permission_check
+|boolean
+a|Specifies if permission checks are to be skipped for NFS WRITE calls from root/owner. For copying read-only files to a destination folder which has inheritable ACLs, this option must be enabled.
+
+
+|===
+
+
+[#security]
+[.api-collapsible-fifth-title]
+security
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|chown_mode
+|string
+a|Specifies whether file ownership can be changed only by the superuser, or if a non-root user can also change file ownership. If you set this parameter to restricted, file ownership can be changed only by the superuser, even though the on-disk permissions allow a non-root user to change file ownership. If you set this parameter to unrestricted, file ownership can be changed by the superuser and by the non-root user, depending upon the access granted by on-disk permissions. If you set this parameter to use_export_policy, file ownership can be changed in accordance with the relevant export rules.
+
+
+|nt_acl_display_permission
+|boolean
+a|Controls the permissions that are displayed to NFSv3 and NFSv4 clients on a file or directory that has an NT ACL set. When true, the displayed permissions are based on the maximum access granted by the NT ACL to any user. When false, the displayed permissions are based on the minimum access granted by the NT ACL to any user.
+
+
+|ntfs_unix_security
+|string
+a|Specifies how NFSv3 security changes affect NTFS volumes. If you set this parameter to ignore, ONTAP ignores NFSv3 security changes. If you set this parameter to fail, this overrides the UNIX security options set in the relevant export rules. If you set this parameter to use_export_policy, ONTAP processes NFSv3 security changes in accordance with the relevant export rules.
+
+* Default value: 1
+* enum: ["ignore", "fail", "use_export_policy"]
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|permitted_encryption_types
+|array[string]
+a|Specifies the permitted encryption types for Kerberos over NFS.
+
+
+|rpcsec_context_idle
+|integer
+a|Specifies, in seconds, the amount of time a RPCSEC_GSS context is permitted to remain unused before it is deleted.
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#v3]
+[.api-collapsible-fifth-title]
+v3
+
+The NFSv3 operations
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#v4]
+[.api-collapsible-fifth-title]
+v4
+
+The NFSv4 operations
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#v41]
+[.api-collapsible-fifth-title]
+v41
+
+The NFSv4.1 operations
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+Realtime performance numbers, such as IOPS latency and throughput, for SVM-NFS protocol.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|v3
+|link:#v3[v3]
+a|The NFSv3 operations
+
+
+|v4
+|link:#v4[v4]
+a|The NFSv4 operations
+
+
+|v41
+|link:#v41[v41]
+a|The NFSv4.1 operations
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#transport]
+[.api-collapsible-fifth-title]
+transport
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|rdma_enabled
+|boolean
+a|Specifies whether RDMA transport is enabled for the NFS server.
+
+
+|tcp_enabled
+|boolean
+a|Specifies whether TCP transports are enabled on the server.
+
+
+|tcp_max_transfer_size
+|integer
+a|Specifies the maximum transfer size in bytes, that the storage system negotiates with the client for TCP transport of data for NFSv3 and NFSv4.x protocols. The range is 8192 to 1048576.
+
+
+|udp_enabled
+|boolean
+a|Specifies whether UDP transports are enabled on the server.
+
+
+|===
+
+
+[#windows]
+[.api-collapsible-fifth-title]
+windows
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_user
+|string
+a|Specifies the default Windows user for the NFS server.
+
+
+|map_unknown_uid_to_default_user
+|boolean
+a|Specifies whether or not the mapping of an unknown UID to the default Windows user is enabled.
+
+
+|v3_ms_dos_client_enabled
+|boolean
+a|Specifies whether NFSv3 MS-DOS client support is enabled.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

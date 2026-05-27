@@ -1,0 +1,863 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-ems-destinations.html'
+summary: 'Retrieve a collection of event destinations'
+---
+
+= Retrieve a collection of event destinations
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/ems/destinations`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of event destinations.
+
+== Related ONTAP commands
+
+* `event notification destination show`
+* `event notification show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|system_defined
+|boolean
+|query
+|False
+a|Filter by system_defined
+
+* Introduced in: 9.10
+
+
+|destination
+|string
+|query
+|False
+a|Filter by destination
+
+
+|certificate.name
+|string
+|query
+|False
+a|Filter by certificate.name
+
+* Introduced in: 9.11
+
+
+|certificate.serial_number
+|string
+|query
+|False
+a|Filter by certificate.serial_number
+
+* maxLength: 40
+* minLength: 1
+
+
+|certificate.ca
+|string
+|query
+|False
+a|Filter by certificate.ca
+
+* maxLength: 256
+* minLength: 1
+
+
+|connectivity.errors.message.message
+|string
+|query
+|False
+a|Filter by connectivity.errors.message.message
+
+* Introduced in: 9.11
+
+
+|connectivity.errors.message.code
+|string
+|query
+|False
+a|Filter by connectivity.errors.message.code
+
+* Introduced in: 9.11
+
+
+|connectivity.errors.message.arguments.message
+|string
+|query
+|False
+a|Filter by connectivity.errors.message.arguments.message
+
+* Introduced in: 9.11
+
+
+|connectivity.errors.message.arguments.code
+|string
+|query
+|False
+a|Filter by connectivity.errors.message.arguments.code
+
+* Introduced in: 9.11
+
+
+|connectivity.errors.node.name
+|string
+|query
+|False
+a|Filter by connectivity.errors.node.name
+
+* Introduced in: 9.11
+
+
+|connectivity.errors.node.uuid
+|string
+|query
+|False
+a|Filter by connectivity.errors.node.uuid
+
+* Introduced in: 9.11
+
+
+|connectivity.state
+|string
+|query
+|False
+a|Filter by connectivity.state
+
+* Introduced in: 9.11
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|syslog.port
+|integer
+|query
+|False
+a|Filter by syslog.port
+
+* Introduced in: 9.12
+
+
+|syslog.format.hostname_override
+|string
+|query
+|False
+a|Filter by syslog.format.hostname_override
+
+* Introduced in: 9.12
+
+
+|syslog.format.message
+|string
+|query
+|False
+a|Filter by syslog.format.message
+
+* Introduced in: 9.12
+
+
+|syslog.format.timestamp_override
+|string
+|query
+|False
+a|Filter by syslog.format.timestamp_override
+
+* Introduced in: 9.12
+
+
+|syslog.transport
+|string
+|query
+|False
+a|Filter by syslog.transport
+
+* Introduced in: 9.12
+
+
+|access_control_role.name
+|string
+|query
+|False
+a|Filter by access_control_role.name
+
+* Introduced in: 9.13
+
+
+|filters.name
+|string
+|query
+|False
+a|Filter by filters.name
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "access_control_role": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "admin"
+      },
+      "certificate": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "ca": "VeriSign",
+        "name": "string",
+        "serial_number": 1234567890
+      },
+      "connectivity": {
+        "errors": [
+          {
+            "message": {
+              "arguments": [
+                {
+                  "code": "string",
+                  "message": "string"
+                }
+              ],
+              "code": "4",
+              "message": "entry doesn't exist"
+            },
+            "node": {
+              "_links": {
+                "self": {
+                  "href": "/api/resourcelink"
+                }
+              },
+              "name": "node1",
+              "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+            }
+          }
+        ],
+        "state": "fail"
+      },
+      "destination": "administrator@mycompany.com",
+      "filters": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "important-events"
+        }
+      ],
+      "name": "Admin_Email",
+      "syslog": {
+        "format": {
+          "hostname_override": "string",
+          "message": "string",
+          "timestamp_override": "string"
+        },
+        "port": 514,
+        "transport": "string"
+      },
+      "system_defined": 1,
+      "type": "email"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#access_control_role]
+[.api-collapsible-fifth-title]
+access_control_role
+
+Indicates the access control role that created the event destination and is used to control access to the destination based on role-based access control (RBAC) rules. If created by the 'admin' user, the field is unset.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Specifies the client-side certificate used by the ONTAP system when mutual authentication is required. This object is only applicable for *rest_api* type destinations. Both the `ca` and `serial_number` fields must be specified when configuring a certificate in a PATCH or POST request. The `name` field is read-only and cannot be used to configure a client-side certificate.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ca
+|string
+a|Client certificate issuing CA
+
+
+|name
+|string
+a|Certificate name
+
+
+|serial_number
+|string
+a|Client certificate serial number
+
+
+|===
+
+
+[#arguments]
+[.api-collapsible-fifth-title]
+arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#message]
+[.api-collapsible-fifth-title]
+message
+
+Information to be displayed to the user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#arguments[arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Unique message code.
+
+
+|message
+|string
+a|User message.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#errors]
+[.api-collapsible-fifth-title]
+errors
+
+Error object included in the event of connectivity failure.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|link:#message[message]
+a|Information to be displayed to the user.
+
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#connectivity]
+[.api-collapsible-fifth-title]
+connectivity
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|errors
+|array[link:#errors[errors]]
+a|A list of errors encountered during connectivity checks.
+
+
+|state
+|string
+a|Current connectivity state.
+
+
+|===
+
+
+[#filters]
+[.api-collapsible-fifth-title]
+filters
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#format]
+[.api-collapsible-fifth-title]
+format
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hostname_override
+|string
+a|Syslog Hostname Format Override. The supported hostname formats are no_override (hostname format based on the syslog.format.message property i.e. fqdn if syslog.format.message is rfc_5424, hostname_only if syslog.format.message is legacy_netapp), fqdn (Fully Qualified Domain Name) and hostname_only.
+
+
+|message
+|string
+a|Syslog Message Format. The supported message formats are legacy_netapp (format: <PRIVAL>TIMESTAMP [HOSTNAME:Event-name:Event-severity]: MSG) and rfc_5424 (format: <PRIVAL>VERSION TIMESTAMP HOSTNAME Event-source - Event-name - MSG).
+
+
+|timestamp_override
+|string
+a|Syslog Timestamp Format Override. The supported timestamp formats are no_override (timestamp format based on the syslog.format.message property i.e. rfc_3164 if syslog.format.message is legacy_netapp, iso_8601_local_time if syslog.format.message is rfc_5424), rfc_3164 (format: Mmm dd hh:mm:ss), iso_8601_local_time (format: YYYY-MM-DDThh:mm:ss+/-hh:mm) and iso_8601_utc (format: YYYY-MM-DDThh:mm:ssZ).
+
+
+|===
+
+
+[#syslog]
+[.api-collapsible-fifth-title]
+syslog
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|format
+|link:#format[format]
+a|
+
+|port
+|integer
+a|Syslog Port.
+
+
+|transport
+|string
+a|Syslog Transport Protocol.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_control_role
+|link:#access_control_role[access_control_role]
+a|Indicates the access control role that created the event destination and is used to control access to the destination based on role-based access control (RBAC) rules. If created by the 'admin' user, the field is unset.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Specifies the client-side certificate used by the ONTAP system when mutual authentication is required. This object is only applicable for *rest_api* type destinations. Both the `ca` and `serial_number` fields must be specified when configuring a certificate in a PATCH or POST request. The `name` field is read-only and cannot be used to configure a client-side certificate.
+
+* Introduced in: 9.6
+
+
+|connectivity
+|link:#connectivity[connectivity]
+a|
+
+|destination
+|string
+a|Event destination
+
+
+|filters
+|array[link:#filters[filters]]
+a|
+
+|name
+|string
+a|Destination name.  Valid in POST.
+
+
+|syslog
+|link:#syslog[syslog]
+a|
+
+|system_defined
+|boolean
+a|Flag indicating system-defined destinations.
+
+
+|type
+|string
+a|Type of destination. Valid in POST.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

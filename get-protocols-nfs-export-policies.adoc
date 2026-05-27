@@ -1,0 +1,659 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nfs-export-policies.html'
+summary: 'Retrieve export policies'
+---
+
+= Retrieve export policies
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nfs/export-policies`#
+
+*Introduced In:* 9.6
+
+Retrieves export policies.
+
+== Related ONTAP commands
+
+* `vserver export-policy show`
+* `vserver export-policy rule show`
+
+== Learn more
+
+* link:protocols_nfs_export-policies_endpoint_overview.html[DOC /protocols/nfs/export-policies]
+
+NOTE: `are_rules_truncated` is set to 'true' if the total number of export-policy rules is greater than 500. If set to 'true', rules after 500 will be truncated. Use GET /api/protocols/nfs/export-policies/\{id}/rules to retrieve all rules for truncated policies.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|id
+|integer
+|query
+|False
+a|Filter by id
+
+
+|are_rules_truncated
+|boolean
+|query
+|False
+a|Filter by are_rules_truncated
+
+* Introduced in: 9.18
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 256
+
+
+|rules.index
+|integer
+|query
+|False
+a|Filter by rules.index
+
+
+|rules.clients.match
+|string
+|query
+|False
+a|Filter by rules.clients.match
+
+
+|rules.chown_mode
+|string
+|query
+|False
+a|Filter by rules.chown_mode
+
+* Introduced in: 9.9
+
+
+|rules.ntfs_unix_security
+|string
+|query
+|False
+a|Filter by rules.ntfs_unix_security
+
+* Introduced in: 9.9
+
+
+|rules.allow_suid
+|boolean
+|query
+|False
+a|Filter by rules.allow_suid
+
+* Introduced in: 9.9
+
+
+|rules.superuser
+|string
+|query
+|False
+a|Filter by rules.superuser
+
+
+|rules.ro_rule
+|string
+|query
+|False
+a|Filter by rules.ro_rule
+
+
+|rules.protocols
+|string
+|query
+|False
+a|Filter by rules.protocols
+
+
+|rules.anonymous_user
+|string
+|query
+|False
+a|Filter by rules.anonymous_user
+
+
+|rules.allow_device_creation
+|boolean
+|query
+|False
+a|Filter by rules.allow_device_creation
+
+* Introduced in: 9.9
+
+
+|rules.rw_rule
+|string
+|query
+|False
+a|Filter by rules.rw_rule
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of export policy records
+
+
+|records
+|array[link:#export_policy[export_policy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "id": 0,
+      "name": "string",
+      "rules": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "anonymous_user": "string",
+          "chown_mode": "string",
+          "clients": [
+            {
+              "match": "0.0.0.0/0"
+            }
+          ],
+          "ntfs_unix_security": "string",
+          "protocols": [
+            "string"
+          ],
+          "ro_rule": [
+            "string"
+          ],
+          "rw_rule": [
+            "string"
+          ],
+          "superuser": [
+            "string"
+          ]
+        }
+      ],
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262197
+| The value provided is invalid for the field
+
+| 2621462
+| The specified SVM name does not exist
+
+| 2621519
+| SVM name is invalid. The SVM name must begin with a letter or an underscore. If the SVM is of type "sync-source", the maximum supported length is 41. Otherwise, the maximum supported length is 47
+
+| 2621643
+| The specified SVM name is too long
+
+| 2621685
+| SVM name length cannot be zero
+
+| 2621706
+| The specified SVM UUID is incorrect for the specified SVM name
+
+| 6691623
+| User is not authorized
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#export_clients]
+[.api-collapsible-fifth-title]
+export_clients
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|===
+
+
+[#export_rules]
+[.api-collapsible-fifth-title]
+export_rules
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allow_device_creation
+|boolean
+a|Specifies whether or not device creation is allowed.
+
+
+|allow_suid
+|boolean
+a|Specifies whether or not SetUID bits in SETATTR Op is to be honored.
+
+
+|anonymous_user
+|string
+a|User ID To Which Anonymous Users Are Mapped.
+
+
+|chown_mode
+|string
+a|Specifies who is authorized to change the ownership mode of a file.
+
+
+|clients
+|array[link:#export_clients[export_clients]]
+a|Array of client matches
+
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|ntfs_unix_security
+|string
+a|NTFS export UNIX security options.
+
+
+|protocols
+|array[string]
+a|
+
+|ro_rule
+|array[string]
+a|Authentication flavors that the read-only access rule governs
+
+
+|rw_rule
+|array[string]
+a|Authentication flavors that the read/write access rule governs
+
+
+|superuser
+|array[string]
+a|Authentication flavors that the superuser security type governs
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|are_rules_truncated
+|boolean
+a|Indicates whether or not export-policy rules are truncated.
+
+
+|id
+|integer
+a|Export Policy ID
+
+
+|name
+|string
+a|Export Policy Name
+
+
+|rules
+|array[link:#export_rules[export_rules]]
+a|Rules of the Export Policy.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,84 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_anti-ransomware_volume_entropy-stats_endpoint_overview.html'
+summary: 'Manage data-entropy statistics'
+---
+
+= Manage data-entropy statistics
+
+
+
+== Overview
+
+This API returns the percentage of data classified as encrypted using an entropy
+algorithm, measured at various time intervals at the volume level. If no volume UUID
+is specified, entropy statistics of all the volumes will be returned.
+The entropy_stats_type parameter can be used to retrieve statistics with sub_hourly,
+hourly, or daily granularity. Additionally, it can be used to identify intervals that
+exhibited high (high_enc_pct) percentages of encrypted
+data. If no type is specified, all types of entropy statistics will be returned for
+the volumes.
+
+== Examples
+
+=== Retrieving volume stats
+
+In this example, the API returns the data-entropy statistics for the
+volumes.
+
+----
+
+# The API:
+/security/anti-ransomware/volume/entropy-stats
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/anti-ransomware/volume/entropy-stats" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+     "volume": {
+     "uuid": "61edb8bb-b7d1-11ef-932d-005056bbaeff",
+     "name": "v2"
+     },
+     "entropy_stats_type": "sub_hourly",
+     "timestamp": "2024-12-13T03:36:24-05:00",
+     "data_written_in_bytes": 13249687,
+     "encryption_percentage": 51,
+     "duration": "PT10M21S",
+     "_links": {
+      "self": {
+       "href": "/api/security/anti-ransomware/volume/entropy-stats/61edb8bb-b7d1-11ef-932d-005056bbaeff/sub_hourly/2024-12-13T03%3A36%3A24-05%3A00"
+      }
+     }
+  },
+  {
+     "volume": {
+     "uuid": "61edb8bb-b7d1-11ef-932d-005056bbaeff",
+     "name": "v2"
+     },
+     "entropy_stats_type": "hourly",
+     "timestamp": "2024-12-13T04:16:06-05:00",
+     "data_written_in_bytes": 13249687,
+     "encryption_percentage": 51,
+     "duration": "PT1H2M36S",
+     "_links": {
+      "self": {
+       "href": "/api/security/anti-ransomware/volume/entropy-stats/61edb8bb-b7d1-11ef-932d-005056bbaeff/hourly/2024-12-13T04%3A16%3A06-05%3A00"
+      }
+     }
+  }
+],
+"num_records": 20,
+"_links": {
+ "self": {
+   "href": "/api/security/anti-ransomware/volume/entropy-stats/61edb8bb-b7d1-11ef-932d-005056bbaeff"
+  }
+ }
+}
+----
+
+

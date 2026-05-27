@@ -1,0 +1,349 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-ssh.html'
+summary: 'Update the SSH server setting for a cluster'
+---
+
+= Update the SSH server setting for a cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/ssh`#
+
+*Introduced In:* 9.7
+
+Updates the SSH server setting for a cluster.
+
+== Optional parameters
+
+* `ciphers` - Encryption algorithms for the payload
+* `key_exchange_algorithms` - SSH key exchange algorithms
+* `mac_algorithms` - MAC algorithms
+* `host_key_algorithms` - Host key algorithms
+* `max_authentication_retry_count` - Maximum authentication retries allowed before closing the connection
+* `connections_per_second` - Maximum allowed connections per second
+* `max_instances` - Maximum allowed connections per node
+* `is_rsa_in_publickey_algorithms_enabled` - _ssh-rsa_ enabled status for public key algorithms
+* `login_grace_time` - The SSH connection login grace time
+* `per_source_limit` - Maximum allowed connections from the same client host
+
+== Related ONTAP commands
+
+* `security ssh`
+* `security protocol ssh`
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ciphers
+|array[string]
+a|Ciphers for encrypting the data.
+
+
+|connections_per_second
+|integer
+a|Maximum connections allowed per second.
+
+
+|host_key_algorithms
+|array[string]
+a|Host key algorithms. The host key algorithms 'ssh_ed25519' and 'ssh_rsa' can be configured only in non-FIPS mode.
+
+
+|is_rsa_in_publickey_algorithms_enabled
+|boolean
+a|Enables or disables the _ssh-rsa_ signature scheme, which uses the SHA-1 hash algorithm, for RSA keys in public key algorithms. If this flag is _false_, older SSH implementations might fail to authenticate using RSA keys. This flag should be enabled only as a temporary measure until legacy SSH client implementations can be upgraded or reconfigured with another key type, for example: ECDSA.
+
+
+|key_exchange_algorithms
+|array[string]
+a|Key exchange algorithms.
+
+
+|login_grace_time
+|integer
+a|The SSH connection login grace time allowed for the connection.
+
+
+|mac_algorithms
+|array[string]
+a|MAC algorithms.
+
+
+|max_authentication_retry_count
+|integer
+a|Maximum authentication retries allowed before closing the connection.
+
+
+|max_instances
+|integer
+a|Maximum possible simultaneous connections.
+
+
+|per_source_limit
+|integer
+a|Maximum connections from the same client host.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "ciphers": [
+    "aes256_ctr",
+    "aes192_ctr",
+    "aes128_ctr"
+  ],
+  "host_key_algorithms": [
+    "ecdsa_sha2_nistp256",
+    "ssh_rsa",
+    "rsa_sha2_256",
+    "rsa_sha2_512"
+  ],
+  "key_exchange_algorithms": [
+    "diffie_hellman_group_exchange_sha256",
+    "ecdh_sha2_nistp256",
+    "diffie_hellman_group18_sha512"
+  ],
+  "mac_algorithms": [
+    "hmac_sha2_512",
+    "hmac_sha2_512_etm"
+  ]
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10682372
+| There must be at least one key exchange algorithm associated with the SSH configuration.
+
+| 10682373
+| There must be at least one cipher associated with the SSH configuration.
+
+| 10682375
+| Failed to modify SSH key exchange algorithms.
+
+| 10682378
+| Failed to modify SSH ciphers.
+
+| 10682399
+| Key exchange algorithm not supported in FIPS enabled mode.
+
+| 10682400
+| Failed to modify SSH MAC algorithms.
+
+| 10682401
+| MAC algorithm not supported in FIPS enabled mode.
+
+| 10682403
+| There must be at least one MAC algorithm with the SSH configuration.
+
+| 10682413
+| Failed to modify maximum authentication retry attempts.
+
+| 10682413
+| Failed to modify maximum authentication retry attempts.
+
+| 10682418
+| Cipher not supported in FIPS enabled mode.
+
+| 10682423
+| There must be at least one host key algorithm associated with the SSH configuration.
+
+| 10682424
+| Host key algorithm not supported in FIPS enabled mode.
+
+| 10682425
+| Failed to modify Host key algorithms.
+
+| 10682426
+| Failed to modify _ssh-rsa_ enabled status for publickey algorithms configuration.
+
+| 10682426
+| Failed to modify the SSH connection login grace time.
+
+| 10682428
+| Cipher not supported in FIPS enabled mode.
+
+| 10682429
+| Adding 'diffie_hellman_group16_sha512' or 'diffie_hellman_group18_sha512' to the SSH key exchange algorithms list requires an effective cluster version of ONTAP 9.16.1 or later.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#cluster_ssh_server]
+[.api-collapsible-fifth-title]
+cluster_ssh_server
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ciphers
+|array[string]
+a|Ciphers for encrypting the data.
+
+
+|connections_per_second
+|integer
+a|Maximum connections allowed per second.
+
+
+|host_key_algorithms
+|array[string]
+a|Host key algorithms. The host key algorithms 'ssh_ed25519' and 'ssh_rsa' can be configured only in non-FIPS mode.
+
+
+|is_rsa_in_publickey_algorithms_enabled
+|boolean
+a|Enables or disables the _ssh-rsa_ signature scheme, which uses the SHA-1 hash algorithm, for RSA keys in public key algorithms. If this flag is _false_, older SSH implementations might fail to authenticate using RSA keys. This flag should be enabled only as a temporary measure until legacy SSH client implementations can be upgraded or reconfigured with another key type, for example: ECDSA.
+
+
+|key_exchange_algorithms
+|array[string]
+a|Key exchange algorithms.
+
+
+|login_grace_time
+|integer
+a|The SSH connection login grace time allowed for the connection.
+
+
+|mac_algorithms
+|array[string]
+a|MAC algorithms.
+
+
+|max_authentication_retry_count
+|integer
+a|Maximum authentication retries allowed before closing the connection.
+
+
+|max_instances
+|integer
+a|Maximum possible simultaneous connections.
+
+
+|per_source_limit
+|integer
+a|Maximum connections from the same client host.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

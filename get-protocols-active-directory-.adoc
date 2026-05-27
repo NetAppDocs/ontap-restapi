@@ -1,0 +1,460 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-active-directory-.html'
+summary: 'Retrieve an Active Directory account for an SVM'
+---
+
+= Retrieve an Active Directory account for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/active-directory/{svm.uuid}`#
+
+*Introduced In:* 9.12
+
+Retrieves the Active Directory account for a given SVM.
+
+== Related ONTAP commands
+
+* `vserver active-directory show`
+* `vserver active-directory preferred-dc show`
+* `vserver active-directory discovered-servers show`
+* `vserver active-directory discovered-servers reset-servers`
+* `vserver cifs security show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|reset_discovered_servers
+|boolean
+|query
+|False
+a|Force a rediscovery.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|discovered_servers
+|array[link:#discovered_servers[discovered_servers]]
+a|Specifies the discovered servers records.
+
+
+|fqdn
+|string
+a|Fully qualified domain name.
+
+
+|name
+|string
+a|Active Directory (AD) account NetBIOS name.
+
+
+|organizational_unit
+|string
+a|Organizational unit under which the Active Directory account will be created.
+
+
+|preferred_dcs
+|array[link:#preferred_dcs[preferred_dcs]]
+a|Specifies the preferred domain controller (DC) records.
+
+
+|security
+|link:#active_directory_security[active_directory_security]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "discovered_servers": [
+    {
+      "domain": "server1.com",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "preference": "preferred",
+      "server": {
+        "ip": "7.4.3.1",
+        "name": "scspk0659102001",
+        "type": "kerberos"
+      },
+      "state": "ok"
+    }
+  ],
+  "force_account_overwrite": "",
+  "fqdn": "server1.com",
+  "name": "account1",
+  "organizational_unit": "CN=Test",
+  "preferred_dcs": [
+    {
+      "fqdn": "test.com",
+      "server_ip": "4.4.4.4"
+    }
+  ],
+  "security": {
+    "advertised_kdc_encryptions": [
+      "string"
+    ]
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#active_directory_discovered_server_reference]
+[.api-collapsible-fifth-title]
+active_directory_discovered_server_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|string
+a|The IP address of the server that was discovered.
+
+
+|name
+|string
+a|Server Name
+
+
+|type
+|string
+a|The type of the server that was discovered.
+
+
+|===
+
+
+[#discovered_servers]
+[.api-collapsible-fifth-title]
+discovered_servers
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|domain
+|string
+a|The Active Directory domain that the discovered server is a member of.
+
+
+|node
+|link:#node[node]
+a|
+
+|preference
+|string
+a|The preference level of the server that was discovered.
+
+
+|server
+|link:#active_directory_discovered_server_reference[active_directory_discovered_server_reference]
+a|
+
+|state
+|string
+a|The status of the connection to the server that was discovered.
+
+
+|===
+
+
+[#preferred_dcs]
+[.api-collapsible-fifth-title]
+preferred_dcs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fqdn
+|string
+a|Fully Qualified Domain Name.
+
+
+|server_ip
+|string
+a|IP address of the preferred DC. The address can be either an IPv4 or an IPv6 address.
+
+
+|===
+
+
+[#active_directory_security]
+[.api-collapsible-fifth-title]
+active_directory_security
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|advertised_kdc_encryptions
+|array[string]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

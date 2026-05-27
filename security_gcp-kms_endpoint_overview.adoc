@@ -1,0 +1,295 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_gcp-kms_endpoint_overview.html'
+summary: 'Manage Google Cloud KMS'
+---
+
+= Manage Google Cloud KMS
+
+
+
+== Overview
+
+Google Cloud Key Management Services is a cloud key management service (KMS) that provides a secure store for encryption keys. This feature
+allows ONTAP to securely protect its encryption keys using Google Cloud KMS.
+In order to use Google Cloud KMS with ONTAP, a user must first deploy a Google Cloud application with appropriate access to the Google Cloud KMS and then provide
+ONTAP with the necessary details, such as, project ID, key ring name, location, key name and application credentials to allow ONTAP to communicate
+with the deployed Google Cloud application.
+The properties `state`, `google_reachability` and `ekmip_reachability` are considered advanced properties and are populated only when explicitly requested.
+
+== Examples
+
+=== Enabling GCKMS for an SVM
+
+The following example shows how to enable GCKMS at the SVM-scope. Note the _return_records=true_ query parameter is used to obtain the newly created key manager configuration.
+
+----
+
+# The API:
+POST /api/security/gcp-kms
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/gcp-kms?return_records=true' -H 'accept: application/hal+json' -d '{"svm":{"uuid":"f36ff553-e713-11ea-bd56-005056bb4222" }, "project_id": "testProj", "key_ring_name":"testKeyRing", "key_ring_location": "global", "key_name": "key1", "application_credentials": "{\"client_email\": \"my@account.email.com\", \"private_key\": \"ValidPrivateKey\"}"}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+    {
+    "uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+    "svm": {
+        "uuid": "f36ff553-e713-11ea-bd56-005056bb4222",
+        "name": "vs0"
+    },
+    "project_id": "testProj",
+    "key_ring_name": "testKeyRing",
+    "key_ring_location": "global",
+    "key_name": "key1",
+    "_links": {
+        "self": {
+        "href": "/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+            }
+        }
+    }
+]
+}
+----
+
+'''
+
+=== Retrieving all GCKMS configurations
+
+The following example shows how to retrieve all GCKMS configurations.
+
+----
+
+# The API:
+GET /api/security/gcp-kms
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/gcp-kms?fields=*'
+
+# The response:
+{
+"records": [
+    {
+    "uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+    "scope": "svm",
+    "svm": {
+        "uuid": "f36ff553-e713-11ea-bd56-005056bb4222",
+        "name": "vs0"
+    },
+    "project_id": "testProj",
+    "key_ring_name": "testKeyRing",
+    "key_ring_location": "global",
+    "key_name": "key1",
+    "_links": {
+        "self": {
+        "href": "/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+        }
+    }
+    }
+],
+"num_records": 1,
+"_links": {
+    "self": {
+    "href": "/api/security/gcp-kms?fields=*"
+    }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific GCKMS configuration
+
+The following example shows how to retrieve information for a specific GCKMS configuration.
+
+----
+
+# The API:
+GET /api/security/gcp-kms/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222?fields=*'
+
+# The response:
+{
+"uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+"scope": "svm",
+"svm": {
+    "uuid": "f36ff553-e713-11ea-bd56-005056bb4222",
+    "name": "vs0"
+},
+"project_id": "testProj",
+"key_ring_name": "testKeyRing",
+"key_ring_location": "global",
+"key_name": "key1",
+"_links": {
+    "self": {
+    "href": "/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+    }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific GCKMS's advanced properties
+
+The following example shows how to retrieve advanced properties for a specific GCKMS configuration.
+
+----
+
+# The API:
+GET /api/security/gcp-kms/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222?fields=state,google_reachability,ekmip_reachability'
+
+# The response:
+{
+"uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+"state": {
+    "cluster_state": false,
+    "message": "The Google Cloud Key Management Service key protection is unavailable on the following nodes: cluster1-node1.",
+    "code": "65537708"
+},
+"google_reachability": {
+    "reachable": true,
+    "message": "",
+    "code": "0"
+},
+"ekmip_reachability": [
+    {
+    "node": {
+        "uuid": "d208115f-7721-11eb-bf83-005056bb150e",
+        "name": "node1",
+        "_links": {
+            "self": {
+            "href": "/api/cluster/nodes/d208115f-7721-11eb-bf83-005056bb150e"
+            }
+        }
+    },
+    "reachable": true,
+    "message": "",
+    "code": "0"
+    },
+    {
+    "node": {
+        "uuid": "e208115f-7721-11eb-bf83-005056bb150e",
+        "name": "node2",
+        "_links": {
+            "self": {
+            "href": "/api/cluster/nodes/e208115f-7721-11eb-bf83-005056bb150e"
+            }
+        }
+    },
+    "reachable": true,
+    "message": "",
+    "code": "0"
+    }
+],
+"_links": {
+    "self": {
+    "href": "/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+    }
+}
+}
+----
+
+'''
+
+=== Updating the application credentials of a specific GCKMS configuration
+
+The following example shows how to update the application credentials for a specific GCKMS configuration.
+
+----
+
+# The API:
+PATCH /api/security/gcp-kms/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222/' -d '{"application_credentials": "{\"client_email\": \"new@account.com\", \"private_key\": \"ValidPrivateKey\"}"}'
+----
+
+'''
+
+=== Updating the application credentials and applying a privileged account for impersonation.
+
+The following example shows how to set a privileged account on an existing GCKMS configuration.
+
+----
+
+# The API:
+PATCH /api/security/gcp-kms/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222/' -d '{"application_credentials": "{\"client_email\": \"unprivileged@account.com\", \"private_key\": \"ValidPrivateKeyforUnprivilegedAccount\"}", "privileged_account": "privileged@account.com"}'
+----
+
+'''
+
+=== Updating the authentication method to use GCE metadata server for retrieving short lived authentication tokens.
+
+The following example shows how to change the authentication method on an existing GCKMS configuration.
+
+----
+
+# The API:
+PATCH /api/security/gcp-kms/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222/' -d '{"authentication_method": "sa_credentials_attachment"}'
+----
+
+'''
+
+=== Changing the GCKMS key
+
+The following example shows how to change the GCKMS key.
+
+----
+
+# The API:
+POST /api/security/gcp-kms/{uuid}/rekey-external
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222/rekey-external' -d '{"key_name": "key2", "key_ring_location": "global", "key_ring_name": "testKeyRing2", "project_id": "testProj2"}'
+----
+
+'''
+
+=== Deleting a specific GCKMS configuration
+
+The following example shows how to delete a specific GCKMS configuration.
+
+----
+
+# The API:
+DELETE /api/security/gcp-kms/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/security/gcp-kms/f72098a2-e908-11ea-bd56-005056bb4222'
+----
+
+'''
+
+=== Restoring keys from a KMIP server
+
+The following example shows how to restore keys for a GCKMS configuration.
+
+----
+
+# The API:
+POST /api/security/gcp-kms/{uuid}/restore
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/gcp-kms/33820b57-ec90-11ea-875e-005056bbf3f0/restore'
+----
+
+'''
+
+

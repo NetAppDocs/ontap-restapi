@@ -1,0 +1,97 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_nfs_services_endpoint_overview.html'
+summary: 'Manage NFS services'
+---
+
+= Manage NFS services
+
+
+
+=== Retrieving an NFS configuration
+
+----
+
+# The API:
+GET /api/protocols/nfs/services
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/nfs/services"
+----
+
+=== Retrieving the mount permissions for a specified volume for a given IP address.
+
+----
+
+# The API:
+GET /api/protocols/nfs/services
+
+# The call:
+curl -X GET curl -X GET "https://<mgmt-ip>/api/protocols/nfs/services/{svm.uuid}?protocol_access_rules.volume=testvol12&protocol_access_rules.client_ip=1.2.3.4&protocol_access_rules.auth_type=sys&fields=protocol_access_rules&return_timeout=15&return_records=true"
+
+#
+Returns the protocol_access_rules structure and provides access permissions for each protocol.
+"protocol_access_rules": {
+  "nfs3_access_type": "read_write",
+  "nfs4_access_type": "read",
+  "cifs_access_type": "read_write"
+}
+----
+
+=== Creating an NFS configuration for an SVM
+
+----
+
+# The API:
+POST /api/protocols/nfs/services
+
+# The call:
+curl  -d "@test_nfs_post.txt" -X POST "https://<mgmt-ip>/api/protocols/nfs/services"
+test_nfs_post.txt(body):
+{
+"svm": {
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+},
+"protocol": {
+  "v4_id_domain": "nfs-nsr-w01.rtp.netapp.com"
+},
+"vstorage_enabled": "true"
+}
+----
+
+=== Updating an  NFS configuration for an SVM
+
+----
+
+# The API:
+PATCH /api/protocols/nfs/services/{svm.uuid}
+
+# The call:
+curl -d "@test_nfs_patch.txt" -X PATCH "https://<mgmt-ip>/api/protocols/nfs/services/4a415601-548c-11e8-a21d-0050568bcbc9"
+test_nfs_patch.txt(body):
+{
+"protocol": {
+  "v4_id_domain": "nfs-nsr-w01.rtp.netapp.com"
+},
+"vstorage_enabled": "false"
+}
+----
+
+=== Deleting an NFS configuration for an SVM
+
+----
+
+# The API:
+DELETE /api/protocols/nfs/services/{svm.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/nfs/services/4a415601-548c-11e8-a21d-0050568bcbc9"
+----
+
+== Performance monitoring
+
+Performance of the SVM can be monitored by the `metric.+*+` and `statistics.+*+` properties. These show the performance of the SVM in terms of IOPS, latency and throughput. The `metric.+*+` properties denote an average whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+

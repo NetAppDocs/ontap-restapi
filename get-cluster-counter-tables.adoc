@@ -1,0 +1,455 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-counter-tables.html'
+summary: 'Retrieve counter tables with schema definitions'
+---
+
+= Retrieve counter tables with schema definitions
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/counter/tables`#
+
+*Introduced In:* 9.11
+
+Returns a collection of counter tables and their schema definitions.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|counter_schemas.unit
+|string
+|query
+|False
+a|Filter by counter_schemas.unit
+
+
+|counter_schemas.type
+|string
+|query
+|False
+a|Filter by counter_schemas.type
+
+
+|counter_schemas.denominator.name
+|string
+|query
+|False
+a|Filter by counter_schemas.denominator.name
+
+
+|counter_schemas.name
+|string
+|query
+|False
+a|Filter by counter_schemas.name
+
+
+|counter_schemas.description
+|string
+|query
+|False
+a|Filter by counter_schemas.description
+
+
+|description
+|string
+|query
+|False
+a|Filter by description
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#counter_table[counter_table]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "counter_schemas": [
+        {
+          "denominator": {
+            "name": "string"
+          },
+          "description": "string",
+          "name": "string",
+          "type": "string",
+          "unit": "string"
+        }
+      ],
+      "description": "string",
+      "name": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 8585368
+| The system has not completed it's initialization
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#counter_denominator]
+[.api-collapsible-fifth-title]
+counter_denominator
+
+Counter used as the denominator in calculating the resulting value of averages and percentages.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Counter name.
+
+
+|===
+
+
+[#counter_schema]
+[.api-collapsible-fifth-title]
+counter_schema
+
+Schema definition of a single counter or property.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|denominator
+|link:#counter_denominator[counter_denominator]
+a|Counter used as the denominator in calculating the resulting value of averages and percentages.
+
+
+|description
+|string
+a|Counter or property description.
+
+
+|name
+|string
+a|Counter or property name.
+
+
+|type
+|string
+a|Type of counter or property. Properties will always set this field to 'string'.
+
+
+|unit
+|string
+a|Counter unit.
+
+
+|===
+
+
+[#counter_table]
+[.api-collapsible-fifth-title]
+counter_table
+
+Information for a single counter table.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|counter_schemas
+|array[link:#counter_schema[counter_schema]]
+a|Array of counter schema definitions.
+
+
+|description
+|string
+a|Description of the table.
+
+
+|name
+|string
+a|Table name.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

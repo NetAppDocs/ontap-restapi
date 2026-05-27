@@ -1,0 +1,152 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_role-configs_endpoint_overview.html'
+summary: 'View and create EMS role-based configurations'
+---
+
+= View and create EMS role-based configurations
+
+
+
+== Overview
+
+Manages the list of access control roles that have limited access to the EMS events and configurations. Access to the EMS events and configurations are controlled by the EMS role-based configuration, which has the following two properties:
+
+* `event_filter`
+* `limit_access_to_global_configs`
+
+=== Role-based event filter
+
+A role-based event filter is a filter assigned to an access control role that limits what events users of that role have access to. It is applied transparently when a user of that role performs GET requests on the following endpoints:
+
+* `/support/ems/events`
+* `/support/ems/messages`
+
+##
+It is also applied when events are forwarded as notifications to destinations created by users of that role. To those destinations, only events that match the role-based filter in addition to the filters configured on the destinations are forwarded.
+
+=== Limiting access to the global EMS configurations
+
+The APIs at the `/api/support/ems` endpoint expose several configuration properties that affect how EMS handles events. The following properties are always accessible by all roles that have access to the `/api/support/ems` APIs.
+
+* `mail_from`
+* `mail_server`
+* `mail_server_user`
+* `mail_server_password`
+* `proxy_url`
+* `proxy_user`
+* `proxy_password`
+
+##
+Access to the following property by an access control role can be restricted:
+
+* `pubsub_enabled`
+
+##
+Limiting access to EMS events and configurations is typically applied for an access control role that is designed to have limited administrative capabilities. For example, when the cluster is physically managed by a service provider and the services are managed by the customer.
+
+== Examples
+
+=== Retrieving the list of EMS role-based configurations
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/role-configs
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/role-configs" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "access_control_role": {
+      "name": "storage-admin",
+      "_links": {
+        "self": {
+          "href": "/api/security/roles/0b2580c8-de36-4213-bfca-88cdaaaf3ae6/storage-admin"
+        }
+      }
+    },
+    "event_filter": {
+      "name": "storage-admin-events",
+      "_links": {
+        "self": {
+          "href": "/api/support/ems/filters/storage-admin-events"
+        }
+      }
+    },
+    "limit_access_to_global_configs": true,
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/role-configs/storage-admin"
+      }
+    }
+  },
+  {
+    "access_control_role": {
+      "name": "network-admin",
+      "_links": {
+        "self": {
+          "href": "/api/security/roles/0b2580c8-de36-4213-bfca-88cdaaaf3ae6/network-admin"
+        }
+      }
+    },
+    "filter_filter": {
+      "name": "network-admin-events",
+      "_links": {
+        "self": {
+          "href": "/api/support/ems/filters/network-admin-events"
+        }
+      }
+    },
+    "limit_access_to_global_configs": true,
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/role-configs/network-admin"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/support/ems/role-configs"
+  }
+}
+}
+----
+
+=== Creating an EMS role-based configuration for an access control role
+
+[,json]
+----
+
+# The API:
+POST /api/support/ems/role-configs
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/role-configs" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@role_configs_post.txt"
+role_configs_post.txt(body):
+{
+"access_control_role": {
+  "name": "storage-admin"
+},
+"event_filter": {
+  "name": "storage-admin-events"
+},
+"limit_access_to_global_configs": true
+}
+
+# The response:
+201 Created
+----
+
+

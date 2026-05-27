@@ -1,0 +1,364 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-cifs-shares--acls.html'
+summary: 'Create a share-level ACL on a CIFS share'
+---
+
+= Create a share-level ACL on a CIFS share
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/cifs/shares/{svm.uuid}/{share}/acls`#
+
+*Introduced In:* 9.6
+
+Creates a share-level ACL on a CIFS share.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the share acl.
+* `share` - Existing CIFS share in which to create the share acl.
+* `user_or_group` - Existing user or group name for which the acl is added on the CIFS share.
+* `permission` - Access rights that a user or group has on the defined CIFS share.
+
+== Default property values
+
+* `type` - _windows_
+
+== Related ONTAP commands
+
+* `vserver cifs share access-control create`
+
+== Learn more
+
+* link:protocols_cifs_shares_svm.uuid_share_acls_endpoint_overview.html[DOC /protocols/cifs/shares/{svm.uuid}/\{share}/acls]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|share
+|string
+|path
+|True
+a|CIFS Share Name
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|permission
+|string
+a|Specifies the access rights that a user or group has on the defined CIFS Share.
+The following values are allowed:
+
+* no_access    - User does not have CIFS share access
+* read         - User has only read access
+* change       - User has change access
+* full_control - User has full_control access
+
+
+|share
+|string
+a|CIFS share name
+
+
+|sid
+|string
+a|Specifies the user or group secure identifier (SID).
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Specifies the type of the user or group to add to the access control
+list of a CIFS share. The following values are allowed:
+
+* windows    - Windows user or group
+* unix_user  - UNIX user
+* unix_group - UNIX group
+
+
+|unix_id
+|integer
+a|Specifies the UNIX user or group identifier (UID/GID).
+
+
+|user_or_group
+|string
+a|Specifies the user or group name to add to the access control list of a CIFS share.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "permission": "string",
+  "share": "string",
+  "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "string",
+  "unix_id": 100,
+  "user_or_group": "ENGDOMAIN\\ad_user"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655446
+| Failed to resolve the security identifier (SID) for the account named \{user_or_group}. Reason: \{Reason}.
+
+| 4849678
+| Failed to resolve \{user_or_group} name to a UNIX ID. Reason: \{Reason}.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_share_acl]
+[.api-collapsible-fifth-title]
+cifs_share_acl
+
+The permissions that users and groups have on a CIFS share.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|permission
+|string
+a|Specifies the access rights that a user or group has on the defined CIFS Share.
+The following values are allowed:
+
+* no_access    - User does not have CIFS share access
+* read         - User has only read access
+* change       - User has change access
+* full_control - User has full_control access
+
+
+|share
+|string
+a|CIFS share name
+
+
+|sid
+|string
+a|Specifies the user or group secure identifier (SID).
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Specifies the type of the user or group to add to the access control
+list of a CIFS share. The following values are allowed:
+
+* windows    - Windows user or group
+* unix_user  - UNIX user
+* unix_group - UNIX group
+
+
+|unix_id
+|integer
+a|Specifies the UNIX user or group identifier (UID/GID).
+
+
+|user_or_group
+|string
+a|Specifies the user or group name to add to the access control list of a CIFS share.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

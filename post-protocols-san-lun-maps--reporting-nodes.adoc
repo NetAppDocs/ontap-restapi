@@ -1,0 +1,389 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-san-lun-maps--reporting-nodes.html'
+summary: 'Add a reporting node and its HA partner to a LUN map'
+---
+
+= Add a reporting node and its HA partner to a LUN map
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes`#
+
+*Introduced In:* 9.10
+
+Adds a reporting node and its HA partner to a LUN map.
+
+== Required properties
+
+* `uuid` or `name` - A cluster node to add.
+
+== Related ONTAP commands
+
+* `lun mapping add-reporting-nodes`
+
+== Learn more
+
+* link:protocols_san_lun-maps_lun.uuid_igroup.uuid_reporting-nodes_endpoint_overview.html[DOC /protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|lun.uuid
+|string
+|path
+|True
+a|The unique identifier of the LUN.
+
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the igroup.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group of the LUN map of the reporting node.
+
+
+|lun
+|link:#lun[lun]
+a|The LUN of the LUN map of the reporting node.
+
+
+|name
+|string
+a|The name of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|uuid
+|string
+a|The unique identifier of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "igroup": {
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "lun": {
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "node1",
+  "uuid": "5ac8eb9c-4e32-dbaa-57ca-fb905976f54e"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#lun_map_reporting_node[lun_map_reporting_node]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "igroup": {
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "lun": {
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "node1",
+      "uuid": "5ac8eb9c-4e32-dbaa-57ca-fb905976f54e"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374875
+| The specified LUN does not exist or is not accessible to the caller.
+
+| 5374878
+| The specified initiator group does not exist, is not accessible to the caller, or is not in the same SVM as the specified LUN.
+
+| 5374920
+| The specified cluster node does not exist.
+
+| 5374921
+| The specified cluster node name and UUID do not refer to the same cluster node.
+
+| 5374922
+| The specified LUN map does not exist.
+
+| 5374923
+| A cluster node `uuid` or `name` must be specified to add a reporting node.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group of the LUN map of the reporting node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN of the LUN map of the reporting node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_map_reporting_node]
+[.api-collapsible-fifth-title]
+lun_map_reporting_node
+
+A cluster node from which network paths to the LUN are advertised by ONTAP via the SAN protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group of the LUN map of the reporting node.
+
+
+|lun
+|link:#lun[lun]
+a|The LUN of the LUN map of the reporting node.
+
+
+|name
+|string
+a|The name of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|uuid
+|string
+a|The unique identifier of the node.
+
+Either `uuid` or `name` are required in POST.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

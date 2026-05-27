@@ -1,0 +1,408 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-name-services-name-mappings.html'
+summary: 'Create hostname mappings for an SVM'
+---
+
+= Create hostname mappings for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/name-services/name-mappings`#
+
+*Introduced In:* 9.6
+
+Creates name mappings for an SVM.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the name mapping.
+* `index` - Name mapping's position in the priority list.
+* `direction` - Direction of the name mapping.
+* `pattern` - Pattern to match to. Maximum length is 256 characters.
+* `replacement` - Replacement pattern to match to. Maximum length is 256 characters.
+
+== Recommended optional properties
+
+* `client_match` - Hostname or IP address added to match the pattern to the client's workstation IP address.
+
+== Related ONTAP commands
+
+* `vserver name-mapping create`
+* `vserver name-mapping insert`
+
+== Learn more
+
+* link:name-services_name-mappings_endpoint_overview.html[DOC /name-services/name-mappings]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|insert_name_map
+|boolean
+|query
+|False
+a|Create a name mapping at a specified position
+
+* Introduced in: 9.17
+* Default value:
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_match
+|string
+a|Client workstation IP Address which is matched when searching for the pattern.
+You can specify the value in any of the following formats:
+
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a hostname
+
+
+|direction
+|string
+a|Direction in which the name mapping is applied. The possible values are:
+
+*** krb_unix  - Kerberos principal name to UNIX user name
+
+*** win_unix  - Windows user name to UNIX user name
+
+*** unix_win  - UNIX user name to Windows user name mapping
+
+*** s3_unix   - S3 user name to UNIX user name mapping
+
+*** s3_win    - S3 user name to Windows user name mapping
+
+
+|index
+|integer
+a|Position in the list of name mappings.
+
+
+|pattern
+|string
+a|Pattern used to match the name while searching for a name that can be used as a replacement. The pattern is a UNIX-style regular expression. Regular expressions are case-insensitive when mapping from Windows to UNIX, and they are case-sensitive for mappings from Kerberos to UNIX and UNIX to Windows.
+
+
+|replacement
+|string
+a|The name that is used as a replacement, if the pattern associated with this entry matches.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "client_match": "10.254.101.111/28",
+  "direction": "win_unix",
+  "index": 1,
+  "pattern": "ENGCIFS_AD_USER",
+  "replacement": "unix_user1",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#name_mapping[name_mapping]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "client_match": "10.254.101.111/28",
+      "direction": "win_unix",
+      "index": 1,
+      "pattern": "ENGCIFS_AD_USER",
+      "replacement": "unix_user1",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65798185
+| Failed to resolve the specified hostname
+
+| 65798173
+| The name mapping pattern already exists with a more generic IP qualifier
+
+| 65798149
+| Invalid index for the name mapping entry
+
+| 2621706
+| The specified svm.uuid and svm.name refer to different SVMs
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#name_mapping]
+[.api-collapsible-fifth-title]
+name_mapping
+
+Name mapping is used to map CIFS identities to UNIX identities, Kerberos identities to UNIX identities, UNIX identities to CIFS identities, S3 to UNIX identities and S3 to CIFS identities. It needs this information to obtain user credentials and provide proper file access regardless of whether they are connecting from an NFS client, CIFS client or an S3 client.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_match
+|string
+a|Client workstation IP Address which is matched when searching for the pattern.
+You can specify the value in any of the following formats:
+
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a hostname
+
+
+|direction
+|string
+a|Direction in which the name mapping is applied. The possible values are:
+
+*** krb_unix  - Kerberos principal name to UNIX user name
+
+*** win_unix  - Windows user name to UNIX user name
+
+*** unix_win  - UNIX user name to Windows user name mapping
+
+*** s3_unix   - S3 user name to UNIX user name mapping
+
+*** s3_win    - S3 user name to Windows user name mapping
+
+
+|index
+|integer
+a|Position in the list of name mappings.
+
+
+|pattern
+|string
+a|Pattern used to match the name while searching for a name that can be used as a replacement. The pattern is a UNIX-style regular expression. Regular expressions are case-insensitive when mapping from Windows to UNIX, and they are case-sensitive for mappings from Kerberos to UNIX and UNIX to Windows.
+
+
+|replacement
+|string
+a|The name that is used as a replacement, if the pattern associated with this entry matches.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

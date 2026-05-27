@@ -1,0 +1,290 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_vscan_svm.uuid_on-demand-policies_endpoint_overview.html'
+summary: 'Manage Vscan On-Demand policies'
+---
+
+= Manage Vscan On-Demand policies
+
+
+
+== Overview
+
+Vscan On-Demand scanning is used to check files for viruses on a schedule. For example, it can be used to run scans only in off-peak hours, or to scan very large files that are excluded from an on-access scan. Vscan On-Demand scanning can be used for any path in the SVM namespace.
+
+Vscan On-Demand policy configurations define the scope of a Vscan On-Demand scan. The schedule parameter in the On-Demand policy configuration decides when to execute the task. Schedule can be created using the /api/clusters/schedule endpoint and can be assigned on policy create or policy modify. This API is used to retrieve and manage Vscan On-Demand policy configurations. It is also used to schedule the Vscan On-Demand scan.
+
+== Examples
+
+=== Retrieving all fields for all policies of an SVM
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-demand-policies/
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/{svm.uuid}/on-demand-policies?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "86fbc414-f140-11e8-8e22-0050568e0945",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/86fbc414-f140-11e8-8e22-0050568e0945"
+        }
+      }
+    },
+    "name": "on-demand-policy1",
+    "scan_paths": [
+      "/vol1/",
+      "/vol2/cifs/"
+    ],
+    "log_path": "/vol0/report_dir",
+    "schedule": {
+      "uuid": "f6d0843e-f159-11e8-8e22-0050568e0945",
+      "name": "schedule",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/schedules/f6d0843e-f159-11e8-8e22-0050568e0945"
+        }
+      }
+    },
+    "scope": {
+      "max_file_size": 10737418240,
+      "exclude_paths": [
+        "/vol1/cold-files/",
+        "/vol1/cifs/names"
+      ],
+      "include_extensions": [
+        "vmdk",
+        "mp*"
+      ],
+      "exclude_extensions": [
+        "mp3",
+        "mp4"
+      ],
+      "scan_without_extension": false
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies/policy1"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "86fbc414-f140-11e8-8e22-0050568e0945",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/86fbc414-f140-11e8-8e22-0050568e0945"
+        }
+      }
+    },
+    "name": "on-demand-policy2",
+    "scan_paths": [
+      "/vol1/",
+      "/vol2/cifs/"
+    ],
+    "log_path": "/report",
+    "scope": {
+      "max_file_size": 10737418240,
+      "include_extensions": [
+        "mp*"
+      ],
+      "scan_without_extension": true
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies/policy2"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific On-Demand policy associated with a specified SVM
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-demand-policies/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies/on-demand-task" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "86fbc414-f140-11e8-8e22-0050568e0945",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/86fbc414-f140-11e8-8e22-0050568e0945"
+    }
+  }
+},
+"name": "on-demand-policy",
+"scan_paths": [
+  "/vol1/cifs"
+],
+"log_path": "/report",
+"scope": {
+  "max_file_size": 10737418240,
+  "include_extensions": [
+    "vmdk",
+    "mp*"
+  ],
+  "scan_without_extension": true
+},
+"_links": {
+  "self": {
+    "href": "/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies/policy2"
+  }
+}
+}
+----
+
+'''
+
+=== Creating a Vscan On-Demand policy
+
+The Vscan On-Demand policy POST endpoint creates an On-Demand policy for the specified SVM. Specify the schedule parameter to schedule an On-Demand scan.
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-demand-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"log_path\": \"/vol0/report_dir\", \"name\": \"on-demand-policy\", \"scan_paths\": [ \"/vol1/\", \"/vol2/cifs/\" ], \"schedule\": { \"name\": \"weekly\", \"uuid\": \"1cd8a442-86d1-11e0-ae1c-123478563412\" }, \"scope\": { \"exclude_extensions\": [ \"mp3\" ], \"exclude_paths\": [ \"/vol/cold-files/\" ], \"include_extensions\": [ \"vmdk\", \"mp*\" ], \"max_file_size\": 1073741824, \"scan_without_extension\": true }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "name": "vs1"
+    },
+    "name": "on-demand-policy",
+    "scan_paths": [
+      "/vol1/",
+      "/vol2/cifs/"
+    ],
+    "log_path": "/vol0/report_dir",
+    "schedule": {
+      "name": "weekly"
+    },
+    "scope": {
+      "max_file_size": 1073741824,
+      "exclude_paths": [
+        "/vol/cold-files/"
+      ],
+      "include_extensions": [
+        "vmdk",
+        "mp*"
+      ],
+      "exclude_extensions": [
+        "mp3"
+      ],
+      "scan_without_extension": true
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating a Vscan On-Demand policy where a number of optional fields are not specified
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-demand-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"log_path\": \"/report\", \"name\": \"on-demand-policy\", \"scan_paths\": [ \"/vol1/cifs/\" ], \"scope\": { \"include_extensions\": [ \"mp*\" ], \"scan_without_extension\": true }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "name": "vs1"
+    },
+    "name": "on-demand-policy",
+    "scan_paths": [
+      "vol1/cifs/"
+    ],
+    "log_path": "/report",
+    "scope": {
+      "max_file_size": 10737418240,
+      "include_extensions": [
+        "vmdk",
+        "mp*"
+      ],
+      "scan_without_extension": true
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Updating a Vscan On-Demand policy
+
+The policy being modified is identified by the UUID of the SVM and the policy name.
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-demand-policies/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies/on-demand-policy" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"schedule\": { \"name\": \"weekly\" }, \"scope\": { \"exclude_extensions\": [ \"mp3\" ], \"exclude_paths\": [ \"/vol/\" ], \"include_extensions\": [ \"vmdk\", \"mp3\" ], \"scan_without_extension\": true }}"
+----
+
+'''
+
+=== Deleting a Vscan On-Demand policy
+
+The policy to be deleted is identified by the UUID of the SVM and the policy name.
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-demand-policies/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-demand-policies/on-demand-policy" -H "accept: application/hal+json"
+----
+
+'''
+
+

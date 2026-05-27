@@ -1,0 +1,683 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-san-igroups-initiators-.html'
+summary: 'Update an initiator'
+---
+
+= Update an initiator
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/san/igroups/{igroup.uuid}/initiators/{name}`#
+
+*Introduced In:* 9.9
+
+Updates an initiator of an initiator group.
+
+This API only supports modification of initiators owned directly by the initiator group. Initiators of nested initiator groups must be modified on the initiator group that directly owns the initiator.
+
+== Related ONTAP commands
+
+* `lun igroup initiator modify`
+
+== Learn more
+
+* link:protocols_san_igroups_endpoint_overview.html[DOC /protocols/san/igroups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the initiator group.
+
+
+|name
+|string
+|path
+|True
+a|The initiator name.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|connectivity_tracking
+|link:#connectivity_tracking[connectivity_tracking]
+a|Overview of the initiator's connections to ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group in which the initiator is found.
+
+Note that this does not mean that the initiator cannot also be found in other initiator groups.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+|records
+|array[link:#records[records]]
+a|An array of initiators specified to add multiple initiators to an initiator group in a single API call. Not allowed when the `name` property is used.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "connectivity_tracking": {
+    "alerts": [
+      {}
+    ],
+    "connection_state": "string",
+    "connections": [
+      {
+        "logins": [
+          {
+            "interface": {
+              "fc": {
+                "name": "fc_lif1",
+                "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+                "wwpn": "20:00:00:50:56:b4:13:a8"
+              },
+              "ip": {
+                "name": "lif1",
+                "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+              }
+            },
+            "last_seen_time": "2021-03-14 05:19:00 +0000"
+          }
+        ],
+        "node": {
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      }
+    ]
+  },
+  "igroup": {
+    "name": "igroup1",
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "proximity": {
+    "peer_svms": [
+      {
+        "name": "peer1",
+        "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+      }
+    ]
+  },
+  "records": [
+    {
+      "comment": "string",
+      "proximity": {
+        "peer_svms": [
+          {
+            "name": "peer1",
+            "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+          }
+        ]
+      }
+    }
+  ]
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374034
+| An initiator is not a member of the initiator group.
+
+| 5374744
+| The cluster is currently running in a mixed version and the initiators cannot be modified until the effective cluster version reaches 9.9.1.
+
+| 5374852
+| The initiator group does not exist.
+
+| 5374918
+| A subset of the provided list of initiators were modified before a failure occurred.
+
+| 5375055
+| The `local_svm` property of an initiator proximity was not specified.
+
+| 5375056
+| An SVM peering relationship that does not have the initiator group's SVM as the local SVM was specified.
+
+| 5375261
+| Setting initiator proximity is not supported for the SVM type.
+
+| 5376057
+| Setting initiator proximity is not supported for the ONTAP version.
+
+| 5376059
+| Setting initiator proximity to a peer that is either the destination of an SVM DR relationship or in a Metrocluster configuration is not supported.
+
+| 26345672
+| The specified SVM peering relationship was not found.
+
+| 26345673
+| An SVM peering relationship between the initiator group's SVM and specified peer SVM was not found.
+
+| 26345675
+| An SVM peering relationship UUID and name were specified and they do not refer to the same SVM peering relationship.
+
+| 26345680
+| Supplied SVM peer is on the local cluster. The operation requires a peer on a remote cluster.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#summary]
+[.api-collapsible-fifth-title]
+summary
+
+A user friendly message describing the connection state.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#alerts]
+[.api-collapsible-fifth-title]
+alerts
+[#fc]
+[.api-collapsible-fifth-title]
+fc
+
+An FC interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the FC interface.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface.
+
+
+|wwpn
+|string
+a|The WWPN of the FC interface.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fc
+|link:#fc[fc]
+a|An FC interface.
+
+
+|ip
+|link:#ip[ip]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|===
+
+
+[#logins]
+[.api-collapsible-fifth-title]
+logins
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connected
+|boolean
+a|True if the initiator is currently logged in to this connection's interface.
+
+
+|interface
+|link:#interface[interface]
+a|
+
+|last_seen_time
+|string
+a|The last time this initiator logged in. Logins not seen for 48 hours are cleared and not reported.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#connections]
+[.api-collapsible-fifth-title]
+connections
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logins
+|array[link:#logins[logins]]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#connectivity_tracking]
+[.api-collapsible-fifth-title]
+connectivity_tracking
+
+Overview of the initiator's connections to ONTAP.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alerts
+|array[link:#alerts[alerts]]
+a|
+
+|connection_state
+|string
+a|Connection state.
+
+
+|connections
+|array[link:#connections[connections]]
+a|
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group in which the initiator is found.
+
+Note that this does not mean that the initiator cannot also be found in other initiator groups.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the initiator is proximal to the SVM of the containing initiator group. This is required for any POST or PATCH that includes the `proximity` sub-object.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the initiator is proximal.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+|===
+
+
+[#igroup_initiator]
+[.api-collapsible-fifth-title]
+igroup_initiator
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|connectivity_tracking
+|link:#connectivity_tracking[connectivity_tracking]
+a|Overview of the initiator's connections to ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group in which the initiator is found.
+
+Note that this does not mean that the initiator cannot also be found in other initiator groups.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+|records
+|array[link:#records[records]]
+a|An array of initiators specified to add multiple initiators to an initiator group in a single API call. Not allowed when the `name` property is used.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

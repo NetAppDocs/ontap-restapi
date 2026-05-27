@@ -1,0 +1,801 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-pools.html'
+summary: 'Create a new storage pool'
+---
+
+= Create a new storage pool
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/pools`#
+
+*Introduced In:* 9.11
+
+Creates a new storage pool using available solid state capacity attached to the nodes specified.
+
+== Required properties
+
+The following properties are required in the POST body:
+
+* `name` - Name of the new storage pool.
+* `nodes[].name` or `nodes[].uuid` - Nodes that can use cache capacity from the new storage pool. Only nodes in the same HA pair can be specified for a given storage pool. Spare cache capacity will be distributed evenly among the specified nodes.
+* `capacity.disk_count` - Number of SSDs to be used to create the storage pool.
+
+== Related ONTAP commands
+
+* `storage pool create`
+
+== Example:
+
+----
+POST /api/storage/pools {"nodes": [{"name": "node1"}, {"name": "node2"}], "name": "storage_pool_1", "capacity": {"disk_count": "4"}}
+----
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|disk_size
+|integer
+|query
+|False
+a|If set, POST only selects SSDs within five percent of the specified size.
+
+
+|simulate
+|boolean
+|query
+|False
+a|When set to "true", the end point returns a simulated layout of the proposed new storage pool, without changing system state.
+
+* Introduced in: 9.12
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|capacity
+|link:#capacity[capacity]
+a|
+
+|name
+|string
+a|Storage pool name.
+
+
+|nodes
+|array[link:#node_reference[node_reference]]
+a|Nodes that can use this storage pool for their aggregates.
+
+
+|storage_type
+|string
+a|Storage type for the disks used to create the storage pool.
+
+
+|uuid
+|string
+a|Storage pool UUID.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "capacity": {
+    "disks": [
+      {
+        "disk": {
+          "name": "1.0.1"
+        },
+        "total_size": 0,
+        "usable_size": 0
+      }
+    ],
+    "remaining": 0,
+    "spare_allocation_units": [
+      {
+        "available_size": 0,
+        "node": {
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "size": 0,
+        "syncmirror_pool": "string"
+      }
+    ],
+    "total": 0,
+    "used_allocation_units": [
+      {
+        "aggregate": {
+          "name": "aggr1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "current_usage": 0,
+        "node": {
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      }
+    ]
+  },
+  "name": "string",
+  "nodes": [
+    {
+      "name": "node1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "storage_type": "string",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 11206666
+| Storage pool is unhealthy.
+
+| 11208658
+| A storage pool already uses the specified name.
+
+| 11208660
+| Disk does not exist.
+
+| 11208661
+| Disk is not a spare disk.
+
+| 11208662
+| Disk is not an SSD.
+
+| 11208663
+| Disk is reserved for core dump.
+
+| 11208664
+| Could not determine checksum type of disk.
+
+| 11208666
+| Could not determine usable size of disk.
+
+| 11208668
+| Could not determine connectivity between controller and disk.
+
+| 11208670
+| Could not determine original owner of disk.
+
+| 11208671
+| Could not determine SyncMirror pool of disk.
+
+| 11208673
+| Could not determine HA mode of node.
+
+| 11208674
+| Could not determine HA partner of node.
+
+| 11208675
+| Disks specified in the disk list are not visible to node.
+
+| 11208678
+| The disk list contains disks from nodes which are not in HA pair.
+
+| 11208679
+| Storage pools are not supported on nodes.
+
+| 11208680
+| Internal error. Cannot determine configuration for node.
+
+| 11208681
+| Node is not online.
+
+| 11208682
+| Internal error. Sharing configuration mismatch.
+
+| 11208684
+| Unable to share disk.
+
+| 11208686
+| Disk cannot be shared.
+
+| 11208687
+| Unable to retrieve expected sharing configuration.
+
+| 11208688
+| Storage pool create job failed.
+
+| 11208690
+| Not all nodes sharing the storage pool view disk as a shared disk.
+
+| 11208691
+| Not enough matching spares available.
+
+| 11208692
+| A disk list or count is a required parameter for storage pool creation.
+
+| 11208693
+| Invalid number of disks specified.
+
+| 11208698
+| Internal error. Missing node name.
+
+| 11208699
+| Internal error. Missing partner name for node configured for HA.
+
+| 11208701
+| Node is a standalone node. Do not specify other nodes with a standalone node.
+
+| 11208703
+| Incorrect number of nodes specified. Specify one node or both nodes in an HA pair.
+
+| 11208704
+| Specified nodes are not part of HA relationship. Specify one node or both nodes in an HA pair.
+
+| 11208705
+| Disk is a data center SSD, which cannot be used in storage pools.
+
+| 11208706
+| Disk is a SSD-ZNS, which cannot be used in storage pools.
+
+| 11215756
+| Missing a required field for POST request.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#disk]
+[.api-collapsible-fifth-title]
+disk
+
+Reference to the constituent disk object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#storage_pool_disk]
+[.api-collapsible-fifth-title]
+storage_pool_disk
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk
+|link:#disk[disk]
+a|Reference to the constituent disk object.
+
+
+|total_size
+|integer
+a|Raw capacity of the disk, in bytes.
+
+
+|usable_size
+|integer
+a|Usable capacity of this disk, in bytes.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Specifies what node can use this set of allocation units.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pool_spare_allocation_unit]
+[.api-collapsible-fifth-title]
+storage_pool_spare_allocation_unit
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available_size
+|integer
+a|The usable capacity of this set of allocation units.
+
+
+|count
+|integer
+a|The number of spare allocation units on this node.
+
+
+|node
+|link:#node[node]
+a|Specifies what node can use this set of allocation units.
+
+
+|size
+|integer
+a|Size of each allocation unit.
+
+
+|syncmirror_pool
+|string
+a|The RAID SyncMirror Pool to which this allocation unit is assigned.
+
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+The aggregate that is using this cache capacity.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node hosting the aggregate using this set of allocation units.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pool_used_allocation_unit]
+[.api-collapsible-fifth-title]
+storage_pool_used_allocation_unit
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|The aggregate that is using this cache capacity.
+
+
+|count
+|integer
+a|The number of allocation units used by this aggregate.
+
+
+|current_usage
+|integer
+a|The amount of cache space used by this aggregate.
+
+
+|node
+|link:#node[node]
+a|The node hosting the aggregate using this set of allocation units.
+
+
+|===
+
+
+[#capacity]
+[.api-collapsible-fifth-title]
+capacity
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|disk_count
+|integer
+a|The number of disks in the storage pool.
+
+
+|disks
+|array[link:#storage_pool_disk[storage_pool_disk]]
+a|Properties of each disk used in the shared storage pool.
+
+
+|remaining
+|integer
+a|Remaining usable capacity in the flash pool, in bytes.
+
+
+|spare_allocation_units
+|array[link:#storage_pool_spare_allocation_unit[storage_pool_spare_allocation_unit]]
+a|Properties of spare allocation units.
+
+
+|total
+|integer
+a|Total size of the flash pool, in bytes.
+
+
+|used_allocation_units
+|array[link:#storage_pool_used_allocation_unit[storage_pool_used_allocation_unit]]
+a|Information about the storage pool allocation units participating in the cache tier of an aggregate.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Indicates why the storage pool is unhealthy. This property is not returned for healthy storage pools.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#health]
+[.api-collapsible-fifth-title]
+health
+
+Properties that outline shared storage pool health.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_healthy
+|boolean
+a|Indicates whether the storage pool is able to participate in provisioning operations.
+
+
+|state
+|string
+a|The state of the shared storage pool.
+
+
+|===
+
+
+[#node_reference]
+[.api-collapsible-fifth-title]
+node_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_pool]
+[.api-collapsible-fifth-title]
+storage_pool
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|capacity
+|link:#capacity[capacity]
+a|
+
+|name
+|string
+a|Storage pool name.
+
+
+|nodes
+|array[link:#node_reference[node_reference]]
+a|Nodes that can use this storage pool for their aggregates.
+
+
+|storage_type
+|string
+a|Storage type for the disks used to create the storage pool.
+
+
+|uuid
+|string
+a|Storage pool UUID.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,1199 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-network-ethernet-ports.html'
+summary: 'Create a new VLAN or LAG'
+---
+
+= Create a new VLAN or LAG
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/network/ethernet/ports`#
+
+*Introduced In:* 9.6
+
+Creates a new VLAN (such as node1:e0a-100) or LAG (ifgrp, such as node2:a0a).
+
+== Required properties
+
+* `node` - Node the port will be created on.
+* `vlan` - This field cannot be specified at the same time as `lag`.
+
+*** `vlan.base_port` - Physical port or LAG the VLAN will be created on.
+
+*** `vlan.tag` - Tag used to identify VLAN on the base port.
+
+* `lag` - This field cannot be specified at the same time as `vlan`.
+
+*** `lag.mode` - Policy for the LAG that will be created.
+
+*** `lag.distribution_policy` - Indicates how the packets are distributed between ports.
+
+*** `lag.member_ports` - Set of ports the LAG consists of.
+
+== Optional properties
+
+* `type` - Defines if a VLAN or LAG will be created:
+* `broadcast_domain` - The layer-2 broadcast domain the port is associated with. The port will be placed in a broadcast domain if it is not specified.  It may take several minutes for the broadcast domain to be assigned.  During that period the port cannot host interfaces.
+
+== Related ONTAP commands
+
+* `network port ifgrp create`
+* `network port vlan create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|broadcast_domain
+|link:#broadcast_domain[broadcast_domain]
+a|Broadcast domain UUID along with a readable name. Either the UUID or both names may be provided on input.
+
+
+|discovered_devices
+|array[link:#discovered_devices[discovered_devices]]
+a|Discovered devices
+
+
+|enabled
+|boolean
+a|
+
+|interface_count
+|integer
+a|Number of interfaces hosted. This field is only applicable for cluster administrators. No value is returned for SVM administrators. If the node hosting a port is not healthy no value will be returned.
+
+
+|lag
+|link:#lag[lag]
+a|
+
+|mac_address
+|string
+a|
+
+|mtu
+|integer
+a|MTU of the port in bytes. Set by broadcast domain.
+
+
+|name
+|string
+a|Portname, such as e0a, e1b-100 (VLAN on Ethernet), a0c (LAG/ifgrp), a0d-200 (VLAN on LAG/ifgrp), e0a.pv1 (p-VLAN, in select environments only)
+
+
+|node
+|link:#node[node]
+a|
+
+|rdma_protocols
+|array[string]
+a|Supported RDMA offload protocols
+
+
+|reachable_broadcast_domains
+|array[link:#reachable_broadcast_domains[reachable_broadcast_domains]]
+a|Reachable broadcast domains.
+
+
+|speed
+|integer
+a|Link speed in Mbps
+
+
+|state
+|string
+a|Operational state of the port. The state is set to 'down' if the operational state of the port is down. The state is set to 'up' if the link state of the port is up and the port is healthy. The state is set to 'up' if the link state of the port is up and configured to ignore health status. The state is 'degraded' if the link state of the port is up, and the port is not healthy.
+
+
+|type
+|string
+a|Type of physical or virtual port
+
+
+|uuid
+|string
+a|Port UUID
+
+
+|vlan
+|link:#vlan[vlan]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "broadcast_domain": {
+    "ipspace": {
+      "name": "ipspace1"
+    },
+    "name": "bd1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "discovered_devices": [
+    {
+      "capabilities": [
+        "router",
+        "switch"
+      ],
+      "chassis_id": "string",
+      "ip_addresses": [
+        "192.168.100.24",
+        "192.168.100.26"
+      ],
+      "name": "ETY-R1S4-510Q13.datacenter.example.com",
+      "platform": "93180YC-EX",
+      "protocol": "cdp",
+      "remote_port": "FastEthernet0/12",
+      "system_name": "string",
+      "version": "Cisco Nexus Operating System (NX-OS) Software, Version 8.1"
+    }
+  ],
+  "interface_count": 0,
+  "lag": {
+    "active_ports": [
+      {
+        "name": "e1b",
+        "node": {
+          "name": "node1"
+        },
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    ],
+    "distribution_policy": "string",
+    "member_ports": [
+      {
+        "name": "e1b",
+        "node": {
+          "name": "node1"
+        },
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    ],
+    "mode": "string"
+  },
+  "mac_address": "01:02:03:04:05:06",
+  "mtu": 1500,
+  "name": "e1b",
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "rdma_protocols": [
+    "roce"
+  ],
+  "reachable_broadcast_domains": [
+    {
+      "ipspace": {
+        "name": "ipspace1"
+      },
+      "name": "bd1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "speed": 1000,
+  "state": "string",
+  "type": "string",
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "vlan": {
+    "base_port": {
+      "name": "e1b",
+      "node": {
+        "name": "node1"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "tag": 100
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#port[port]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "broadcast_domain": {
+        "ipspace": {
+          "name": "ipspace1"
+        },
+        "name": "bd1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "discovered_devices": [
+        {
+          "capabilities": [
+            "router",
+            "switch"
+          ],
+          "chassis_id": "string",
+          "ip_addresses": [
+            "192.168.100.24",
+            "192.168.100.26"
+          ],
+          "name": "ETY-R1S4-510Q13.datacenter.example.com",
+          "platform": "93180YC-EX",
+          "protocol": "cdp",
+          "remote_port": "FastEthernet0/12",
+          "system_name": "string",
+          "version": "Cisco Nexus Operating System (NX-OS) Software, Version 8.1"
+        }
+      ],
+      "interface_count": 0,
+      "lag": {
+        "active_ports": [
+          {
+            "name": "e1b",
+            "node": {
+              "name": "node1"
+            },
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          }
+        ],
+        "distribution_policy": "string",
+        "member_ports": [
+          {
+            "name": "e1b",
+            "node": {
+              "name": "node1"
+            },
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          }
+        ],
+        "mode": "string"
+      },
+      "mac_address": "01:02:03:04:05:06",
+      "mtu": 1500,
+      "name": "e1b",
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "rdma_protocols": [
+        "roce"
+      ],
+      "reachable_broadcast_domains": [
+        {
+          "ipspace": {
+            "name": "ipspace1"
+          },
+          "name": "bd1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "speed": 1000,
+      "state": "string",
+      "type": "string",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+      "vlan": {
+        "base_port": {
+          "name": "e1b",
+          "node": {
+            "name": "node1"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "tag": 100
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1376361
+| Port is already a member of a LAG.
+
+| 1376857
+| Cannot create a VLAN on a port that is a member of a LAG.
+
+| 1377609
+| The update is partially complete. Updating broadcast domain attributes on this port has failed.
+
+| 1966189
+| Port is the home port or current port of an interface.
+
+| 1966466
+| VLAN ID must be a number from 1 to 4094.
+
+| 1967083
+| The specified type is not valid.
+
+| 1967084
+| The specified node UUID is not valid.
+
+| 1967085
+| The specified node name is not valid.
+
+| 1967086
+| Node name and UUID must match if both are provided.
+
+| 1967087
+| The specified broadcast domain UUID is not valid.
+
+| 1967088
+| The specified broadcast domain name does not exist in the specified IPspace.
+
+| 1967089
+| The specified broadcast domain UUID, name, and IPspace name do not match.
+
+| 1967090
+| The specified VLAN base port UUID is not valid.
+
+| 1967091
+| The specified VLAN base port name and node name are not valid.
+
+| 1967092
+| The specified node does not match the node specified for the VLAN base port.
+
+| 1967093
+| The specified VLAN base port UUID, name, and VLAN base port node name do not match.
+
+| 1967094
+| The specified LAG member port UUID is not valid.
+
+| 1967095
+| The specified LAG member port name and node name combination is not valid.
+
+| 1967096
+| The specified node does not match the specified LAG member port node.
+
+| 1967097
+| The specified LAG member ports UUID, name, and node name do not match.
+
+| 1967098
+| VLAN POST operation has failed because admin status could not be set for the specified port.
+
+| 1967099
+| Partial success of the VLAN POST operation. Verify the state of the created VLAN for more information.
+
+| 1967100
+| LAG POST operation failed because admin status could not be set.
+
+| 1967101
+| Partial success of the LAG POST operation. Verify the state of the created LAG for more information.
+
+| 1967102
+| POST operation might have left the configuration in an inconsistent state. Check the configuration.
+
+| 1967126
+| A LAG requires at least one member port.
+
+| 1967148
+| Failure to remove port from broadcast domain.
+
+| 1967149
+| Failure to add port to broadcast domain.
+
+| 1967175
+| VLANs cannot be created on ports in the Cluster IPspace.
+
+| 1967190
+| Missing or incomplete VLAN specification.
+
+| 1967191
+| Missing or incomplete lag specification.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the broadcast domain's IPspace
+
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+Broadcast domain UUID along with a readable name. Either the UUID or both names may be provided on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipspace
+|link:#ipspace[ipspace]
+a|
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#discovered_devices]
+[.api-collapsible-fifth-title]
+discovered_devices
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|capabilities
+|array[string]
+a|The list of the capabilities of the discovered device.
+
+
+|chassis_id
+|string
+a|Identifier associated with this specific discovered device, useful for locating the device in a data center.
+
+
+|ip_addresses
+|array[string]
+a|The IP addresses on the discovered device.
+
+
+|name
+|string
+a|Name of the discovered device.
+
+
+|platform
+|string
+a|Hardware platform of the discovered device.
+
+
+|protocol
+|string
+a|The protocol used to identify the discovered device. This can have a value of CDP or LLDP.
+
+
+|remaining_hold_time
+|integer
+a|The number of seconds until the discovered device entry expires and is removed.
+
+
+|remote_port
+|string
+a|The name of the remote port on the discovered device. The format is dependent on the reporting device.
+
+
+|system_name
+|string
+a|Additional name used to identify a specific piece of equipment.
+
+
+|version
+|string
+a|The version of the software running on the discovered device.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#active_ports]
+[.api-collapsible-fifth-title]
+active_ports
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#member_ports]
+[.api-collapsible-fifth-title]
+member_ports
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#lag]
+[.api-collapsible-fifth-title]
+lag
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|active_ports
+|array[link:#active_ports[active_ports]]
+a|Active ports of a LAG (ifgrp). (Some member ports may be inactive.)
+
+
+|distribution_policy
+|string
+a|Policy for mapping flows to ports for outbound packets through a LAG (ifgrp).
+
+
+|member_ports
+|array[link:#member_ports[member_ports]]
+a|Array of ports belonging to the LAG, regardless of their state.
+
+
+|mode
+|string
+a|Determines how the ports interact with the switch.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+The most recent sample of I/O metrics for the port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the interface.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#reachable_broadcast_domains]
+[.api-collapsible-fifth-title]
+reachable_broadcast_domains
+
+Broadcast domain UUID along with a readable name. Either the UUID or both names may be provided on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipspace
+|link:#ipspace[ipspace]
+a|
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#receive_raw]
+[.api-collapsible-fifth-title]
+receive_raw
+
+Packet receive counters for the Ethernet port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|discards
+|integer
+a|Total number of discarded packets.
+
+
+|errors
+|integer
+a|Number of packet errors.
+
+
+|packets
+|integer
+a|Total packet count.
+
+
+|===
+
+
+[#transmit_raw]
+[.api-collapsible-fifth-title]
+transmit_raw
+
+Packet transmit counters for the Ethernet port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|discards
+|integer
+a|Total number of discarded packets.
+
+
+|errors
+|integer
+a|Number of packet errors.
+
+
+|packets
+|integer
+a|Total packet count.
+
+
+|===
+
+
+[#device]
+[.api-collapsible-fifth-title]
+device
+
+Device-related counters for the port object. These counters are applicable at the lowest layer of the networking stack. These values can be used to calculate both transmit and receive packet and error rates by comparing two samples taken at different times and calculating the increase in counter value divided by the elapsed time between the two samples.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|link_down_count_raw
+|integer
+a|The number of link state changes from up to down seen on the device.
+
+
+|timestamp
+|string
+a|The timestamp when the device specific counters were collected.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the port object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+The real time I/O statistics for the port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|status
+|string
+a|Errors associated with the sample. For example, if the aggregation of data over multiple nodes fails, then any partial errors might return "ok" on success or "error" on an internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the port object. This can be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the throughput_raw performance data.
+
+
+|===
+
+
+[#base_port]
+[.api-collapsible-fifth-title]
+base_port
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#vlan]
+[.api-collapsible-fifth-title]
+vlan
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|base_port
+|link:#base_port[base_port]
+a|Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+|tag
+|integer
+a|VLAN ID
+
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|broadcast_domain
+|link:#broadcast_domain[broadcast_domain]
+a|Broadcast domain UUID along with a readable name. Either the UUID or both names may be provided on input.
+
+
+|discovered_devices
+|array[link:#discovered_devices[discovered_devices]]
+a|Discovered devices
+
+
+|enabled
+|boolean
+a|
+
+|interface_count
+|integer
+a|Number of interfaces hosted. This field is only applicable for cluster administrators. No value is returned for SVM administrators. If the node hosting a port is not healthy no value will be returned.
+
+
+|lag
+|link:#lag[lag]
+a|
+
+|mac_address
+|string
+a|
+
+|mtu
+|integer
+a|MTU of the port in bytes. Set by broadcast domain.
+
+
+|name
+|string
+a|Portname, such as e0a, e1b-100 (VLAN on Ethernet), a0c (LAG/ifgrp), a0d-200 (VLAN on LAG/ifgrp), e0a.pv1 (p-VLAN, in select environments only)
+
+
+|node
+|link:#node[node]
+a|
+
+|rdma_protocols
+|array[string]
+a|Supported RDMA offload protocols
+
+
+|reachable_broadcast_domains
+|array[link:#reachable_broadcast_domains[reachable_broadcast_domains]]
+a|Reachable broadcast domains.
+
+
+|speed
+|integer
+a|Link speed in Mbps
+
+
+|state
+|string
+a|Operational state of the port. The state is set to 'down' if the operational state of the port is down. The state is set to 'up' if the link state of the port is up and the port is healthy. The state is set to 'up' if the link state of the port is up and configured to ignore health status. The state is 'degraded' if the link state of the port is up, and the port is not healthy.
+
+
+|type
+|string
+a|Type of physical or virtual port
+
+
+|uuid
+|string
+a|Port UUID
+
+
+|vlan
+|link:#vlan[vlan]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

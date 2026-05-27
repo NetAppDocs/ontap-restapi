@@ -1,0 +1,1260 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-igroups-.html'
+summary: 'Retrieve an initiator group'
+---
+
+= Retrieve an initiator group
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/igroups/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves an initiator group.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `connectivity_tracking.+*+`
+* `igroups.+*+`
+* `lun_maps.+*+`
+* `parent_igroups.+*+`
+
+== Related ONTAP commands
+
+* `lun igroup show`
+* `lun mapping show`
+
+== Learn more
+
+* link:protocols_san_igroups_endpoint_overview.html[DOC /protocols/san/igroups]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the initiator group.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|connectivity_tracking
+|link:#connectivity_tracking[connectivity_tracking]
+a|An overview of the connections to ONTAP by the initiators in this group.
+
+* readOnly: 1
+* Introduced in: 9.11
+
+
+|delete_on_unmap
+|boolean
+a|An option that causes the initiator group to be deleted when the last LUN map associated with it is deleted. Optional in POST and PATCH. This property defaults to _false_ when the initiator group is created.
+
+
+|igroups
+|array[link:#igroup_child[igroup_child]]
+a|The existing initiator groups that are members of the group. Optional in POST.
+
+This property is mutually exclusive with the _initiators_ property during POST.
+
+This array contains only the direct children of the initiator group. If the member initiator groups have further nested initiator groups, those are reported in the `igroups` property of the child initiator group.
+
+Zero or more nested initiator groups can be supplied when the initiator group is created. The initiator group will act as if it contains the aggregation of all initiators in any nested initiator groups.
+
+After creation, nested initiator groups can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/igroups` endpoint. See link:post-protocols-san-igroups-igroups(#-san-igroup-nested-create)anddelete-protocols-san-igroups-igroups-.html<</SAN/igroup_nested_create,POST /protocols/san/igroups/{igroup.uuid}/igroups>> and [DELETE /protocols/san/igroups/{igroup.uuid}/igroups/\{uuid}]  for more details.
+
+
+|initiators
+|array[link:#initiators[initiators]]
+a|The initiators that are members of the group or any group nested below this group. Optional in POST.
+
+This property is mutually exclusive with the _igroups_ property during POST.
+
+During GET, this array contains initiators that are members of this group or any nested initiator groups below this group. When initiators of nested groups are returned, they include links to the initiator group that directly contains the initiator.
+
+Zero or more initiators can be supplied when the initiator group is created. After creation, initiators can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/initiators` endpoint. See link:post-protocols-san-igroups-initiators(#-san-igroup-initiator-create)anddelete-protocols-san-igroups-initiators-.html<</SAN/igroup_initiator_create,POST /protocols/san/igroups/{igroup.uuid}/initiators>> and [DELETE /protocols/san/igroups/{igroup.uuid}/initiators/\{name}]  for more details.
+
+
+|lun_maps
+|array[link:#lun_maps[lun_maps]]
+a|All LUN maps with which the initiator is associated.
+
+If the requested igroup is part of a remote, non-local, MetroCluster SVM, the LUN maps are not retrieved.
+
+There is an added computational cost to retrieving property values for `lun_maps`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|name
+|string
+a|The name of the initiator group. Required in POST; optional in PATCH.
+
+
+|os_type
+|string
+a|The host operating system of the initiator group. All initiators in the group should be hosts of the same operating system. Required in POST; optional in PATCH.
+
+
+|parent_igroups
+|array[link:#igroup_parent[igroup_parent]]
+a|The initiator groups that contain this initiator group as a member.
+
+
+|portset
+|link:#portset[portset]
+a|The portset to which the initiator group is bound. Binding the initiator group to a portset restricts the initiators of the group to accessing mapped LUNs only through network interfaces in the portset.
+
+In a nested initiator group hierarchy, only a portset bound to the initiator group at the same level at which it is mapped, applies; portsets bound to parent or child initiator groups are ignored.
+
+Optional in POST and PATCH. To unbind a portset from the initiator group, PATCH the `portset` object to  `null`, or PATCH `portset.name` to an empty string ("").
+
+
+|protocol
+|string
+a|The protocols supported by the initiator group. This restricts the type of initiators that can be added to the initiator group. Optional in POST; if not supplied, this defaults to _mixed_.
+
+The protocol of an initiator group cannot be changed after creation of the group.
+
+
+|replication
+|link:#replication[replication]
+a|Properties related to initiator group replication.
+
+
+|supports_igroups
+|boolean
+a|An initiator group may contain either initiators or other initiator groups, but not both simultaneously. This property is _true_ when initiator groups can be added to this initiator group. The `initiators.name` property cannot be used to determine this via a query because it reports initiators inherited from nested igroups.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|target
+|link:#target[target]
+a|Properties of the SCSI target to which the initiator group provides access.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "comment": "string",
+  "connectivity_tracking": {
+    "alerts": [
+      {
+        "summary": {
+          "arguments": [
+            {
+              "code": "string",
+              "message": "string"
+            }
+          ],
+          "code": "4",
+          "message": "entry doesn't exist"
+        }
+      }
+    ],
+    "connection_state": "string",
+    "required_nodes": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    ]
+  },
+  "igroups": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "string",
+      "igroups": [
+        null
+      ],
+      "name": "igroup1",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "initiators": [
+    {
+      "_links": {
+        "connectivity_tracking": {
+          "href": "/api/resourcelink"
+        },
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "string",
+      "connectivity_tracking": {
+        "connection_state": "string"
+      },
+      "igroup": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "igroup1",
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "iqn.1998-01.com.corp.iscsi:name1",
+      "proximity": {
+        "peer_svms": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "peer1",
+            "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+          }
+        ]
+      }
+    }
+  ],
+  "lun_maps": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "logical_unit_number": 0,
+      "lun": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "lun1",
+        "node": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "node1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "name": "igroup1",
+  "os_type": "string",
+  "parent_igroups": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "string",
+      "name": "igroup1",
+      "parent_igroups": [
+        null
+      ],
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "portset": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "portset1",
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "protocol": "string",
+  "replication": {
+    "error": {
+      "igroup": {
+        "name": "igroup1",
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "summary": {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": "4",
+        "message": "entry doesn't exist"
+      }
+    },
+    "peer_svm": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "peer1",
+      "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+    },
+    "state": "string"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "target": {
+    "firmware_revision": "9111",
+    "product_id": "LUN C-Mode",
+    "vendor_id": "NETAPP"
+  },
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374852
+| The initiator group does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#summary]
+[.api-collapsible-fifth-title]
+summary
+
+A user friendly message describing the connection state of the initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#alerts]
+[.api-collapsible-fifth-title]
+alerts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|summary
+|link:#summary[summary]
+a|A user friendly message describing the connection state of the initiator group.
+
+
+|===
+
+
+[#required_nodes]
+[.api-collapsible-fifth-title]
+required_nodes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#connectivity_tracking]
+[.api-collapsible-fifth-title]
+connectivity_tracking
+
+An overview of the connections to ONTAP by the initiators in this group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alerts
+|array[link:#alerts[alerts]]
+a|
+
+|connection_state
+|string
+a|Connection state.
+
+
+|required_nodes
+|array[link:#required_nodes[required_nodes]]
+a|Nodes to which the initiators in this group should be connected to ensure reliable service. This is the collection of any node hosting a LUN mapped to this igroup as well as the HA partners of those nodes.
+
+
+|===
+
+
+[#igroup_child]
+[.api-collapsible-fifth-title]
+igroup_child
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|igroups
+|array[link:#igroup_child[igroup_child]]
+a|Further nested initiator groups.
+
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#connectivity_tracking]
+[.api-collapsible-fifth-title]
+connectivity_tracking
+
+A link to the initiator with connectivity information relevant to its membership of this initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self]
+[.api-collapsible-fifth-title]
+self
+
+A link to the initiator where mutations can be made. If the initiator is inherited from a nested initiator group, the link refers to the initiator in the nested initiator group. In this case, mutations of the initiator will be applied to all initiator groups referencing the same nested initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connectivity_tracking
+|link:#connectivity_tracking[connectivity_tracking]
+a|A link to the initiator with connectivity information relevant to its membership of this initiator group.
+
+
+|self
+|link:#self[self]
+a|A link to the initiator where mutations can be made. If the initiator is inherited from a nested initiator group, the link refers to the initiator in the nested initiator group. In this case, mutations of the initiator will be applied to all initiator groups referencing the same nested initiator group.
+
+
+|===
+
+
+[#connectivity_tracking]
+[.api-collapsible-fifth-title]
+connectivity_tracking
+
+Overview of the initiator's connections to ONTAP.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connection_state
+|string
+a|Connection state.
+
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group that directly owns the initiator, which is where modification of the initiator is supported. This property will only be populated when the initiator is a member of a nested initiator group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the initiator is proximal to the SVM of the containing initiator group. This is required for any POST or PATCH that includes the `proximity` sub-object.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the initiator is proximal.
+
+
+|===
+
+
+[#initiators]
+[.api-collapsible-fifth-title]
+initiators
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|connectivity_tracking
+|link:#connectivity_tracking[connectivity_tracking]
+a|Overview of the initiator's connections to ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group that directly owns the initiator, which is where modification of the initiator is supported. This property will only be populated when the initiator is a member of a nested initiator group.
+
+
+|name
+|string
+a|The FC WWPN, iSCSI IQN, or iSCSI EUI that identifies the host initiator. Valid in POST only and not allowed when the `records` property is used.
+
+An FC WWPN consists of 16 hexadecimal digits grouped as 8 pairs separated by colons. The format for an iSCSI IQN is _iqn.yyyy-mm.reverse_domain_name:any_. The iSCSI EUI format consists of the _eui._ prefix followed by 16 hexadecimal characters.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define to what SVMs the initiator is proximal. This information is used to properly report active optimized and active non-optimized network paths via ALUA. If no configuration has been specified for an initiator, the sub-object will not be present in GET.
+
+These properties can be set via initiator group POST and PATCH and apply to all instances of the initiator in all initiator groups in the SVM and its peers. The `proximity` sub-object for an initiator is set in POST and PATCH in its entirety and replaces any previously set proximity for the initiator within the SVM for the initiator within the SVM. The `local_svm` property must always be set to `true` or `false` when setting the `proximity` property. To clear any previously set proximity, POST or PATCH the `proximity` object to `null`.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN to which the initiator group is mapped.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the LUN.
+
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_maps]
+[.api-collapsible-fifth-title]
+lun_maps
+
+A LUN map with which the initiator group is associated.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|logical_unit_number
+|integer
+a|The logical unit number assigned to the LUN for initiators in the initiator group.
+
+
+|lun
+|link:#lun[lun]
+a|The LUN to which the initiator group is mapped.
+
+
+|===
+
+
+[#igroup_parent]
+[.api-collapsible-fifth-title]
+igroup_parent
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A comment available for use by the administrator.
+
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|parent_igroups
+|array[link:#igroup_parent[igroup_parent]]
+a|The initiator groups that contain this initiator group as a member.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#portset]
+[.api-collapsible-fifth-title]
+portset
+
+The portset to which the initiator group is bound. Binding the initiator group to a portset restricts the initiators of the group to accessing mapped LUNs only through network interfaces in the portset.
+
+In a nested initiator group hierarchy, only a portset bound to the initiator group at the same level at which it is mapped, applies; portsets bound to parent or child initiator groups are ignored.
+
+Optional in POST and PATCH. To unbind a portset from the initiator group, PATCH the `portset` object to  `null`, or PATCH `portset.name` to an empty string ("").
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the portset.
+
+
+|uuid
+|string
+a|The unique identifier of the portset.
+
+
+|===
+
+
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|Indicates whether the reported igroup is on the local SVM or the peer SVM. When deleting a replicated igroup, the local copy is deleted first and then the peer copy is deleted. If the error is encountered between these two operations and only the peer igroup remains, the peer igroup is reported and the problem might need to be corrected on the peer cluster.
+
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#summary]
+[.api-collapsible-fifth-title]
+summary
+
+A user friendly message describing the error.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Information about asynchronous errors encountered while replicating this igroup. Igroups within a peering relationship are replicated in the same stream, so the error reported here might be related to this igroup or a prior replicated igroup that is now blocking the replication of this igroup. Both the error information and the igroup encountering the error are reported. If the error is configuration related, it can be corrected on the referenced igroup. The replication is retried using exponential backoff up to a maximum of one retry every 5 minutes. Every operation on the same stream triggers an immediate retry and restarts the exponential backoff starting with a 1 second delay. If the error is system related, the retries should correct the error when the system enters a healthy state.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup
+|link:#igroup[igroup]
+a|
+
+|summary
+|link:#summary[summary]
+a|A user friendly message describing the error.
+
+
+|===
+
+
+[#peer_svm]
+[.api-collapsible-fifth-title]
+peer_svm
+
+The peered SVM to which the initiator group should be replicated. Optional in POST and PATCH. To clear any previously set replication peer, PATCH the `replication.peer_svm` object to `null`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#replication]
+[.api-collapsible-fifth-title]
+replication
+
+Properties related to initiator group replication.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#error[error]
+a|Information about asynchronous errors encountered while replicating this igroup. Igroups within a peering relationship are replicated in the same stream, so the error reported here might be related to this igroup or a prior replicated igroup that is now blocking the replication of this igroup. Both the error information and the igroup encountering the error are reported. If the error is configuration related, it can be corrected on the referenced igroup. The replication is retried using exponential backoff up to a maximum of one retry every 5 minutes. Every operation on the same stream triggers an immediate retry and restarts the exponential backoff starting with a 1 second delay. If the error is system related, the retries should correct the error when the system enters a healthy state.
+
+
+|peer_svm
+|link:#peer_svm[peer_svm]
+a|The peered SVM to which the initiator group should be replicated. Optional in POST and PATCH. To clear any previously set replication peer, PATCH the `replication.peer_svm` object to `null`.
+
+
+|state
+|string
+a|The state of the replication queue associated with this igroup. If this igroup is not in the replication queue, the state is reported as _ok_. If this igroup is in the replication queue, but no errors have been encountered, the state is reported as _replicating_. If this igroup is in the replication queue and the queue is blocked by an error, the state is reported as _error_. When in the _error_ state, additional context is provided by the `replication.error` property.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#target]
+[.api-collapsible-fifth-title]
+target
+
+Properties of the SCSI target to which the initiator group provides access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|firmware_revision
+|string
+a|The firmware revision of the SCSI target specific to the OS type of the initiator group.
+
+
+|product_id
+|string
+a|The product ID of the SCSI target.
+
+
+|vendor_id
+|string
+a|The vendor ID of the SCSI target.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

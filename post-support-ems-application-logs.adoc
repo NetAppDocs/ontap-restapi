@@ -1,0 +1,281 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-support-ems-application-logs.html'
+summary: 'Create an application log'
+---
+
+= Create an application log
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/support/ems/application-logs`#
+
+*Introduced In:* 9.11
+
+Creates an app.log.* event. Setting the "autosupport_required" flag causes callhome.client.app.* events also to be generated, which in turn triggers AutoSupports.
+
+== Required properties
+
+* `computer_name` - Client computer connected to the cluster.
+* `event_source` - Client application that generated this event.
+* `app_version` - Client application version.
+* `event_id` - Application eventID.
+* `category` - Event category.
+* `event_description` - Event description.
+* `severity` - Severity of the event.
+* `autosupport_required` - Indicates whether AutoSupport generation is required.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|app_version
+|string
+a|Client application version.
+
+
+|autosupport_required
+|boolean
+a|Indicates whether AutoSupport generation is required.
+
+
+|category
+|string
+a|Event category.
+
+
+|computer_name
+|string
+a|Client computer connected to the cluster.
+
+
+|event_description
+|string
+a|Event description, which corresponds to the subject parameter in the generated event.
+
+
+|event_id
+|integer
+a|Application eventID.
+
+
+|event_source
+|string
+a|Client application that generated this event.
+
+
+|severity
+|string
+a|Severity
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "app_version": "3.0.0.2373",
+  "autosupport_required": "",
+  "category": "Error",
+  "computer_name": "W12-R2-DC",
+  "event_description": "Clone split job failed",
+  "event_id": 10001,
+  "event_source": "SnapCenter Software",
+  "severity": "error"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 983173
+| Application log event generation failed.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#ems_application_log]
+[.api-collapsible-fifth-title]
+ems_application_log
+
+Input for generation of app.log.x and callhome.client.app.x events.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|app_version
+|string
+a|Client application version.
+
+
+|autosupport_required
+|boolean
+a|Indicates whether AutoSupport generation is required.
+
+
+|category
+|string
+a|Event category.
+
+
+|computer_name
+|string
+a|Client computer connected to the cluster.
+
+
+|event_description
+|string
+a|Event description, which corresponds to the subject parameter in the generated event.
+
+
+|event_id
+|integer
+a|Application eventID.
+
+
+|event_source
+|string
+a|Client application that generated this event.
+
+
+|severity
+|string
+a|Severity
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

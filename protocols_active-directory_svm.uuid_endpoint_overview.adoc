@@ -1,0 +1,82 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_active-directory_svm.uuid_endpoint_overview.html'
+summary: 'Manage Active Directory accounts for an SVM'
+---
+
+= Manage Active Directory accounts for an SVM
+
+
+
+== Overview
+
+You can use this API to display or modify Active Directory account details of the specified SVM.
+It can also be used to delete an Active Directory account for the specified SVM.
+
+== Examples
+
+=== Retrieving all Active Directory account details of a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/active-directory/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/active-directory/6dd78167-c907-11eb-b2bf-0050568e7324" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "6dd78167-c907-11eb-b2bf-0050568e7324",
+  "name": "vs1"
+},
+"organizational_unit": "CN=Computers",
+"name": "ACCOUNT1",
+"fqdn": "EXAMPLE.COM",
+"security": {
+  "advertised_kdc_encryptions": [
+    "des"
+  ]
+}
+}
+----
+
+'''
+
+=== Update the Active Directory account details of a specific SVM
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/active-directory/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/active-directory/6dd78167-c907-11eb-b2bf-0050568e7324" -H "accept: application/json"
+            -d "{  \"force_account_overwrite\": true,  \"fqdn\": \"example.com\",  \"password\": \"password\",  \"username\": \"administrator\", \"security\": { \"advertised_kdc_encryptions\": [ \"des\" ] } }"
+----
+
+'''
+
+=== Delete an Active Directory account of a specific SVM
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/active-directory/{svm.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/active-directory/6dd78167-c907-11eb-b2bf-0050568e7324" -H "accept: application/json" -d "{  \"password\": \"password\",  \"username\": \"administrator\"}"
+----
+
+'''
+
+

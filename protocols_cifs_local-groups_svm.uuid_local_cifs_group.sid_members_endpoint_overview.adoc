@@ -1,0 +1,75 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_local-groups_svm.uuid_local_cifs_group.sid_members_endpoint_overview.html'
+summary: 'Manage local group members'
+---
+
+= Manage local group members
+
+
+
+== Overview
+
+You can use this API to display local group members and to add or delete local users, Active Directory users and/or Active Directory groups to a local group of an SVM.
+
+== Examples
+
+=== Retrieving the members of a specific local group
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups/{svm.uuid}/{local_cifs_group.sid}/members
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/local-groups/2ebec9c7-28be-11eb-95f4-0050568ed0a2/S-1-5-21-256008430-3394229847-3930036330-1257/members" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "CIFS_SERVER1\\user1"
+  },
+  {
+    "name": "CIFS_SERVER1\\user2"
+  }
+],
+"num_records": 2
+}
+----
+
+== Adding members to a local group
+
+The local group members POST endpoint adds local users, Active Directory users and/or Active Directory groups to the specified local group and the SVM.
+
+=== Adding local users to a group
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups/{svm.uuid}/{local_cifs_group.sid}/members
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/local-groups/179d3c85-7053-11e8-b9b8-005056b41bd1/S-1-5-21-256008430-3394229847-3930036330-1001/members" -H "accept: application/json" -H "Content-Type: application/json" -d '{ "records": [ { "name": "user1" }, { "name": "user2"} ] }'
+----
+
+== Deleting local users from the local group of a specific SVM
+
+== Example
+
+=== Delete the local users 'user1' and 'user2' from the specified local group
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups/{svm.uuid}/{local_cifs_group.sid}/members
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/local-groups/179d3c85-7053-11e8-b9b8-005056b41bd1/S-1-5-21-256008430-3394229847-3930036330-1001/members" -H "accept: application/json" -d '{ "records": [ { "name": "user1"}, { "name": "user2"} ] }'
+----
+
+

@@ -1,0 +1,355 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-name-services-unix-users.html'
+summary: 'Create a local UNIX user configuration for an SVM'
+---
+
+= Create a local UNIX user configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/name-services/unix-users`#
+
+*Introduced In:* 9.9
+
+Creates the local UNIX user configuration for an SVM.
+
+== Important notes
+
+* The default limit for local UNIX users is 32768.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|full_name
+|string
+a|User's full name.
+
+
+|id
+|integer
+a|UNIX user ID of the specified user.
+
+
+|name
+|string
+a|UNIX user name to be added to the local database.
+
+
+|primary_gid
+|integer
+a|Primary group ID to which the user belongs.
+
+
+|skip_name_validation
+|boolean
+a|Indicates whether or not the validation for the specified UNIX user name is disabled.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "full_name": "Full User Name for user1",
+  "name": "user1",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of UNIX user records.
+
+
+|records
+|array[link:#unix_user[unix_user]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "full_name": "Full User Name for user1",
+      "name": "user1",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2621706
+| The specified SVM UUID is incorrect for the specified SVM name
+
+| 2621516
+| This operation is only supported on a data SVM
+
+| 23724066
+| The specified UNIX user name is too long. Maximum supported length is 64 characters.
+
+| 3277051
+| The specified UNIX user name contains invalid characters. Valid characters are 0-9, A-Z, a-z, ".", "_" and "-".
+
+| 23724128
+| The specified UNIX user full-name contains the invalid character ':'.
+
+| 23724089
+| The specified UNIX user full-name is too long. Maximum supported length is 256 characters.
+
+| 23724055
+| Internal error. Failed to create the UNIX user for the SVM. Verify that the cluster is healthy, then try the command again.
+
+| 23724090
+| Configuring individual entries is not supported because file-only configuration is enabled.
+
+| 3277025
+| Failed to create the UNIX user for the SVM because the system limit has been reached.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#unix_user]
+[.api-collapsible-fifth-title]
+unix_user
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|full_name
+|string
+a|User's full name.
+
+
+|id
+|integer
+a|UNIX user ID of the specified user.
+
+
+|name
+|string
+a|UNIX user name to be added to the local database.
+
+
+|primary_gid
+|integer
+a|Primary group ID to which the user belongs.
+
+
+|skip_name_validation
+|boolean
+a|Indicates whether or not the validation for the specified UNIX user name is disabled.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

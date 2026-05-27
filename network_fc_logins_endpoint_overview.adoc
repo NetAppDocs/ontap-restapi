@@ -1,0 +1,378 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_fc_logins_endpoint_overview.html'
+summary: 'Retrieve FC port information'
+---
+
+= Retrieve FC port information
+
+
+
+== Overview
+
+Fibre Channel (FC) ports are the physical ports of FC adapters on ONTAP cluster nodes that can be connected to FC networks to provide FC network connectivity. An FC port defines the location of an FC interface within the ONTAP cluster.
+
+The Fibre Channel port REST API allows you to discover FC ports, obtain status information for FC ports, and configure FC port properties. POST and DELETE requests are not supported. You must physically add and remove FC adapters to ONTAP nodes to create and remove ports from the ONTAP cluster.
+
+== Performance monitoring
+
+Performance of an FC port can be monitored by observing the `metric.+*+` and `statistics.+*+` properties. These properties show the performance of an FC port in terms of IOPS, latency, and throughput. The `metric.+*+` properties denote an average, whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+== Examples
+
+=== Retrieving all FC ports
+
+----
+
+# The API:
+GET /api/network/fc/ports
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/fc/ports" -H "Accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b20f8-b047-11e8-9af3-005056bb838e",
+    "name": "0a",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b20f8-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b23f7-b047-11e8-9af3-005056bb838e",
+    "name": "0b",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b23f7-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b25ba-b047-11e8-9af3-005056bb838e",
+    "name": "0c",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b25ba-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b2748-b047-11e8-9af3-005056bb838e",
+    "name": "0d",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b2748-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b28c2-b047-11e8-9af3-005056bb838e",
+    "name": "0e",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b28c2-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b2a7b-b047-11e8-9af3-005056bb838e",
+    "name": "0f",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b2a7b-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b2e2b-b047-11e8-9af3-005056bb838e",
+    "name": "1b",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b2e2b-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  }
+],
+"num_records": 8,
+"_links": {
+  "self": {
+    "href": "/api/network/fc/ports"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all FC ports with state _online_
+
+The `state` query parameter is used to perform the query.
+
+----
+
+# The API:
+GET /api/network/fc/ports
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/fc/ports?state=online" -H "Accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b20f8-b047-11e8-9af3-005056bb838e",
+    "name": "0a",
+    "state": "online",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b20f8-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b23f7-b047-11e8-9af3-005056bb838e",
+    "name": "0b",
+    "state": "online",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b23f7-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  },
+  {
+    "node": {
+      "name": "node1",
+      "uuid": "3c768e01-1abc-4b3b-b7c0-629ceb62a497",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3c768e01-1abc-4b3b-b7c0-629ceb62a497"
+        }
+      }
+    },
+    "uuid": "931b25ba-b047-11e8-9af3-005056bb838e",
+    "name": "0c",
+    "state": "online",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/931b25ba-b047-11e8-9af3-005056bb838e"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/network/fc/ports?state=online"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving an FC port
+
+----
+
+# The API:
+GET /api/network/fc/ports/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/fc/ports/931b20f8-b047-11e8-9af3-005056bb838e" -H "Accept: application/hal+json"
+
+# The response:
+{
+"node": {
+  "name": "node1",
+  "uuid": "5a534a72-b047-11e8-9af3-005056bb838e",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/5a534a72-b047-11e8-9af3-005056bb838e"
+    }
+  }
+},
+"uuid": "931b20f8-b047-11e8-9af3-005056bb838e",
+"name": "0a",
+"description": "Fibre Channel Target Adapter 0a (ACME Fibre Channel Adapter, rev. 1.0.0, 8G)",
+"enabled": true,
+"fabric": {
+  "connected": true,
+  "connected_speed": 8,
+  "name": "55:0e:b1:a0:20:40:80:00",
+  "port_address": "52100",
+  "switch_port": "ssan-g620-03:1"
+},
+"physical_protocol": "fibre_channel",
+"speed": {
+  "maximum": "8",
+  "configured": "auto"
+},
+"state": "online",
+"supported_protocols": [
+  "fcp"
+],
+"transceiver": {
+  "form_factor": "SFP",
+  "manufacturer": "ACME",
+  "capabilities": [
+    4,
+    8
+  ],
+  "part_number": "1000"
+},
+"wwnn": "50:0a:09:80:bb:83:8e:00",
+"wwpn": "50:0a:09:82:bb:83:8e:00",
+"metric": {
+  "timestamp": "2019-04-09T05:50:15Z",
+  "duration": "PT15S",
+  "status": "ok",
+  "latency": {
+    "other": 0,
+    "total": 0,
+    "read": 0,
+    "write": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "total": 0
+  }
+},
+"statistics": {
+  "timestamp": "2019-04-09T05:50:42Z",
+  "status": "ok",
+  "latency_raw": {
+    "other": 38298,
+    "total": 38298,
+    "read": 0,
+    "write": 0
+  },
+  "iops_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 3,
+    "total": 3
+  },
+  "throughput_raw": {
+    "read": 0,
+    "write": 0,
+    "total": 0
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/network/fc/ports/931b20f8-b047-11e8-9af3-005056bb838e"
+  }
+}
+}
+----
+
+'''
+
+=== Disabling an FC port
+
+If an active FC interface exists on an FC port, the port cannot be disabled.
+
+----
+
+# The API:
+PATCH /api/network/fc/ports/{uuid}
+
+# The call:
+curl -X PATCH "http://<mgmt-ip>/api/network/fc/ports/931b20f8-b047-11e8-9af3-005056bb838e" -H "Accept: application/hal+json" -d '{ "enabled": false }'
+----
+
+

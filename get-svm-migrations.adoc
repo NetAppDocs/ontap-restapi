@@ -1,0 +1,1145 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-svm-migrations.html'
+summary: 'Retrieve the SVM migration status'
+---
+
+= Retrieve the SVM migration status
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/svm/migrations`#
+
+*Introduced In:* 9.10
+
+Retrieves the SVM migration status.
+
+== Related ONTAP commands
+
+* `vserver migrate show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|post_ponr_retry_count
+|integer
+|query
+|False
+a|Filter by post_ponr_retry_count
+
+* Introduced in: 9.17
+
+
+|auto_source_cleanup
+|boolean
+|query
+|False
+a|Filter by auto_source_cleanup
+
+
+|source.cluster.name
+|string
+|query
+|False
+a|Filter by source.cluster.name
+
+
+|source.cluster.uuid
+|string
+|query
+|False
+a|Filter by source.cluster.uuid
+
+
+|source.svm.name
+|string
+|query
+|False
+a|Filter by source.svm.name
+
+
+|source.svm.uuid
+|string
+|query
+|False
+a|Filter by source.svm.uuid
+
+
+|point_of_no_return
+|boolean
+|query
+|False
+a|Filter by point_of_no_return
+
+
+|destination.ipspace.name
+|string
+|query
+|False
+a|Filter by destination.ipspace.name
+
+
+|destination.ipspace.uuid
+|string
+|query
+|False
+a|Filter by destination.ipspace.uuid
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|current_operation
+|string
+|query
+|False
+a|Filter by current_operation
+
+
+|messages.message
+|string
+|query
+|False
+a|Filter by messages.message
+
+
+|messages.code
+|string
+|query
+|False
+a|Filter by messages.code
+
+
+|auto_cutover
+|boolean
+|query
+|False
+a|Filter by auto_cutover
+
+
+|restart_count
+|integer
+|query
+|False
+a|Filter by restart_count
+
+
+|throttle
+|integer
+|query
+|False
+a|Filter by throttle
+
+* Introduced in: 9.12
+
+
+|last_operation
+|string
+|query
+|False
+a|Filter by last_operation
+
+
+|time_metrics.start_time
+|string
+|query
+|False
+a|Filter by time_metrics.start_time
+
+
+|time_metrics.last_resume_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_resume_time
+
+
+|time_metrics.last_pause_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_pause_time
+
+
+|time_metrics.last_post_ponr_retry_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_post_ponr_retry_time
+
+* Introduced in: 9.17
+
+
+|time_metrics.cutover_start_time
+|string
+|query
+|False
+a|Filter by time_metrics.cutover_start_time
+
+
+|time_metrics.cutover_trigger_time
+|string
+|query
+|False
+a|Filter by time_metrics.cutover_trigger_time
+
+
+|time_metrics.cutover_complete_time
+|string
+|query
+|False
+a|Filter by time_metrics.cutover_complete_time
+
+
+|time_metrics.end_time
+|string
+|query
+|False
+a|Filter by time_metrics.end_time
+
+
+|last_failed_state
+|string
+|query
+|False
+a|Filter by last_failed_state
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#svm_migration[svm_migration]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "check_only": true,
+      "current_operation": "string",
+      "destination": {
+        "ipspace": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "Default",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      },
+      "last_failed_state": "string",
+      "last_operation": "string",
+      "messages": [
+        {
+          "code": "string",
+          "message": "string"
+        }
+      ],
+      "post_ponr_retry_count": 0,
+      "restart_count": 0,
+      "source": {
+        "cluster": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "cluster1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        },
+        "svm": {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        }
+      },
+      "state": "string",
+      "throttle": 0,
+      "time_metrics": {
+        "cutover_complete_time": "2020-12-02 19:30:19 -0800",
+        "cutover_start_time": "2020-12-02 18:20:19 -0800",
+        "cutover_trigger_time": "2020-12-02 19:15:19 -0800",
+        "end_time": "2020-12-02 19:36:19 -0800",
+        "last_pause_time": "2020-12-02 18:50:19 -0800",
+        "last_post_ponr_retry_time": "2020-12-02 19:30:19 -0800",
+        "last_resume_time": "2020-12-02 18:54:19 -0800",
+        "start_time": "2020-12-02 18:36:19 -0800"
+      },
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 13172783
+| Migrate RDB lookup failed
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Optional property used to specify which IPspace to use for the SVM. By default, the "default" ipspace is used.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+Aggregate to use for volume creation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+Property indicating the source volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#volume_aggregate_pairs]
+[.api-collapsible-fifth-title]
+volume_aggregate_pairs
+
+Volume-aggregate pair information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregate
+|link:#aggregate[aggregate]
+a|Aggregate to use for volume creation.
+
+
+|volume
+|link:#volume[volume]
+a|Property indicating the source volume.
+
+
+|===
+
+
+[#volume_placement]
+[.api-collapsible-fifth-title]
+volume_placement
+
+Optional property to specify the source volume placement in the destination. It is input only and won't be returned by a subsequent GET. Volume placement is ignored if the migration resumes from the cleanup_failed state.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|Optional property used to specify the list of desired aggregates to use for volume creation in the destination.
+
+
+|volume_aggregate_pairs
+|array[link:#volume_aggregate_pairs[volume_aggregate_pairs]]
+a|Optional property used to specify the list of desired volume-aggregate pairs in the destination.
+
+
+|===
+
+
+[#destination]
+[.api-collapsible-fifth-title]
+destination
+
+Destination cluster details for the SVM migration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Optional property used to specify which IPspace to use for the SVM. By default, the "default" ipspace is used.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+Network interface on the source SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+Port to use for IP interface placement on the destination SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ip_interfaces]
+[.api-collapsible-fifth-title]
+ip_interfaces
+
+IP interface and network port pair information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|interface
+|link:#interface[interface]
+a|Network interface on the source SVM.
+
+
+|port
+|link:#port[port]
+a|Port to use for IP interface placement on the destination SVM.
+
+
+|===
+
+
+[#svm_migration_ip_interface_placement]
+[.api-collapsible-fifth-title]
+svm_migration_ip_interface_placement
+
+Optional property used to specify the list of source SVM's IP interface and network port pairs in the destination for migrating the source SVM IP interfaces. Note that the SVM migration does not perform any reachability checks on the IP interfaces provided.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip_interfaces
+|array[link:#ip_interfaces[ip_interfaces]]
+a|List of source SVM's IP interface and port pairs on the destination for migrating the source SVM's IP interfaces.
+
+
+|===
+
+
+[#messages]
+[.api-collapsible-fifth-title]
+messages
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+Source cluster for the SVM migration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Source SVM
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+Source cluster details for the SVM migration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|Source cluster for the SVM migration.
+
+
+|svm
+|link:#svm[svm]
+a|Source SVM
+
+
+|===
+
+
+[#time_metrics]
+[.api-collapsible-fifth-title]
+time_metrics
+
+Various time metrics details
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_complete_time
+|string
+a|Cutover end time
+
+
+|cutover_start_time
+|string
+a|Cutover start time
+
+
+|cutover_trigger_time
+|string
+a|Cutover trigger time
+
+
+|end_time
+|string
+a|Migration end time
+
+
+|last_pause_time
+|string
+a|Last migration pause time
+
+
+|last_post_ponr_retry_time
+|string
+a|Last post point of no return retry time
+
+
+|last_resume_time
+|string
+a|Last migration resume time
+
+
+|start_time
+|string
+a|Migration start time
+
+
+|===
+
+
+[#svm_migration]
+[.api-collapsible-fifth-title]
+svm_migration
+
+Provides information on SVM migration, default and user specified configurations, the state of the migration, and volume transfer metrics.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_cutover
+|boolean
+a|Optional property that when set to true automatically performs cutover when the migration state reaches "ready for cutover".
+
+
+|auto_source_cleanup
+|boolean
+a|Optional property that when set to true automatically cleans up the SVM on the source cluster after the migration cutover.
+
+
+|current_operation
+|string
+a|
+
+|destination
+|link:#destination[destination]
+a|Destination cluster details for the SVM migration.
+
+
+|last_failed_state
+|string
+a|Indicates the state of the migration.
+
+
+|last_operation
+|string
+a|
+
+|messages
+|array[link:#messages[messages]]
+a|Errors and warnings returned/displayed during migration.
+
+
+|point_of_no_return
+|boolean
+a|Indicates if the migration has progressed beyond the point of no return. When true, the migration cannot be aborted or paused. When false, the migration can be paused or aborted.
+
+
+|post_ponr_retry_count
+|integer
+a|Number of times the migration restarted after the point of no return.
+
+
+|restart_count
+|integer
+a|Number of times migrate restarted the transfer, for example, rollback to transfer after starting the cutover.
+
+
+|source
+|link:#source[source]
+a|Source cluster details for the SVM migration.
+
+
+|state
+|string
+a|Indicates the state of the migration.
+
+
+|throttle
+|integer
+a|Optional property to specify a throttle value in KB/s for each individual volume transfer. Defaults to 0 if not set, which is interpreted as unlimited. The minimum throttle value is 4 KB/s, so if you specify a throttle value between 1 and 4, it will be treated as if you specified 4.
+
+
+|time_metrics
+|link:#time_metrics[time_metrics]
+a|Various time metrics details
+
+
+|uuid
+|string
+a|SVM migration UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

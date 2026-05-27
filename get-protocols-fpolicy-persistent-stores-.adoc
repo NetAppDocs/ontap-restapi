@@ -1,0 +1,237 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-fpolicy-persistent-stores-.html'
+summary: 'Retrieve an FPolicy persistent store configuration for an SVM'
+---
+
+= Retrieve an FPolicy persistent store configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/persistent-stores/{name}`#
+
+*Introduced In:* 9.14
+
+Retrieves a specific FPolicy Persistent Store configuration for an SVM.
+
+== Related ONTAP commands
+
+* `fpolicy persistent-store show`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_persistent-stores_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/persistent-stores]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autosize_mode
+|string
+a|Autosize mode for the volume.
+grow &dash; Volume automatically grows in response to the amount of space used.
+grow_shrink &dash; Volume grows or shrinks in response to the amount of space used.
+off &dash; Autosizing of the volume is disabled.
+
+
+|name
+|string
+a|The name specified for the FPolicy Persistent Store.
+
+
+|size
+|integer
+a|The size of the Persistent Store volume, in bytes.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|volume
+|string
+a|The specified volume to store the events for the FPolicy Persistent Store.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "autosize_mode": "string",
+  "name": "ps1",
+  "size": "100M",
+  "svm": {
+    "uuid": "string"
+  },
+  "volume": "psvol"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

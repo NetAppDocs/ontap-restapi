@@ -1,0 +1,25 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'svm_overview.html'
+summary: 'ONTAP REST API SVM endpoints'
+---
+
+= ONTAP REST API SVM endpoints
+
+
+
+== Overview
+
+Storage Virtual Machine (SVM) APIs enable you to manage SVMs and their attributes, including the configuration of the CIFS and NFS protocols, export policies, name mappings between CIFS and NFS users, and network services.
+
+SVMs contain data volumes and one or more network interfaces through which they serve data to the clients. SVMs securely isolate the shared virtualized data storage and network, and each SVM appears as a single dedicated server to the clients. Each SVM has a separate administrator authentication domain, and each SVM can be managed independently by its SVM administrator.
+
+In a cluster, SVMs facilitate data access. A cluster must have at least one SVM to serve data. Multiple SVMs can coexist in a single cluster without being bound to any particular node in the cluster. However, they are bound to the physical cluster on which they exist.
+
+SVMs with volumes can contain files and LUNs. They provide file-level data access by using NFS and CIFS protocols for the NAS clients, and block-level data access by using iSCSI and Fibre Channel (FC) (FCoE included) for SAN hosts. The volumes within each NAS SVM are related to each other through junctions and they are mounted on junction paths. These junctions present the file system in each volume. The root volume of the SVM resides at the top level of the namespace hierarchy; additional volumes are mounted to the SVM root volume to extend the namespace. As volumes are created for the SVM, the root volume of the SVM contains junction paths.
+
+The ONTAP REST APIs only expose data SVMs as an SVM. The information and configuration associated with the cluster and nodes are exposed from REST, but the cluster and nodes are not treated as if they are a type of SVM from REST APIs. Some APIs that expose both cluster-owned resources and SVM-owned resources from the same endpoint only return and support the "svm" sub-object for the resources that are within a data SVM. In those endpoints, the resources that are not in a data SVM do not return the "svm" sub-object. Generally, such endpoints have a "scope" attribute that returns either "svm" or "cluster" to identify the resource as either a cluster-level resource or one that is completely contained in a data SVM.
+
+

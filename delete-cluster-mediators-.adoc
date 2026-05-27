@@ -1,0 +1,636 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-cluster-mediators-.html'
+summary: 'Delete an ONTAP Mediator'
+---
+
+= Delete an ONTAP Mediator
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/cluster/mediators/{uuid}`#
+
+*Introduced In:* 9.8
+
+Deletes the mediator.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|* format: uuid
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bluexp_account_token
+|string
+a|BlueXP account token. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|bluexp_org_id
+|string
+a|BlueXP organization ID. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|ca_certificate
+|string
+a|CA certificate for ONTAP Mediator. This is optional if the certificate is already installed.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|dr_group
+|link:#dr_group[dr_group]
+a|DR group reference.
+
+
+|ip_address
+|string
+a|The IP address of the mediator.
+
+
+|local_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the local cluster. Possible values are connected, unreachable, unusable and down-high-latency. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|password
+|string
+a|The password used to connect to the REST server on the mediator.
+
+
+|peer_cluster
+|link:#peer_cluster[peer_cluster]
+a|The peer cluster that the mediator service is used for.
+
+
+|peer_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the peer cluster. Possible values are connected, unreachable, unknown and down-high-latency.
+
+
+|port
+|integer
+a|The REST server's port number on the mediator.
+
+
+|reachable
+|boolean
+a|Indicates the connectivity status of the mediator.
+
+
+|service_account_client_id
+|string
+a|Client ID of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|service_account_client_secret
+|string
+a|Client secret token of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|strict_cert_validation
+|boolean
+a|Indicates if strict validation of certificates is performed while making REST API calls to the mediator. This field is only applicable to the ONTAP Cloud Mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|type
+|string
+a|Mediator type. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|use_http_proxy_local
+|boolean
+a|Indicates if the local cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|use_http_proxy_remote
+|boolean
+a|Indicates if the remote cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* writeOnly: 1
+* x-nullable: true
+
+
+|user
+|string
+a|The username used to connect to the REST server on the mediator.
+
+
+|uuid
+|string
+a|The unique identifier for the mediator service.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "bluexp_account_token": "string",
+  "bluexp_org_id": "string",
+  "ca_certificate": "string",
+  "dr_group": {
+    "id": 0
+  },
+  "ip_address": "10.10.10.7",
+  "local_mediator_connectivity": "connected",
+  "password": "mypassword",
+  "peer_cluster": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "cluster2",
+    "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+  },
+  "peer_mediator_connectivity": "connected",
+  "port": 31784,
+  "reachable": 1,
+  "service_account_client_id": "string",
+  "service_account_client_secret": "string",
+  "strict_cert_validation": 1,
+  "type": "string",
+  "use_http_proxy_local": 1,
+  "use_http_proxy_remote": 1,
+  "user": "myusername",
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13369377
+| Mediator field "mediator.id" does not exist.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#dr_group]
+[.api-collapsible-fifth-title]
+dr_group
+
+DR group reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|DR Group ID
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#peer_cluster]
+[.api-collapsible-fifth-title]
+peer_cluster
+
+The peer cluster that the mediator service is used for.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#mediator]
+[.api-collapsible-fifth-title]
+mediator
+
+Mediator information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bluexp_account_token
+|string
+a|BlueXP account token. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|bluexp_org_id
+|string
+a|BlueXP organization ID. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|ca_certificate
+|string
+a|CA certificate for ONTAP Mediator. This is optional if the certificate is already installed.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.8
+* x-nullable: true
+
+
+|dr_group
+|link:#dr_group[dr_group]
+a|DR group reference.
+
+
+|ip_address
+|string
+a|The IP address of the mediator.
+
+
+|local_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the local cluster. Possible values are connected, unreachable, unusable and down-high-latency. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|password
+|string
+a|The password used to connect to the REST server on the mediator.
+
+
+|peer_cluster
+|link:#peer_cluster[peer_cluster]
+a|The peer cluster that the mediator service is used for.
+
+
+|peer_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the peer cluster. Possible values are connected, unreachable, unknown and down-high-latency.
+
+
+|port
+|integer
+a|The REST server's port number on the mediator.
+
+
+|reachable
+|boolean
+a|Indicates the connectivity status of the mediator.
+
+
+|service_account_client_id
+|string
+a|Client ID of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|service_account_client_secret
+|string
+a|Client secret token of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|strict_cert_validation
+|boolean
+a|Indicates if strict validation of certificates is performed while making REST API calls to the mediator. This field is only applicable to the ONTAP Cloud Mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|type
+|string
+a|Mediator type. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|use_http_proxy_local
+|boolean
+a|Indicates if the local cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|use_http_proxy_remote
+|boolean
+a|Indicates if the remote cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value: 1
+* example: true
+* Introduced in: 9.17
+* writeOnly: 1
+* x-nullable: true
+
+
+|user
+|string
+a|The username used to connect to the REST server on the mediator.
+
+
+|uuid
+|string
+a|The unique identifier for the mediator service.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

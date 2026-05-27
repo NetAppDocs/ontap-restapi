@@ -1,0 +1,407 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-authentication-publickeys.html'
+summary: 'Create a public key for a user account'
+---
+
+= Create a public key for a user account
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/authentication/publickeys`#
+
+*Introduced In:* 9.7
+
+Creates a public key along with an optional certificate for a user account.
+
+== Required properties
+
+* `owner.uuid` - UUID of the account owner.
+* `name` - User account name.
+* `index` - Index number for the public key (where there are multiple keys for the same account).
+* `public_key` - The publickey details for the creation of the user account.
+
+== Optional properties
+
+* `comment` - Comment text for the public key.
+* `certificate` - The certificate in PEM format.
+
+== Related ONTAP commands
+
+* `security login publickey create`
+
+== Learn more
+
+* link:security_authentication_publickeys_endpoint_overview.html[DOC /security/authentication/publickeys]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|
+
+|certificate
+|string
+a|Optional certificate for the public key.
+
+
+|certificate_details
+|string
+a|The details present in the certificate (READONLY).
+
+
+|certificate_expired
+|string
+a|The expiration details of the certificate (READONLY).
+
+
+|certificate_revoked
+|string
+a|The revocation details of the certificate (READONLY).
+
+
+|comment
+|string
+a|Optional comment for the public key.
+
+
+|index
+|integer
+a|Index number for the public key (where there are multiple keys for the same account).
+
+
+|obfuscated_fingerprint
+|string
+a|The obfuscated fingerprint for the public key (READONLY).
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the public key.
+
+
+|public_key
+|string
+a|The public key
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|The SHA fingerprint for the public key (READONLY).
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "account": {
+    "name": "joe.smith"
+  },
+  "certificate": "string",
+  "certificate_details": "string",
+  "certificate_expired": "string",
+  "certificate_revoked": "string",
+  "comment": "string",
+  "obfuscated_fingerprint": "string",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "public_key": "string",
+  "scope": "string",
+  "sha_fingerprint": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5832705
+| Public key already exists for the given user and application.
+
+| 5832707
+| Failed to generate fingerprint for the public key.
+
+| 5832722
+| The public key cannot be associated with this user on the SVM because a login method using the given application and authentication method does not exist for this user.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#account_reference]
+[.api-collapsible-fifth-title]
+account_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|User account
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the public key.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#publickey]
+[.api-collapsible-fifth-title]
+publickey
+
+The public key for the user account (to access SSH).
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|
+
+|certificate
+|string
+a|Optional certificate for the public key.
+
+
+|certificate_details
+|string
+a|The details present in the certificate (READONLY).
+
+
+|certificate_expired
+|string
+a|The expiration details of the certificate (READONLY).
+
+
+|certificate_revoked
+|string
+a|The revocation details of the certificate (READONLY).
+
+
+|comment
+|string
+a|Optional comment for the public key.
+
+
+|index
+|integer
+a|Index number for the public key (where there are multiple keys for the same account).
+
+
+|obfuscated_fingerprint
+|string
+a|The obfuscated fingerprint for the public key (READONLY).
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the public key.
+
+
+|public_key
+|string
+a|The public key
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|The SHA fingerprint for the public key (READONLY).
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

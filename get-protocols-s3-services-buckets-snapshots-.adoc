@@ -1,0 +1,304 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-s3-services-buckets-snapshots-.html'
+summary: 'Retrieve details of a specific S3 bucket snapshot'
+---
+
+= Retrieve details of a specific S3 bucket snapshot
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/{uuid}`#
+
+*Introduced In:* 9.16
+
+Retrieves details of a specific S3 bucket snapshot.
+
+== Related ONTAP commands
+
+* `vserver object-store-server bucket snapshot show`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_buckets_s3_bucket.uuid_snapshots_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|s3_bucket.uuid
+|string
+|path
+|True
+a|The unique identifier of the bucket.
+
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the S3 bucket snapshot.
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|bucket_uuid
+|string
+a|The unique identifier of the bucket.
+
+
+|create_time
+|string
+a|Creation time of the snapshot. It is the storage unit access time when the snapshot was created.
+
+
+|name
+|string
+a|The name of the snapshot. Snapshot names must start with a lowercase letter, a number, or a hyphen, must end with a lowercase letter or a number, and cannot exceed 30 characters.
+
+
+|svm
+|link:#svm[svm]
+a|Specifies the name of the SVM where this bucket exists.
+
+
+|uuid
+|string
+a|The UUID of the snapshot in the bucket that uniquely identifies the snapshot in that bucket.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "bucket_uuid": "2aec8270-58e3-11ef-861e-005056ae1130",
+  "create_time": "2024-08-21 20:18:04 -0400",
+  "name": "snap1",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "522b29a1-3b26-11e9-bd58-0050568ea321"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Specifies the name of the SVM where this bucket exists.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

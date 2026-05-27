@@ -1,0 +1,290 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-name-services-name-mappings--.html'
+summary: 'Update the name mapping configuration for an SVM'
+---
+
+= Update the name mapping configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/name-services/name-mappings/{svm.uuid}/{direction}/{index}`#
+
+*Introduced In:* 9.6
+
+Updates the name mapping configuration of an SVM. The positions can be swapped by providing the `new_index` property.
+Swapping is not allowed for entries that have `client_match` property configured.
+
+== Related ONTAP commands
+
+* `vserver name-mapping modify`
+* `vserver name-mapping swap`
+
+== Learn more
+
+* link:name-services_name-mappings_endpoint_overview.html[DOC /name-services/name-mappings]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|direction
+|string
+|path
+|True
+a|Direction
+
+
+|index
+|integer
+|path
+|True
+a|Position of the entry in the list
+
+
+|new_index
+|integer
+|query
+|False
+a|New position of the Index after a swap is completed.
+
+* Introduced in: 9.7
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_match
+|string
+a|Client workstation IP Address which is matched when searching for the pattern.
+You can specify the value in any of the following formats:
+
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a hostname
+
+
+|pattern
+|string
+a|Pattern used to match the name while searching for a name that can be used as a replacement. The pattern is a UNIX-style regular expression. Regular expressions are case-insensitive when mapping from Windows to UNIX, and they are case-sensitive for mappings from Kerberos to UNIX and UNIX to Windows.
+
+
+|replacement
+|string
+a|The name that is used as a replacement, if the pattern associated with this entry matches.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "client_match": "10.254.101.111/28",
+  "pattern": "ENGCIFS_AD_USER",
+  "replacement": "unix_user1"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65798185
+| Failed to resolve the specified hostname
+
+| 65798179
+| Cannot swap entries because one or both entries have host name or address configured.
+
+|
+| Delete and re-create the new entry at the specified position.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#name_mapping]
+[.api-collapsible-fifth-title]
+name_mapping
+
+Name mapping is used to map CIFS identities to UNIX identities, Kerberos identities to UNIX identities, UNIX identities to CIFS identities, S3 to UNIX identities and S3 to CIFS identities. It needs this information to obtain user credentials and provide proper file access regardless of whether they are connecting from an NFS client, CIFS client or an S3 client.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_match
+|string
+a|Client workstation IP Address which is matched when searching for the pattern.
+You can specify the value in any of the following formats:
+
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a hostname
+
+
+|pattern
+|string
+a|Pattern used to match the name while searching for a name that can be used as a replacement. The pattern is a UNIX-style regular expression. Regular expressions are case-insensitive when mapping from Windows to UNIX, and they are case-sensitive for mappings from Kerberos to UNIX and UNIX to Windows.
+
+
+|replacement
+|string
+a|The name that is used as a replacement, if the pattern associated with this entry matches.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,232 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-nfs-export-policies-rules-clients-.html'
+summary: 'Delete an export policy client'
+---
+
+= Delete an export policy client
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/nfs/export-policies/{policy.id}/rules/{index}/clients/{match}`#
+
+*Introduced In:* 9.6
+
+Deletes an export policy client
+
+== Related ONTAP commands
+
+* `vserver export-policy rule remove-clientmatches`
+
+== Learn more
+
+* link:protocols_nfs_export-policies_endpoint_overview.html[DOC /protocols/nfs/export-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|policy.id
+|integer
+|path
+|True
+a|Export Policy ID
+
+
+|index
+|integer
+|path
+|True
+a|Export Rule Index
+
+
+|match
+|string
+|path
+|True
+a|Export Client Match
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1703954
+| Export policy does not exist
+
+| 1704036
+| Invalid clientmatch:  missing domain name
+
+| 1704037
+| Invalid clientmatch:  missing network name
+
+| 1704038
+| Invalid clientmatch:  missing netgroup name
+
+| 1704039
+| Invalid clientmatch
+
+| 1704040
+| Invalid clientmatch: address bytes masked out by netmask are non-zero
+
+| 1704041
+| Invalid clientmatch: address bytes masked to zero by netmask
+
+| 1704042
+| Invalid clientmatch: too many bits in netmask
+
+| 1704043
+| Invalid clientmatch: invalid netmask
+
+| 1704044
+| Invalid clientmatch: invalid characters in host name
+
+| 1704045
+| Invalid clientmatch: invalid characters in domain name
+
+| 1704050
+| Invalid clientmatch: the clientmatch list contains a duplicate string. Duplicate strings in a clientmatch list are not supported
+
+| 1704054
+| Invalid clientmatch: invalid characters in netgroup name. Valid characters for a netgroup name are 0-9, A-Z, a-z, ".", "_" and "-"
+
+| 1704064
+| Clientmatch host name too long
+
+| 1704065
+| Clientmatch domain name too long
+
+| 6691623
+| User is not authorized
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,2042 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-svm-svms-.html'
+summary: 'Retrieve SVM properties'
+---
+
+= Retrieve SVM properties
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/svm/svms/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves the properties for an individual SVM. This includes protocol configurations such as CIFS and NFS, export policies, name service configurations, and network services.
+
+== Important notes
+
+* The SVM object includes a large set of fields and can be expensive to retrieve.
+* REST APIs only expose a data SVM as an SVM.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `snapmirror.+*+`
+
+== Example
+
+Retrieving an individual SVM in the cluster
+
+----
+  GET "/api/svm/svms/f16f0935-5281-11e8-b94d-005056b46485"
+----
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Filter by UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|List of allowed aggregates for SVM volumes. An administrator is allowed to create volumes on these aggregates.
+
+
+|aggregates_delegated
+|boolean
+a|This property is true when the administrator has delegated the aggregates for the SVM volumes.
+
+
+|anti_ransomware
+|link:#arw_vserver[arw_vserver]
+a|Anti-ransomware related information for the SVM.
+
+
+|anti_ransomware_auto_switch_duration_without_new_file_extension
+|integer
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that no new file-extensions are observed in the volume in recent time. This parameter optionally specifies the recent time duration (in days) to be considered during which no new file-extension should be observed in a given volume to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". This field will no longer be supported in a future release.
+
+
+|anti_ransomware_auto_switch_from_learning_to_enabled
+|boolean
+a|This property specifies whether anti-ransomware state of the volumes in this SVM are automatically switched by the system from "`learning`" (dry-run) to "`enabled`" (active) state after sufficient learning. This field will no longer be supported in a future release.
+
+
+|anti_ransomware_auto_switch_minimum_file_count
+|integer
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that the volume should have a minimum file count in "`learning`" state. This parameter optionally specifies the minimum number of newly created files in "`learning`" state in a given volume to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". This field will no longer be supported in a future release.
+
+
+|anti_ransomware_auto_switch_minimum_file_extension
+|integer
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that the volume should have minimum number of file extensions in "`learning`" state. This parameter optionally specifies the minimum number of new file extensions in "`learning`" state in a given volume to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". This field will no longer be supported in a future release.
+
+
+|anti_ransomware_auto_switch_minimum_incoming_data
+|string
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that the volume should have sufficient data ingested to do the learning. This parameter optionally specifies the minimum amount of data (in GB) to be written to a given volume during the learning period to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". The amount of data considered as ingested also includes the data that is deleted or overwritten after ingestion. This field will no longer be supported in a future release.
+
+
+|anti_ransomware_auto_switch_minimum_learning_period
+|integer
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that the volume should be in "`learning`" state for sufficient time period. This parameter optionally specifies the minimum number of days a given volume should be in "`learning`" state to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". This field will no longer be supported in a future release.
+
+
+|anti_ransomware_default_volume_state
+|string
+a|Specifies the default anti-ransomware state of the volumes in the SVM. The default "anti_ransomware_default_volume_state" property is disabled for POST operations. If this value is "disabled", anti-ransomware protection is disabled by default on the new volumes that are created in the SVM. If this value is "dry_run", anti-ransomware protection is in learning mode by default on the new volumes that are created in the SVM.  When the anti-ransomware license is not present, this property is ignored and volumes will be created with the "disabled" state. This value "dry_run" will no longer be supported in a future release.
+
+
+|anti_ransomware_incoming_write_threshold
+|string
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that the volume should have sufficient data ingested to do the learning. This parameter optionally specifies the minimum amount of data (in GB) to be written to a given volume during the learning period to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". The amount of data considered as ingested also includes the data that is deleted or overwritten after ingestion. This field is no longer supported.
+
+
+|anti_ransomware_incoming_write_threshold_percent
+|string
+a|One of the many conditions to be satisfied to automatically switch the anti-ransomware state of the volumes in this SVM from "`learning`" (dry-run) to "`enabled`" is that the volume should have sufficient data ingested to do the learning. This parameter optionally specifies the minimum amount of data (in percentage) to be written to a given volume during the learning period to automatically switch the anti-ransomware state from "`learning`" to "`enabled`". The amount of data considered as ingested also includes the data that is deleted or overwritten after ingestion. This field will no longer be supported in a future release.
+
+
+|auto_enable_activity_tracking
+|boolean
+a|Specifies whether volume activity tracking is automatically enabled on volumes that are created in the SVM.
+
+
+|auto_enable_analytics
+|boolean
+a|Specifies whether file system analytics is automatically enabled on volumes that are created in the SVM.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Support for this field will be removed in a future release. Please use /svm/svms/{svm.uuid}/web for this field. Certificate for incoming TLS connection requests.
+
+
+|cifs
+|link:#cifs[cifs]
+a|
+
+|comment
+|string
+a|Comment
+
+
+|dns
+|link:#dns[dns]
+a|
+
+|fc_interfaces
+|array[link:#fc_interface_svm[fc_interface_svm]]
+a|FC Interface for the SVM
+
+
+|fcp
+|link:#fcp[fcp]
+a|Available for GET, POST, and PATCH requests.
+
+
+|ip_interfaces
+|array[link:#ip_interface_svm[ip_interface_svm]]
+a|IP interfaces for the SVM
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Either the UUID or name may be supplied on input.
+
+
+|is_space_enforcement_logical
+|boolean
+a|Indicates whether logical space enforcement for the SVM is enabled.
+
+
+|is_space_reporting_logical
+|boolean
+a|Indicates whether logical space reporting for the SVM is enabled.
+
+
+|iscsi
+|link:#iscsi[iscsi]
+a|Available for GET, POST, and PATCH requests.
+
+
+|language
+|string
+a|Default volume language code. UTF-8 encoded languages are valid in POST or PATCH. Non UTF-8 language encodings are for backward compatibility and are not valid input for POST and PATCH requests.
+
+
+|ldap
+|link:#ldap[ldap]
+a|
+
+|max_volumes
+|string
+a|This property is used by cluster administrator to specify the limit on maximum number of volumes allowed in the SVM. The value can be either the string "unlimited" or a number.
+
+
+|name
+|string
+a|The name of the SVM.
+
+
+|ndmp
+|link:#ndmp[ndmp]
+a|
+
+|nfs
+|link:#nfs[nfs]
+a|
+
+|nis
+|link:#nis[nis]
+a|
+
+|nsswitch
+|link:#nsswitch[nsswitch]
+a|Name service switch configuration
+
+
+|number_of_volumes_in_recovery_queue
+|integer
+a|Number of volumes in the recovery queue.
+
+
+|nvme
+|link:#nvme[nvme]
+a|Available for GET, POST, and PATCH requests.
+
+
+|qos_adaptive_policy_group_template
+|link:#qos_adaptive_policy_group_template[qos_adaptive_policy_group_template]
+a|This optionally specifies which QoS adaptive policy group to apply to the SVM as a template. This policy group will then be assigned to volumes created or rehosted into this SVM. This policy group defines measurable service level objectives (SLOs) and Service Level Agreements (SLAs) that adjust based on the volume allocated space or used space.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|This optionally specifies which QoS policy group to apply to the Vserver. This policy group defines measurable service level objectives (SLOs) that apply to the storage objects with which the policy group is associated.
+
+
+|qos_policy_group_template
+|link:#qos_policy_group_template[qos_policy_group_template]
+a|This optionally specifies which QoS non-shared policy group to apply to the SVM as a template. This policy group is then assigned to volumes created or rehosted into this SVM. This policy group defines measurable service level objectives (SLOs) and Service Level Agreements (SLAs).
+
+
+|s3
+|link:#s3[s3]
+a|
+
+|snapmirror
+|link:#snapmirror[snapmirror]
+a|Specifies attributes for SVM DR protection.
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|This is a reference to the snapshot policy.
+
+
+|state
+|string
+a|SVM State
+
+
+|storage
+|link:#storage[storage]
+a|
+
+|subtype
+|string
+a|SVM subtype. The SVM subtype sync_destination is created automatically when an SVM of subtype sync_source is created on the source MetroCluster cluster. A POST request with sync_destination as SVM subtype is invalid. SVM of subtype data_engine cannot be explicitly created by the admin and most management changes are not allowed on it.
+
+
+|total_volume_size_in_recovery_queue
+|integer
+a|Sum of the sizes of the volumes in the recovery queue.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "aggregates": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "available_size": 10156560384,
+      "name": "aggr1",
+      "snaplock_type": "string",
+      "state": "string",
+      "type": "string",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "anti_ransomware_auto_switch_minimum_incoming_data": "string",
+  "anti_ransomware_default_volume_state": "string",
+  "anti_ransomware_incoming_write_threshold": "string",
+  "anti_ransomware_incoming_write_threshold_percent": "string",
+  "certificate": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "cifs": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "ad_domain": {
+      "default_site": "string",
+      "fqdn": "example.com",
+      "organizational_unit": "string"
+    },
+    "auth-style": "domain",
+    "domain_workgroup": "string",
+    "name": "CIFS1",
+    "workgroup": "workgrp1"
+  },
+  "comment": "string",
+  "dns": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "domains": [
+      "example.com",
+      "example2.example3.com"
+    ],
+    "servers": [
+      "10.224.65.20",
+      "2001:db08:a0b:12f0::1"
+    ]
+  },
+  "fc_interfaces": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "data_protocol": "string",
+      "name": "lif1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "fcp": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    }
+  },
+  "ip_interfaces": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "ip": {
+        "address": "10.10.10.7"
+      },
+      "name": "lif1",
+      "services": [
+        "data_nfs"
+      ],
+      "subnet": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "subnet1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "ipspace": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "iscsi": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    }
+  },
+  "language": "c.utf_8",
+  "ldap": {
+    "ad_domain": "string",
+    "base_dn": "string",
+    "bind_dn": "string",
+    "servers": [
+      "string"
+    ]
+  },
+  "max_volumes": "string",
+  "name": "svm1",
+  "nfs": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    }
+  },
+  "nis": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "domain": "string",
+    "servers": [
+      "string"
+    ]
+  },
+  "nsswitch": {
+    "group": [
+      "string"
+    ],
+    "hosts": [
+      "string"
+    ],
+    "namemap": [
+      "string"
+    ],
+    "netgroup": [
+      "string"
+    ],
+    "passwd": [
+      "string"
+    ]
+  },
+  "number_of_volumes_in_recovery_queue": 0,
+  "nvme": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    }
+  },
+  "qos_adaptive_policy_group_template": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "max_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "max_throughput_iops": 10000,
+    "max_throughput_mbps": 500,
+    "min_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "min_throughput_iops": 2000,
+    "min_throughput_mbps": 500,
+    "name": "performance",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "qos_policy": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "max_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "max_throughput_iops": 10000,
+    "max_throughput_mbps": 500,
+    "min_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "min_throughput_iops": 2000,
+    "min_throughput_mbps": 500,
+    "name": "performance",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "qos_policy_group_template": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "max_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "max_throughput_iops": 10000,
+    "max_throughput_mbps": 500,
+    "min_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "min_throughput_iops": 2000,
+    "min_throughput_mbps": 500,
+    "name": "performance",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "s3": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "certificate": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "string",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "default_unix_user": "string",
+    "default_win_user": "string",
+    "name": "s3-server-1"
+  },
+  "snapmirror": {
+    "protected_consistency_group_count": 0,
+    "protected_volumes_count": 0
+  },
+  "snapshot_policy": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "state": "running",
+  "storage": {
+    "allocated": 0,
+    "available": 0,
+    "used_percentage": 0
+  },
+  "subtype": "string",
+  "total_volume_size_in_recovery_queue": 0,
+  "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error codes | Description
+
+| 262188
+| Field "top_metric" was specified twice (to "iops.read" and "throughput.read").
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|available_size
+|integer
+a|Space available, in bytes.
+
+
+|name
+|string
+a|
+
+|snaplock_type
+|string
+a|SnapLock type.
+
+
+|state
+|string
+a|Aggregate state.
+
+
+|type
+|string
+a|Type of aggregate.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#event_log]
+[.api-collapsible-fifth-title]
+event_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_enabled_on_new_file_extension_seen
+|boolean
+a|Specifies whether to send an EMS when a new file extension is discovered.
+
+
+|is_enabled_on_snapshot_copy_creation
+|boolean
+a|Specifies whether to send an EMS when a snapshot is created.
+
+
+|===
+
+
+[#arw_vserver]
+[.api-collapsible-fifth-title]
+arw_vserver
+
+Anti-ransomware related information for the SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|event_log
+|link:#event_log[event_log]
+a|
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Support for this field will be removed in a future release. Please use /svm/svms/{svm.uuid}/web for this field. Certificate for incoming TLS connection requests.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#ad_domain]
+[.api-collapsible-fifth-title]
+ad_domain
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_site
+|string
+a|The default site used by LIFs that do not have a site membership.
+
+
+|fqdn
+|string
+a|The fully qualified domain name of the Windows Active Directory to which this CIFS server belongs. A CIFS server appears as a member of Windows server object in the Active Directory store.
+
+
+|organizational_unit
+|string
+a|Specifies the organizational unit within the Active Directory domain to associate with the CIFS server.
+
+
+|===
+
+
+[#cifs]
+[.api-collapsible-fifth-title]
+cifs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ad_domain
+|link:#ad_domain[ad_domain]
+a|
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the CIFS service. If it is false, only the cluster administrator can manage the service.
+
+
+|auth-style
+|string
+a|Authentication type.
+
+
+|domain_workgroup
+|string
+a|The NetBIOS name of the domain or workgroup associated with the CIFS server.
+
+
+|enabled
+|boolean
+a|If allowed, setting to true enables the CIFS service.
+
+
+|name
+|string
+a|The NetBIOS name of the CIFS server.
+
+
+|workgroup
+|string
+a|The workgroup name.
+
+
+|===
+
+
+[#dns]
+[.api-collapsible-fifth-title]
+dns
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|domains
+|array[string]
+a|A list of DNS domains.
+Domain names have the following requirements:
+
+* The name must contain only the following characters: A through Z,
+a through z, 0 through 9, ".", "-" or "_".
+* The first character of each label, delimited by ".", must be one
+of the following characters: A through Z or a through z or 0
+through 9.
+* The last character of each label, delimited by ".", must be one of
+the following characters: A through Z, a through z, or 0 through 9.
+* The top level domain must contain only the following characters: A
+through Z, a through z.
+* The system reserves the following names:"all", "local", and "localhost".
+
+
+|servers
+|array[string]
+a|The list of IP addresses of the DNS servers. Addresses can be either
+IPv4 or IPv6 addresses.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node on which the FC port is located.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the node on which the FC port is located.
+
+
+|===
+
+
+[#fc_port_reference]
+[.api-collapsible-fifth-title]
+fc_port_reference
+
+An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC port.
+
+
+|node
+|link:#node[node]
+a|The node on which the FC port is located.
+
+
+|uuid
+|string
+a|The unique identifier of the FC port.
+
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+The location of the Fibre Channel interface is defined by the location of its port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|port
+|link:#fc_port_reference[fc_port_reference]
+a|An FC port is the physical port of an FC adapter on a cluster node that can be connected to an FC network.
+
+
+|===
+
+
+[#fc_interface_svm]
+[.api-collapsible-fifth-title]
+fc_interface_svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|data_protocol
+|string
+a|The data protocol for which the Fibre Channel interface is configured.
+
+
+|name
+|string
+a|The name of the Fibre Channel interface.
+
+
+|uuid
+|string
+a|The unique identifier of the Fibre Channel interface.
+
+
+|===
+
+
+[#fcp]
+[.api-collapsible-fifth-title]
+fcp
+
+Available for GET, POST, and PATCH requests.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the FCP service. If it is false, only the cluster administrator can manage the service.
+
+
+|enabled
+|boolean
+a|If allowed, setting to true enables the FCP service.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+Broadcast domain UUID along with a readable name.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#home_node]
+[.api-collapsible-fifth-title]
+home_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#port_svm]
+[.api-collapsible-fifth-title]
+port_svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+Home_node is optional.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|broadcast_domain
+|link:#broadcast_domain[broadcast_domain]
+a|Broadcast domain UUID along with a readable name.
+
+
+|home_node
+|link:#home_node[home_node]
+a|
+
+|home_port
+|link:#port_svm[port_svm]
+a|
+
+|===
+
+
+[#ip_subnet_reference]
+[.api-collapsible-fifth-title]
+ip_subnet_reference
+
+A named subnet. Either UUID or name can be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the subnet. If only the name is provided, the IPspace scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the subnet.
+
+
+|===
+
+
+[#ip_interface_svm]
+[.api-collapsible-fifth-title]
+ip_interface_svm
+
+Interface parameters.  Name and home_node are optional.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface (optional).
+
+
+|services
+|array[string]
+a|The services associated with the interface.
+
+
+|subnet
+|link:#ip_subnet_reference[ip_subnet_reference]
+a|A named subnet. Either UUID or name can be supplied on input.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Either the UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#iscsi]
+[.api-collapsible-fifth-title]
+iscsi
+
+Available for GET, POST, and PATCH requests.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the iSCSI service. If it is false, only the cluster administrator can manage the service.
+
+
+|enabled
+|boolean
+a|If allowed, setting to true enables the iSCSI service.
+
+
+|===
+
+
+[#ldap]
+[.api-collapsible-fifth-title]
+ldap
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|string
+a|This parameter specifies the name of the Active Directory domain
+used to discover LDAP servers for use by this client.
+This is mutually exclusive with `servers` during POST.
+
+
+|base_dn
+|string
+a|Specifies the default base DN for all searches.
+
+
+|bind_dn
+|string
+a|Specifies the user that binds to the LDAP servers. SVM API supports anonymous binding. For Simple and SASL LDAP binding, use the LDAP API endpoint.
+
+
+|enabled
+|boolean
+a|Enable LDAP? Setting to true creates a configuration if not already created.
+
+
+|restrict_discovery_to_site
+|boolean
+a|Specifies whether or not LDAP server discovery is restricted to site-scope.
+
+
+|servers
+|array[string]
+a|
+
+|===
+
+
+[#ndmp]
+[.api-collapsible-fifth-title]
+ndmp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the NDMP service. If it is false, only the cluster administrator can manage the service.
+
+
+|===
+
+
+[#nfs]
+[.api-collapsible-fifth-title]
+nfs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the NFS service. If it is false, only the cluster administrator can manage the service.
+
+
+|enabled
+|boolean
+a|If allowed, setting to true enables the NFS service.
+
+
+|===
+
+
+[#nis]
+[.api-collapsible-fifth-title]
+nis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|domain
+|string
+a|The NIS domain to which this configuration belongs.
+
+
+|enabled
+|boolean
+a|Enable NIS? Setting to true creates a configuration if not already created.
+
+
+|servers
+|array[string]
+a|A list of hostnames or IP addresses of NIS servers used
+by the NIS domain configuration.
+
+
+|===
+
+
+[#nsswitch]
+[.api-collapsible-fifth-title]
+nsswitch
+
+Name service switch configuration
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group
+|array[string]
+a|Group sources
+
+
+|hosts
+|array[string]
+a|Host sources
+
+
+|namemap
+|array[string]
+a|NameMap sources
+
+
+|netgroup
+|array[string]
+a|NetGroup sources
+
+
+|passwd
+|array[string]
+a|Password sources
+
+
+|===
+
+
+[#nvme]
+[.api-collapsible-fifth-title]
+nvme
+
+Available for GET, POST, and PATCH requests.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the NVMe service. If it is false, only the cluster administrator can manage the service.
+
+
+|enabled
+|boolean
+a|If allowed, setting to true enables the NVMe service.
+
+
+|===
+
+
+[#qos_adaptive_policy_group_template]
+[.api-collapsible-fifth-title]
+qos_adaptive_policy_group_template
+
+This optionally specifies which QoS adaptive policy group to apply to the SVM as a template. This policy group will then be assigned to volumes created or rehosted into this SVM. This policy group defines measurable service level objectives (SLOs) and Service Level Agreements (SLAs) that adjust based on the volume allocated space or used space.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+This optionally specifies which QoS policy group to apply to the Vserver. This policy group defines measurable service level objectives (SLOs) that apply to the storage objects with which the policy group is associated.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#qos_policy_group_template]
+[.api-collapsible-fifth-title]
+qos_policy_group_template
+
+This optionally specifies which QoS non-shared policy group to apply to the SVM as a template. This policy group is then assigned to volumes created or rehosted into this SVM. This policy group defines measurable service level objectives (SLOs) and Service Level Agreements (SLAs).
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either max_throughput_mbps or max_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|max_throughput_mbps
+|integer
+a|Specifies the maximum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when max_throughput is set during POST or PATCH.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in Kilobytes per sec, Megabytes per sec or Gigabytes per sec along with or without IOPS. 0 means none.Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when either min_throughput_mbps or min_throughput_iops are set during POST or PATCH. During GET, the returned value is rounded to the largest unit with a value greater than 1.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none. Setting "min_throughput" is supported on AFF platforms only, unless FabricPool tiering policies are set. This is mutually exclusive with name and UUID during POST and PATCH. This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|min_throughput_mbps
+|integer
+a|Specifies the minimum throughput in Megabytes per sec, 0 means none. This is mutually exclusive with name and UUID during POST and PATCH.This cannot be set when min_throughput is set during POST or PATCH.
+
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#ip_info]
+[.api-collapsible-fifth-title]
+ip_info
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|family
+|string
+a|IPv4 or IPv6
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#network_route_for_svm]
+[.api-collapsible-fifth-title]
+network_route_for_svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|gateway
+|string
+a|The IP address of the gateway router leading to the destination.
+
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Specifies the certificate that will be used for creating HTTPS connections to the S3 server.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#s3]
+[.api-collapsible-fifth-title]
+s3
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|allowed
+|boolean
+a|If this is set to true, an SVM administrator can manage the S3 service. If it is false, only the cluster administrator can manage the service.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Specifies the certificate that will be used for creating HTTPS connections to the S3 server.
+
+
+|default_unix_user
+|string
+a|Specifies the default UNIX user for NAS Access.
+
+
+|default_win_user
+|string
+a|Specifies the default Windows user for NAS Access.
+
+
+|enabled
+|boolean
+a|Specifies whether or not to enable S3. Setting this value to true creates a service if one is not yet created.
+
+
+|is_http_enabled
+|boolean
+a|Specifies whether HTTP is enabled on the S3 server. By default, HTTP is disabled on the S3 server.
+
+
+|is_https_enabled
+|boolean
+a|Specifies whether HTTPS is enabled on the S3 server. By default, HTTPS is enabled on the S3 server.
+
+
+|name
+|string
+a|Specifies the name of the S3 server. A server name length can range from 1 to 253 characters and can only contain the following combination of characters 0-9, A-Z, a-z, ".", and "-".
+
+
+|port
+|integer
+a|Specifies the HTTP listener port for the S3 server. By default, HTTP is enabled on port 80.
+
+
+|secure_port
+|integer
+a|Specifies the HTTPS listener port for the S3 server. By default, HTTPS is enabled on port 443.
+
+
+|===
+
+
+[#snapmirror]
+[.api-collapsible-fifth-title]
+snapmirror
+
+Specifies attributes for SVM DR protection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|is_protected
+|boolean
+a|Specifies whether the SVM is a SnapMirror source SVM, using SnapMirror to protect its data.
+
+
+|protected_consistency_group_count
+|integer
+a|Specifies the number of SVM DR protected consistency groups in the SVM.
+
+
+|protected_volumes_count
+|integer
+a|Specifies the number of SVM DR protected volumes in the SVM.
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+This is a reference to the snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage]
+[.api-collapsible-fifth-title]
+storage
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|allocated
+|integer
+a|Total size of the volumes in SVM, in bytes.
+
+
+|available
+|integer
+a|Currently available storage capacity in SVM, in bytes.
+
+
+|limit
+|integer
+a|Maximum storage permitted on a single SVM, in bytes.
+
+
+|limit_threshold_alert
+|integer
+a|Indicates at what percentage of storage capacity an alert message is sent. The default value is 90.
+
+
+|limit_threshold_exceeded
+|boolean
+a|Indicates whether the total storage capacity exceeds the alert percentage.
+
+
+|used_percentage
+|integer
+a|The percentage of storage capacity used.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,190 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_active-directory_svm.uuid_preferred-domain-controllers_endpoint_overview.html'
+summary: 'Manage Active Directory domain controllers'
+---
+
+= Manage Active Directory domain controllers
+
+
+
+== Overview
+
+You can use this API to display the preferred DC configuration of an SVM.
+
+== Retrieving all the preferred DC configurations of an SVM
+
+'''
+
+The preferred DC GET endpoint retrieves all the configurations for a specific SVM.
+
+== Examples
+
+=== Retrieving all fields for all the preferred DC configurations of an SVM
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/?fields=*" -H "accept: application/json"
+
+# The response:
+{
+ "records": [
+{
+  "svm": {
+    "uuid": "1226670c-abc9-11eb-8de3-0050568eb0c4",
+    "name": "svm1"
+  },
+  "fqdn": "host1",
+  "server_ip": "4.4.4.4"
+},
+{
+  "svm": {
+    "uuid": "1226670c-abc9-11eb-8de3-0050568eb0c4",
+    "name": "svm1"
+  },
+  "fqdn": "host2",
+  "server_ip": "11.11.11.11"
+}
+],
+ "num_records": 2
+}
+----
+
+'''
+
+=== Retrieving the preferred DC configuration of a specific SVM, "fqdn" and "server_ip"
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers/{fqdn}/{server_ip}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/host1/4.4.4.4" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "1226670c-abc9-11eb-8de3-0050568eb0c4",
+  "name": "svm1"
+},
+"fqdn": "host1",
+"server_ip": "4.4.4.4"
+}
+----
+
+'''
+
+== Creating a new preferred DC configuration
+
+The preferred DC POST endpoint creates a new configuration. Both bulk and instance POST is supported.
+
+== Examples
+
+=== Creating a single preferred DC configuration
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers?skip_config_validation=true&return_records=false" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"fqdn\": \"testing.com\", \"server_ip\": \"1.1.1.1\"}"
+----
+
+'''
+
+== Deleting an existing preferred DC configuration
+
+The preferred DC DELETE endpoint deletes an existing configuration. Both bulk and instance delete is supported.
+
+== Examples
+
+=== Deleting the preferred DC configuration of a specific SVM, "fqdn" and "server_ip"
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers/{fqdn}/{server_ip}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/sample/4.4.4.4"
+----
+
+'''
+
+=== Deleting the preferred DC configurations of a specific SVM and "fqdn"
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/?fqdn=sampl"
+----
+
+'''
+
+=== Deleting all preferred DC configurations of a specific SVM
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/?fqdn=*"
+----
+
+'''
+
+=== Deleting the preferred DC configurations of a specific SVM, "fqdn" and set of "server_ips"
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/?fqdn=sample&server_ip=3.3.3.3&#124;4.4.4.4&#124;1.1.1.1&#124;2.2.2.2"
+----
+
+'''
+
+=== Deleting the preferred DC configurations of a specific SVM and set of "server_ips"
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/active-directory/{svm.uuid}/preferred-domain-controllers
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/active-directory/1226670c-abc9-11eb-8de3-0050568eb0c4/preferred-domain-controllers/?server_ip=3.3.3.3&#124;4.4.4.4&#124;1.1.1.1&#124;2.2.2.2"
+----
+
+'''
+
+

@@ -1,0 +1,385 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-fpolicy-persistent-stores.html'
+summary: 'Create an FPolicy persistent store configuration for an SVM'
+---
+
+= Create an FPolicy persistent store configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/persistent-stores`#
+
+*Introduced In:* 9.14
+
+Creates an FPolicy Persistent Store configuration for a specified SVM.
+
+Important notes:
+
+* FPolicy Persistent Store creation is allowed only on data SVMs.
+* In persistent mode, when the Persistent Store is full, event notifications are dropped.
+* There is flexibility to provide an existing volume or create a new volume for the persistent storage. The creation of new volume is handled internally.
+* For existing volumes, the snapshot policy is set to 'none' and the size is adjusted to the specified value.
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the FPolicy Persistent Store.
+* `name` - Name of the FPolicy Persistent Store.
+* `volume` - Volume specified for Persistent Store (only FlexVol volumes of type RW are supported).
+
+== Optional properties
+
+* `size` - Size of the Persistent Store volume.
+* `autosize-mode` - Autosize mode for the Persistent Store volume.
+
+== Related ONTAP commands
+
+* `fpolicy persistent-store create`
+
+== Learn more
+
+* link:protocols_fpolicy_svm.uuid_persistent-stores_endpoint_overview.html[DOC /protocols/fpolicy/{svm.uuid}/persistent-stores]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autosize_mode
+|string
+a|Autosize mode for the volume.
+grow &dash; Volume automatically grows in response to the amount of space used.
+grow_shrink &dash; Volume grows or shrinks in response to the amount of space used.
+off &dash; Autosizing of the volume is disabled.
+
+
+|name
+|string
+a|The name specified for the FPolicy Persistent Store.
+
+
+|size
+|integer
+a|The size of the Persistent Store volume, in bytes.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|volume
+|string
+a|The specified volume to store the events for the FPolicy Persistent Store.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "autosize_mode": "string",
+  "name": "ps1",
+  "size": "100M",
+  "svm": {
+    "uuid": "string"
+  },
+  "volume": "psvol"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#fpolicy_persistent_store[fpolicy_persistent_store]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "autosize_mode": "string",
+      "name": "ps1",
+      "size": "100M",
+      "svm": {
+        "uuid": "string"
+      },
+      "volume": "psvol"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+|===
+| Error Code | Description
+
+| 9765052
+| Cannot create more than one Persistent Store per SVM
+
+| 9765053
+| Volume mentioned does not exist in the SVM
+
+| 9765068
+| The Persistent Store name is too long. It must not exceed 500 characters
+
+| 2621516
+| This operation is only supported on a data SVM
+
+| 9765069
+| Volume is not a FlexVol volume. Only FlexVol volumes are supported for this operation.
+
+| 9765072
+| Volume is not of type RW. Only volumes of type RW are supported.
+
+| 9765074
+| Size is a required parameter for the creation of the Persistent Store.
+
+| 9765077
+| The SVM is not associated with any aggregates.
+
+| 524849
+| Attribute cannot be modified for the target volume because of the specified reason.
+
+| 917533
+| The target volume is not eligible for modification due to certain constraints, such as the volume being offline or currently engaged in a volume move operation.
+
+| 917826
+| Volume minimum autosize must be greater than zero.
+
+| 918647
+| The designated size exceeds the maximum available capacity of the intended volume.
+
+| 917534
+| The value specified for the field \"-size\" is too small. Update the field \"-size\" with the minimum size allowed and retry the operation.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#fpolicy_persistent_store]
+[.api-collapsible-fifth-title]
+fpolicy_persistent_store
+
+The information that an FPolicy process needs in order to configure a Persistent Store.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autosize_mode
+|string
+a|Autosize mode for the volume.
+grow &dash; Volume automatically grows in response to the amount of space used.
+grow_shrink &dash; Volume grows or shrinks in response to the amount of space used.
+off &dash; Autosizing of the volume is disabled.
+
+
+|name
+|string
+a|The name specified for the FPolicy Persistent Store.
+
+
+|size
+|integer
+a|The size of the Persistent Store volume, in bytes.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|volume
+|string
+a|The specified volume to store the events for the FPolicy Persistent Store.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

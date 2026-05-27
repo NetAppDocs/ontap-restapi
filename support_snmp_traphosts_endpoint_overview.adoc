@@ -1,0 +1,135 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_snmp_traphosts_endpoint_overview.html'
+summary: 'Create or retrieve SNMP traphosts'
+---
+
+= Create or retrieve SNMP traphosts
+
+
+
+== Overview
+
+This SNMP endpoint is used to retrieve, configure and reconfigure SNMP traphosts. An SNMP traphost is a host machine that is configured to receive SNMP traps from ONTAP. An SNMP traphost can be an SNMPv1/SNMPv2c traphost or an SNMPv3 traphost. ONTAP sends SNMPv1/SNMPv2c traps to an SNMPv1/SNMPv2c traphost over the SNMPv1/SNMPv2c protocol. Similarly, it sends SNMPv3 traps to an SNMPv3 traphost over the SNMPv3 protocol.
+
+== Examples
+
+=== Retrieves a list of SNMP traphosts in the cluster, sorted by IP address
+
+----
+
+# The API:
+GET "/api/support/snmp/traphosts"
+
+# The call:
+curl -H "accept: application/hal+json" -X GET "https://<mgmt-ip>/api/support/snmp/traphosts?order_by=ip_address"
+
+# The response:
+{
+"records": [
+  {
+    "host": "example_host_name",
+    "ip_address": "12.34.56.78",
+    "_links": {
+      "self": {
+        "href": "/api/support/snmp/traphosts/example_host_name"
+      }
+    }
+  },
+  {
+    "host": "example_host_name2",
+    "ip_address": "12.34.56.90",
+    "_links": {
+      "self": {
+        "href": "/api/support/snmp/traphosts/example_host_name2"
+      }
+    }
+  },
+  {
+    "host": "example_host_name3",
+    "ip_address": "12.34.56.91",
+    "_links": {
+      "self": {
+        "href": "/api/support/snmp/traphosts/example_host_name3"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/support/snmp/traphosts?order_by=ip_address"
+  }
+}
+}
+----
+
+=== Retrieves a list of SNMP traphosts in the cluster for which SNMP user is 'snmpv3user1'
+
+----
+
+# The call:
+curl -H "accept: application/hal+json" -X GET "https://<mgmt-ip>/api/support/snmp/traphosts?name=snmpv3user1"
+
+# The response:
+{
+"records": [
+  {
+    "host": "example_host_name",
+    "user": {
+      "name": "snmpv3user1",
+      "_links": {
+        "self": {
+          "href": "/api/support/snmp/users/800003150558b57e8dbd9ce9119d82005056a7b4e5/snmpv3user1"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/support/snmp/traphosts/example_host_name"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/support/snmp/traphosts?user.name=snmpv3user1"
+  }
+}
+}
+----
+
+=== Adds an SNMPv1 or SNMPv2c traphost
+
+----
+
+# The API:
+POST "/api/support/snmp/traphosts"
+
+# The call:
+curl -H "accept: application/json" -H "Content-Type: application/json" -X POST "https://<mgmt-ip>/api/support/snmp/traphosts" -d '{"host":"10.140.128.48"}'
+
+# The response:
+201 Created
+{}
+----
+
+=== Adds an SNMPv3 traphost
+
+----
+
+# The API:
+POST "/api/support/snmp/traphosts"
+
+# The call:
+curl -H "accept: application/json" -H "Content-Type: application/json" -X POST "https://<mgmt-ip>/api/support/snmp/traphosts" -d '{"host":"fd-geoycpi-uno.gycpi.b.yahoodns.net", "user":{"name":"snmpv3user1"}}'
+
+# The response:
+201 Created
+{}
+----
+
+

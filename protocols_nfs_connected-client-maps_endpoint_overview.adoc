@@ -1,0 +1,59 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_nfs_connected-client-maps_endpoint_overview.html'
+summary: 'View NFS client information'
+---
+
+= View NFS client information
+
+
+
+== Overview
+
+ONTAP connected clients map functionality is mainly used by the System Manager to display client information.
+
+The following are details of the fields retrieved for the Connected Clients MAP GET API:
+
+node.name: Node name hosting this record, essentially the node hosting the "server_ip".
+node.uuid: Node UUID hosting this record, essentially the node hosting the "server_ip".
+svm.name: SVM name to which the "server_ip" belongs to.
+svm.uuid: SVM UUID to which the "server_ip" belongs to.
+server_ip: All clients that are connected to this interface are displayed in rows.
+client_ips: List of client IP addresses connected to the interface.
+
+== Example
+
+=== Retrieving connected client Map information
+
+----
+
+# The API:
+GET /protocols/nfs/connected-client-maps
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/nfs/connected-client-maps?return_timeout=15&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+ {
+   "svm": {
+     "uuid": "c642db55-b8d0-11e9-9ad1-0050568e8480",
+     "name": "vs1"
+   },
+   "node": {
+     "uuid": "cc282893-b82f-11e9-a3ad-0050568e8480",
+     "name": "vsim1"
+   },
+   "server_ip": "10.140.72.214",
+   "client_ips": [
+     "127.0.0.1"
+   ]
+ }],
+ "num_records": 1
+}
+----
+
+

@@ -1,0 +1,341 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-configuration-backup-backups-.html'
+summary: 'Retrieve configuration backup file details'
+---
+
+= Retrieve configuration backup file details
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/configuration-backup/backups/{node.uuid}/{name}`#
+
+*Introduced In:* 9.7
+
+Retrieves details of the specified configuration backup file.
+
+== Related ONTAP commands
+
+* `system configuration backup show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|UUID of the node that owns the configuration backup.
+
+
+|name
+|string
+|path
+|True
+a|Name of the configuration backup.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto
+|boolean
+a|Indicates if the backup was created automatically.
+
+
+|backup_nodes
+|array[link:#backup_node[backup_node]]
+a|The list of nodes included in the backup.
+
+
+|download_link
+|string
+a|The link to download the backup file.
+
+
+|name
+|string
+a|The backup name.
+
+
+|node
+|link:#node[node]
+a|The node that owns the configuration backup.
+
+
+|size
+|integer
+a|The size of the backup in bytes.
+
+
+|time
+|string
+a|The backup creation time.
+
+
+|type
+|string
+a|The backup type.
+
+
+|version
+|string
+a|The software version.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "backup_nodes": [
+    {
+      "name": "string"
+    }
+  ],
+  "download_link": "https://10.224.65.198/backups/backup_file.7z",
+  "name": "backup_file.7z",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "size": 4787563,
+  "time": "2019-02-04 13:33:48 -0500",
+  "type": "string",
+  "version": "9.7.0"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5963777
+| Configuration backup file does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#backup_node]
+[.api-collapsible-fifth-title]
+backup_node
+
+The node name in the backup.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node that owns the configuration backup.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

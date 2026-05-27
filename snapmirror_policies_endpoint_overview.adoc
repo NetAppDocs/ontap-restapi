@@ -1,0 +1,57 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'snapmirror_policies_endpoint_overview.html'
+summary: 'Manage SnapMirror policies'
+---
+
+= Manage SnapMirror policies
+
+
+
+== Managing SnapMirror policies
+
+This API is used to manage SnapMirror policies of type "async" and "sync". When applied to a SnapMirror relationship, the SnapMirror policy controls the behavior of the relationship and specifies the configuration attributes for that relationship.
+The policy type "async" can be associated with a SnapMirror relationship that has either a FlexVol volume, FlexGroup volume, or SVM as the endpoint.
+The policy type "sync" can be associated with a SnapMirror relationship that has a FlexVol volume or a consistency group as the endpoint. The policy type "sync" can have a "sync_type" of either "sync", "strict_sync", "automated_failover" or "automated_failover_duplex". If the "sync_type" is "sync", a write success is returned to the client after writing the data to the primary endpoint and before writing the data to the secondary endpoint. If the "sync_type" is "strict_sync", a write success is returned to the client after writing the data to both primary and secondary endpoints.
+A "sync_type" of "automated_failover" can be associated with a SnapMirror relationship that has a consistency group as the endpoint and provides asymmetric active active access to the two storage copies.
+
+A "sync_type" of "automated_failover_duplex" can be associated with a SnapMirror relationship that has a consistency group as the endpoint and provides symmetric active active access to the two storage copies.
+
+Mapping of SnapMirror policies from CLI to REST
+
+|===
+| CLI | REST
+
+| mirror-vault
+| async
+
+| async-mirror w/
+| async w/
+
+| all_source_snapshots
+| copy_all_source_snapshots
+
+| async-mirror w/o
+| async w/
+
+| all_source_snapshots
+| copy_latest_source_snapshot
+
+| vault
+| async w/
+
+|
+| create_snapshot_on_source
+|===
+
+|                          |       |  sync_type                |
+|                          |       |------------------|
+|sync-mirror               | sync  | sync                      |
+|strict-sync-mirror        | sync  | strict_sync               |
+|automated-failover        | sync  | automated_failover        |
+|automated-failover-duplex | sync  | automated_failover_duplex |
+|                          |                                   |
+
+

@@ -1,0 +1,112 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_cache_unix-user_settings_endpoint_overview.html'
+summary: 'Manage UNIX user cache settings'
+---
+
+= Manage UNIX user cache settings
+
+
+
+== Overview
+
+This API is used to retrieve and manage unix-user settings.
+
+== Examples
+
+=== Retrieving unix-user cache settings
+
+'''
+
+The following example shows how to use the cache unix-user settings GET endpoint to retrieve unix-user cache settings.
+
+----
+
+# The API:
+GET /api/name-services/cache/unix-user/settings
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/cache/unix-user/settings?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "8a1a8730-2036-11ec-8457-005056bbcfdb",
+      "name": "vs43"
+    },
+    "enabled": true,
+    "negative_cache_enabled": true,
+    "ttl": "P1D",
+    "negative_ttl": "PT1M",
+    "propagation_enabled": true
+  },
+  {
+    "svm": {
+      "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+      "name": "vs34"
+    },
+    "enabled": true,
+    "negative_cache_enabled": true,
+    "ttl": "P1D",
+    "negative_ttl": "PT1M",
+    "propagation_enabled": true
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving a unix-user cache setting for a given SVM
+
+'''
+
+The following example shows how to use the cache unix-user settings GET endpoint to retrieve unix-user cache settings for a given SVM.
+
+----
+
+# The API:
+GET /api/name-services/cache/unix-user/settings/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/cache/unix-user/settings/dc458b2f-2035-11ec-bfe2-005056bb6bef" -H "accept: application/hal+json"
+
+# The response:
+{
+"svm": {
+  "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+  "name": "vs34"
+},
+"enabled": true,
+"negative_cache_enabled": true,
+"ttl": "P1D",
+"negative_ttl": "PT1M",
+"propagation_enabled": true
+}
+----
+
+'''
+
+=== Updating a unix-user setting
+
+'''
+
+The following example shows how to use the cache unix-user settings PATCH endpoint to update unix-user cache settings.
+
+----
+
+# The API:
+PATCH /api/name-services/cache/unix-user/settings/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/cache/unix-user/settings/02c9e252-41be-11e9-81d5-00a0986138f9" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"ttl\": \"PT2H\", \"negative_ttl\": \"PT2M\" }"
+----
+
+'''
+
+

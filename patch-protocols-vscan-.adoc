@@ -1,0 +1,521 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-vscan-.html'
+summary: 'Update the Vscan configuration for an SVM'
+---
+
+= Update the Vscan configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the Vscan configuration of an SVM. Allows you to either enable or disable a Vscan, and allows you to clear the Vscan cache that stores the past scanning data for an SVM.
+
+Important note:
+
+* The Vscan PATCH endpoint does not allow you to modify scanner-pools, On-Demand policies or On-Access policies. Those modifications can only be done through their respective endpoints.
+
+== Related ONTAP commands
+
+* `vserver vscan enable`
+* `vserver vscan disable`
+* `vserver vscan reset`
+
+== Learn more
+
+* link:protocols_vscan_endpoint_overview.html[DOC /protocols/vscan]
+* link:protocols_vscan_svm.uuid_scanner-pools_endpoint_overview.html[DOC /protocols/vscan/{svm.uuid}/scanner-pools]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cache_clear
+|boolean
+a|Discards the cached information of the files that have been successfully scanned. Once the cache is cleared, files are scanned again when they are accessed. PATCH only
+
+
+|enabled
+|boolean
+a|Specifies whether or not Vscan is enabled on the SVM.
+
+
+|===
+
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|10027015 +
+//end row
+//start row
+|Attempting to enable a Vscan but no active scanner-pool exists for the specified SVM
+//end row
+//start row
+|10027009 +
+//end row
+//start row
+|Attempting to enable a Vscan for an SVM for which it's already enabled
+//end row
+//start row
+|10027010 +
+//end row
+//start row
+|Attempting to disable a Vscan for an SVM for which it's already disabled
+//end row
+//start row
+|10027011 +
+//end row
+//start row
+|Attempting to enable a Vscan for an SVM for which no CIFS server exists
+//end row
+//start row
+|10027023 +
+//end row
+//start row
+|Attempting to enable a Vscan for an SVM for which no active Vscan On-Access policy exists
+//end row
+//start row
+|10027012 +
+//end row
+//start row
+|Cannot enable Vscan on an administrative SVM.
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|exclude_extensions
+|array[string]
+a|List of file extensions for which scanning is not performed.
+
+
+|exclude_paths
+|array[string]
+a|List of file paths for which scanning must not be performed.
+
+
+|include_extensions
+|array[string]
+a|List of file extensions to be scanned.
+
+
+|max_file_size
+|integer
+a|Maximum file size, in bytes, allowed for scanning.
+
+
+|only_execute_access
+|boolean
+a|Scan only files opened with execute-access.
+
+
+|scan_readonly_volumes
+|boolean
+a|Specifies whether or not read-only volume can be scanned.
+
+
+|scan_without_extension
+|boolean
+a|Specifies whether or not files without any extension can be scanned.
+
+
+|===
+
+
+[#vscan_on_access_policy]
+[.api-collapsible-fifth-title]
+vscan_on_access_policy
+
+An On-Access policy that defines the scope of an On-Access scan. Use On-Access scanning to check for viruses when clients open, read, rename, or close files over CIFS. By default, ONTAP creates an On-Access policy named "default_CIFS" and enables it for all the SVMs in a cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Status of the On-Access Vscan policy
+
+
+|mandatory
+|boolean
+a|Specifies if scanning is mandatory. File access is denied if there are no external virus-scanning servers available for virus scanning.
+
+
+|protocol
+|string
+a|Specifies the file access protocol for the on-access policy. The following lists the possible protocols. CIFS  - SMB protocol
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|===
+
+
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+Schedule of the task.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|exclude_extensions
+|array[string]
+a|List of file extensions for which scanning is not performed.
+
+
+|exclude_paths
+|array[string]
+a|List of file paths for which scanning must not be performed.
+
+
+|include_extensions
+|array[string]
+a|List of file extensions to be scanned.
+
+
+|max_file_size
+|integer
+a|Maximum file size, in bytes, allowed for scanning.
+
+
+|scan_without_extension
+|boolean
+a|Specifies whether or not files without any extension can be scanned.
+
+
+|===
+
+
+[#vscan_on_demand_policy]
+[.api-collapsible-fifth-title]
+vscan_on_demand_policy
+
+Use On-Demand scanning to check files for viruses on a schedule. An On-Demand policy defines the scope of an On-Demand scan.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|log_path
+|string
+a|The path from the Vserver root where the task report is created.
+
+
+|scan_paths
+|array[string]
+a|List of paths that need to be scanned.
+
+
+|schedule
+|link:#schedule[schedule]
+a|Schedule of the task.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|===
+
+
+[#cluster_reference]
+[.api-collapsible-fifth-title]
+cluster_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#scanner_pool]
+[.api-collapsible-fifth-title]
+scanner_pool
+
+Scanner pool is a set of attributes which are used to validate and manage connections between clustered ONTAP and external virus-scanning server, or "Vscan server".
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster_reference[cluster_reference]
+a|
+
+|privileged_users
+|array[string]
+a|Specifies a list of privileged users. A valid form of privileged user-name is "domain-name\user-name". Privileged user-names are stored and treated as case-insensitive strings. Virus scanners must use one of the registered privileged users for connecting to clustered Data ONTAP for exchanging virus-scanning protocol messages and to access file for scanning, remedying and quarantining operations.
+
+* example: ["cifs\u1", "cifs\u2"]
+* Introduced in: 9.10
+
+
+|role
+|string
+a|Specifies the role of the scanner pool. The possible values are:
+
+*** primary   - Always active.
+
+*** secondary - Active only when none of the primary external virus-scanning servers are connected.
+
+*** idle      - Always inactive.
+
+
+|servers
+|array[string]
+a|Specifies a list of IP addresses or FQDN for each Vscan server host names which are allowed to connect to clustered ONTAP.
+
+* example: ["1.1.1.1", "10.72.204.27", "vmwin204-27.fsct.nb"]
+* Introduced in: 9.10
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vscan]
+[.api-collapsible-fifth-title]
+vscan
+
+Vscan can be used to protect data from being compromised by viruses or other malicious code. This combines best-in-class third-party antivirus software with ONTAP features that give you the flexibility you need to control which files get scanned and when. Storage systems offload scanning operations to external servers hosting antivirus software from third-party vendors. An Antivirus Connector on the external server handles communications between the storage system and the antivirus software.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cache_clear
+|boolean
+a|Discards the cached information of the files that have been successfully scanned. Once the cache is cleared, files are scanned again when they are accessed. PATCH only
+
+
+|enabled
+|boolean
+a|Specifies whether or not Vscan is enabled on the SVM.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

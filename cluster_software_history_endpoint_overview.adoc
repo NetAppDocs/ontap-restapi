@@ -1,0 +1,60 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_software_history_endpoint_overview.html'
+summary: 'Manage cluster software history'
+---
+
+= Manage cluster software history
+
+
+
+== Overview
+
+You can use this API to retrieve the history details for software installation requests.
+
+== Examples
+
+=== Retrieving software installation history information
+
+The following example shows how to:
+
+* Retrieve the software package installation history information.
+* Display specific node level software installation history information.
+* Provide all the attributes by default in response when the self referential link is not present.
+
+----
+
+# The API:
+/api/cluster/software/history
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/software/history" -H "accept: application/hal+json"
+
+# The response:
+{
+"node": {
+  "uuid": "58cd3a2b-af63-11e8-8b0d-0050568e7279",
+  "name": "sti70-vsim-ucs165n",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/58cd3a2b-af63-11e8-8b0d-0050568e7279"
+    }
+  }
+},
+"start_time": "2018-09-03T16:18:46+05:30",
+"state": "successful",
+"from_version": "9.4.0",
+"to_version": "9.5.0",
+"end_time": "2018-05-21T10:14:51+05:30"
+}
+----
+
+'''
+
+=== Learn more
+
+* link:cluster_software_history_endpoint_overview.html[DOC /cluster/software/history]
+
+

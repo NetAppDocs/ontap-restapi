@@ -1,0 +1,515 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-audit-.html'
+summary: 'Retrieve the audit configuration for an SVM'
+---
+
+= Retrieve the audit configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/audit/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves an audit configuration for an SVM.
+
+== Related ONTAP commands
+
+* `vserver audit show`
+
+== Learn more
+
+* link:protocols_audit_endpoint_overview.html[DOC /protocols/audit]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|charge_qos
+|boolean
+a|Indicates if audit logs generation should incur an extra charge.
+
+
+|enabled
+|boolean
+a|Specifies whether or not auditing is enabled on the SVM.
+
+
+|events
+|link:#events[events]
+a|
+
+|guarantee
+|boolean
+a|Indicates whether there is a strict Guarantee of Auditing
+
+
+|log
+|link:#log[log]
+a|
+
+|log_path
+|string
+a|The audit log destination path where consolidated audit logs are stored.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "charge_qos": "",
+  "guarantee": "",
+  "log": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "format": "string",
+    "retention": {
+      "duration": "P4DT12H30M5S"
+    },
+    "rotation": {
+      "schedule": {
+        "days": [
+          "integer"
+        ],
+        "hours": [
+          "integer"
+        ],
+        "minutes": [
+          "integer"
+        ],
+        "months": [
+          "integer"
+        ],
+        "weekdays": [
+          "integer"
+        ]
+      }
+    }
+  },
+  "log_path": "string",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#events]
+[.api-collapsible-fifth-title]
+events
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|async_delete
+|boolean
+a|Volume file async delete events
+
+
+|audit_policy_change
+|boolean
+a|Audit policy change events
+
+
+|authorization_policy
+|boolean
+a|Authorization policy change events
+
+
+|cap_staging
+|boolean
+a|Central access policy staging events
+
+
+|cifs_logon_logoff
+|boolean
+a|CIFS logon and logoff events
+
+
+|file_operations
+|boolean
+a|File operation events
+
+
+|file_share
+|boolean
+a|File share category events
+
+
+|security_group
+|boolean
+a|Local security group management events
+
+
+|user_account
+|boolean
+a|Local user account management events
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#retention]
+[.api-collapsible-fifth-title]
+retention
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Determines how many audit log files to retain before
+rotating the oldest log file out. This is mutually exclusive with
+duration.
+
+
+|duration
+|string
+a|Specifies an ISO-8601 format date and time to retain the audit log file. The audit log files are
+deleted once they reach the specified date/time. This is mutually exclusive with count.
+
+
+|===
+
+
+[#audit_schedule]
+[.api-collapsible-fifth-title]
+audit_schedule
+
+Rotates the audit logs based on a schedule by using the time-based rotation parameters in any combination. The rotation schedule is calculated by using all the time-related values.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|days
+|array[integer]
+a|Specifies the day of the month schedule to rotate audit log. Leave empty for all.
+
+
+|hours
+|array[integer]
+a|Specifies the hourly schedule to rotate audit log. Leave empty for all.
+
+
+|minutes
+|array[integer]
+a|Specifies the minutes schedule to rotate the audit log.
+
+
+|months
+|array[integer]
+a|Specifies the months schedule to rotate audit log. Leave empty for all.
+
+
+|weekdays
+|array[integer]
+a|Specifies the weekdays schedule to rotate audit log. Leave empty for all.
+
+
+|===
+
+
+[#rotation]
+[.api-collapsible-fifth-title]
+rotation
+
+Audit event log files are rotated when they reach a configured threshold log size or are on a configured schedule. When an event log file is rotated, the scheduled consolidation task first renames the active converted file to a time-stamped archive file, and then creates a new active converted event log file.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|now
+|boolean
+a|Manually rotates the audit logs. Optional in PATCH only. Not available in POST.
+
+
+|schedule
+|link:#audit_schedule[audit_schedule]
+a|Rotates the audit logs based on a schedule by using the time-based rotation parameters in any combination. The rotation schedule is calculated by using all the time-related values.
+
+
+|size
+|integer
+a|Rotates logs based on log size in bytes.
+
+
+|===
+
+
+[#log]
+[.api-collapsible-fifth-title]
+log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|format
+|string
+a|The format in which the logs are generated by consolidation process.
+Possible values are:
+
+*** xml  - Data ONTAP-specific XML log format
+
+*** evtx - Microsoft Windows EVTX log format
+
+* Default value: 1
+* enum: ["xml", "evtx"]
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|retention
+|link:#retention[retention]
+a|
+
+|rotation
+|link:#rotation[rotation]
+a|Audit event log files are rotated when they reach a configured threshold log size or are on a configured schedule. When an event log file is rotated, the scheduled consolidation task first renames the active converted file to a time-stamped archive file, and then creates a new active converted event log file.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

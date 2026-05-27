@@ -1,0 +1,479 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-fc-logins-.html'
+summary: 'Retrieve an FC login'
+---
+
+= Retrieve an FC login
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/fc/logins/{interface.uuid}/{initiator.wwpn}`#
+
+*Introduced In:* 9.6
+
+Retrieves an FC login.
+
+== Related ONTAP commands
+
+* `vserver fcp initiator show`
+
+== Learn more
+
+* SAN: link:network_fc_logins_endpoint_overview.html[DOC /network/fc/logins]
+* NVMe: link:network_fc_logins_endpoint_overview.html[DOC /network/fc/logins]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|interface.uuid
+|string
+|path
+|True
+a|The unique identifier of the FC interface through which the initiator logged in.
+
+
+|initiator.wwpn
+|string
+|path
+|True
+a|The world wide port name (WWPN) of the initiator.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|igroups
+|array[link:#igroups[igroups]]
+a|The initiator groups in which the initiator is a member.
+
+
+|initiator
+|link:#initiator[initiator]
+a|Information about the logged in FC initiator.
+
+
+|interface
+|link:#interface[interface]
+a|An FC interface.
+
+
+|protocol
+|string
+a|The data protocol used to perform the login.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "igroups": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "igroup1",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "initiator": {
+    "aliases": [
+      "alias1"
+    ],
+    "comment": "This is an FC initiator for host 5",
+    "port_address": "5060A",
+    "wwnn": "2f:a0:00:a0:98:0b:56:13",
+    "wwpn": "2f:a0:00:a0:98:0b:56:13"
+  },
+  "interface": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "fc_lif1",
+    "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+    "wwpn": "20:00:00:50:56:b4:13:a8"
+  },
+  "protocol": "string",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 4
+| The Fibre Channel login specified does not exist.
+
+| 5373982
+| An invalid WWN was specified. The length is incorrect.
+
+| 5373983
+| An invalid WWN was specified. The format is incorrect.
+
+| 5374881
+| The Fibre Channel interface specified does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#initiator]
+[.api-collapsible-fifth-title]
+initiator
+
+Information about the logged in FC initiator.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|aliases
+|array[string]
+a|The logged in initiator world wide port name (WWPN) aliases.
+
+
+|comment
+|string
+a|A comment available for use by the administrator. This is modifiable from the initiator REST endpoint directly. See link:patch-protocols-san-igroups-initiators-.html[PATCH /protocols/san/igroups/{igroup.uuid}/initiators/\{name}] .
+
+
+|port_address
+|string
+a|The port address of the initiator's FC port.
+
+Each port in an FC switched fabric has its own unique port address for routing purposes. The port address is assigned by a switch in the fabric when that port logs in to the fabric. This property refers to the address given by a switch to the initiator port.
+
+This is useful for obtaining statistics and diagnostic information from FC switches.
+
+This is a hexadecimal encoded numeric value.
+
+
+|wwnn
+|string
+a|The logged in initiator world wide node name (WWNN).
+
+
+|wwpn
+|string
+a|The logged in initiator WWPN.
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+An FC interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the FC interface.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface.
+
+
+|wwpn
+|string
+a|The WWPN of the FC interface.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

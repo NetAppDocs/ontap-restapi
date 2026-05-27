@@ -1,0 +1,643 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-name-services-ldap-schemas-.html'
+summary: 'Update the LDAP schema details for an owner and schema'
+---
+
+= Update the LDAP schema details for an owner and schema
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/name-services/ldap-schemas/{owner.uuid}/{name}`#
+
+*Introduced In:* 9.11
+
+Updates LDAP schema details for a given owner and schema.
+
+== Important notes
+
+* The default LDAP schemas provided by ONTAP cannot be modified.
+* LDAP schemas can only be modified by the owner of the schema.
+
+== Related ONTAP commands
+
+* `vserver services name-service ldap client schema modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|UUID of the owner to which this object belongs.
+
+
+|name
+|string
+|path
+|True
+a|LDAP schema name.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Comment to associate with the schema.
+
+
+|global_schema
+|boolean
+a|A global schema that can be used by all the SVMs.
+
+
+|name_mapping
+|link:#ldap_schema_name_mapping[ldap_schema_name_mapping]
+a|
+
+|rfc2307
+|link:#rfc2307[rfc2307]
+a|
+
+|rfc2307bis
+|link:#rfc2307bis[rfc2307bis]
+a|
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "Schema based on Active Directory Services for UNIX (read-only).",
+  "global_schema": 1,
+  "name_mapping": {
+    "account": {
+      "unix": "windowsAccount",
+      "windows": "windowsAccount"
+    },
+    "windows_to_unix": {
+      "attribute": "windowsAccount",
+      "no_domain_prefix": "",
+      "object_class": "User"
+    }
+  },
+  "rfc2307": {
+    "attribute": {
+      "gecos": "name",
+      "gid_number": "msSFU30GidNumber",
+      "home_directory": "msSFU30HomeDirectory",
+      "login_shell": "msSFU30LoginShell",
+      "uid": "sAMAccountName",
+      "uid_number": "msSFU30UidNumber",
+      "user_password": "msSFU30Password"
+    },
+    "cn": {
+      "group": "cn",
+      "netgroup": "name"
+    },
+    "member": {
+      "nis_netgroup": "msSFU30MemberNisNetgroup",
+      "uid": "msSFU30MemberUid"
+    },
+    "nis": {
+      "mapentry": "msSFU30NisMapEntry",
+      "mapname": "msSFU30NisMapName",
+      "netgroup": "msSFU30NisNetGroup",
+      "netgroup_triple": "msSFU30MemberOfNisNetgroup",
+      "object": "msSFU30NisObject"
+    },
+    "posix": {
+      "account": "User",
+      "group": "Group"
+    }
+  },
+  "rfc2307bis": {
+    "enabled": "",
+    "group_of_unique_names": "groupOfUniqueNames",
+    "maximum_groups": 256,
+    "unique_member": "uniqueMember"
+  },
+  "scope": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 4915205
+| The LDAP schema is a default schema and cannot be modified or deleted.
+
+| 4915217
+| LDAP schema is owned by the admin SVM.
+
+| 4915223
+| LDAP schema does not belong to the admin SVM.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ldap_schema_account]
+[.api-collapsible-fifth-title]
+ldap_schema_account
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|unix
+|string
+a|Attribute name used to retrieve UNIX account information.
+
+
+|windows
+|string
+a|Attribute name used to retrieve Windows account information for a UNIX user account.
+
+
+|===
+
+
+[#windows_to_unix]
+[.api-collapsible-fifth-title]
+windows_to_unix
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attribute
+|string
+a|Attribute name used to retrieve the UNIX account information for a Windows user account.
+
+
+|no_domain_prefix
+|boolean
+a|Indicates whether or not the name for Windows to UNIX name mapping should have a domain prefix.
+
+
+|object_class
+|string
+a|Name used to represent the windowsToUnix object class.
+
+
+|===
+
+
+[#ldap_schema_name_mapping]
+[.api-collapsible-fifth-title]
+ldap_schema_name_mapping
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#ldap_schema_account[ldap_schema_account]
+a|
+
+|windows_to_unix
+|link:#windows_to_unix[windows_to_unix]
+a|
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#attribute]
+[.api-collapsible-fifth-title]
+attribute
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|gecos
+|string
+a|RFC 2307 gecos attribute.
+
+
+|gid_number
+|string
+a|RFC 2307 gidNumber attribute.
+
+
+|home_directory
+|string
+a|RFC 2307 homeDirectory attribute.
+
+
+|login_shell
+|string
+a|RFC 2307 loginShell attribute.
+
+
+|uid
+|string
+a|RFC 1274 userid attribute used by RFC 2307 as UID.
+
+
+|uid_number
+|string
+a|RFC 2307 uidNumber attribute.
+
+
+|user_password
+|string
+a|RFC 2256 userPassword attribute used by RFC 2307.
+
+
+|===
+
+
+[#cn]
+[.api-collapsible-fifth-title]
+cn
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group
+|string
+a|RFC 2256 cn attribute used by RFC 2307 when working with groups.
+
+
+|netgroup
+|string
+a|RFC 2256 cn attribute used by RFC 2307 when working with netgroups.
+
+
+|===
+
+
+[#member]
+[.api-collapsible-fifth-title]
+member
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|nis_netgroup
+|string
+a|RFC 2307 memberNisNetgroup attribute.
+
+
+|uid
+|string
+a|RFC 2307 memberUid attribute.
+
+
+|===
+
+
+[#nis]
+[.api-collapsible-fifth-title]
+nis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mapentry
+|string
+a|RFC 2307 nisMapEntry attribute.
+
+
+|mapname
+|string
+a|RFC 2307 nisMapName attribute.
+
+
+|netgroup
+|string
+a|RFC 2307 nisNetgroup object class.
+
+
+|netgroup_triple
+|string
+a|RFC 2307 nisNetgroupTriple attribute.
+
+
+|object
+|string
+a|RFC 2307 nisObject object class.
+
+
+|===
+
+
+[#posix]
+[.api-collapsible-fifth-title]
+posix
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|string
+a|RFC 2307 posixAccount object class.
+
+
+|group
+|string
+a|RFC 2307 posixGroup object class.
+
+
+|===
+
+
+[#rfc2307]
+[.api-collapsible-fifth-title]
+rfc2307
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attribute
+|link:#attribute[attribute]
+a|
+
+|cn
+|link:#cn[cn]
+a|
+
+|member
+|link:#member[member]
+a|
+
+|nis
+|link:#nis[nis]
+a|
+
+|posix
+|link:#posix[posix]
+a|
+
+|===
+
+
+[#rfc2307bis]
+[.api-collapsible-fifth-title]
+rfc2307bis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether RFC 2307bis is enabled for the client schema.
+
+
+|group_of_unique_names
+|string
+a|RFC 2307bis groupOfUniqueNames object class.
+
+
+|maximum_groups
+|integer
+a|Maximum number of groups supported when RFC 2307bis is enabled.
+
+
+|unique_member
+|string
+a|RFC 2307bis uniqueMember attribute.
+
+
+|===
+
+
+[#template]
+[.api-collapsible-fifth-title]
+template
+
+The existing schema template you want to copy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the schema.
+
+
+|===
+
+
+[#ldap_schema]
+[.api-collapsible-fifth-title]
+ldap_schema
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Comment to associate with the schema.
+
+
+|global_schema
+|boolean
+a|A global schema that can be used by all the SVMs.
+
+
+|name_mapping
+|link:#ldap_schema_name_mapping[ldap_schema_name_mapping]
+a|
+
+|rfc2307
+|link:#rfc2307[rfc2307]
+a|
+
+|rfc2307bis
+|link:#rfc2307bis[rfc2307bis]
+a|
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

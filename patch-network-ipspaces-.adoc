@@ -1,0 +1,226 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-network-ipspaces-.html'
+summary: 'Update an IPspace object'
+---
+
+= Update an IPspace object
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/network/ipspaces/{uuid}`#
+
+*Introduced In:* 9.6
+
+Updates an IPspace object.
+
+== Related ONTAP commands
+
+* `network ipspace rename`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|IPspace UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the IPspace.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "name": "ipspace1",
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1377256
+| Another IPspace with the same name exists.
+
+| 1377259
+| System-defined IPspaces cannot be modified or removed.
+
+| 1966449
+| Invalid IPspace name in MetroCluster configurations.
+
+| 9240587
+| IPspace name cannot be empty.
+
+| 9240588
+| The specified name is too long.
+
+| 9240589
+| Invalid character in specified name.
+
+| 9240590
+| Invalid name, the name is reserved by the system.
+
+| 9240591
+| Invalid name.  The name is already in use by a cluster node, Vserver, or it is the name of the local cluster.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the IPspace.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

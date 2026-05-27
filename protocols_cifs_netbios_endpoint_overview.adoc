@@ -1,0 +1,139 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_netbios_endpoint_overview.html'
+summary: 'View NetBIOS information'
+---
+
+= View NetBIOS information
+
+
+
+Displays information about NBT connections for the cluster. Displays the IP address associated with the interfaces, the IP addresses of the WINS servers in use, and information about the registered NetBIOS names for the cluster. You can use this command to troubleshoot NetBIOS name resolution problems.
+
+== Examples
+
+=== Retrieving full CIFS NetBIOS information for all SVMs in the cluster
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/netbios
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/netbios?return_timeout=15&fields=*&return_records=true" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "c2179c2c-777f-11ec-95a1-1315568ef5fd",
+      "name": "vsim2"
+    },
+    "svm": {
+      "name": "vs1",
+      "uuid": "99a3bd71-777f-11ec-95a1-1315568ef5fd"
+    },
+    "name": "CIFSERVER2",
+    "interfaces": [
+      "172.10.144.44"
+    ],
+    "wins_servers": [
+      {
+        "ip": "10.10.10.10",
+        "state": "inactive"
+      }
+    ],
+    "scope": "group",
+    "mode": "h",
+    "state": "broadcast",
+    "time_left": 0,
+    "name_registration_type": "",
+    "suffix": "00"
+  },
+  {
+    "node": {
+      "uuid": "c2179c2c-777f-11ec-95a1-1315568ef5fd",
+      "name": "vsim2"
+    },
+    "svm": {
+      "name": "vs1",
+      "uuid": "99a3bd71-777f-11ec-95a1-1315568ef5fd"
+    },
+    "name": "CIFSERVER2",
+    "interfaces": [
+      "172.10.144.44"
+    ],
+    "wins_servers": [
+      {
+        "ip": "10.10.10.10",
+        "state": "inactive"
+      }
+    ],
+    "scope": "",
+    "mode": "h",
+    "state": "broadcast",
+    "time_left": 0,
+    "name_registration_type": "group",
+    "suffix": "20"
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving CIFS NetBIOS Information for a particular SVM
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/netbios
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/netbios?svm.uuid=45a3bd71-777f-11ec-95a1-1315568ef5fd&return_timeout=15&fields=*&return_records=true" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "c2179c2c-777f-11ec-95a1-1315568ef5fd",
+      "name": "vsim2"
+    },
+    "svm": {
+      "name": "vs1",
+      "uuid": "45a3bd71-777f-11ec-95a1-1315568ef5fd"
+    },
+    "name": "CIFSERVER2",
+    "interfaces": [
+      "172.10.144.44"
+    ],
+    "wins_servers": [
+      {
+        "ip": "10.10.10.10",
+        "state": "inactive"
+      }
+    ],
+    "scope": "group",
+    "mode": "h",
+    "state": "broadcast",
+    "time_left": 0,
+    "name_registration_type": "",
+    "suffix": "00"
+  }
+],
+"num_records": 1
+}
+----
+
+'''
+
+

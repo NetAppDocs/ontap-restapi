@@ -1,0 +1,194 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-s3-services-buckets-rules-.html'
+summary: 'Delete an S3 bucket lifecycle rule'
+---
+
+= Delete an S3 bucket lifecycle rule
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/rules/{name}`#
+
+*Introduced In:* 9.13
+
+Deletes the S3 bucket lifecycle rule configuration.
+
+== Related ONTAP commands
+
+* `vserver object-store-server bucket lifecycle-management-rule delete`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_buckets_s3_bucket.uuid_rules_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/rules]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|s3_bucket.uuid
+|string
+|path
+|True
+a|The unique identifier of the bucket.
+
+
+|name
+|string
+|path
+|True
+a|The unique identifier of the bucket lifecycle_management rule.
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+* Introduced in: 9.14
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error code | Message
+//end header
+//end row
+//start row
+|92405861 +
+//end row
+//start row
+|"The specified SVM UUID or bucket UUID does not exist.";
+//end row
+//start row
+|92406139 +
+//end row
+//start row
+|"Lifecycle Management rule for bucket in Vserver with action is a stale entry. Contact technical support for assistance.";
+//end row
+|===
+//end table
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

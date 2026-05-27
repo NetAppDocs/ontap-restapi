@@ -1,0 +1,124 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_accounts_owner.uuid_name_endpoint_overview.html'
+summary: 'Manage scoped user accounts'
+---
+
+= Manage scoped user accounts
+
+
+
+== Overview
+
+This API displays and manages the configuration of scoped user accounts.
+
+Newly created user accounts might need to be updated for many reasons. For example, a user account might need to use a different application or its role might need to be modified. According to a policy, the password or authentication source of a user account might need to be changed, or a user account might need to be locked or deleted from the system. This API allows you to make these changes to user accounts.
+
+Specify the owner UUID and the user account name in the URI path. The owner UUID corresponds to the UUID of the SVM for which the user account has been created and can be obtained from the response body of the GET request performed on one of the following APIs:
+_/api/security/accounts_ for all user accounts
+_/api/security/accounts/?scope=cluster_ for cluster-scoped user accounts
+_/api/security/accounts/?scope=svm_ for SVM-scoped accounts
+_/api/security/accounts/?owner.name=+++<svm-name>+++</i> for a specific SVM This API response contains the complete URI for each user account that can be used.+++</svm-name>+++_
+
+== Examples
+
+=== Retrieving the user account details
+
+----
+
+# The API:
+GET "/api/security/accounts/{owner.uuid}/{name}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/accounts/aef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1"
+
+# The response:
+{
+"owner": {
+  "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/aaef7c38-4bd3-11e9-b238-0050568e2e25"
+    }
+        }
+},
+"name": "svm_user1",
+"applications": [
+  {
+    "application": "ssh",
+    "authentication_methods": [
+      "password"
+    ],
+    "second_authentication_method": "none"
+  }
+],
+"role": {
+  "name": "vsadmin",
+  "_links": {
+    "self": {
+      "href": "/api/svms/aaef7c38-4bd3-11e9-b238-0050568e2e25/admin/roles/vsadmin"
+    }
+  }
+},
+"locked": false,
+"password_hash_algorithm": "sha512",
+"scope": "svm",
+"_links": {
+  "self": {
+    "href": "/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1"
+  }
+}
+}
+----
+
+=== Updating the applications and role in a user account
+
+Specify the desired configuration in the form of tuples (of applications and authentication methods) and the role. All other previously configured applications that are not specified in the "applications" parameter of the PATCH request will be de-provisioned for the user account.
+
+----
+
+# The API:
+PATCH "/api/security/accounts/{owner.uuid}/{name}"
+
+# The call to update the applications and role:
+curl -X PATCH "https://<mgmt-ip>/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1" -d '{"applications":[{"application":"http","authentication_methods":["domain"]},{"application":"ontapi","authentication_methods":["password"]}],"role": {"name": "vsadmin-backup"}}'
+
+# The call to update only the role:
+curl -X PATCH "https://<mgmt-ip>/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1" -d '{"role":"vsadmin-protocol"}'
+----
+
+=== Updating the password for a user account
+
+----
+
+# The API:
+PATCH "/api/security/accounts/{owner.uuid}/{name}"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1" -d '{"password":"newp@ssw@rd2"}'
+----
+
+=== Locking a user account
+
+----
+The API:
+PATCH "/api/security/accounts/{owner.uuid}/{name}"
+The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1" -d '{"locked":"true"}'
+----
+
+=== Deleting a user account
+
+----
+
+# The API:
+DELETE "/api/security/accounts/{owner.uuid}/{name}"
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/accounts/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_user1"
+----
+
+

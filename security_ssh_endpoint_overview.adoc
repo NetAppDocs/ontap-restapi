@@ -1,0 +1,96 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_ssh_endpoint_overview.html'
+summary: 'Manage SSH server'
+---
+
+= Manage SSH server
+
+
+
+== Overview
+
+ONTAP supports SSH server that can be accessed from any standard SSH client. A user account needs to be associated with SSH as the application (refer the documentation for _api/security/accounts_ link:security_accounts_endpoint_overview.html[DOC /security/accounts] . Upon connecting from a client, the user is authenticated and a command line shell is presented.
+
+This endpoint is used to retrieve or modify the SSH configuration at the cluster level. The configuration consists of SSH security parameters (security algorithms, maximum authentication retry attempts allowed before closing the connection, SSH connection login grace time and _ssh-rsa_ enabled status for public key algorithms) and SSH connection limits.
+
+The security algorithms include SSH key exchange algorithms, ciphers for payload encryption, MAC algorithms and host key algorithms. This configuration is the default for all newly created SVMs; existing SVM configurations are not impacted.
+The SSH connection limits include maximum connections per second, maximum simultaneous sessions from the same client host, and overall maximum SSH connections at any given point in time. The connection limits are per node and will be the same for all nodes in the cluster.
+
+== Examples
+
+=== Updating the SSH security parameters
+
+Specify the algorithms in the body of the PATCH request.
+
+----
+
+# The API:
+PATCH "/api/security/ssh"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/ssh" -d '{ "ciphers": [ "aes256_ctr", "aes192_ctr" ], "key_exchange_algorithms": [ "diffie_hellman_group_exchange_sha256", "ecdh_sha2_nistp256", "diffie_hellman_group18_sha512" ], "mac_algorithms": [ "hmac_sha2_512_etm", "umac_128_etm" ], "host_key_algorithms": [ "ecdsa_sha2_nistp256", "ssh_rsa", "ssh_ed25519", "rsa_sha2_256", "rsa_sha2_512"], "max_authentication_retry_count": 3, "is_rsa_in_publickey_algorithms_enabled": true , "login_grace_time": 30 }'
+----
+
+=== Updating the SSH connection limits
+
+Specify the connection limits in the body of the PATCH request.
+
+----
+
+# The API:
+PATCH "/api/security/ssh"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/ssh" -d '{ "connections_per_second": 8, "max_instances": 10, "per_source_limit": 5 }'
+----
+
+=== Retrieving the cluster SSH server configuration
+
+----
+
+# The API:
+GET "/api/security/ssh"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/ssh"
+
+# The response:
+{
+"ciphers": [
+  "aes256_ctr",
+  "aes192_ctr"
+],
+"key_exchange_algorithms": [
+  "diffie_hellman_group_exchange_sha256",
+  "ecdh_sha2_nistp256",
+  "diffie_hellman_group18_sha512"
+],
+"mac_algorithms": [
+  "hmac_sha2_512_etm",
+  "umac_128_etm"
+],
+"host_key_algorithms": [
+  "ecdsa_sha2_nistp256",
+  "ssh_rsa",
+  "ssh_ed25519",
+  "rsa_sha2_256",
+  "rsa_sha2_512"
+],
+"max_authentication_retry_count": 3,
+"connections_per_second": 8,
+"max_instances": 10,
+"is_rsa_in_publickey_algorithms_enabled": true,
+"login_grace_time": 30,
+"per_source_limit": 5,
+"_links": {
+  "self": {
+    "href": "/api/security/ssh"
+  }
+}
+}
+----
+
+

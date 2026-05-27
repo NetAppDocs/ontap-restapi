@@ -1,0 +1,191 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_licensing_capacity-pools_endpoint_overview.html'
+summary: 'Retrieve capacity pool licenses'
+---
+
+= Retrieve capacity pool licenses
+
+
+
+== Overview
+
+Capacity pool licenses are installed on and managed by the license manager. Each ONTAP node that is using the capacity pools licensing model is associated with a capacity pool license from which capacity is leased for data aggregates.
+
+This API is used to retrieve information about associations between ONTAP nodes in the cluster and capacity pool licenses. It also reports how much capacity each node is consuming from the capacity pool.
+
+'''
+
+== Examples
+
+=== Retrieving a collection of capacity pools associated with the cluster
+
+This example retrieves a collection that contains two capacity pool licenses, each of which is associated with an HA pair of nodes in a four-node cluster.
+
+[,json]
+----
+
+# API
+curl -X GET "https://<mgmt-ip>/api/cluster/licensing/capacity-pools"
+
+# Response
+200 OK
+
+# JSON Body
+{
+"records":[
+  {
+    "serial_number":"390000100",
+    "license_manager": {
+      "uuid": "4ea7a442-86d1-11e0-ae1c-112233445566",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/licensing/license-managers/4ea7a442-86d1-11e0-ae1c-112233445566"
+         }
+      }
+    },
+    "nodes":[
+      {
+        "node":{
+          "name":"node-1",
+          "uuid":"4ea7a442-86d1-11e0-ae1c-123478563411"
+        },
+        "used_size":1099511627776,
+        "_links":{
+          "self":{
+            "href": "/api/cluster/nodes/4ea7a442-86d1-11e0-ae1c-123478563411"
+          }
+        }
+      },
+      {
+        "node":{
+          "name":"node-2",
+          "uuid":"4ea7a442-86d1-11e0-ae1c-123478563412"
+        },
+        "used_size":1099511627776,
+        "_links":{
+          "self":{
+            "href": "/api/cluster/nodes/4ea7a442-86d1-11e0-ae1c-123478563412"
+          }
+        }
+      }
+    ],
+    "_links":{
+      "self":{
+        "href":"/api/cluster/licensing/capacity-pools/390000100"
+      }
+    }
+  },
+  {
+    "serial_number":"390000101",
+    "license_manager": {
+      "uuid": "4ea7a442-86d1-11e0-ae1c-112233445566",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/licensing/license-managers/4ea7a442-86d1-11e0-ae1c-112233445566"
+         }
+      }
+    },
+    "nodes":[
+      {
+        "node":{
+          "name":"node-3",
+          "uuid":"4ea7a442-86d1-11e0-ae1c-123478563413"
+        },
+        "used_size":2199023255552,
+        "_links":{
+          "self":{
+            "href": "/api/cluster/nodes/4ea7a442-86d1-11e0-ae1c-123478563413"
+          }
+        }
+      },
+      {
+        "node":{
+          "name":"node-4",
+          "uuid":"4ea7a442-86d1-11e0-ae1c-123478563414"
+        },
+        "used_size":2199023255552,
+        "_links":{
+          "self":{
+            "href": "/api/cluster/nodes/4ea7a442-86d1-11e0-ae1c-123478563414"
+          }
+        }
+      }
+    ],
+    "_links":{
+      "self":{
+        "href":"/api/cluster/licensing/capacity-pools/390000101"
+      }
+    }
+  }
+],
+"num_records":2,
+"_links":{
+  "self":{
+    "href":"/api/cluster/licensing/capacity-pools"
+  }
+}
+}
+----
+
+=== Retrieving information about nodes associated with a specific capacity pool license
+
+This example retrieves information about the nodes that are associated with a capacity pool license of the serial number 390000100.
+
+[,json]
+----
+
+# API
+curl -X GET "https://<mgmt-ip>/api/cluster/licensing/capacity-pools/390000100"
+
+# Response
+200 OK
+
+# JSON Body
+{
+"serial_number":"390000100",
+"license_manager": {
+  "uuid": "4ea7a442-86d1-11e0-ae1c-112233445566",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/licensing/license-managers/4ea7a442-86d1-11e0-ae1c-112233445566"
+     }
+  }
+},
+"nodes":[
+  {
+    "node":{
+      "name":"node-1",
+      "uuid":"4ea7a442-86d1-11e0-ae1c-123478563411"
+    },
+    "used_size":1099511627776,
+    "_links":{
+      "self":{
+        "href": "/api/cluster/nodes/4ea7a442-86d1-11e0-ae1c-123478563411"
+      }
+    }
+  },
+  {
+    "node":{
+      "name":"node-2",
+      "uuid":"4ea7a442-86d1-11e0-ae1c-123478563412"
+    },
+    "used_size":1099511627776,
+    "_links":{
+      "self":{
+        "href": "/api/cluster/nodes/4ea7a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  }
+],
+"_links":{
+  "self":{
+    "href":"/api/cluster/licensing/capacity-pools/390000100"
+  }
+}
+}
+----
+
+

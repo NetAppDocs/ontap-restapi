@@ -1,0 +1,107 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_anti-ransomware_endpoint_overview.html'
+summary: 'Manage the anti-ransomware package'
+---
+
+= Manage the anti-ransomware package
+
+
+
+== Overview
+
+This API displays and manages the anti-ransomware package version.
+
+== Examples
+
+=== Retrieving the anti-ransomware package version of all nodes in the cluster.
+
+The following example shows how to retrieve anti-ransomware package version.
+
+----
+
+# The API:
+GET /security/anti-ransomware
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/anti-ransomware" -H "accept: application/hal+json"
+
+# The response:
+{
+"nodes": [
+  {
+    "name": "sti11-vsim-ucs573i",
+    "version": "1.0"
+  },
+  {
+    "name": "sti11-vsim-ucs573j",
+    "version": "1.0"
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/security/anti-ransomware/"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the anti-ransomware package
+
+The following example shows how to update the anti-ransomware package on the cluster.
+
+----
+
+# The API:
+PATCH /security/anti-ransomware
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/anti-ransomware" -H "accept: application/hal+json" -d '{"uri": "http://server/package"}'
+
+# The response:
+{
+"job": {
+  "uuid": "74d0faef-3e1a-11ef-af89-005056ac6d8a",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/74d0faef-3e1a-11ef-af89-005056ac6d8a"
+    }
+  }
+}
+}
+----
+
+'''
+
+The call to update the anti-ransomware package returns the job UUID, including a HAL link to retrieve details about the job. The job object includes a `state` field and a message to indicate the progress of the job. When the job is complete and the application is fully created, the message indicates success and the job `state` field is set to `success`.
+
+----
+
+# The API:
+/api/cluster/jobs/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/jobs/74d0faef-3e1a-11ef-af89-005056ac6d8a" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "74d0faef-3e1a-11ef-af89-005056ac6d8a",
+"description": "PATCH /api/security/anti-ransomware",
+"state": "success",
+"message": "success",
+"code": 0,
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/74d0faef-3e1a-11ef-af89-005056ac6d8a"
+  }
+}
+}
+----
+
+'''
+
+

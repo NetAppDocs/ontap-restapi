@@ -1,0 +1,179 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-storage-snaplock-litigations-.html'
+summary: 'Create a legal-hold end on all of the files for a litigation ID'
+---
+
+= Create a legal-hold end on all of the files for a litigation ID
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/storage/snaplock/litigations/{id}`#
+
+*Introduced In:* 9.7
+
+Creates a legal-hold end on all of the files for the specified litigation ID. This is only allowed when an operation is no longer in progress.
+
+== Related ONTAP commands
+
+* `snaplock legal-hold end`
+
+== Example
+
+----
+DELETE "/api/storage/snaplock/litigations/fd72e138-4bc3-11e9-a85f-0050568eb48f%3Al3"
+----
+
+== Learn more
+
+* link:storage_snaplock_litigations_endpoint_overview.html[DOC /storage/snaplock/litigations]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|id
+|string
+|path
+|True
+a|Litigation ID
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13763280
+| Only a user with security login role "vsadmin-snaplock" is allowed to perform this operation.
+
+| 14090343
+| Invalid Field
+
+| 14090346
+| Internal Error. Wait a few minutes, then try the command again
+
+| 14090642
+| Legal-Hold operation is in progress. Legal-Hold end cannot be performed. Wait for the operation to complete or abort the operation
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

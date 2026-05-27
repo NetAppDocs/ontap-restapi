@@ -1,0 +1,277 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-authentication-cluster-nis.html'
+summary: 'Update the NIS configuration for the cluster'
+---
+
+= Update the NIS configuration for the cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/authentication/cluster/nis`#
+
+*Introduced In:* 9.6
+
+Both NIS domain and servers can be updated. Domains and servers cannot be empty. Both FQDNs and IP addresses are supported for the 'servers' field. If the domain is updated, NIS servers must also be specified. IPv6 must be enabled if IPv6 family addresses are specified for the `servers` property.
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|binding_details
+|array[link:#binding_details[binding_details]]
+a|An array of objects where each object represents the NIS server and it's status for a given NIS domain. It is an advanced field.
+
+
+|bound_servers
+|array[string]
+a|
+
+|domain
+|string
+a|The NIS domain to which this configuration belongs.
+
+
+|servers
+|array[string]
+a|A list of hostnames or IP addresses of NIS servers used
+by the NIS domain configuration.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "binding_details": [
+    {
+      "server": "string",
+      "status": {
+        "code": "string",
+        "message": "string"
+      }
+    }
+  ],
+  "bound_servers": [
+    "string"
+  ],
+  "domain": "string",
+  "servers": [
+    "string"
+  ]
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1966253
+| IPv6 is not enabled in the cluster .
+
+| 3276964
+| The NIS domain name or NIS server domain is too long. The maximum supported for domain name is 64 characters and the maximum supported for NIS server domain is 255 characters.
+
+| 3276933
+| A maximum of 10 NIS servers can be configured per SVM.
+
+| 23724109
+| DNS resolution failed for one or more specified servers.
+
+| 23724112
+| DNS resolution failed due to an internal error. Contact technical support if this issue persists.
+
+| 23724132
+| DNS resolution failed for all the specified servers.
+
+| 23724130
+| Cannot use an IPv6 name server address because there are no IPv6 interfaces
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#binding_status]
+[.api-collapsible-fifth-title]
+binding_status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the server's binding status.
+
+
+|message
+|string
+a|Detailed description of the server's binding status.
+
+
+|===
+
+
+[#binding_details]
+[.api-collapsible-fifth-title]
+binding_details
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|server
+|string
+a|Hostname/IP address of the NIS server in the domain.
+
+
+|status
+|link:#binding_status[binding_status]
+a|
+
+|===
+
+
+[#cluster_nis_service]
+[.api-collapsible-fifth-title]
+cluster_nis_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|binding_details
+|array[link:#binding_details[binding_details]]
+a|An array of objects where each object represents the NIS server and it's status for a given NIS domain. It is an advanced field.
+
+
+|bound_servers
+|array[string]
+a|
+
+|domain
+|string
+a|The NIS domain to which this configuration belongs.
+
+
+|servers
+|array[string]
+a|A list of hostnames or IP addresses of NIS servers used
+by the NIS domain configuration.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

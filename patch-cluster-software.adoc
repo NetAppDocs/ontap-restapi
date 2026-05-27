@@ -1,0 +1,1440 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-cluster-software.html'
+summary: 'Update the cluster software version'
+---
+
+= Update the cluster software version
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/cluster/software`#
+
+*Introduced In:* 9.6
+
+Updates the cluster software version.
+Important note:
+
+*** Setting 'version' triggers the package installation.
+
+*** To validate the package for installation but not perform the installation, use the `validate_only` field on the request.
+
+== Required properties
+
+* `version` - Software version to be installed on the cluster.
+
+== Recommended optional parameters
+
+* `validate_only` - Required to validate a software package before an upgrade.
+* `skip_warnings` - Used to skip validation warnings when starting a software upgrade.
+* `action` - Used to pause, resume, or cancel an ongoing software upgrade.
+* `stabilize_minutes` - Specifies a custom value between 1 to 60 minutes that allows each node a specified amount of time to stabilize after a reboot; the default is 8 minutes.
+* `estimate_only` - Estimates the time duration; does not perform any update.
+* `nodes_to_update` - Specifies a subset of the cluster's nodes for update.
+* `show_validation_details` - If the value is set to true, then all validation details will be shown in the output.
+* `skip_nodes_at_target_version` - If the value is set to true, then nodes already at the target version will not be upgraded. Defaults to true in non-MetroCluster configurations. Setting this option to false will force all the selected nodes of the cluster to undergo upgrade.
+
+== Related ONTAP commands
+
+* `cluster image validate`
+* `cluster image update`
+* `cluster image pause-update`
+* `cluster image resume-update`
+* `cluster image cancel-update`
+
+== Learn more
+
+* link:cluster_software_endpoint_overview.html[DOC /cluster/software]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|skip_warnings
+|boolean
+|query
+|False
+a|Ignore warnings and proceed with the install.
+
+
+|action
+|string
+|query
+|False
+a|Requests an upgrade to pause, resume, or cancel.
+Note that not all upgrades support these actions. An upgrade can only be resumed if it is in the paused state. When a request to cancel an upgrade is successful, the upgrade state changes to either `success` or `failure`.
+
+* enum: ["pause", "resume", "cancel"]
+
+
+|stabilize_minutes
+|integer
+|query
+|False
+a|Sets a custom value between 1 to 60 minutes for the upgrade, allowing each node a specified amount of time to stabilize after a reboot.
+
+* Introduced in: 9.8
+
+
+|estimate_only
+|boolean
+|query
+|False
+a|Generates an estimate of the time required for the overall update operation for the specified package.
+No update is performed when this option is used. The default is false.
+
+* Introduced in: 9.9
+
+
+|force_rolling
+|boolean
+|query
+|False
+a|Forces a rolling upgrade on the cluster. This option is not applicable for a single-node cluster and for a two-node MetroCluster. The default is false.
+
+* Introduced in: 9.9
+
+
+|nodes_to_update
+|string
+|query
+|False
+a|A comma separated list of node names that are to be updated. The nodes must be a part of an HA pair. The default is all nodes. If the nodes_to_update parameter is an empty string, the upgrade errors out and does not proceed.
+
+* Introduced in: 9.9
+
+
+|show_validation_details
+|boolean
+|query
+|False
+a|If the value is set to true, then all validation details will be shown in the output.
+
+* Introduced in: 9.11
+
+
+|skip_nodes_at_target_version
+|boolean
+|query
+|False
+a|Defaults to true in non-MetroCluster configurations. When set to true, nodes already at the target version will not be upgraded.
+Setting this field to false will force nodes at the target version to undergo upgrade including migrating LIFs, performing takeover/giveback, and rebooting.
+It's invalid to set this option to true when the action field is set.
+It's an invalid option until effective cluster version is 9_16_0.
+
+* Introduced in: 9.16
+
+
+|pause_after
+|string
+|query
+|False
+a|The pause after specified tasks option. When ANDU is paused user interaction is required to resume the update. The default is none.
+
+* Introduced in: 9.9
+* enum: ["none", "takeover_giveback", "all"]
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|validate_only
+|boolean
+|query
+|False
+a|Validate the operation and its parameters, without actually performing the operation.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|User triggered action to apply to the install operation
+
+
+|elapsed_duration
+|integer
+a|Elapsed time during the upgrade or validation operation
+
+
+|estimated_duration
+|integer
+a|Overall estimated time for completion of the upgrade or validation operation.
+
+
+|metrocluster
+|link:#metrocluster[metrocluster]
+a|
+
+|nodes
+|array[link:#software_node_reference[software_node_reference]]
+a|List of nodes, active versions, and firmware update progressions.
+
+
+|pending_version
+|string
+a|Version being installed on the system.
+
+* example: ONTAP_X_1
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|post_update_checks
+|array[link:#software_validation_reference[software_validation_reference]]
+a|List of failed post-update checks' warnings, errors, and advice.
+
+
+|state
+|string
+a|Operational state of the upgrade
+
+
+|status_details
+|array[link:#software_status_details_reference[software_status_details_reference]]
+a|Display status details.
+
+
+|update_details
+|array[link:#software_update_details_reference[software_update_details_reference]]
+a|Display update progress details.
+
+
+|validation_results
+|array[link:#software_validation_reference[software_validation_reference]]
+a|List of validation warnings, errors, and advice.
+
+
+|version
+|string
+a|Version of ONTAP installed and currently active on the system. During PATCH, using the 'validate_only' parameter on the request executes pre-checks, but does not perform the full installation.
+
+* example: ONTAP_X
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "action": "pause",
+  "elapsed_duration": 2140,
+  "estimated_duration": 5220,
+  "metrocluster": {
+    "clusters": [
+      {
+        "elapsed_duration": 2140,
+        "estimated_duration": 3480,
+        "name": "cluster_A",
+        "state": "in_progress"
+      }
+    ],
+    "progress_details": {
+      "message": "Switchover in progress"
+    },
+    "progress_summary": {
+      "message": "MetroCluster updated successfully."
+    }
+  },
+  "nodes": [
+    {
+      "model": "AFF-A800",
+      "name": "node1",
+      "software_images": [
+        {
+          "package": "image.tgz"
+        }
+      ],
+      "version": "ONTAP_X"
+    }
+  ],
+  "pending_version": "ONTAP_X_1",
+  "post_update_checks": [
+    {
+      "action": {
+        "message": "Use NFS hard mounts, if possible."
+      },
+      "issue": {
+        "message": "Cluster HA is not configured in the cluster."
+      },
+      "status": "warning",
+      "update_check": "nfs_mounts"
+    }
+  ],
+  "state": "completed",
+  "status_details": [
+    {
+      "action": {
+        "message": "string"
+      },
+      "end_time": "2019-02-02 19:00:00 +0000",
+      "issue": {
+        "code": 10551399,
+        "message": "Image update complete"
+      },
+      "name": "initialize",
+      "node": {
+        "name": "node1"
+      },
+      "start_time": "2019-02-02 19:00:00 +0000",
+      "state": "failed"
+    }
+  ],
+  "update_details": [
+    {
+      "elapsed_duration": 2100,
+      "estimated_duration": 4620,
+      "node": {
+        "name": "node1"
+      },
+      "phase": "Post-update checks",
+      "state": "failed"
+    }
+  ],
+  "validation_results": [
+    {
+      "action": {
+        "message": "Use NFS hard mounts, if possible."
+      },
+      "issue": {
+        "message": "Cluster HA is not configured in the cluster."
+      },
+      "status": "warning",
+      "update_check": "nfs_mounts"
+    }
+  ],
+  "version": "ONTAP_X"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2424933
+| An internal error occurred while checking MetroCluster information.
+
+| 2424998
+| An internal error occurred while checking MetroCluster configuration.
+
+| 2425737
+| An internal error occurred while checking MetroCluster information.
+
+| 10551297
+| Failed to find an update in progress.
+
+| 10551298
+| Internal error while attempting to pause the upgrade operation.
+
+| 10551300
+| There is no update in progress to be paused.
+
+| 10551303
+| The operation is invalid while the update is not in the paused state.
+
+| 10551304
+| An internal error occurred while canceling the current update operation.
+
+| 10551306
+| A cancel operation is not possible at this time.
+
+| 10551315
+| Failed to find the package in the package repository.
+
+| 10551319
+| An internal error occurred while preparing for the update.
+
+| 10551320
+| Failed to create task on master update manager node.
+
+| 10551325
+| The required package version is not present in RDB.
+
+| 10551353
+| Internal error occurred while running the ANDU pre-validation checks.
+
+| 10551354
+| Invalid operation while the package is being deleted.
+
+| 10551357
+| The operation is invalid while a previous update is still in progress.
+
+| 10551368
+| The list of nodes should contain HA pairs only.
+
+| 10551391
+| An internal error occurred while performing the upgrade operation.
+
+| 10551395
+| ANDU validation check resulted in warnings.
+
+| 10551396
+| ANDU validation checks failed.
+
+| 10551434
+| The options are invalid for a resume operation.
+
+| 10551524
+| The upgrade operation is in the running state, pause the operation before attempting to cancel.
+
+| 10551558
+| Cluster configuration is not supported.
+
+| 10551564
+| Batch mode upgrade is not supported for MetroCluster configurations.
+
+| 10551565
+| Failed to contact the MetroCluster partner cluster, check the MetroCluster configuration then try again.
+
+| 10551566
+| Validation is not complete on the partner MetroCluster cluster.
+
+| 10551567
+| The required package is not available on the partner MetroCluster cluster.
+
+| 10551572
+| Internal error while checking the update status from RDB. Ensure that cluster is healthy and retry the operation.
+
+| 10551573
+| The running update is not in paused state on the MetroCluster partner cluster, so it cannot be resumed.
+
+| 10551574
+| The running update is not in the paused state on the MetroCluster partner cluster, so it cannot be canceled.
+
+| 10551592
+| The nodes selection option is not supported for MetroCluster configurations.
+
+| 10551599
+| Double-hop package is missing.
+
+| 10551602
+| A double-hop upgrade is not supported.
+
+| 10551606
+| An option selected requires a higher effective cluster version.
+
+| 10551643
+| Operation invalid while controller replacement is in progress.
+
+| 10551656
+| Invalid operation while ANDU validation checks are in progress.
+
+| 10551718
+| Invalid operation before running validation checks.
+
+| 10551719
+| ANDU validation results are too old.
+
+| 10551720
+| ANDU validation checks have failed with errors on both clusters in a MetroCluster config.
+
+| 10551724
+| ANDU validation checks were run on a different version from the requested operation.
+
+| 10551837
+| An internal error occurred while generating the AutoSupport prior to starting ANDU.
+
+| 10551840
+| An internal error occurred while generating the AutoSupport prior to starting ANDU.
+
+| 10551841
+| An internal error occurred while generating the AutoSupport prior to starting ANDU.
+
+| 10551854
+| All specified nodes are already running the specified package version.
+
+| 10551859
+| Failed to access the package repository and its backup copy.
+
+| 10551872
+| Package version is not mentioned.
+
+| 10551897
+| All nodes are already running the requested version.
+
+| 10551898
+| Failed to get nodes-to-update list.
+
+| 10551899
+| skip_nodes_at_target_version cannot be specified in a validate_only, pause, resume, or cancel operations.
+
+| 10551900
+| skip_nodes_at_target_version cannot be set to true in MetroCluster configurations.
+
+| 10551901
+| skip_nodes_at_target_version conflicts with another specified field.
+
+| 10551902
+| Failed to determine if the cluster is configured for MetroCluster.
+
+| 10551908
+| skip_nodes_at_target_version is not a valid option until effective cluster version is 9_16_0.
+
+| 10551910
+| The operation is invalid while in the current upgrade state.
+
+| 13303864
+| SnapMirror operation is in progress, retry later.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#software_mcc_reference]
+[.api-collapsible-fifth-title]
+software_mcc_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elapsed_duration
+|integer
+a|Elapsed duration of update time (in seconds) of MetroCluster.
+
+
+|estimated_duration
+|integer
+a|Estimated duration of update time (in seconds) of MetroCluster.
+
+
+|name
+|string
+a|Name of the site in MetroCluster.
+
+
+|state
+|
+a|Upgrade state of MetroCluster.
+
+
+|===
+
+
+[#progress_details]
+[.api-collapsible-fifth-title]
+progress_details
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|string
+a|MetroCluster update progress details.
+
+
+|===
+
+
+[#progress_summary]
+[.api-collapsible-fifth-title]
+progress_summary
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|string
+a|MetroCluster update progress summary.
+
+
+|===
+
+
+[#metrocluster]
+[.api-collapsible-fifth-title]
+metrocluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|clusters
+|array[link:#software_mcc_reference[software_mcc_reference]]
+a|List of MetroCluster sites, statuses, and active ONTAP versions.
+
+* readOnly: 1
+* Introduced in: 9.6
+
+
+|progress_details
+|link:#progress_details[progress_details]
+a|
+
+|progress_summary
+|link:#progress_summary[progress_summary]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#worker_node]
+[.api-collapsible-fifth-title]
+worker_node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#firmware_update_progress_state]
+[.api-collapsible-fifth-title]
+firmware_update_progress_state
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attempts
+|integer
+a|
+
+|code
+|integer
+a|Code corresponding to the status message.
+
+
+|message
+|string
+a|Error message returned when a cluster firmware update job fails.
+
+
+|status
+|string
+a|
+
+|worker_node
+|link:#worker_node[worker_node]
+a|
+
+|===
+
+
+[#firmware_update_progress]
+[.api-collapsible-fifth-title]
+firmware_update_progress
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|update_state
+|array[link:#firmware_update_progress_state[firmware_update_progress_state]]
+a|
+
+|update_type
+|string
+a|Specifies the type of update.
+
+
+|zip_file_name
+|string
+a|
+
+|===
+
+
+[#firmware_disk]
+[.api-collapsible-fifth-title]
+firmware_disk
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|average_duration_per_disk
+|integer
+a|Average firmware update duration per disk (in seconds).
+
+
+|num_waiting_download
+|integer
+a|The number of disks waiting to download the firmware update.
+
+
+|total_completion_estimate
+|integer
+a|Estimated firmware update duration to completion (in minutes).
+
+
+|update_status
+|
+a|Status of the background disk firmware update.
+
+
+|===
+
+
+[#firmware_dqp_record_count]
+[.api-collapsible-fifth-title]
+firmware_dqp_record_count
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|integer
+a|Alias record count
+
+
+|device
+|integer
+a|Device record count
+
+
+|drive
+|integer
+a|Drive record count
+
+
+|system
+|integer
+a|System record count
+
+
+|===
+
+
+[#firmware_dqp]
+[.api-collapsible-fifth-title]
+firmware_dqp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|file_name
+|string
+a|Firmware file name
+
+
+|revision
+|string
+a|Firmware revision
+
+
+|version
+|string
+a|Firmware version
+
+
+|===
+
+
+[#firmware_shelf]
+[.api-collapsible-fifth-title]
+firmware_shelf
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|in_progress_count
+|integer
+a|
+
+|update_status
+|
+a|Status of the shelf firmware update.
+
+
+|===
+
+
+[#firmware_sp_bmc]
+[.api-collapsible-fifth-title]
+firmware_sp_bmc
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|autoupdate
+|boolean
+a|
+
+|end_time
+|string
+a|
+
+|fw_type
+|string
+a|
+
+|image
+|string
+a|
+
+|in_progress
+|boolean
+a|
+
+|is_current
+|boolean
+a|
+
+|last_update_state
+|string
+a|
+
+|percent_done
+|integer
+a|
+
+|running_version
+|string
+a|
+
+|start_time
+|string
+a|
+
+|state
+|string
+a|
+
+|===
+
+
+[#system_firmware]
+[.api-collapsible-fifth-title]
+system_firmware
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|boot_media_bios_version
+|string
+a|BIOS version that is currently staged on the boot media of the node.
+
+
+|boot_media_loader_version
+|string
+a|LOADER version that is currently staged on the boot media of the node.
+
+
+|install_pending
+|boolean
+a|Flag that indicates if the system firmware install is pending. A true value suggests that a node reboot or cluster upgrade is required for completing installation.
+
+
+|running_bios_version
+|string
+a|BIOS version that is currently installed on the node.
+
+
+|running_loader_version
+|string
+a|LOADER version that is currently installed on the node.
+
+
+|===
+
+
+[#firmware]
+[.api-collapsible-fifth-title]
+firmware
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_fw_progress
+|array[link:#firmware_update_progress[firmware_update_progress]]
+a|
+
+|===
+
+
+[#software_images]
+[.api-collapsible-fifth-title]
+software_images
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|package
+|string
+a|Package file name.
+
+
+|===
+
+
+[#software_node_reference]
+[.api-collapsible-fifth-title]
+software_node_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|model
+|string
+a|Model number of the node.
+
+
+|name
+|string
+a|Name of the node.
+
+
+|software_images
+|array[link:#software_images[software_images]]
+a|List of software image information.
+
+
+|version
+|string
+a|ONTAP version of the node.
+
+* example: ONTAP_X
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#action]
+[.api-collapsible-fifth-title]
+action
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|string
+a|Specifies the corrective action to take to resolve an error.
+
+
+|===
+
+
+[#issue]
+[.api-collapsible-fifth-title]
+issue
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|string
+a|Details of the error or warning encountered by the update checks.
+
+
+|===
+
+
+[#software_validation_reference]
+[.api-collapsible-fifth-title]
+software_validation_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|link:#action[action]
+a|
+
+|issue
+|link:#issue[issue]
+a|
+
+|status
+|string
+a|Status of the update check.
+
+
+|update_check
+|string
+a|Name of the update check.
+
+
+|===
+
+
+[#action]
+[.api-collapsible-fifth-title]
+action
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Error code corresponding the status error
+
+
+|message
+|string
+a|Corrective action to be taken to resolve the status error.
+
+
+|===
+
+
+[#issue]
+[.api-collapsible-fifth-title]
+issue
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Error code corresponding to update status
+
+
+|message
+|string
+a|Update status details
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the node to be retrieved for status details.
+
+
+|===
+
+
+[#software_status_details_reference]
+[.api-collapsible-fifth-title]
+software_status_details_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|link:#action[action]
+a|
+
+|end_time
+|string
+a|End time for each status phase.
+
+
+|issue
+|link:#issue[issue]
+a|
+
+|name
+|string
+a|Name of the phase to be retrieved for status details.
+
+
+|node
+|link:#node[node]
+a|
+
+|start_time
+|string
+a|Start time for each status phase.
+
+
+|state
+|string
+a|Status of the phase
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the node to be retrieved for update details.
+
+
+|===
+
+
+[#software_update_details_reference]
+[.api-collapsible-fifth-title]
+software_update_details_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|elapsed_duration
+|integer
+a|Elapsed duration for each update phase
+
+
+|estimated_duration
+|integer
+a|Estimated duration for each update phase
+
+
+|node
+|link:#node[node]
+a|
+
+|phase
+|string
+a|Phase details
+
+
+|state
+|string
+a|State of the update phase
+
+
+|===
+
+
+[#software_reference]
+[.api-collapsible-fifth-title]
+software_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|action
+|string
+a|User triggered action to apply to the install operation
+
+
+|elapsed_duration
+|integer
+a|Elapsed time during the upgrade or validation operation
+
+
+|estimated_duration
+|integer
+a|Overall estimated time for completion of the upgrade or validation operation.
+
+
+|metrocluster
+|link:#metrocluster[metrocluster]
+a|
+
+|nodes
+|array[link:#software_node_reference[software_node_reference]]
+a|List of nodes, active versions, and firmware update progressions.
+
+
+|pending_version
+|string
+a|Version being installed on the system.
+
+* example: ONTAP_X_1
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|post_update_checks
+|array[link:#software_validation_reference[software_validation_reference]]
+a|List of failed post-update checks' warnings, errors, and advice.
+
+
+|state
+|string
+a|Operational state of the upgrade
+
+
+|status_details
+|array[link:#software_status_details_reference[software_status_details_reference]]
+a|Display status details.
+
+
+|update_details
+|array[link:#software_update_details_reference[software_update_details_reference]]
+a|Display update progress details.
+
+
+|validation_results
+|array[link:#software_validation_reference[software_validation_reference]]
+a|List of validation warnings, errors, and advice.
+
+
+|version
+|string
+a|Version of ONTAP installed and currently active on the system. During PATCH, using the 'validate_only' parameter on the request executes pre-checks, but does not perform the full installation.
+
+* example: ONTAP_X
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,66 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_auto-update_configurations_uuid_endpoint_overview.html'
+summary: 'Manage automatic update configuration'
+---
+
+= Manage automatic update configuration
+
+
+
+== Overview
+
+Use this API to query and retrieve a specific automatic package update configuration.
+
+This API supports GET and PATCH calls. PATCH enables the `action` field to be updated for the specified configuration.
+
+'''
+
+== Examples
+
+=== Retrieving settings for a specific automatic update
+
+The following example shows how to retrieve configuration settings for an automatic update category:
+
+[,json]
+----
+
+# The API:
+/support/auto-update/configurations/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/auto-update/configurations/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d"
+
+# The response:
+{
+"uuid": "440ae2e4-fd8f-4225-9bee-94e2da3f8d9d",
+"category": "firmware",
+"description": {
+  "message": "SP/BMC Firmware",
+  "code": "131072402"
+},
+"action": "confirm",
+}
+----
+
+'''
+
+=== Updating the settings for a specific automatic update
+
+The following example shows how to modify configuration settings for an automatic update:
+
+----
+
+# The API:
+/support/auto-update/configurations/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/auto-update/configurations/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d" -H "accept: application/hal+json" -d '{"action":"confirm"}'
+
+# The response:
+200 OK
+----
+
+

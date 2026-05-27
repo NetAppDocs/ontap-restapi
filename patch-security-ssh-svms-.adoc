@@ -1,0 +1,374 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-ssh-svms-.html'
+summary: 'Update the SSH server configuration for an SVM'
+---
+
+= Update the SSH server configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/ssh/svms/{svm.uuid}`#
+
+*Introduced In:* 9.10
+
+Updates the SSH server configuration for the specified data SVM.
+
+== Optional parameters
+
+* `ciphers` - Encryption algorithms for the payload
+* `key_exchange_algorithms` - SSH key exchange algorithms
+* `host_key_algorithms` - Host key algorithms
+* `mac_algorithms` - MAC algorithms
+* `max_authentication_retry_count` - Maximum authentication retries allowed before closing the connection
+* `is_rsa_in_publickey_algorithms_enabled` - _ssh-rsa_ enabled status for public key algorithms
+* `login_grace_time` - Login grace time allowed for SSH connection
+
+== Related ONTAP commands
+
+* `security ssh`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|SVM UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ciphers
+|array[string]
+a|Ciphers for encrypting the data.
+
+
+|host_key_algorithms
+|array[string]
+a|Host key algorithms. The host key algorithms 'ssh_ed25519' and 'ssh_rsa' can be configured only in non-FIPS mode.
+
+
+|is_rsa_in_publickey_algorithms_enabled
+|boolean
+a|Enables or disables the _ssh-rsa_ signature scheme, which uses the SHA-1 hash algorithm, for RSA keys in public key algorithms. If this flag is _false_, older SSH implementations might fail to authenticate using RSA keys. This flag should be enabled only as a temporary measure until legacy SSH client implementations can be upgraded or reconfigured with another key type, for example: ECDSA.
+
+
+|key_exchange_algorithms
+|array[string]
+a|Key exchange algorithms.
+
+
+|login_grace_time
+|integer
+a|The login grace time allowed for SSH connection request timeout.
+
+
+|mac_algorithms
+|array[string]
+a|MAC algorithms.
+
+
+|max_authentication_retry_count
+|integer
+a|Maximum authentication retries allowed before closing the connection.
+
+
+|svm
+|link:#svm[svm]
+a|SVM name and UUID for which the SSH server is configured.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "ciphers": [
+    "aes256_ctr",
+    "aes192_ctr",
+    "aes128_ctr"
+  ],
+  "host_key_algorithms": [
+    "ecdsa_sha2_nistp256",
+    "ssh_ed25519",
+    "ssh_rsa",
+    "rsa_sha2_256",
+    "rsa_sha2_512"
+  ],
+  "key_exchange_algorithms": [
+    "diffie_hellman_group_exchange_sha256",
+    "ecdh_sha2_nistp256"
+  ],
+  "mac_algorithms": [
+    "hmac_sha2_512",
+    "hmac_sha2_512_etm"
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10682372
+| There must be at least one key exchange algorithm associated with the SSH configuration.
+
+| 10682373
+| There must be at least one cipher associated with the SSH configuration.
+
+| 10682375
+| Failed to modify SSH key exchange algorithms.
+
+| 10682378
+| Failed to modify SSH ciphers.
+
+| 10682399
+| Key exchange algorithm not supported in FIPS-enabled mode.
+
+| 10682400
+| Failed to modify SSH MAC algorithms.
+
+| 10682401
+| MAC algorithm not supported in FIPS-enabled mode.
+
+| 10682403
+| There must be at least one MAC algorithm with the SSH configuration.
+
+| 10682413
+| Failed to modify maximum authentication retry attempts.
+
+| 10682418
+| Cipher not supported in FIPS-enabled mode.
+
+| 10682420
+| To modify the SSH configuration of the admin SVM, use the /api/security/ssh REST API.
+
+| 10682423
+| There must be at least one host key algorithm associated with the SSH configuration.
+
+| 10682424
+| Host key algorithm not supported in FIPS enabled mode.
+
+| 10682425
+| Failed to modify Host key algorithms.
+
+| 10682426
+| Failed to modify _ssh-rsa_ enabled status for publickey algorithms configuration.
+
+| 10682428
+| Cipher not supported in FIPS enabled mode.
+
+| 10682429
+| Adding 'diffie_hellman_group16_sha512' or 'diffie_hellman_group18_sha512' to the SSH key exchange algorithms list requires an effective cluster version of ONTAP 9.16.1 or later.
+
+| 10682430
+| Failed to modify the login grace time.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM name and UUID for which the SSH server is configured.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#svm_ssh_server]
+[.api-collapsible-fifth-title]
+svm_ssh_server
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ciphers
+|array[string]
+a|Ciphers for encrypting the data.
+
+
+|host_key_algorithms
+|array[string]
+a|Host key algorithms. The host key algorithms 'ssh_ed25519' and 'ssh_rsa' can be configured only in non-FIPS mode.
+
+
+|is_rsa_in_publickey_algorithms_enabled
+|boolean
+a|Enables or disables the _ssh-rsa_ signature scheme, which uses the SHA-1 hash algorithm, for RSA keys in public key algorithms. If this flag is _false_, older SSH implementations might fail to authenticate using RSA keys. This flag should be enabled only as a temporary measure until legacy SSH client implementations can be upgraded or reconfigured with another key type, for example: ECDSA.
+
+
+|key_exchange_algorithms
+|array[string]
+a|Key exchange algorithms.
+
+
+|login_grace_time
+|integer
+a|The login grace time allowed for SSH connection request timeout.
+
+
+|mac_algorithms
+|array[string]
+a|MAC algorithms.
+
+
+|max_authentication_retry_count
+|integer
+a|Maximum authentication retries allowed before closing the connection.
+
+
+|svm
+|link:#svm[svm]
+a|SVM name and UUID for which the SSH server is configured.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

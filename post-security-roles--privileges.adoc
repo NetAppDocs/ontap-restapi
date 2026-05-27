@@ -1,0 +1,339 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-roles--privileges.html'
+summary: 'Add a privilege tuple to an existing role'
+---
+
+= Add a privilege tuple to an existing role
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/roles/{owner.uuid}/{name}/privileges`#
+
+*Introduced In:* 9.6
+
+Adds a privilege tuple (of REST URI or command/command directory path, its access level and an optional query, if the "path" refers to a command/command directory path) to an existing role or creates a new role with the provided tuple.
+
+== Required parameters
+
+* `owner.uuid` - UUID of the SVM that houses this role.
+* `name` - Name of the role to be updated.
+* `path` - REST URI path (example: _/api/storage/volumes_) or command/command directory path (example: _snaplock compliance-clock_). Can be a resource-qualified endpoint (example: _/api/storage/volumes/43256a71-be02-474d-a2a9-9642e12a6a2c/snapshots_). Currently, resource-qualified endpoints are limited to the following&#58;
+
+== Snapshots APIs
+
+&ndash; _/api/storage/volumes/{volume.uuid}/snapshots_
+
+== File System Analytics APIs
+
+&ndash; _/api/storage/volumes/{volume.uuid}/files_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/clients_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/directories_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/files_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/users_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/clients_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/directories_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/files_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/users_
+
+In the APIs above, and in the context of REST roles, the wildcard character &#42; can be used in place of _{volume.uuid}_ or _{svm.uuid}_ to represent _all_ volumes or _all_ SVMs, depending on whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ corresponds to the _-instance-uuid_ field in the output of the "volume show" command at the diagnostic privilege level. It can also be retrieved through the REST endpoint _/api/storage/volumes_.
+
+* `access` - Desired access level for the REST URI path or command/command directory.
+
+== Related ONTAP commands
+
+* `security login rest-role create`
+* `security login role create`
+
+== Learn more
+
+* link:security_roles_owner.uuid_name_privileges_endpoint_overview.html[DOC /security/roles/{owner.uuid}/\{name}/privileges]
+* link:security_roles_endpoint_overview.html[DOC /security/roles]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Role owner UUID
+
+
+|name
+|string
+|path
+|True
+a|Role name
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Access level for the REST endpoint or command/command directory path. If it denotes the access level for a command/command directory path, the only supported enum values are 'none','readonly' and 'all'.
+
+
+|path
+|string
+a|Either of REST URI/endpoint OR command/command directory path.
+
+
+|query
+|string
+a|Optional attribute that can be specified only if the "path" attribute refers to a command/command directory path. The privilege tuple implicitly defines a set of objects the role can or cannot access at the specified access level. The query further reduces this set of objects to a subset of objects that the role is allowed to access. The query attribute must be applicable to the command/command directory specified by the "path" attribute. It is defined using one or more parameters of the command/command directory path specified by the "path" attribute.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "access": "all",
+  "path": "volume move start",
+  "query": "-vserver vs1|vs2|vs3 -destination-aggregate aggr1|aggr2"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1263347
+| Cannot modify pre-defined roles.
+
+| 5636129
+| A role with given name has not been defined.
+
+| 5636143
+| A Vserver admin cannot use the API with this access level.
+
+| 5636144
+| The value specified for the access level is not valid.
+
+| 5636168
+| This role is mapped to a REST role and can only be modified by updating the REST role.
+
+| 5636262
+| Cannot create a role with the specified role name because it is reserved by the system.
+
+| 13434890
+| Vserver-ID failed for Vserver roles.
+
+| 13434891
+| UUID LookUp failed for Vserver roles.
+
+| 13434892
+| Roles is a required field.
+
+| 13434893
+| The SVM does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#role_privilege]
+[.api-collapsible-fifth-title]
+role_privilege
+
+A tuple containing a REST endpoint or a command/command directory path and the access level assigned to that endpoint or command/command directory. If the "path" attribute refers to a command/command directory path, the tuple could additionally contain an optional query. The REST endpoint can be a resource-qualified endpoint. At present, the only supported resource-qualified endpoints are the following
+
+Snapshots APIs
+
+* _/api/storage/volumes/{volume.uuid}/snapshots_
+
+File System Analytics APIs
+
+* _/api/storage/volumes/{volume.uuid}/files_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/clients_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/directories_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/files_
+* _/api/storage/volumes/{volume.uuid}/top-metrics/users_
+* _/api/svm/svms/{svm.uuid}/top-metrics/clients_
+* _/api/svm/svms/{svm.uuid}/top-metrics/directories_
+* _/api/svm/svms/{svm.uuid}/top-metrics/files_
+* _/api/svm/svms/{svm.uuid}/top-metrics/users_
+* _/api/protocols/s3/services/{svm.uuid}/users_
+
+In the above APIs, wildcard character * could be used in place of _{volume.uuid}_ or _{svm.uuid}_ to denote _all_ volumes or _all_ SVMs, depending upon whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ refers to the _-instance-uuid_ field value in the "volume show" command output at diagnostic privilege level. It can also be fetched through REST endpoint _/api/storage/volumes_.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Access level for the REST endpoint or command/command directory path. If it denotes the access level for a command/command directory path, the only supported enum values are 'none','readonly' and 'all'.
+
+
+|path
+|string
+a|Either of REST URI/endpoint OR command/command directory path.
+
+
+|query
+|string
+a|Optional attribute that can be specified only if the "path" attribute refers to a command/command directory path. The privilege tuple implicitly defines a set of objects the role can or cannot access at the specified access level. The query further reduces this set of objects to a subset of objects that the role is allowed to access. The query attribute must be applicable to the command/command directory specified by the "path" attribute. It is defined using one or more parameters of the command/command directory path specified by the "path" attribute.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

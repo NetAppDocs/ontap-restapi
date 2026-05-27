@@ -1,0 +1,348 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-sensors-.html'
+summary: 'Retrieve the environment sensors for a node'
+---
+
+= Retrieve the environment sensors for a node
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/sensors/{node.uuid}/{index}`#
+
+*Introduced In:* 9.11
+
+Retrieve Environment Sensors
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|index
+|string
+|path
+|True
+a|Filter by index
+
+
+|node.uuid
+|string
+|path
+|True
+a|Filter by node.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|critical_high_threshold
+|integer
+a|Value above which the sensor goes into a critically high state.
+
+
+|critical_low_threshold
+|integer
+a|Value below which the sensor goes into a critically low state.
+
+
+|discrete_state
+|string
+a|Used to determine whether the sensor is in a normal state or any other failed state based on the value of "discrete_value" field. This field is only applicable for discrete sensors.
+
+
+|discrete_value
+|string
+a|Applies to discrete sensors which do not have an integer value. It can have values like on, off, good, bad, ok.
+
+
+|index
+|integer
+a|Provides the sensor ID.
+
+
+|name
+|string
+a|Name of the sensor.
+
+
+|node
+|link:#node[node]
+a|
+
+|threshold_state
+|string
+a|Used to determine whether the sensor is in a normal state or any other failed state.
+
+
+|type
+|string
+a|Used to determine the type of the sensor.
+
+
+|value
+|integer
+a|Provides the sensor reading.
+
+
+|value_units
+|string
+a|Units in which the "value" is measured. Some examples of units are mV, mW*hr, C, RPM.
+
+
+|warning_high_threshold
+|integer
+a|Value above which the sensor goes into a warning high state.
+
+
+|warning_low_threshold
+|integer
+a|Value below which the sensor goes into a warning low state.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "critical_high_threshold": 0,
+  "critical_low_threshold": 0,
+  "discrete_state": "normal",
+  "discrete_value": "ok",
+  "index": 0,
+  "name": "PVCCSA CPU FD",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "threshold_state": "normal",
+  "type": "string",
+  "value": 831,
+  "value_units": "mV",
+  "warning_high_threshold": 0,
+  "warning_low_threshold": 0
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

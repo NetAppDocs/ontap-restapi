@@ -1,0 +1,64 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_snmp_traphosts_host_endpoint_overview.html'
+summary: 'Manage individual SNMP traphosts'
+---
+
+= Manage individual SNMP traphosts
+
+
+
+== Overview
+
+Defines, retrieves or deletes an individual SNMP traphost.
+
+== Examples
+
+=== Retrieves an individual traphost in the cluster
+
+----
+
+# The API:
+GET "/api/support/snmp/traphosts/{host}"
+
+# The call
+curl -H "accept: application/hal+json" -X GET "https://<mgmt-ip>/api/support/snmp/traphosts/10.235.36.62"
+
+# The response
+{
+"host": "example_host_name",
+"ip_address": "10.235.36.62",
+"user": {
+  "name": "public",
+  "_links": {
+    "self": {
+      "href": "/api/support/snmp/users/800003150558b57e8dbd9ce9119d82005056a7b4e5/public"
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/support/snmp/traphosts/10.235.36.62"
+  }
+}
+}
+----
+
+=== Deletes an individual traphost in the cluster
+
+----
+
+# The API:
+DELETE "/api/support/snmp/traphosts/{host}"
+
+# The call:
+curl -H "accept: application/json" -H "Content-Type: application/json" -X DELETE "https://<mgmt-ip>/api/support/snmp/traphosts/3ffe:ffff:100:f102::1"
+
+# The response:
+200 OK
+{}
+----
+
+

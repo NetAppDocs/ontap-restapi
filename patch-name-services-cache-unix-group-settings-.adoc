@@ -1,0 +1,287 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-name-services-cache-unix-group-settings-.html'
+summary: 'Update UNIX group cache settings'
+---
+
+= Update UNIX group cache settings
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/name-services/cache/unix-group/settings/{svm.uuid}`#
+
+*Introduced In:* 9.11
+
+Updates unix-group cache settings.
+
+== Important notes
+
+* svm.uuid field cannot be empty.
+* Returns success in case no values are provided for update.
+
+== Related ONTAP commands
+
+* `vserver services name-service cache unix-group settings modify`
+
+== Learn more
+
+* link:name-services_cache_unix-group_settings_endpoint_overview.html[DOC /name-services/cache/unix-group/settings]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|SVM UUID.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not the cache is enabled.
+
+
+|negative_cache_enabled
+|boolean
+a|Indicates whether or not the negative cache is enabled.
+
+
+|negative_ttl
+|string
+a|Specifies negative Time to Live, in ISO 8601 format.
+
+
+|propagation_enabled
+|boolean
+a|Specifies whether the propagation setting is enabled or not.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|ttl
+|string
+a|Specifies Time to Live (TTL), in ISO 8601 format.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "negative_ttl": "PT5M",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "ttl": "PT24H"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 23724055
+| Internal error. Configuration for Vserver failed. Verify that the cluster is healthy, then try the command again. For further assistance, contact technical support.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#unix_group_settings]
+[.api-collapsible-fifth-title]
+unix_group_settings
+
+UNIX groups cache setting.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not the cache is enabled.
+
+
+|negative_cache_enabled
+|boolean
+a|Indicates whether or not the negative cache is enabled.
+
+
+|negative_ttl
+|string
+a|Specifies negative Time to Live, in ISO 8601 format.
+
+
+|propagation_enabled
+|boolean
+a|Specifies whether the propagation setting is enabled or not.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|ttl
+|string
+a|Specifies Time to Live (TTL), in ISO 8601 format.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,283 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_nfs_export-policies_endpoint_overview.html'
+summary: 'Manage NFS export policies'
+---
+
+= Manage NFS export policies
+
+
+
+== Export Policies
+
+=== 1) Retrieve the export policy details
+
+==== NOTE: This is used to read in the whole policy.
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/nfs/export-policies
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/nfs/export-policies"
+----
+
+'''
+
+=== 2) Create an export policy for an SVM
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/nfs/export-policies
+
+# The call:
+curl -d "@test_post_policy_single_rule.txt" -X POST "https://<mgmt-ip>/api/protocols/nfs/export-policies"
+test_post_policy_single_rule.txt(body):
+{
+"name": "P1",
+"rules":[
+  {
+    "clients": [
+      {
+        "match": "host1"
+      }
+    ],
+    "ro_rule": [
+      "krb5"
+    ],
+    "rw_rule": [
+      "ntlm"
+    ],
+    "anonymous_user": "anon1",
+    "chown_mode": "restricted",
+    "allow_suid": true
+  },
+  {
+    "clients": [
+      {
+        "match": "host2"
+      }
+    ],
+    "ro_rule": [
+      "sys"
+    ],
+    "rw_rule": [
+      "ntlm"
+    ],
+    "superuser": [
+      "any"
+    ],
+    "allow_device_creation": true,
+    "ntfs_unix_security": "fail"
+  }
+]
+}
+----
+
+'''
+
+=== 3) Update an export policy for an SVM
+
+==== NOTE: This is used to either update the policy name or update all of the rules at once in an existing export policy.
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/nfs/export-policies/{policy.id}
+
+# The call:
+curl -d "@test_patch_policy.txt" -X PATCH "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934594"
+test_patch_policy.txt(body):
+{
+"name": "S1",
+"rules":[
+  {
+    "clients": [
+      {
+        "match": "host4"
+      }
+    ],
+    "ro_rule": [
+      "krb5"
+    ],
+    "rw_rule": [
+      "ntlm"
+    ]
+  }
+]
+}
+----
+
+'''
+
+=== 4) Delete an export policy for an SVM
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/nfs/export-policies/{policy.id}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934594"
+----
+
+'''
+
+== Export Rules
+
+=== 1) Retrieve the export policy rule details for an export policy
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/nfs/export-policies/{policy.id}/rules
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934595/rules"
+----
+
+'''
+
+=== 2) Create an export policy rule for an export policy
+
+==== NOTE: This is used to add a single new rule to an existing export policy.
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/nfs/export-policies/{policy.id}/rules
+
+# The call:
+curl -d "@test_patch_export_rule.txt" -X POST "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934595/rules"
+test_patch_export_rule.txt(body):
+{
+"clients": [
+  {
+    "match": "host2"
+  }
+],
+"ro_rule": [
+  "sys"
+],
+"rw_rule": [
+  "ntlm"
+]
+}
+----
+
+'''
+
+=== 3) Update an export policy rule for an export policy
+
+==== NOTE: This is used to edit an existing single rule in an existing export policy.
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/nfs/export-policies/{policy.id}/rules/{index}
+
+# The call:
+curl -d "@test_patch_export_rule.txt" -X PATCH "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934595/rules/5?new_index=10"
+test_patch_export_rule.txt(body):
+{
+"clients": [
+  {
+    "match": "host4"
+  }
+],
+"ro_rule": [
+  "sys"
+],
+"rw_rule": [
+  "krb5"
+]
+}
+----
+
+'''
+
+=== 4) Delete an export policy rule for an export policy
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/nfs/export-policies/{policy.id}/rules/{index}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934595/rules/15"
+----
+
+'''
+
+== Export Clients
+
+=== 1) Retrieve the export client matches of an export policy rule
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/nfs/export-policies/{policy.id}/rules/{index}/clients
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934593/rules/2/clients"
+----
+
+'''
+
+=== 2) Add an export client match to an export policy rule
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/nfs/export-policies/{policy.id}/rules/{index}/clients
+
+# The call:
+curl -d "@add_client_match.txt" -X POST "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934593/rules/1/clients"
+add_client_match.txt(body):
+{
+"match" : "host4"
+}
+----
+
+'''
+
+=== 3) Delete an export client match from an export policy rule
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/nfs/export-policies/{policy.id}/rules/{index}/clients/{match}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/nfs/export-policies/8589934593/rules/1/clients/host1,host2"
+----
+
+'''
+
+

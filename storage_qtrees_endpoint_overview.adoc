@@ -1,0 +1,642 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_qtrees_endpoint_overview.html'
+summary: 'Manage storage qtrees'
+---
+
+= Manage storage qtrees
+
+
+
+== Overview
+
+A qtree is a logically defined file system that can exist as a special subdirectory of the root directory within a FlexVol volume or a FlexGroup volume.
+
+== Qtree QoS policy
+
+Qtree QoS policy and settings enforce Service Level Objectives (SLOs) on a qtree. SLOs can be set by specifying "qos_policy.max_throughput_iops" and/or "qos_policy.max_throughput_mbps" or "qos_policy.min_throughput_iops" and/or "qos_policy.min_throughput_mbps".
+Specifying "min_throughput_iops" or "min_throughput_mbps" is only supported on volumes hosted on a node that is flash optimized. A pre-created QoS policy can also be used by specifying "qos_policy.name" or "qos_policy.uuid" properties.
+Setting or assigning a QoS policy to a qtree is not supported if its containing volume or SVM has a QoS policy attached, or a file or LUN in its containing volume already has a QoS policy attached.
+
+== Performance monitoring
+
+Performance of a qtree can be monitored by observing the `statistics.+*+` properties. These properties show the performance of the qtree in terms of IOPS and throughput. The `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+=== Extended performance monitoring
+
+Extended performance monitoring enables the collection of latency statistics and the archival of statistics samples for a qtree. When extended performance monitoring is enabled for a qtree, its performance can be monitored by observing the `metric.+*+` and `statistics.+*+` properties. These properties show the performance of the qtree in terms of IOPS, latency and throughput. The `metric.+*+` properties denote an average whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+Extended performance monitoring can be enabled for a qtree using the `ext_performance_monitoring.enabled` property. A maximum of 50,000 qtrees can have extended performance monitoring enabled on a cluster. If extended performance monitoring is enabled for an existing qtree, the prior `statistics.+*+` properties showing the IOPS and throughput performance of the qtree will be cleared.
+
+When extended performance monitoring is enabled for a qtree for the first time in an SVM, existing NFS clients might not be accounted for until their NFS shares associated with the SVM are remounted.
+
+== Qtree APIs
+
+The following APIs are used to create, retrieve, modify, and delete qtrees.
+
+&ndash; POST      /api/storage/qtrees
+
+&ndash; GET       /api/storage/qtrees
+
+&ndash; GET       /api/storage/qtrees/\{volume-uuid}/\{qtree-id}
+
+&ndash; PATCH     /api/storage/qtrees/\{volume-uuid}/\{qtree-id}
+
+&ndash; DELETE    /api/storage/qtrees/\{volume-uuid}/\{qtree-id}
+
+== Examples
+
+=== Creating a qtree inside a volume for an SVM
+
+This API is used to create a qtree inside a volume for an SVM.
+
+The following example shows how to create a qtree in a FlexVol volume with a given security style, user, group, UNIX permissions, an export policy, and a QoS policy.
+
+'''
+
+----
+
+# The API:
+POST /api/storage/qtrees
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/qtrees?return_records=true' -H 'accept: application/hal+json' -d @test_qtree_post.txt
+test_qtree_post.txt(body):
+{
+"svm": {
+  "name": "svm1"
+},
+"volume": {
+  "name": "fv"
+},
+"name": "qt1",
+"security_style": "unix",
+"user": {
+  "name": "unix_user1"
+},
+"group": {
+  "name": "unix_group1"
+},
+"unix_permissions": 744,
+"export_policy": {
+    "name": "default"
+},
+"qos_policy": {
+    "max_throughput_iops": 1000
+}
+}
+
+# The response:
+{
+  "num_records": 1,
+  "records": [
+    {
+      "svm": {
+        "name": "svm1"
+      },
+      "volume": {
+        "name": "fv"
+      },
+      "name": "qt1",
+      "security_style": "unix",
+      "user": {
+        "name": "unix_user1"
+      },
+      "group": {
+        "name": "unix_group1"
+      },
+      "unix_permissions": 744,
+      "export_policy": {
+        "name": "default"
+      },
+      "qos_policy": {
+        "min_throughput_iops": 0,
+        "min_throughput_mbps": 0,
+        "max_throughput_iops": 1000,
+        "max_throughput_mbps": 0,
+        "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab52",
+        "name": "vs0_auto_gen_policy_39a9522f_ff35_11e9_b0f9_005056a7ab52"
+      },
+      "_links": {
+        "self": {
+          "href": "/api/storage/qtrees/?volume.name=fv&name=qt1"
+        }
+      }
+    }
+  ],
+  "job": {
+    "uuid": "84edef3c-4f6d-11e9-9a71-005056a7f717",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/jobs/84edef3c-4f6d-11e9-9a71-005056a7f717"
+      }
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving qtrees
+
+This API is used to retrieve qtrees.
+
+The following example shows how to retrieve qtrees belonging to SVM _svm1_ and volume _fv_. The `svm.name` and `volume.name` query parameters are used to find the required qtrees.
+
+'''
+
+----
+
+# The API:
+GET /api/storage/qtrees
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/qtrees/?svm.name=svm1&volume.name=fv" -H 'accept: application/hal+json'
+
+# The response
+{
+  "records": [
+    {
+      "svm": {
+        "uuid": "b68f961b-4cee-11e9-930a-005056a7f717",
+        "name": "svm1",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/b68f961b-4cee-11e9-930a-005056a7f717"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+        "name": "fv",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717"
+          }
+        }
+      },
+      "id": 0,
+      "name": "",
+      "_links": {
+        "self": {
+          "href": "/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/0"
+        }
+      }
+    },
+    {
+      "svm": {
+        "uuid": "b68f961b-4cee-11e9-930a-005056a7f717",
+        "name": "svm1",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/b68f961b-4cee-11e9-930a-005056a7f717"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+        "name": "fv",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717"
+          }
+        }
+      },
+      "id": 1,
+      "name": "qt1",
+      "_links": {
+        "self": {
+          "href": "/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/1"
+        }
+      }
+    },
+    {
+      "svm": {
+        "uuid": "b68f961b-4cee-11e9-930a-005056a7f717",
+        "name": "svm1",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/b68f961b-4cee-11e9-930a-005056a7f717"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+        "name": "fv",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717"
+          }
+        }
+      },
+      "id": 2,
+      "name": "qt2",
+      "_links": {
+        "self": {
+          "href": "/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/2"
+        }
+      }
+    }
+  ],
+  "num_records": 3,
+  "_links": {
+    "self": {
+      "href": "/api/storage/qtrees/?svm.name=svm1&volume.name=fv"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving properties of a specific qtree using a qtree identifier
+
+This API is used to retrieve properties of a specific qtree using qtree.id.
+
+The following example shows how to use the qtree identifier to retrieve all properties of the qtree using the `fields` query parameter.
+
+'''
+
+----
+
+# The API:
+GET /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/2?fields=*' -H 'accept: application/hal+json'
+{
+  "svm": {
+    "uuid": "b68f961b-4cee-11e9-930a-005056a7f717",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/b68f961b-4cee-11e9-930a-005056a7f717"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+    "name": "fv",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717"
+      }
+    }
+  },
+  "id": 2,
+  "name": "qt2",
+  "security_style": "unix",
+  "user": {
+    "name": "unix_user1"
+  },
+  "group": {
+    "name": "unix_group1"
+  },
+  "unix_permissions": 744,
+  "export_policy": {
+    "name": "default",
+    "id": 12884901889,
+    "_links": {
+      "self": {
+        "href": "/api/protocols/nfs/export-policies/12884901889"
+      }
+    }
+  },
+  "qos_policy": {
+    "min_throughput_iops": 0,
+    "min_throughput_mbps": 0,
+    "max_throughput_iops": 1000,
+    "max_throughput_mbps": 0,
+    "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab52",
+    "name": "vs0_auto_gen_policy_39a9522f_ff35_11e9_b0f9_005056a7ab52",
+    "_links": {
+      "self": {
+        "href": "/api/storage/qos/policies/39ac471f-ff35-11e9-b0f9-005056a7ab52"
+      }
+    }
+  },
+  "ext_performance_monitoring": {
+    "enabled": false
+  },
+  "statistics": {
+    "timestamp": "2019-04-09T05:50:42Z",
+    "status": "ok",
+    "iops_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 3,
+      "total": 3
+    },
+    "throughput_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+  },
+  "path": "/fv/qt2",
+  "nas": {
+    "path": "/fv/qt2",
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/2"
+    }
+  }
+}
+----
+
+'''
+
+=== Retrieving properties of a specific qtree using the qtree name
+
+This API is used to retrieve properties of a specific qtree using "qtree.name".
+The following example shows how to retrieve all of the properties belonging to qtree "qt2". The `svm.name` and `volume.name` query parameters are used here along with the qtree name.
+
+'''
+
+----
+
+# The API:
+GET /api/storage/qtrees/
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/qtrees/?svm.name=svm1&volume.name=fv&name=qt2&fields=*' -H 'accept: application/hal+json'
+{
+  "svm": {
+    "uuid": "b68f961b-4cee-11e9-930a-005056a7f717",
+    "name": "svm1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/b68f961b-4cee-11e9-930a-005056a7f717"
+      }
+    }
+  },
+  "volume": {
+    "uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+    "name": "fv",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717"
+      }
+    }
+  },
+  "id": 2,
+  "name": "qt2",
+  "security_style": "unix",
+  "user": {
+    "name": "unix_user1"
+  },
+  "group": {
+    "name": "unix_group1"
+  },
+  "unix_permissions": 744,
+  "export_policy": {
+    "name": "default",
+    "id": 12884901889,
+    "_links": {
+      "self": {
+        "href": "/api/protocols/nfs/export-policies/12884901889"
+      }
+    }
+  },
+  "qos_policy": {
+    "min_throughput_iops": 0,
+    "min_throughput_mbps": 0,
+    "max_throughput_iops": 1000,
+    "max_throughput_mbps": 0,
+    "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab52",
+    "name": "vs0_auto_gen_policy_39a9522f_ff35_11e9_b0f9_005056a7ab52",
+    "_links": {
+      "self": {
+        "href": "/api/storage/qos/policies/39ac471f-ff35-11e9-b0f9-005056a7ab52"
+      }
+    }
+  },
+  "ext_performance_monitoring": {
+    "enabled": false
+  },
+  "statistics": {
+    "timestamp": "2019-04-09T05:50:42Z",
+    "status": "ok",
+    "iops_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 3,
+      "total": 3
+    },
+    "throughput_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/2"
+    }
+  }
+}
+----
+
+'''
+
+=== Updating a qtree
+
+This API is used to update a qtree.
+
+The following example shows how to update properties in a qtree.
+
+'''
+
+----
+
+# The API:
+PATCH /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/2' -H 'accept: application/hal+json' -d '@test_qtree_patch.txt'
+test_qtree_patch.txt(body):
+{
+"security_style": "mixed",
+"user": {
+  "name": "unix_user1"
+},
+"group": {
+  "name": "unix_group1"
+},
+"unix_permissions": 777,
+"export_policy": {
+    "id": "9",
+    "name": "exp1"
+},
+"qos_policy": {
+    "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab53"
+}
+}
+----
+
+'''
+
+=== Renaming a qtree
+
+This API is used to rename a qtree.
+
+The following example below shows how to rename a qtree with a new name.
+
+'''
+
+----
+
+# The API:
+PATCH /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/1' -H 'accept: application/hal+json' -d '{ "name": "new_qt1" }'
+----
+
+'''
+
+=== Deleting a qtree inside a volume of an SVM
+
+This API is used to delete a qtree inside a volume of an SVM.
+
+The following example shows how to delete a qtree.
+
+'''
+
+----
+
+# The API:
+DELETE /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/2" -H 'accept: application/hal+json'
+----
+
+'''
+
+=== Enabling extended performance monitoring on a qtree using PATCH
+
+This API is used to enable extended performance monitoring on a qtree.
+
+The following example shows how to enable extended performance monitoring on a qtree.
+
+'''
+
+----
+
+# The API:
+PATCH /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/1" -H 'accept: application/hal+json' -d '{ "ext_performance_monitoring": { "enabled": "true" }}'
+----
+
+'''
+
+=== Disabling extended performance monitoring on a qtree using PATCH
+
+This API is used to disable extended performance monitoring on a qtree.
+
+The following example shows how to disable extended performance monitoring on a qtree.
+
+'''
+
+----
+
+# The API:
+PATCH /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/1" -H 'accept: application/hal+json' -d '{ "ext_performance_monitoring": { "enabled": "false" }}'
+----
+
+'''
+
+=== Retrieving performance properties for a qtree which has extended performance monitoring enabled
+
+The following example shows how to use a GET request to retrieve performance properties for a qtree which has extended performance monitoring enabled.
+
+'''
+
+----
+
+# The API:
+GET /api/storage/qtrees/{volume.uuid}/{id}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/3?fields=ext_performance_monitoring,statistics,metric' -H 'accept: application/hal+json'
+{
+  "volume": {
+    "uuid": "cb20da45-4f6b-11e9-9a71-005056a7f717",
+    "name": "fv",
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/cb20da45-4f6b-11e9-9a71-005056a7f717"
+      }
+    }
+  },
+  "id": 3,
+  "name": "qt3",
+  "ext_performance_monitoring": {
+    "enabled": true
+  },
+  "statistics": {
+    "timestamp": "2019-04-09T05:50:42Z",
+    "status": "ok",
+    "iops_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "throughput_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+    "latency_raw": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+  },
+  "metric": {
+    "timestamp": "2019-04-09T05:50:00Z",
+    "duration": "PT5M",
+    "status": "ok",
+    "iops": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "throughput": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "latency": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    }
+  },
+  "_links": {
+    "self": {
+      "href": "/api/storage/qtrees/cb20da45-4f6b-11e9-9a71-005056a7f717/3"
+    }
+  }
+}
+----
+
+'''
+
+

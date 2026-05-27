@@ -1,0 +1,54 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_messages_endpoint_overview.html'
+summary: 'Manage the EMS event catalog'
+---
+
+= Manage the EMS event catalog
+
+
+
+== Overview
+
+Allows access to the EMS event catalog. The catalog contains a list of all events supported by the system and their corresponding descriptions, the reason for an event occurrence, and how to correct issues related to the event.
+
+== Example
+
+=== Querying for the first event that has a message name beginning with 'C'
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/messages
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/messages?fields=name&max_records=1&name=C*" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "name": "CR.Data.File.Inaccessible",
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/messages/CR.Data.File.Inaccessible"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/support/ems/messages?fields=name&max_records=1&name=C*"
+  },
+}
+}
+----
+
+

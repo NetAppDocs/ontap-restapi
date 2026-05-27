@@ -1,0 +1,330 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_san_portsets_endpoint_overview.html'
+summary: 'Manage SAN portsets'
+---
+
+= Manage SAN portsets
+
+
+
+== Overview
+
+A portset is a collection of Fibre Channel Protocol and/or iSCSI network interfaces from the portset's SVM.
+
+Portsets are used to limit the network interfaces through which an initiator can connect to mapped LUNs. When a portset is bound to an initiator group (igroup), and the initiator group is mapped to a LUN, the initiators of the initiator group can only reach the LUN through the network interfaces in the portset.
+
+Portsets are not recommended for new configurations. With modern releases of ONTAP, it is recommended to use multiple SVMs and initiator groups with no bound portset to load balance applications over multiple ports on a node. Selective LUN mapping will automatically limit the number of visible paths to a LUN from the client host to those required for efficient access and high availability. The REST portset API is primarily intended for legacy use.
+
+The portset REST API allows you to create, delete, and discover portsets, and to add and remove network interfaces from portsets.
+
+A portset can be bound to one or more initiator groups. An initiator group (igroup) can be bound to at most one portset.
+
+When a portset is created, the `protocol` property is used to restrict member network interfaces to Fibre Channel Protocol (_fcp_), iSCSI (_iscsi_), or both (_mixed_).
+
+Zero or more network interfaces can be supplied when the portset is created. After creation, network interfaces can be added to or removed from the portset using the `/protocols/san/portsets/{portset.uuid}/interfaces` endpoint. See link:post-protocols-san-portsets-interfaces(#-san-portset-interface-create)anddelete-protocols-san-portsets-interfaces-.html<</SAN/portset_interface_create,POST /protocols/san/portsets/{portset.uuid}/interfaces>> and [DELETE /protocols/san/portsets/{portset.uuid}/interfaces/\{name}]  for more details.
+
+== Examples
+
+=== Creating a portset with no network interfaces
+
+The example portset uses the default `mixed` protocol. Note that the `return_records` query parameter is used to obtain the newly created portset in the response.
+
+----
+
+# The API:
+POST /api/protocols/san/portsets
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/portsets?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm" : { "name": "svm1" }, "name": "portset1" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "5d7b1dfa-1ed7-11eb-8b0f-005056bb3521",
+    "svm": {
+      "uuid": "31484775-1e23-11eb-b2a8-005056bb3521",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/31484775-1e23-11eb-b2a8-005056bb3521"
+        }
+      }
+    },
+    "name": "portset1",
+    "protocol": "mixed",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/5d7b1dfa-1ed7-11eb-8b0f-005056bb3521"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an iSCSI portset with two network interfaces
+
+Note that the `return_records` query parameter is used to obtain the newly created portset in the response.
+
+----
+
+# The API:
+POST /api/protocols/san/portsets
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/portsets?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm" : { "name": "svm1" }, "name": "portset2", "protocol": "iscsi", "interfaces": [ { "ip": { "name": "lif1" } }, { "ip": { "name": "lif2" } } ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "816c0d49-1ed7-11eb-8b0f-005056bb3521",
+    "svm": {
+      "uuid": "31484775-1e23-11eb-b2a8-005056bb3521",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/31484775-1e23-11eb-b2a8-005056bb3521"
+        }
+      }
+    },
+    "name": "portset2",
+    "protocol": "iscsi",
+    "interfaces": [
+      {
+        "uuid": "f37bfb01-1e2a-11eb-b2a8-005056bb3521",
+        "ip": {
+          "uuid": "f37bfb01-1e2a-11eb-b2a8-005056bb3521",
+          "name": "lif1",
+          "ip": {
+            "address": "192.168.1.100"
+          },
+          "_links": {
+            "self": {
+              "href": "/api/network/ip/interfaces/f37bfb01-1e2a-11eb-b2a8-005056bb3521"
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/portsets/816c0d49-1ed7-11eb-8b0f-005056bb3521/interfaces/f37bfb01-1e2a-11eb-b2a8-005056bb3521"
+          }
+        }
+      },
+      {
+        "uuid": "f92178e7-1e2a-11eb-b2a8-005056bb3521",
+        "ip": {
+          "uuid": "f92178e7-1e2a-11eb-b2a8-005056bb3521",
+          "name": "lif2",
+          "ip": {
+            "address": "192.168.1.101"
+          },
+          "_links": {
+            "self": {
+              "href": "/api/network/ip/interfaces/f92178e7-1e2a-11eb-b2a8-005056bb3521"
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "/api/protocols/san/portsets/816c0d49-1ed7-11eb-8b0f-005056bb3521/interfaces/f92178e7-1e2a-11eb-b2a8-005056bb3521"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/816c0d49-1ed7-11eb-8b0f-005056bb3521"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving a summary of all portsets
+
+----
+
+# The API:
+GET /api/protocols/san/portsets
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/portsets' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "5d7b1dfa-1ed7-11eb-8b0f-005056bb3521",
+    "name": "portset1",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/5d7b1dfa-1ed7-11eb-8b0f-005056bb3521"
+      }
+    }
+  },
+  {
+    "uuid": "816c0d49-1ed7-11eb-8b0f-005056bb3521",
+    "name": "portset2",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/816c0d49-1ed7-11eb-8b0f-005056bb3521"
+      }
+    }
+  },
+  {
+    "uuid": "b716b4d2-1ed7-11eb-8b0f-005056bb3521",
+    "name": "portset3",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/b716b4d2-1ed7-11eb-8b0f-005056bb3521"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/portsets"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving details for a specific portset
+
+----
+
+# The API:
+GET /api/protocols/san/portsets/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/san/portsets/b716b4d2-1ed7-11eb-8b0f-005056bb3521' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"uuid": "b716b4d2-1ed7-11eb-8b0f-005056bb3521",
+"svm": {
+  "uuid": "31484775-1e23-11eb-b2a8-005056bb3521",
+  "name": "svm1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/31484775-1e23-11eb-b2a8-005056bb3521"
+    }
+  }
+},
+"name": "portset3",
+"protocol": "fcp",
+"interfaces": [
+  {
+    "uuid": "164eb052-1e2b-11eb-b2a8-005056bb3521",
+    "fc": {
+      "uuid": "164eb052-1e2b-11eb-b2a8-005056bb3521",
+      "name": "lif5",
+      "wwpn": "20:01:00:50:56:bb:35:21",
+      "_links": {
+        "self": {
+          "href": "/api/network/fc/interfaces/164eb052-1e2b-11eb-b2a8-005056bb3521"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/b716b4d2-1ed7-11eb-8b0f-005056bb3521/interfaces/164eb052-1e2b-11eb-b2a8-005056bb3521"
+      }
+    }
+  },
+  {
+    "uuid": "197ba2b7-1e2b-11eb-b2a8-005056bb3521",
+    "fc": {
+      "uuid": "197ba2b7-1e2b-11eb-b2a8-005056bb3521",
+      "name": "lif6",
+      "wwpn": "20:02:00:50:56:bb:35:21",
+      "_links": {
+        "self": {
+          "href": "/api/network/fc/interfaces/197ba2b7-1e2b-11eb-b2a8-005056bb3521"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/protocols/san/portsets/b716b4d2-1ed7-11eb-8b0f-005056bb3521/interfaces/197ba2b7-1e2b-11eb-b2a8-005056bb3521"
+      }
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/protocols/san/portsets/b716b4d2-1ed7-11eb-8b0f-005056bb3521"
+  }
+}
+}
+----
+
+'''
+
+=== Deleting a portset
+
+----
+
+# The API:
+DELETE /api/protocols/san/portsets/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/portsets/b716b4d2-1ed7-11eb-8b0f-005056bb3521' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Adding a network interface to a portset
+
+----
+
+# The API:
+POST /api/protocols/san/portsets/{uuid}/interfaces
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/portsets/5d7b1dfa-1ed7-11eb-8b0f-005056bb3521/interfaces' -H 'Accept: application/hal+json' -d '{ "fc": { "name": "lif4" } }'
+}
+----
+
+'''
+
+=== Adding multiple network interfaces to a portset in a single call
+
+----
+
+# The API:
+POST /api/protocols/san/portsets/{uuid}/interfaces
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/san/portsets/5d7b1dfa-1ed7-11eb-8b0f-005056bb3521/interfaces' -H 'Accept: application/hal+json' -d '{ "records": [ { "ip": { "name": "lif1" } },  { "ip": { "name": "lif2" } }, { "fc": { "name": "lif5" } } ] }'
+----
+
+'''
+
+=== Removing a network interface from a portset
+
+----
+
+# The API:
+DELETE /api/protocols/san/portsets/{uuid}/interfaces/f92178e7-1e2a-11eb-b2a8-005056bb3521
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/san/portsets/5d7b1dfa-1ed7-11eb-8b0f-005056bb3521/interfaces/f92178e7-1e2a-11eb-b2a8-005056bb3521' -H 'Accept: application/hal+json'
+----
+
+

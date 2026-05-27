@@ -1,0 +1,401 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-cifs-domains-preferred-domain-controllers.html'
+summary: 'Create the CIFS domain preferred DC configuration for an SVM'
+---
+
+= Create the CIFS domain preferred DC configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/cifs/domains/{svm.uuid}/preferred-domain-controllers`#
+
+*Introduced In:* 9.10
+
+Creates a CIFS preferred DC configuration for an SVM.
+
+== Important notes
+
+* In the case of bulk POST requests, the create operation should be performed serially since there can be interdependence between records. In order to avoid issues, it is advisable to always use the query parameter "serial_records=true".
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the preferred-dc.
+* `domain` - Fully Qualified Domain Name.
+* `server_ip` - IPv4/IPv6 address of the Preferred Domain Controller.
+
+== The following parameters are optional:
+
+* skip_config_validation
+
+== Related ONTAP commands
+
+* `vserver cifs domain preferred-dc add`
+
+== Learn more
+
+* link:protocols_cifs_domains_svm.uuid_preferred-domain-controllers_endpoint_overview.html[DOC /protocols/cifs/domains/{svm.uuid}/preferred-domain-controllers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|skip_config_validation
+|boolean
+|query
+|False
+a|Skip the validation of the specified preferred DC configuration.
+
+* Default value:
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fqdn
+|string
+a|Fully Qualified Domain Name.
+
+
+|server_ip
+|string
+a|IP address of the preferred domain controller (DC). The address can be either an IPv4 or an IPv6 address.
+
+
+|status
+|link:#status[status]
+a|Status of CIFS preferred domain controller.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "fqdn": "test.com",
+  "server_ip": "4.4.4.4",
+  "status": {
+    "details": "Response time (msec): 111",
+    "reachable": 1
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fqdn
+|string
+a|Fully Qualified Domain Name.
+
+
+|server_ip
+|string
+a|IP address of the preferred domain controller (DC). The address can be either an IPv4 or an IPv6 address.
+
+
+|status
+|link:#status[status]
+a|Status of CIFS preferred domain controller.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "fqdn": "test.com",
+  "server_ip": "4.4.4.4",
+  "status": {
+    "details": "Response time (msec): 111",
+    "reachable": 1
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2621516
+| Only data SVMs allowed.
+
+| 655918
+| The fully qualified domain name cannot be longer than 254 bytes.
+
+| 656408
+| RPC failure occurred during the CIFS preferred-dc configuration validation.
+
+| 656407
+| Failed to validate CIFS preferred-dc for domain. Reason: Configuration not found at SecD. Contact technical support for assistance.
+
+| 655366
+| Invalid domain controller.
+
+| 655506
+| Failed to add preferred-dc.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Status of CIFS preferred domain controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|details
+|string
+a|Provides a detailed description of the state if the state is 'down' or
+the response time of the DNS server if the state is 'up'.
+
+
+|reachable
+|boolean
+a|Indicates whether or not the domain controller is reachable.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_domain_preferred_dc]
+[.api-collapsible-fifth-title]
+cifs_domain_preferred_dc
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fqdn
+|string
+a|Fully Qualified Domain Name.
+
+
+|server_ip
+|string
+a|IP address of the preferred domain controller (DC). The address can be either an IPv4 or an IPv6 address.
+
+
+|status
+|link:#status[status]
+a|Status of CIFS preferred domain controller.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

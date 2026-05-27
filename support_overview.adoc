@@ -1,0 +1,107 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_overview.html'
+summary: 'ONTAP REST API Support endpoints'
+---
+
+= ONTAP REST API Support endpoints
+
+
+
+== Overview
+
+You can use ONTAP support APIs to manage configuration backups, autosupport settings, and event handling.
+
+'''
+
+== Configuration backups
+
+Configuration backups are copies of node and cluster settings saved to an external server.
+Single-node clusters must have configuration backups as protection against corruption of the configuration database. Multi-node clusters back up the configuration automatically between the nodes in the cluster.
+
+'''
+
+== Event Management System (EMS)
+
+The Event Management System (EMS) collects and processes events, and sends notification of the events through various reporting mechanisms.
+
+== Examples
+
+The following example configures EMS to send a support email when a WAFL event is observed with a severity of error, alert, or emergency.
+
+=== Configuring the system-wide email parameters
+
+[,json]
+----
+
+# The API:
+PATCH /support/ems
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/ems" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_config_patch.txt"
+test_ems_config_patch.txt(body):
+{
+"mail_from": "administrator@mycompany.com",
+"mail_server": "smtp@mycompany.com"
+}
+
+# The response:
+200 OK
+----
+
+=== Configuring a filter with an enclosed rule
+
+[,json]
+----
+
+# The API:
+POST /support/ems/filters
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/filters" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_filters_post.txt"
+test_ems_filters_post.txt(body):
+{
+"name": "error-wafl",
+"rules": [
+  {
+    "index": 1,
+    "type": "include",
+    "message_criteria": {
+      "name_pattern": "wafl.*",
+      "severities": "emergency,alert,error"
+    }
+  }
+]
+}
+
+# The response:
+201 Created
+----
+
+=== Setting up an email destination
+
+[,json]
+----
+
+# The API:
+POST /support/ems/destinations
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/destinations" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_dest_post.txt"
+test_ems_dest_post.txt(body):
+{
+"name": "Technician_Email",
+"type": "email",
+"destination": "technician@mycompany.com",
+"filters": [
+  { "name" : "error-wafl" }
+]
+}
+
+# The response:
+201 Created
+----
+
+

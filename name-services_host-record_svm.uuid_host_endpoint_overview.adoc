@@ -1,0 +1,85 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_host-record_svm.uuid_host_endpoint_overview.html'
+summary: 'View host records'
+---
+
+= View host records
+
+
+
+== Overview
+
+Displays the IP address of the specified hostname and vice-versa.
+
+== Retrieving the host table entries
+
+The host-record GET endpoint to retrieve the hostname for a given Ip address and vice-versa.
+
+== Examples
+
+=== Retrieving the hostname for a given IP address.
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/host-record/{svm.uuid}/{host}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/host-record/77e23bd4-a8fe-11eb-99e0-0050568e14ff/127.0.0.1" -H "accept: application/json"
+
+# The response:
+ {
+"svm": {
+  "uuid": "77e23bd4-a8fe-11eb-99e0-0050568e14ff",
+  "name": "svm1"
+ },
+"host": "127.0.0.1",
+"ipv4_addresses": [
+  "127.0.0.1"
+ ],
+"hostname": "localhost",
+"source": "Files"
+ }
+----
+
+'''
+
+=== Retrieving the Ip address for a given hostname.
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/host-record/{svm.uuid}/{host}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/host-record/77e23bd4-a8fe-11eb-99e0-0050568e14ff/localhost" -H "accept: application/json"
+
+# The response:
+ {
+"svm": {
+  "uuid": "77e23bd4-a8fe-11eb-99e0-0050568e14ff",
+  "name": "svm1"
+},
+"host": "localhost",
+"ipv4_addresses": [
+  "127.0.0.1"
+],
+"ipv6_addresses": [
+  "::1"
+],
+"hostname": "localhost",
+"canonical_name": "localhost",
+"source": "Files"
+ }
+----
+
+'''
+
+

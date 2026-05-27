@@ -1,0 +1,380 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-licensing-capacity-pools-.html'
+summary: 'Retrieve capacity pool information'
+---
+
+= Retrieve capacity pool information
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/licensing/capacity-pools/{serial_number}`#
+
+*Introduced In:* 9.8
+
+Retrieves information about the capacity pool.
+
+== Learn more
+
+* link:cluster_licensing_capacity-pools_endpoint_overview.html[DOC /cluster/licensing/capacity-pools]
+
+== Related ONTAP commands
+
+* `system license show-status`
+* `system license show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|serial_number
+|string
+|path
+|True
+a|Serial number of the capacity pool license.
+
+
+|nodes.used_size
+|integer
+|query
+|False
+a|Filter by nodes.used_size
+
+
+|nodes.node.name
+|string
+|query
+|False
+a|Filter by nodes.node.name
+
+
+|nodes.node.uuid
+|string
+|query
+|False
+a|Filter by nodes.node.uuid
+
+
+|license_manager.uuid
+|string
+|query
+|False
+a|Filter by license_manager.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|license_manager
+|link:#license_manager[license_manager]
+a|License manager instance where this capacity pool license in installed.
+
+
+|nodes
+|array[link:#nodes[nodes]]
+a|Nodes in the cluster associated with this capacity pool.
+
+
+|serial_number
+|string
+a|Serial number of the capacity pool license.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "license_manager": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "uuid": "4ea7a442-86d1-11e0-ae1c-112233445566"
+  },
+  "nodes": [
+    {
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "used_size": 0
+    }
+  ],
+  "serial_number": 390000100
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#license_manager]
+[.api-collapsible-fifth-title]
+license_manager
+
+License manager instance where this capacity pool license in installed.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node_reference]
+[.api-collapsible-fifth-title]
+node_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#nodes]
+[.api-collapsible-fifth-title]
+nodes
+
+Information on a node from the capacity licensing perspective.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node_reference[node_reference]
+a|
+
+|used_size
+|integer
+a|Capacity, in bytes, that is currently used by the node.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

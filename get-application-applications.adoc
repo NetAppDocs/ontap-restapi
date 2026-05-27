@@ -1,0 +1,3989 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-application-applications.html'
+summary: 'Retrieve applications'
+---
+
+= Retrieve applications
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/application/applications`#
+
+*Introduced In:* 9.6
+
+Retrieves applications.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `<template>` the property corresponding to the `template.name` of the application
+
+== Query examples
+
+Numerous queries are available for classifying and sorting applications:
+
+. Return a list of applications sorted by name.
++
+----
+  GET /application/applications?order_by=name
+----
+
+. Return a list of applications for a specific SVM.
++
+----
+  GET /application/applications?svm.name=<name>
+----
+
+. Return a list of all SQL applications.
++
+----
+  GET /application/applications?template.name=sql*
+----
+
+. Return a list of all applications that can be accessed via SAN.
+
+----
+  GET /application/applications?template.protocol=san
+----
+
+. Return the top five applications consuming the most IOPS.
+
+----
+  GET /application/applications?order_by=statistics.iops.total desc&max_records=5
+----
+
+The above examples are not comprehensive. There are many more properties available for queries. Also, multiple queries can be mixed and matched with other query parameters for a large variety of requests. See the per-property documentation below for the full list of supported query parameters.
+
+== Learn more
+
+* link:application_overview.html[DOC /application]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|query
+|False
+a|Filter by UUID
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|template.name
+|string
+|query
+|False
+a|Filter by template.name
+
+
+|template.version
+|string
+|query
+|False
+a|Filter by template.version
+
+
+|template.protocol
+|string
+|query
+|False
+a|Filter by template.protocol
+
+
+|generation
+|string
+|query
+|False
+a|Filter by generation
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|protection_granularity
+|string
+|query
+|False
+a|Filter by protection granularity
+
+
+|rpo.is_supported
+|string
+|query
+|False
+a|Filter by rpo.is_supported
+
+
+|rpo.local.name
+|string
+|query
+|False
+a|Filter by rpo.local.name
+
+
+|rpo.local.description
+|string
+|query
+|False
+a|Filter by rpo.local.description
+
+
+|rpo.remote.name
+|string
+|query
+|False
+a|Filter by rpo.remote.name
+
+
+|rpo.remote.description
+|string
+|query
+|False
+a|Filter by rpo.remote.description
+
+
+|rpo.components.name
+|string
+|query
+|False
+a|Filter by rpo.components.name
+
+
+|rpo.components.uuid
+|string
+|query
+|False
+a|Filter by rpo.components.uuid
+
+
+|rpo.components.rpo.local.name
+|string
+|query
+|False
+a|Filter by rpo.components.rpo.local.name
+
+* Introduced in: 9.7
+
+
+|rpo.components.rpo.local.description
+|string
+|query
+|False
+a|Filter by rpo.components.rpo.local.description
+
+
+|rpo.components.rpo.remote.name
+|string
+|query
+|False
+a|Filter by rpo.components.rpo.remote.name
+
+
+|rpo.components.rpo.remote.description
+|string
+|query
+|False
+a|Filter by rpo.components.rpo.remote.description
+
+
+|statistics.space.provisioned
+|string
+|query
+|False
+a|Filter by statistics.space.provisioned
+
+
+|statistics.space.used
+|string
+|query
+|False
+a|Filter by statistics.space.used
+
+
+|statistics.space.used_percent
+|string
+|query
+|False
+a|Filter by statistics.space.used_percent
+
+
+|statistics.space.used_excluding_reserves
+|string
+|query
+|False
+a|Filter by statistics.space.used_excluding_reserves
+
+
+|statistics.space.logical_used
+|string
+|query
+|False
+a|Filter by statistics.space.logical_used
+
+
+|statistics.space.reserved_unused
+|string
+|query
+|False
+a|Filter by statistics.space.reserved_unused
+
+
+|statistics.space.available
+|string
+|query
+|False
+a|Filter by statistics.space.available
+
+
+|statistics.space.savings
+|string
+|query
+|False
+a|Filter by statistics.space.savings
+
+
+|statistics.iops.total
+|string
+|query
+|False
+a|Filter by statistics.iops.total
+
+
+|statistics.iops.per_tb
+|string
+|query
+|False
+a|Filter by statistics.iops.per_tb
+
+
+|statistics.snapshot.reserve
+|string
+|query
+|False
+a|Filter by statistics.snapshot.reserve
+
+
+|statistics.snapshot.used
+|string
+|query
+|False
+a|Filter by statistics.snapshot.used
+
+
+|statistics.latency.raw
+|string
+|query
+|False
+a|Filter by statistics.latency.raw
+
+
+|statistics.latency.average
+|string
+|query
+|False
+a|Filter by statistics.latency.average
+
+
+|statistics.statistics_incomplete
+|string
+|query
+|False
+a|Filter by statistics.statistics_incomplete
+
+
+|statistics.shared_storage_pool
+|string
+|query
+|False
+a|Filter by statistics.shared_storage_pool
+
+
+|statistics.components.name
+|string
+|query
+|False
+a|Filter by statistics.components.name
+
+
+|statistics.components.uuid
+|string
+|query
+|False
+a|Filter by statistics.components.uuid
+
+
+|statistics.components.storage_service.name
+|string
+|query
+|False
+a|Filter by statistics.components.storage_service.name
+
+
+|statistics.components.space.provisioned
+|string
+|query
+|False
+a|Filter by statistics.components.space.provisioned
+
+
+|statistics.components.space.used
+|string
+|query
+|False
+a|Filter by statistics.components.space.used
+
+
+|statistics.components.space.used_percent
+|string
+|query
+|False
+a|Filter by statistics.components.space.used_percent
+
+
+|statistics.components.space.used_excluding_reserves
+|string
+|query
+|False
+a|Filter by statistics.components.space.used_excluding_reserves
+
+
+|statistics.components.space.logical_used
+|string
+|query
+|False
+a|Filter by statistics.components.space.logical_used
+
+
+|statistics.components.space.reserved_unused
+|string
+|query
+|False
+a|Filter by statistics.components.space.reserved_unused
+
+
+|statistics.components.space.available
+|string
+|query
+|False
+a|Filter by statistics.components.space.available
+
+
+|statistics.components.space.savings
+|string
+|query
+|False
+a|Filter by statistics.components.space.savings
+
+
+|statistics.components.iops.total
+|string
+|query
+|False
+a|Filter by statistics.components.iops.total
+
+
+|statistics.components.iops.per_tb
+|string
+|query
+|False
+a|Filter by statistics.components.iops.per_tb
+
+
+|statistics.components.snapshot.reserve
+|string
+|query
+|False
+a|Filter by statistics.components.snapshot.reserve
+
+
+|statistics.components.snapshot.used
+|string
+|query
+|False
+a|Filter by statistics.components.snapshot.used
+
+
+|statistics.components.latency.raw
+|string
+|query
+|False
+a|Filter by statistics.components.latency.raw
+
+
+|statistics.components.latency.average
+|string
+|query
+|False
+a|Filter by statistics.components.latency.average
+
+
+|statistics.components.statistics_incomplete
+|string
+|query
+|False
+a|Filter by statistics.components.statistics_incomplete
+
+
+|statistics.components.shared_storage_pool
+|string
+|query
+|False
+a|Filter by statistics.components.shared_storage_pool
+
+
+|smart_container
+|string
+|query
+|False
+a|Filter by smart_container
+
+* Introduced in: 9.7
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#application[application]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        },
+        "snapshots": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "creation_timestamp": "string",
+      "delete_data": true,
+      "generation": 0,
+      "name": "string",
+      "nas": {
+        "application_components": [
+          {}
+        ],
+        "cifs_access": [
+          {
+            "access": "string",
+            "user_or_group": "string"
+          }
+        ],
+        "cifs_share_name": "string",
+        "exclude_aggregates": [
+          {
+            "name": "string",
+            "uuid": "string"
+          }
+        ],
+        "nfs_access": [
+          {
+            "access": "string",
+            "host": "string"
+          }
+        ],
+        "protection_type": {
+          "local_policy": "string",
+          "local_rpo": "string",
+          "remote_rpo": "string"
+        }
+      },
+      "nvme": {
+        "components": [
+          {
+            "name": "string",
+            "os_type": "string",
+            "performance": {
+              "storage_service": {
+                "name": "string"
+              }
+            },
+            "qos": {
+              "policy": {
+                "name": "string",
+                "uuid": "string"
+              }
+            },
+            "subsystem": {
+              "hosts": [
+                {
+                  "dh_hmac_chap": {
+                    "group_size": "string",
+                    "hash_function": "string"
+                  },
+                  "nqn": "string",
+                  "priority": "string"
+                }
+              ],
+              "name": "string",
+              "os_type": "string",
+              "uuid": "string"
+            },
+            "tiering": {
+              "policy": "string"
+            }
+          }
+        ],
+        "os_type": "string",
+        "rpo": {
+          "local": {
+            "name": "string",
+            "policy": "string"
+          },
+          "remote": {
+            "name": "string"
+          }
+        }
+      },
+      "protection_granularity": "string",
+      "rpo": {
+        "components": [
+          {
+            "name": "string",
+            "rpo": {
+              "local": {
+                "description": "string",
+                "name": "string"
+              },
+              "remote": {
+                "description": "string",
+                "name": "string"
+              }
+            },
+            "uuid": "string"
+          }
+        ],
+        "local": {
+          "description": "string",
+          "name": "string"
+        },
+        "remote": {
+          "description": "string",
+          "name": "string"
+        }
+      },
+      "s3_bucket": {
+        "application_components": [
+          {
+            "access_policies": [
+              {
+                "actions": [
+                  "string"
+                ],
+                "conditions": [
+                  {
+                    "delimiters": [
+                      "string"
+                    ],
+                    "max_keys": [
+                      "integer"
+                    ],
+                    "operator": "string",
+                    "prefixes": [
+                      "string"
+                    ],
+                    "source_ips": [
+                      "string"
+                    ],
+                    "usernames": [
+                      "string"
+                    ]
+                  }
+                ],
+                "effect": "string",
+                "principals": [
+                  "string"
+                ],
+                "resources": [
+                  "string"
+                ],
+                "sid": "string"
+              }
+            ],
+            "bucket_endpoint_type": "string",
+            "comment": "string",
+            "default_retention_period": "string",
+            "exclude_aggregates": [
+              {
+                "name": "string",
+                "uuid": "string"
+              }
+            ],
+            "name": "string",
+            "nas_path": "string",
+            "qos": {
+              "policy": {
+                "name": "string",
+                "uuid": "string"
+              }
+            },
+            "retention_mode": "string",
+            "snapshot_policy": {
+              "name": "string",
+              "uuid": "string"
+            },
+            "storage_service": {
+              "name": "string"
+            },
+            "uuid": "string",
+            "versioning_state": "string"
+          }
+        ],
+        "protection_type": {
+          "remote_rpo": "string"
+        }
+      },
+      "san": {
+        "application_components": [
+          {
+            "igroup_name": "string",
+            "name": "string",
+            "os_type": "string",
+            "qos": {
+              "policy": {
+                "name": "string",
+                "uuid": "string"
+              }
+            },
+            "storage_service": {
+              "name": "string"
+            },
+            "tiering": {
+              "policy": "string"
+            }
+          }
+        ],
+        "exclude_aggregates": [
+          {
+            "name": "string",
+            "uuid": "string"
+          }
+        ],
+        "os_type": "string",
+        "protection_type": {
+          "local_policy": "string",
+          "local_rpo": "string",
+          "remote_rpo": "string"
+        }
+      },
+      "state": "string",
+      "statistics": {
+        "components": [
+          {
+            "iops": {
+              "per_tb": 0,
+              "total": 0
+            },
+            "latency": {
+              "average": 0,
+              "raw": 0
+            },
+            "name": "string",
+            "snapshot": {
+              "reserve": 0,
+              "used": 0
+            },
+            "space": {
+              "available": 0,
+              "logical_used": 0,
+              "provisioned": 0,
+              "reserved_unused": 0,
+              "savings": 0,
+              "used": 0,
+              "used_excluding_reserves": 0,
+              "used_percent": 0
+            },
+            "storage_service": {
+              "name": "string",
+              "uuid": "string"
+            },
+            "uuid": "string"
+          }
+        ],
+        "iops": {
+          "per_tb": 0,
+          "total": 0
+        },
+        "latency": {
+          "average": 0,
+          "raw": 0
+        },
+        "snapshot": {
+          "reserve": 0,
+          "used": 0
+        },
+        "space": {
+          "available": 0,
+          "logical_used": 0,
+          "provisioned": 0,
+          "reserved_unused": 0,
+          "savings": 0,
+          "used": 0,
+          "used_excluding_reserves": 0,
+          "used_percent": 0
+        }
+      },
+      "svm": {
+        "name": "string",
+        "uuid": "string"
+      },
+      "template": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "string",
+        "protocol": "string",
+        "version": 0
+      },
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|snapshots
+|link:#href[href]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the database.
+
+
+|===
+
+
+[#dataset]
+[.api-collapsible-fifth-title]
+dataset
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|element_count
+|integer
+a|The number of storage elements (LUNs for SAN) of the database to maintain.  Must be an even number between 2 and 16.  Odd numbers will be rounded up to the next even number within range.
+
+
+|replication_factor
+|integer
+a|The number of data bearing members of the replicaset, including 1 primary and at least 1 secondary.
+
+
+|size
+|integer
+a|The size of the database. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+[#initiator_objects]
+[.api-collapsible-fifth-title]
+initiator_objects
+[#mongo_db_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+mongo_db_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#protection_type]
+[.api-collapsible-fifth-title]
+protection_type
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_rpo
+|string
+a|The local RPO of the application.
+
+
+|remote_rpo
+|string
+a|The remote RPO of the application.
+
+
+|===
+
+
+[#secondary_igroups]
+[.api-collapsible-fifth-title]
+secondary_igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the initiator group for each secondary.
+
+
+|===
+
+
+[#mongo_db_on_san]
+[.api-collapsible-fifth-title]
+mongo_db_on_san
+
+MongoDB using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dataset
+|link:#dataset[dataset]
+a|
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|primary_igroup_name
+|string
+a|The initiator group for the primary.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|secondary_igroups
+|array[link:#secondary_igroups[secondary_igroups]]
+a|
+
+|===
+
+
+[#export_policy]
+[.api-collapsible-fifth-title]
+export_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|The ID of an existing NFS export policy.
+
+
+|name
+|string
+a|The name of an existing NFS export policy.
+
+
+|===
+
+
+[#component]
+[.api-collapsible-fifth-title]
+component
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the source component.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the source SVM.
+
+
+|===
+
+
+[#origin]
+[.api-collapsible-fifth-title]
+origin
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|component
+|link:#component[component]
+a|
+
+|svm
+|link:#svm[svm]
+a|
+
+|===
+
+
+[#flexcache]
+[.api-collapsible-fifth-title]
+flexcache
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dr_cache
+|boolean
+a|Dr-cache is a FlexCache volume create time option that has the same flexgroup-msid as that of the origin of a FlexCache volume. By default, dr-cache is disabled. The flexgroup-msid of the FlexCache volume does not need to be same as that of the origin of a FlexCache volume.
+
+
+|origin
+|link:#origin[origin]
+a|
+
+|===
+
+
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of an existing QoS policy.
+
+
+|uuid
+|string
+a|The UUID of an existing QoS policy. Usage: <UUID>
+
+
+|===
+
+
+[#qos]
+[.api-collapsible-fifth-title]
+qos
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|link:#policy[policy]
+a|
+
+|===
+
+
+[#retention]
+[.api-collapsible-fifth-title]
+retention
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default
+|string
+a|Specifies the default retention period that is applied to files while committing them to the WORM state without an associated retention period. The retention value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A duration specified for years, months, and days is represented in the ISO-8601 format as quot;Plt;num>Y&quot;, &quot;P<num>M&quot;, &quot;P<num>D&quot; respectively, for example &quot;P10Y&quot; represents a duration of 10 years. A duration in hours and minutes is represented by &quot;PT<num>H&quot; and &quot;PT<num>M&quot; respectively. The retention string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example &quot;P1Y10M&quot; is not supported. Apart from the duration specified in the ISO-8601 format, the duration field also accepts the string &quot;infinite&quot; to set an infinite retention period and the string &quot;unspecified&quot; to set an unspecified retention period.
+
+
+|maximum
+|string
+a|Specifies the maximum allowed retention period for files committed to the WORM state on the volume. The retention value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A duration specified for years, months, and days is represented in the ISO-8601 format as &quot;P<num>Y&quot;, &quot;P<num>M&quot;, &quot;P<num>D&quot; respectively, for example &quot;P10Y&quot; represents a duration of 10 years. A duration in hours and minutes is represented by &quot;PT<num>H&quot; and &quot;PT<num>M&quot; respectively. The retention string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example &quot;P1Y10M&quot; is not supported. Apart from the duration specified in the ISO-8601 format, the duration field also accepts the string &quot;infinite&quot; to set an infinite retention period.
+
+
+|minimum
+|string
+a|Specifies the minimum allowed retention period for files committed to the WORM state on the volume. The retention value represents a duration and must be specified in the ISO-8601 duration format. The retention period can be in years, months, days, hours, and minutes. A duration specified for years, month,s and days is represented in the ISO-8601 format as &quot;P<num>Y&quot;, &quot;P<num>M&quot;, &quot;P<num>D&quot; respectively, for example &quot;P10Y&quot; represents a duration of 10 years. A duration in hours and minutes is represented by &quot;PT<num>H&quot; and &quot;PT<num>M&quot; respectively. The retention string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example &quot;P1Y10M&quot; is not supported. Apart from the duration specified in the ISO-8601 format, the duration field also accepts the string &quot;infinite&quot; to set an infinite retention period.
+
+
+|===
+
+
+[#snaplock]
+[.api-collapsible-fifth-title]
+snaplock
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|append_mode_enabled
+|boolean
+a|Specifies if the volume append mode is enabled or disabled. When it is enabled, all the files created with write permissions on the volume are, by default, WORM appendable files. The user can append the data to a WORM appendable file but cannot modify the existing contents of the file nor delete the file until it expires.
+
+
+|autocommit_period
+|string
+a|Specifies the autocommit period for SnapLock volume. All files which are not modified for a period greater than the autocommit period of the volume are committed to the WORM state. The autocommit period value represents a duration and must be specified in the ISO-8601 duration format. The autocommit period can be in years, months, days, hours, and minutes. A period specified for years, months, and days is represented in the ISO-8601 format as &quot;P<num>Y&quot;, &quot;P<num>M&quot;, &quot;P<num>D&quot; respectively, for example &quot;P10Y&quot; represents a duration of 10 years. A duration in hours and minutes is represented by &quot;PT<num>H&quot; and &quot;PT<num>M&quot; respectively. The period string must contain only a single time element that is, either years, months, days, hours, or minutes. A duration which combines different periods is not supported, for example &quot;P1Y10M&quot; is not supported. Apart from the duration specified in the ISO-8601 format, the autocommit field also accepts the string &quot;none&quot;.
+
+
+|retention
+|link:#retention[retention]
+a|
+
+|snaplock_type
+|string
+a|The SnapLock type of the smart container.
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the application component.
+
+
+|===
+
+
+[#object_stores]
+[.api-collapsible-fifth-title]
+object_stores
+[#nas_application_components_tiering]
+[.api-collapsible-fifth-title]
+nas_application_components_tiering
+
+application-components.tiering
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|string
+a|The storage tiering type of the application component.
+
+
+|===
+
+
+[#application_components]
+[.api-collapsible-fifth-title]
+application_components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|export_policy
+|link:#export_policy[export_policy]
+a|
+
+|flexcache
+|link:#flexcache[flexcache]
+a|
+
+|name
+|string
+a|The name of the application component.
+
+
+|qos
+|link:#qos[qos]
+a|
+
+|scale_out
+|boolean
+a|Denotes a Flexgroup.
+
+
+|share_count
+|integer
+a|The number of shares in the application component.
+
+
+|snaplock
+|link:#snaplock[snaplock]
+a|
+
+|snapshot_locking_enabled
+|boolean
+a|Indicates whether Snapshot copy locking is enabled on the volume.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|tiering
+|link:#nas_application_components_tiering[nas_application_components_tiering]
+a|application-components.tiering
+
+
+|total_size
+|integer
+a|The total size of the application component, split across the member shares. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|===
+
+
+[#app_cifs_access]
+[.api-collapsible-fifth-title]
+app_cifs_access
+
+The list of CIFS access controls. You must provide either 'user_or_group' or 'access' to enable CIFS access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|The CIFS access granted to the user or group.
+
+
+|user_or_group
+|string
+a|The name of the CIFS user or group that will be granted access.
+
+
+|===
+
+
+[#exclude_aggregates]
+[.api-collapsible-fifth-title]
+exclude_aggregates
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the aggregate to exclude. Usage: <aggregate name>
+
+
+|uuid
+|string
+a|The ID of the aggregate to exclude. Usage: <UUID>
+
+
+|===
+
+
+[#app_nfs_access]
+[.api-collapsible-fifth-title]
+app_nfs_access
+
+The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|The NFS access granted.
+
+
+|host
+|string
+a|The name of the NFS entity granted access.
+
+
+|===
+
+
+[#protection_type]
+[.api-collapsible-fifth-title]
+protection_type
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_policy
+|string
+a|The Snapshot copy policy to apply to each volume in the smart container. This property is only supported for smart containers. Usage: <snapshot policy>
+
+
+|local_rpo
+|string
+a|The local RPO of the application.
+
+
+|remote_rpo
+|string
+a|The remote RPO of the application.
+
+
+|===
+
+
+[#nas]
+[.api-collapsible-fifth-title]
+nas
+
+A generic NAS application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_components
+|array[link:#application_components[application_components]]
+a|
+
+|cifs_access
+|array[link:#app_cifs_access[app_cifs_access]]
+a|The list of CIFS access controls. You must provide either 'user_or_group' or 'access' to enable CIFS access.
+
+
+|cifs_share_name
+|string
+a|The name of the CIFS share. Usage: <Share>
+
+
+|exclude_aggregates
+|array[link:#exclude_aggregates[exclude_aggregates]]
+a|
+
+|nfs_access
+|array[link:#app_nfs_access[app_nfs_access]]
+a|The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#performance]
+[.api-collapsible-fifth-title]
+performance
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#dh_hmac_chap]
+[.api-collapsible-fifth-title]
+dh_hmac_chap
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group_size
+|string
+a|Authentication Diffie-Hellman Group.
+
+
+|hash_function
+|string
+a|Authentication Hash Function.
+
+
+|===
+
+
+[#hosts]
+[.api-collapsible-fifth-title]
+hosts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dh_hmac_chap
+|link:#dh_hmac_chap[dh_hmac_chap]
+a|
+
+|nqn
+|string
+a|The host NQN.
+
+
+|priority
+|string
+a|Host Priority.
+
+
+|===
+
+
+[#zapp_nvme_components_subsystem]
+[.api-collapsible-fifth-title]
+zapp_nvme_components_subsystem
+
+components.subsystem
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hosts
+|array[link:#hosts[hosts]]
+a|
+
+|name
+|string
+a|The name of the subsystem accessing the component. If neither the name nor the UUID is provided, the name defaults to <application-name>_<component-name>, whether that subsystem already exists or not.
+
+
+|os_type
+|string
+a|The name of the host OS accessing the component. The default value is the host OS that is running the application.
+
+
+|uuid
+|string
+a|The UUID of an existing subsystem to be granted access to the component.
+
+
+|===
+
+
+[#zapp_nvme_components_tiering]
+[.api-collapsible-fifth-title]
+zapp_nvme_components_tiering
+
+application-components.tiering
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|string
+a|The storage tiering type of the application component.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the application component.
+
+
+|namespace_count
+|integer
+a|The number of namespaces supported per request, with a total limit of 1024 per volume.
+
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|performance
+|link:#performance[performance]
+a|
+
+|qos
+|link:#qos[qos]
+a|
+
+|subsystem
+|link:#zapp_nvme_components_subsystem[zapp_nvme_components_subsystem]
+a|components.subsystem
+
+
+|tiering
+|link:#zapp_nvme_components_tiering[zapp_nvme_components_tiering]
+a|application-components.tiering
+
+
+|total_size
+|integer
+a|The total size of the component, spread across member namespaces. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The local RPO of the application.
+
+
+|policy
+|string
+a|The Snapshot copy policy to apply to each volume in the smart container. This property is only supported for smart containers. Usage: <snapshot policy>
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The remote RPO of the application.
+
+
+|===
+
+
+[#rpo]
+[.api-collapsible-fifth-title]
+rpo
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local
+|link:#local[local]
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+[#zapp_nvme]
+[.api-collapsible-fifth-title]
+zapp_nvme
+
+An NVME application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|components
+|array[link:#components[components]]
+a|
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the archive log.
+
+
+|===
+
+
+[#archive_log]
+[.api-collapsible-fifth-title]
+archive_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the archive log. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#db]
+[.api-collapsible-fifth-title]
+db
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the database. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the ORACLE_HOME storage volume.
+
+
+|===
+
+
+[#ora_home]
+[.api-collapsible-fifth-title]
+ora_home
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the ORACLE_HOME storage volume. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the redo log group.
+
+
+|===
+
+
+[#redo_log]
+[.api-collapsible-fifth-title]
+redo_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mirrored
+|boolean
+a|Specifies whether the redo log group should be mirrored.
+
+
+|size
+|integer
+a|The size of the redo log group. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#oracle_on_nfs]
+[.api-collapsible-fifth-title]
+oracle_on_nfs
+
+Oracle using NFS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|nfs_access
+|array[link:#app_nfs_access[app_nfs_access]]
+a|The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#oracle_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+oracle_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#oracle_on_san]
+[.api-collapsible-fifth-title]
+oracle_on_san
+
+Oracle using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the Oracle grid binary storage volume.
+
+
+|===
+
+
+[#grid_binary]
+[.api-collapsible-fifth-title]
+grid_binary
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the Oracle grid binary storage volume. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the Oracle CRS volume.
+
+
+|===
+
+
+[#oracle_crs]
+[.api-collapsible-fifth-title]
+oracle_crs
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|copies
+|integer
+a|The number of CRS volumes.
+
+
+|size
+|integer
+a|The size of the Oracle CRS/voting storage volume. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#oracle_rac_on_nfs]
+[.api-collapsible-fifth-title]
+oracle_rac_on_nfs
+
+Oracle RAC using NFS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|grid_binary
+|link:#grid_binary[grid_binary]
+a|
+
+|nfs_access
+|array[link:#app_nfs_access[app_nfs_access]]
+a|The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|oracle_crs
+|link:#oracle_crs[oracle_crs]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#db_sids]
+[.api-collapsible-fifth-title]
+db_sids
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|===
+
+
+[#oracle_rac_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+oracle_rac_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#oracle_rac_on_san]
+[.api-collapsible-fifth-title]
+oracle_rac_on_san
+
+Oracle RAC using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|archive_log
+|link:#archive_log[archive_log]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|db_sids
+|array[link:#db_sids[db_sids]]
+a|
+
+|grid_binary
+|link:#grid_binary[grid_binary]
+a|
+
+|ora_home
+|link:#ora_home[ora_home]
+a|
+
+|oracle_crs
+|link:#oracle_crs[oracle_crs]
+a|
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|redo_log
+|link:#redo_log[redo_log]
+a|
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the local RPO. This will include details about the Snapshot copy schedule.
+
+
+|name
+|string
+a|The local RPO of the component. This indicates how often component Snapshot copies are automatically created.
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the remote RPO.
+
+
+|name
+|string
+a|The remote RPO of the component. A remote RPO of zero indicates that the component is synchronously replicated to another cluster.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Component Name.
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|uuid
+|string
+a|Component UUID.
+
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the local RPO. This will include details about the Snapshot copy schedule.
+
+
+|name
+|string
+a|The local RPO of the application. This indicates how often application Snapshot copies are automatically created.
+
+
+|===
+
+
+[#remote]
+[.api-collapsible-fifth-title]
+remote
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|description
+|string
+a|A detailed description of the remote RPO.
+
+
+|name
+|string
+a|The remote RPO of the application. A remote RPO of zero indicates that the application is synchronously replicated to another cluster.
+
+
+|===
+
+
+[#rpo]
+[.api-collapsible-fifth-title]
+rpo
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|components
+|array[link:#components[components]]
+a|
+
+|is_supported
+|boolean
+a|Is RPO supported for this application? Generation 1 applications did not support Snapshot copies or MetroCluster.
+
+
+|local
+|link:#local[local]
+a|
+
+|remote
+|link:#remote[remote]
+a|
+
+|===
+
+
+[#zapp_s3_bucket_application_components_access_policies_conditions]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket_application_components_access_policies_conditions
+
+conditions
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|delimiters
+|array[string]
+a|
+
+|max_keys
+|array[integer]
+a|
+
+|operator
+|string
+a|Policy Condition Operator.
+
+
+|prefixes
+|array[string]
+a|
+
+|source_ips
+|array[string]
+a|
+
+|usernames
+|array[string]
+a|
+
+|===
+
+
+[#zapp_s3_bucket_application_components_access_policies]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket_application_components_access_policies
+
+The list of S3 objectstore policies to be created.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|actions
+|array[string]
+a|
+
+|conditions
+|array[link:#zapp_s3_bucket_application_components_access_policies_conditions[zapp_s3_bucket_application_components_access_policies_conditions]]
+a|conditions.
+
+
+|effect
+|string
+a|Allow or Deny Access.
+
+
+|principals
+|array[string]
+a|
+
+|resources
+|array[string]
+a|
+
+|sid
+|string
+a|Statement Identifier Usage: <(size 1..256)>
+
+
+|===
+
+
+[#snapshot_policy]
+[.api-collapsible-fifth-title]
+snapshot_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the snapshot policy that is used for the S3 bucket.
+
+
+|uuid
+|string
+a|The UUID of the snapshot policy that is used for the S3 bucket. Usage: <UUID>
+
+
+|===
+
+
+[#zapp_s3_bucket_application_components]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket_application_components
+
+The list of application components to be created.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_policies
+|array[link:#zapp_s3_bucket_application_components_access_policies[zapp_s3_bucket_application_components_access_policies]]
+a|The list of S3 objectstore policies to be created.
+
+
+|bucket_endpoint_type
+|string
+a|The type of bucket.
+
+
+|capacity_tier
+|boolean
+a|Prefer lower latency storage under similar media costs.
+
+
+|comment
+|string
+a|Object Store Server Bucket Description Usage: <(size 1..256)>
+
+
+|default_retention_period
+|string
+a|Specifies the default retention period that is applied to objects while committing them to the WORM state without an associated retention period. The retention period can be in years, or days. The retention period value represents a duration and must be specified in the ISO-8601 duration format. A period specified for years and days is represented in the ISO-8601 format as quot;Plt;num>Y&quot; and quot;Plt;num>D&quot; respectively, for example &quot;P10Y&quot; represents a duration of 10 years. The period string must contain only a single time element that is, either years, or days. A duration which combines different periods is not supported, for example &quot;P1Y10D&quot; is not supported. Usage: {{<integer> days\|years} \| none}
+
+
+|exclude_aggregates
+|array[link:#exclude_aggregates[exclude_aggregates]]
+a|
+
+|name
+|string
+a|The name of the application component.
+
+
+|nas_path
+|string
+a|The path to which the bucket corresponds to.
+
+
+|qos
+|link:#qos[qos]
+a|
+
+|retention_mode
+|string
+a|The lock mode of the bucket. <br>compliance &dash; A SnapLock Compliance (SLC) bucket provides the highest level of WORM protection and an administrator cannot destroy a compliance bucket if it contains unexpired WORM objects. <br> governance &dash; An administrator can delete a Governance bucket.<br> no_lock &dash; Indicates the bucket does not support object locking. For s3 type buckets, the default value is no_lock.
+
+
+|size
+|integer
+a|The total size of the S3 Bucket, split across the member components. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|snapshot_policy
+|link:#snapshot_policy[snapshot_policy]
+a|
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|uuid
+|string
+a|Object Store Server Bucket UUID Usage: <UUID>
+
+
+|versioning_state
+|string
+a|Bucket Versioning State. For nas type buckets, this field is not set. For s3 type buckets, the default value is disabled.
+
+
+|===
+
+
+[#protection_type]
+[.api-collapsible-fifth-title]
+protection_type
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|remote_rpo
+|string
+a|The remote RPO of the application.
+
+
+|===
+
+
+[#zapp_s3_bucket]
+[.api-collapsible-fifth-title]
+zapp_s3_bucket
+
+A generic S3 bucket application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_components
+|array[link:#zapp_s3_bucket_application_components[zapp_s3_bucket_application_components]]
+a|The list of application components to be created.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#san_application_components_tiering]
+[.api-collapsible-fifth-title]
+san_application_components_tiering
+
+application-components.tiering
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|policy
+|string
+a|The storage tiering type of the application component.
+
+
+|===
+
+
+[#application_components]
+[.api-collapsible-fifth-title]
+application_components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|lun_count
+|integer
+a|The number of LUNs in the application component.
+
+
+|name
+|string
+a|The name of the application component.
+
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|qos
+|link:#qos[qos]
+a|
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|tiering
+|link:#san_application_components_tiering[san_application_components_tiering]
+a|application-components.tiering
+
+
+|total_size
+|integer
+a|The total size of the application component, split across the member LUNs. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|===
+
+
+[#san_new_igroups]
+[.api-collapsible-fifth-title]
+san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#san]
+[.api-collapsible-fifth-title]
+san
+
+A generic SAN application.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application_components
+|array[link:#application_components[application_components]]
+a|
+
+|exclude_aggregates
+|array[link:#exclude_aggregates[exclude_aggregates]]
+a|
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the DB.
+
+
+|===
+
+
+[#db]
+[.api-collapsible-fifth-title]
+db
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the DB. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the log DB.
+
+
+|===
+
+
+[#log]
+[.api-collapsible-fifth-title]
+log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the log DB. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#sql_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+sql_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the temp DB.
+
+
+|===
+
+
+[#temp_db]
+[.api-collapsible-fifth-title]
+temp_db
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|size
+|integer
+a|The size of the temp DB. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#sql_on_san]
+[.api-collapsible-fifth-title]
+sql_on_san
+
+Microsoft SQL using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|db
+|link:#db[db]
+a|
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|log
+|link:#log[log]
+a|
+
+|os_type
+|string
+a|The name of the host OS running the application.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|server_cores_count
+|integer
+a|The number of server cores for the DB.
+
+
+|temp_db
+|link:#temp_db[temp_db]
+a|
+
+|===
+
+
+[#access]
+[.api-collapsible-fifth-title]
+access
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|installer
+|string
+a|SQL installer admin user name.
+
+
+|service_account
+|string
+a|SQL service account user name.
+
+
+|===
+
+
+[#sql_on_smb]
+[.api-collapsible-fifth-title]
+sql_on_smb
+
+Microsoft SQL using SMB.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|link:#access[access]
+a|
+
+|db
+|link:#db[db]
+a|
+
+|log
+|link:#log[log]
+a|
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|server_cores_count
+|integer
+a|The number of server cores for the DB.
+
+
+|temp_db
+|link:#temp_db[temp_db]
+a|
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|per_tb
+|integer
+a|The number of IOPS per terabyte of logical space currently being used by the application component.
+
+
+|total
+|integer
+a|The total number of IOPS being used by the application component.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|average
+|integer
+a|The cumulative average response time in microseconds for this component.
+
+
+|raw
+|integer
+a|The cumulative response time in microseconds for this component.
+
+
+|===
+
+
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reserve
+|integer
+a|The amount of space reserved by the system for Snapshot copies.
+
+
+|used
+|integer
+a|The amount of spacing currently in use by the system to store Snapshot copies.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The available amount of space left in the application component. Note that this field has limited meaning for SAN applications. Space may be considered used from ONTAP's perspective while the host filesystem still considers it available.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|logical_used
+|integer
+a|The amount of space that would currently be used if no space saving features were enabled. For example, if compression were the only space saving feature enabled, this field would represent the uncompressed amount of space used.
+
+
+|provisioned
+|integer
+a|The originally requested amount of space that was provisioned for the application component.
+
+
+|reserved_unused
+|integer
+a|The amount of space reserved for system features such as Snapshot copies that has not yet been used.
+
+
+|savings
+|integer
+a|The amount of space saved by all enabled space saving features.
+
+
+|used
+|integer
+a|The amount of space that is currently being used by the application component. Note that this includes any space reserved by the system for features such as Snapshot copies.
+
+
+|used_excluding_reserves
+|integer
+a|The amount of space that is currently being used, excluding any space that is reserved by the system for features such as Snapshot copies.
+
+
+|used_percent
+|integer
+a|The percentage of the originally provisioned space that is currently being used by the application component.
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service name. AFF systems support the extreme storage service. All other systems only support value.
+
+
+|uuid
+|string
+a|The storage service UUID.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops
+|link:#iops[iops]
+a|
+
+|latency
+|link:#latency[latency]
+a|
+
+|name
+|string
+a|Component Name.
+
+
+|shared_storage_pool
+|boolean
+a|An application component is considered to use a shared storage pool if storage elements for for other components reside on the same aggregate as storage elements for this component.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|statistics_incomplete
+|boolean
+a|If not all storage elements of the application component are currently available, the returned statistics might only include data from those elements that were available.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|uuid
+|string
+a|Component UUID.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|per_tb
+|integer
+a|The number of IOPS per terabyte of logical space currently being used by the application.
+
+
+|total
+|integer
+a|The total number of IOPS being used by the application.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|average
+|integer
+a|The cumulative average response time in microseconds for this application.
+
+
+|raw
+|integer
+a|The cumulative response time in microseconds for this application.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available
+|integer
+a|The available amount of space left in the application. Note that this field has limited meaning for SAN applications. Space may be considered used from ONTAP's perspective while the host filesystem still considers it available.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|logical_used
+|integer
+a|The amount of space that would currently be used if no space saving features were enabled. For example, if compression were the only space saving feature enabled, this field would represent the uncompressed amount of space used.
+
+
+|provisioned
+|integer
+a|The originally requested amount of space that was provisioned for the application.
+
+
+|reserved_unused
+|integer
+a|The amount of space reserved for system features such as Snapshot copies that has not yet been used.
+
+
+|savings
+|integer
+a|The amount of space saved by all enabled space saving features.
+
+
+|used
+|integer
+a|The amount of space that is currently being used by the application. Note that this includes any space reserved by the system for features such as Snapshot copies.
+
+
+|used_excluding_reserves
+|integer
+a|The amount of space that is currently being used, excluding any space that is reserved by the system for features such as Snapshot copies.
+
+
+|used_percent
+|integer
+a|The percentage of the originally provisioned space that is currently being used by the application.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|components
+|array[link:#components[components]]
+a|
+
+|iops
+|link:#iops[iops]
+a|
+
+|latency
+|link:#latency[latency]
+a|
+
+|shared_storage_pool
+|boolean
+a|An application is considered to use a shared storage pool if storage elements for multiple components reside on the same aggregate.
+
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
+
+|space
+|link:#space[space]
+a|
+
+|statistics_incomplete
+|boolean
+a|If not all storage elements of the application are currently available, the returned statistics might only include data from those elements that were available.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|SVM Name. Either the SVM name or UUID must be provided to create an application.
+
+
+|uuid
+|string
+a|SVM UUID. Either the SVM name or UUID must be provided to create an application.
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#template]
+[.api-collapsible-fifth-title]
+template
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the template that was used to provision this application.
+
+
+|protocol
+|string
+a|The protocol access of the template that was used to provision this application.
+
+
+|version
+|integer
+a|The version of the template that was used to provision this application. The template version changes only if the layout of the application changes over time. For example, redo logs in Oracle RAC templates were updated and provisioned differently in DATA ONTAP 9.3.0 compared to prior releases, so the version number was increased. If layouts change in the future, the changes will be documented along with the corresponding version numbers.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the desktops.
+
+
+|===
+
+
+[#desktops]
+[.api-collapsible-fifth-title]
+desktops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of desktops to support.
+
+
+|size
+|integer
+a|The size of the desktops. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#hyper_v_access]
+[.api-collapsible-fifth-title]
+hyper_v_access
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|service_account
+|string
+a|Hyper-V service account.
+
+
+|===
+
+
+[#vdi_on_nas]
+[.api-collapsible-fifth-title]
+vdi_on_nas
+
+A VDI application using NAS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|desktops
+|link:#desktops[desktops]
+a|
+
+|hyper_v_access
+|link:#hyper_v_access[hyper_v_access]
+a|
+
+|nfs_access
+|array[link:#app_nfs_access[app_nfs_access]]
+a|The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#vdi_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+vdi_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#vdi_on_san]
+[.api-collapsible-fifth-title]
+vdi_on_san
+
+A VDI application using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|desktops
+|link:#desktops[desktops]
+a|
+
+|hypervisor
+|string
+a|The name of the hypervisor hosting the application.
+
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The storage service of the datastore.
+
+
+|===
+
+
+[#datastore]
+[.api-collapsible-fifth-title]
+datastore
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of datastores to support.
+
+
+|size
+|integer
+a|The size of the datastore. Usage: {<integer>[KB\|MB\|GB\|TB\|PB]}
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|
+
+|===
+
+
+[#vsi_on_nas]
+[.api-collapsible-fifth-title]
+vsi_on_nas
+
+A VSI application using NAS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|datastore
+|link:#datastore[datastore]
+a|
+
+|hyper_v_access
+|link:#hyper_v_access[hyper_v_access]
+a|
+
+|nfs_access
+|array[link:#app_nfs_access[app_nfs_access]]
+a|The list of NFS access controls. You must provide either 'host' or 'access' to enable NFS access.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#vsi_on_san_new_igroups]
+[.api-collapsible-fifth-title]
+vsi_on_san_new_igroups
+
+The list of initiator groups to create.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|
+
+|===
+
+
+[#vsi_on_san]
+[.api-collapsible-fifth-title]
+vsi_on_san
+
+A VSI application using SAN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|datastore
+|link:#datastore[datastore]
+a|
+
+|hypervisor
+|string
+a|The name of the hypervisor hosting the application.
+
+
+|igroup_name
+|string
+a|The name of the initiator group through which the contents of this application will be accessed. Modification of this parameter is a disruptive operation. All LUNs in the application component will be unmapped from the current igroup and re-mapped to the new igroup.
+
+
+|protection_type
+|link:#protection_type[protection_type]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+Applications
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|creation_timestamp
+|string
+a|The time when the application was created.
+
+
+|generation
+|integer
+a|The generation number of the application. This indicates which features are supported on the application. For example, generation 1 applications do not support Snapshot copies. Support for Snapshot copies was added at generation 2. Any future generation numbers and their feature set will be documented.
+
+
+|mongo_db_on_san
+|link:#mongo_db_on_san[mongo_db_on_san]
+a|MongoDB using SAN.
+
+
+|name
+|string
+a|Application Name. This field is user supplied when the application is created.
+
+
+|nas
+|link:#nas[nas]
+a|A generic NAS application.
+
+
+|nvme
+|link:#zapp_nvme[zapp_nvme]
+a|An NVME application.
+
+
+|oracle_on_nfs
+|link:#oracle_on_nfs[oracle_on_nfs]
+a|Oracle using NFS.
+
+
+|oracle_on_san
+|link:#oracle_on_san[oracle_on_san]
+a|Oracle using SAN.
+
+
+|oracle_rac_on_nfs
+|link:#oracle_rac_on_nfs[oracle_rac_on_nfs]
+a|Oracle RAC using NFS.
+
+
+|oracle_rac_on_san
+|link:#oracle_rac_on_san[oracle_rac_on_san]
+a|Oracle RAC using SAN.
+
+
+|protection_granularity
+|string
+a|Protection granularity determines the scope of Snapshot copy operations for the application. Possible values are "application" and "component". If the value is "application", Snapshot copy operations are performed on the entire application. If the value is "component", Snapshot copy operations are performed separately on the application components.
+
+
+|rpo
+|link:#rpo[rpo]
+a|
+
+|s3_bucket
+|link:#zapp_s3_bucket[zapp_s3_bucket]
+a|A generic S3 bucket application.
+
+
+|san
+|link:#san[san]
+a|A generic SAN application.
+
+
+|smart_container
+|boolean
+a|Identifies if this is a smart container or not.
+
+
+|sql_on_san
+|link:#sql_on_san[sql_on_san]
+a|Microsoft SQL using SAN.
+
+
+|sql_on_smb
+|link:#sql_on_smb[sql_on_smb]
+a|Microsoft SQL using SMB.
+
+
+|state
+|string
+a|The state of the application. For full functionality, applications must be in the online state. Other states indicate that the application is in a transient state and not all operations are supported.
+
+
+|statistics
+|link:#statistics[statistics]
+a|
+
+|svm
+|link:#svm[svm]
+a|
+
+|template
+|link:#template[template]
+a|
+
+|uuid
+|string
+a|Application UUID. This field is generated when the application is created.
+
+
+|vdi_on_nas
+|link:#vdi_on_nas[vdi_on_nas]
+a|A VDI application using NAS.
+
+
+|vdi_on_san
+|link:#vdi_on_san[vdi_on_san]
+a|A VDI application using SAN.
+
+
+|vsi_on_nas
+|link:#vsi_on_nas[vsi_on_nas]
+a|A VSI application using NAS.
+
+
+|vsi_on_san
+|link:#vsi_on_san[vsi_on_san]
+a|A VSI application using SAN.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

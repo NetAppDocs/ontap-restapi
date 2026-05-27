@@ -1,0 +1,428 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-schedules.html'
+summary: 'Create a schedule'
+---
+
+= Create a schedule
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/schedules`#
+
+*Introduced In:* 9.6
+
+Creates a schedule.
+
+== Required Fields
+
+* name - Name of the job schedule.
+You must provide a minutes field for a cron schedule and an interval field for an interval schedule. Do not provide both a cron field and an interval field.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|The cluster that owns the schedule. Defaults to the local cluster.
+
+
+|cron
+|link:#cron[cron]
+a|Details for schedules of type cron.
+
+
+|interval
+|string
+a|An ISO-8601 duration formatted string.
+
+
+|name
+|string
+a|Schedule name. Required in the URL or POST body.
+
+
+|scope
+|string
+a|If the schedule is owned by a data SVM, then the scope is set to svm. Otherwise it will be set to cluster.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Schedule type
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "cluster": {
+    "name": "cluster1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "cron": {
+    "days": [
+      "integer"
+    ],
+    "hours": [
+      "integer"
+    ],
+    "minutes": [
+      "integer"
+    ],
+    "months": [
+      "integer"
+    ],
+    "weekdays": [
+      "integer"
+    ]
+  },
+  "interval": "P1DT2H3M4S",
+  "name": "string",
+  "scope": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "string",
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 458788
+| The schedule specified is not a valid schedule.
+
+| 459760
+| The schedule specified is not a valid schedule.
+
+| 459763
+| Schedule cannot be created locally using the remote cluster name as the owner.
+
+| 459764
+| Cannot create a schedule with the same name as an existing schedule from the MetroCluster partner cluster but of a different schedule type.
+
+| 460783
+| As this is a MetroCluster configuration and the local cluster is waiting for switchback, changes to non-system schedules are not allowed.
+
+| 460784
+| An error occurred creating the remote cluster version of this schedule.
+
+| 2621601
+| Cannot create a schedule on a system SVM.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+The cluster that owns the schedule. Defaults to the local cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Cluster name
+
+
+|uuid
+|string
+a|Cluster UUID
+
+
+|===
+
+
+[#cron]
+[.api-collapsible-fifth-title]
+cron
+
+Details for schedules of type cron.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|days
+|array[integer]
+a|The days of the month the schedule runs. Leave empty for all.
+
+
+|hours
+|array[integer]
+a|The hours of the day the schedule runs. Leave empty for all.
+
+
+|minutes
+|array[integer]
+a|The minutes the schedule runs. Required on POST for a cron schedule.
+
+
+|months
+|array[integer]
+a|The months of the year the schedule runs. Leave empty for all.
+
+
+|weekdays
+|array[integer]
+a|The weekdays the schedule runs. Leave empty for all.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+Complete schedule information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|The cluster that owns the schedule. Defaults to the local cluster.
+
+
+|cron
+|link:#cron[cron]
+a|Details for schedules of type cron.
+
+
+|interval
+|string
+a|An ISO-8601 duration formatted string.
+
+
+|name
+|string
+a|Schedule name. Required in the URL or POST body.
+
+
+|scope
+|string
+a|If the schedule is owned by a data SVM, then the scope is set to svm. Otherwise it will be set to cluster.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Schedule type
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

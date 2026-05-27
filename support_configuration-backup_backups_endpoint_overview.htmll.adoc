@@ -1,0 +1,182 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_configuration-backup_backups_endpoint_overview.htmll'
+summary: 'Manage configuration backups'
+---
+
+= Manage configuration backups
+
+
+
+== Overview
+
+This API supports creating, deleting and retrieving configuration backup files.
+Configuration backups can be 'cluster' or 'node' type. A 'cluster' backup contains cluster-wide configuration in addition to the configuration of each node in the cluster. A 'node' backup contains only node-specific configuration such as configuration files on the root volume and the boot variables. For creating a cluster backup, a cluster-wide job is queued. For creating a node backup, a private job local to the node is queued.
+In addition to the backups created using this API, ONTAP creates configuration backups automatically based on job schedules. This API supports creating configuration backups on demand only. It supports deleting and retrieving configuration backups that are created automatically or on demand.
+For information on configuration backup settings for automatically created backups, see link:support_configuration-backup_endpoint_overview.html[DOC /support/configuration-backup]
+
+== Examples
+
+=== Retrieving a list of configuration backup files
+
+'''
+
+----
+
+# The API:
+/api/support/configuration-backup/backups
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/configuration-backup/backups" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "5cafe0f6-499f-11e9-b644-005056bbcf93",
+      "name": "node1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/5cafe0f6-499f-11e9-b644-005056bbcf93"
+        }
+      }
+    },
+    "name": "backup1.7z",
+    "_links": {
+      "self": {
+        "href": "/api/support/configuration-backup/backups/5cafe0f6-499f-11e9-b644-005056bbcf93/backup1.7z"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/support/configuration-backup/backups"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving details of the specified configuration backup file
+
+'''
+
+----
+
+# The API:
+/api/support/configuration-backup/backups/{node.uuid}/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/configuration-backup/backups/bc2f15d0-8b93-11e9-90e9-005056bb6a30/backup1.7z" -H "accept: application/hal+json"
+
+# The response:
+{
+"node": {
+  "uuid": "bc2f15d0-8b93-11e9-90e9-005056bb6a30",
+  "name": "node1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/bc2f15d0-8b93-11e9-90e9-005056bb6a30"
+    }
+  }
+},
+"name": "backup1.7z",
+"type": "cluster",
+"time": "2019-06-10T13:35:06-04:00",
+"size": 6058408,
+"backup_nodes": [
+  {
+    "name": "node1"
+  },
+  {
+    "name": "node2"
+  }
+],
+"version": "9.7.0",
+"auto": false,
+"download_link": "https://10.224.66.113/backups/backup1.7z",
+"_links": {
+  "self": {
+    "href": "/api/support/configuration-backup/backups/bc2f15d0-8b93-11e9-90e9-005056bb6a30/backup1.7z"
+  }
+}
+}
+----
+
+'''
+
+=== Creating a configuration backup file
+
+'''
+
+----
+
+# The API:
+/api/support/configuration-backup/backups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/configuration-backup/backups" -H "accept: application/hal+json" -d "@create_backup.txt"
+create_backup.txt:
+{
+"node":
+  {
+    "uuid": "ac13c636-4fc9-11e9-94c2-005056bb2516",
+    "name": "node1"
+  },
+"name": "backup3.7z"
+}
+
+# The response header:
+HTTP/1.1 202 Accepted
+Date: Tue, 26 Mar 2019 14:26:24 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/support/configuration-backup/backups/ac13c636-4fc9-11e9-94c2-005056bb2516/backup3.7z
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "22acfb68-4fd3-11e9-94c2-005056bb2516",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/22acfb68-4fd3-11e9-94c2-005056bb2516"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Deleting a configuration backup file
+
+'''
+
+----
+
+# The API:
+/api/support/configuration-backup/backups/{node.uuid}/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/support/configuration-backup/backups/5cafe0f6-499f-11e9-b644-005056bbcf93/backup1.7z" -H "content-type: application/json"
+
+# The response header:
+HTTP/1.1 200 OK
+Date: Tue, 26 Mar 2019 14:32:23 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 3
+Content-Type: application/hal+json
+----
+
+'''
+
+

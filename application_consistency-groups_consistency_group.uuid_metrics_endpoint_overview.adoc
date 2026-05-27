@@ -1,0 +1,201 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'application_consistency-groups_consistency_group.uuid_metrics_endpoint_overview.html'
+summary: 'Retrieve consistency group metrics'
+---
+
+= Retrieve consistency group metrics
+
+
+
+== Overview
+
+Retrieves historical performance and capacity metrics for a consistency group.
+
+== Examples
+
+=== Retrieving historical performance and space metrics for a consistency group for the past day
+
+----
+
+# The API:
+/api/application/consistency-groups/{uuid}/metrics
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/application/consistency-groups/{uuid}/metrics?interval=1d&fields=**" -H "accept: application/hal+json"
+
+# The response:
+Snipped most of the records
+{
+"records": [
+  {
+    "uuid": "5069acd5-b325-11ed-a958-005056ac6b54",
+    "timestamp": "2023-02-23T03:17:45Z",
+    "status": "ok",
+    "duration": "PT15S",
+    "latency": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "iops": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "throughput": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "available_space": 862216192,
+    "used_space": 1810432,
+    "size": 864026624,
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/5069acd5-b325-11ed-a958-005056ac6b54/metrics/2023-02-23T03%3A17%3A45Z?fields=**"
+      }
+    }
+  },
+  {
+    "uuid": "5069acd5-b325-11ed-a958-005056ac6b54",
+    "timestamp": "2023-02-23T02:18:00Z",
+    "svm": {
+      "name": "vs0",
+      "uuid": "55b1a7b9-b2fb-11ed-a958-005056ac6b54"
+    },
+    "status": "partial_no_data",
+    "duration": "PT15S",
+    "latency": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "iops": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "throughput": {
+      "read": 0,
+      "write": 0,
+      "other": 0,
+      "total": 0
+    },
+    "available_space": 0,
+    "used_space": 0,
+    "size": 0,
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/5069acd5-b325-11ed-a958-005056ac6b54/metrics/2023-02-23T02%3A18%3A00Z?fields=**"
+      }
+    }
+  }
+],
+"num_records": 240,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups/5069acd5-b325-11ed-a958-005056ac6b54/metrics?fields=**"
+  }
+}
+}
+----
+
+=== Retrieving historical metrics within a time range defined by timestamp
+
+----
+curl -X GET "https://<mgmt-ip>/api/application/consistency-groups/{uuid}/metrics?fields=**&timestamp=2023-02-23T03:36:45Z..2023-02-23T03:36:30Z" -H "accept: application/hal+json"
+
+#### Response:
+{
+"records": [
+{
+  "uuid": "5069acd5-b325-11ed-a958-005056ac6b54",
+  "timestamp": "2023-02-23T03:36:45Z",
+  "svm": {
+    "name": "vs0",
+    "uuid": "55b1a7b9-b2fb-11ed-a958-005056ac6b54"
+  },
+  "status": "ok",
+  "duration": "PT15S",
+  "latency": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "available_space": 862183424,
+  "used_space": 1843200,
+  "size": 864026624,
+  "_links": {
+    "self": {
+      "href": "/api/application/consistency-groups/5069acd5-b325-11ed-a958-005056ac6b54/metrics/2023-02-23T03%3A36%3A45Z?fields=**"
+    }
+  }
+},
+{
+  "uuid": "5069acd5-b325-11ed-a958-005056ac6b54",
+  "timestamp": "2023-02-23T03:36:30Z",
+  "svm": {
+    "name": "vs0",
+    "uuid": "55b1a7b9-b2fb-11ed-a958-005056ac6b54"
+  },
+  "status": "ok",
+  "duration": "PT15S",
+  "latency": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "available_space": 862183424,
+  "used_space": 1843200,
+  "size": 864026624,
+  "_links": {
+    "self": {
+      "href": "/api/application/consistency-groups/5069acd5-b325-11ed-a958-005056ac6b54/metrics/2023-02-23T03%3A36%3A30Z?fields=**"
+    }
+  }
+}
+],
+"num_records": 2,
+"_links": {
+"self": {
+  "href": "/api/application/consistency-groups/5069acd5-b325-11ed-a958-005056ac6b54/metrics?fields=**&timestamp=2023-02-23T03:36:45Z..2023-02-23T03:36:30Z"
+}
+}
+}
+----
+
+

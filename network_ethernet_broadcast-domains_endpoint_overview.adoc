@@ -1,0 +1,430 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_ethernet_broadcast-domains_endpoint_overview.html'
+summary: 'Manage broadcast domains'
+---
+
+= Manage broadcast domains
+
+
+
+== Overview
+
+A broadcast domain is a collection of Ethernet ports that have layer 2 connectivity. They are used to determine which Ethernet ports can host interfaces of various types. The broadcast domain REST API allows you to retrieve, create, modify, and delete broadcast domains. The broadcast domain APIs do not manage port membership. To add a port to a broadcast domain or to move a port to a different broadcast domain, use PATCH /network/ethernet/ports/+++<uuid>+++.+++</uuid>+++
+
+== Retrieving network Ethernet broadcast domain information
+
+The broadcast domains GET API retrieves and displays relevant information pertaining to the broadcast domains configured in the cluster. The API retrieves the list of all broadcast domains configured in the cluster, or a specific broadcast domain.
+
+'''
+
+== Examples
+
+=== Retrieving all broadcast domains in the cluster
+
+The following output shows the list of all broadcast domains configured in a cluster.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ethernet/broadcast-domains" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "6970c2a9-f34f-11e8-8373-005056bb6b85",
+    "name": "Cluster",
+    "ipspace": {
+      "uuid": "6267eff8-f34f-11e8-8373-005056bb6b85",
+      "name": "Cluster",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/6267eff8-f34f-11e8-8373-005056bb6b85"
+        }
+      }
+    },
+    "ports": [
+      {
+        "uuid": "626b4d19-f34f-11e8-8373-005056bb6b85",
+        "name": "e0a",
+        "node": {
+          "name": "examplecluster-node01"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/ethernet/ports/626b4d19-f34f-11e8-8373-005056bb6b85"
+          }
+        }
+      },
+      {
+        "uuid": "626b77b9-f34f-11e8-8373-005056bb6b85",
+        "name": "e0b",
+        "node": {
+          "name": "examplecluster-node01"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/ethernet/ports/626b77b9-f34f-11e8-8373-005056bb6b85"
+          }
+        }
+      }
+    ],
+    "mtu": 9000,
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/broadcast-domains/6970c2a9-f34f-11e8-8373-005056bb6b85"
+      }
+    }
+  },
+  {
+    "uuid": "6972416c-f34f-11e8-8373-005056bb6b85",
+    "name": "Default",
+    "ipspace": {
+      "uuid": "5f650349-f34f-11e8-8373-005056bb6b85",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/5f650349-f34f-11e8-8373-005056bb6b85"
+        }
+      }
+    },
+    "ports": [
+      {
+        "uuid": "626bae19-f34f-11e8-8373-005056bb6b85",
+        "name": "e0c",
+        "node": {
+          "name": "examplecluster-node01"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/ethernet/ports/626bae19-f34f-11e8-8373-005056bb6b85"
+          }
+        }
+      },
+      {
+        "uuid": "626bd677-f34f-11e8-8373-005056bb6b85",
+        "name": "e0d",
+        "node": {
+          "name": "examplecluster-node01"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/ethernet/ports/626bd677-f34f-11e8-8373-005056bb6b85"
+          }
+        }
+      }
+    ],
+    "mtu": 1500,
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/broadcast-domains/6972416c-f34f-11e8-8373-005056bb6b85"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/network/ethernet/broadcast-domains?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific broadcast domain
+
+The following output shows the response returned when a specific broadcast domain is requested. The system returns an error if there is no broadcast domain with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ethernet/broadcast-domains/4475a2c8-f8a0-11e8-8d33-005056bb986f/?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "4475a2c8-f8a0-11e8-8d33-005056bb986f",
+"name": "Cluster",
+"ipspace": {
+  "uuid": "3e518ed5-f8a0-11e8-8d33-005056bb986f",
+  "name": "Cluster",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/3e518ed5-f8a0-11e8-8d33-005056bb986f"
+    }
+  }
+},
+"ports": [
+  {
+    "uuid": "3e539a62-f8a0-11e8-8d33-005056bb986f",
+    "name": "e0a",
+    "node": {
+      "name": "examplecluster-node01"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/ports/3e539a62-f8a0-11e8-8d33-005056bb986f"
+      }
+    }
+  },
+  {
+    "uuid": "3e53c94a-f8a0-11e8-8d33-005056bb986f",
+    "name": "e0b",
+    "node": {
+      "name": "examplecluster-node01"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/ports/3e53c94a-f8a0-11e8-8d33-005056bb986f"
+      }
+    }
+  }
+],
+"mtu": 9000,
+"_links": {
+  "self": {
+    "href": "/api/network/ethernet/broadcast-domains/4475a2c8-f8a0-11e8-8d33-005056bb986f/"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving all broadcast domains with a specific name
+
+The following output shows the response returned when broadcast domains with a specific name in any IPspace are requested.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains
+
+# The call:
+curl -X GET "https://10.224.87.121/api/network/ethernet/broadcast-domains/?name=bd1" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "66b607e5-4bee-11e9-af6a-005056bb13c0",
+    "name": "bd1",
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/broadcast-domains/66b607e5-4bee-11e9-af6a-005056bb13c0"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/network/ethernet/broadcast-domains/?name=bd1"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the broadcast domains for an IPspace
+
+The following output shows the response returned when the broadcast domains for a specified IPspace are requested.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains
+
+# The call:
+curl -X GET "https://10.224.87.121/api/network/ethernet/broadcast-domains/?ipspace.name=Cluster&fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "ae69070c-4bed-11e9-af6a-005056bb13c0",
+    "name": "Cluster",
+    "ipspace": {
+      "uuid": "ac466a88-4bed-11e9-af6a-005056bb13c0",
+      "name": "Cluster",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/ac466a88-4bed-11e9-af6a-005056bb13c0"
+        }
+      }
+    },
+    "ports": [
+      {
+        "uuid": "acd67884-4bed-11e9-af6a-005056bb13c0",
+        "name": "e0a",
+        "node": {
+          "name": "examplecluster-node-1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/ethernet/ports/acd67884-4bed-11e9-af6a-005056bb13c0"
+          }
+        }
+      },
+      {
+        "uuid": "ace1a36f-4bed-11e9-af6a-005056bb13c0",
+        "name": "e0b",
+        "node": {
+          "name": "examplecluster-node-1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/ethernet/ports/ace1a36f-4bed-11e9-af6a-005056bb13c0"
+          }
+        }
+      }
+    ],
+    "mtu": 1500,
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/broadcast-domains/ae69070c-4bed-11e9-af6a-005056bb13c0"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/network/ethernet/broadcast-domains/?ipspace.name=Cluster&fields=*"
+  }
+}
+}
+----
+
+'''
+
+== Creating network Ethernet broadcast domains
+
+You can use the POST API to create broadcast domains.
+
+'''
+
+== Example
+
+=== Creating a new broadcast domain
+
+The following example shows how to create a broadcast domain with a name of 'bd1' and an MTU of 1500.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ethernet/broadcast-domains?return_records=true" -H "accept: application/hal+json" -d '{ "name": "bd1", "mtu": 1500 }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "bd1",
+    "mtu": 1500,
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/broadcast-domains/"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+== Updating network Ethernet broadcast domains
+
+You can use the PATCH API to update the attributes of broadcast domains.
+
+'''
+
+== Examples
+
+=== Updating the name and MTU of a specific broadcast domain
+
+The following example shows how the PATCH request changes the broadcast domain name to 'bd2' and the broadcast domain MTU to 9000.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ethernet/broadcast-domains/6cde03b2-f8a2-11e8-8d33-005056bb986f/" -d '{ "name": "bd2", "mtu": 9000 }'
+{
+}
+----
+
+'''
+
+=== Updating the IPspace of a specific broadcast domain
+
+The following example shows how the PATCH request changes the IPspace of a broadcast domain to 'ipspace2'.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ethernet/broadcast-domains/c6fe2541-61f4-11e9-a66e-005056bbe83e" -d '{ "ipspace" : { "name" : "ipspace2" } }'
+{
+}
+----
+
+'''
+
+== Deleting network Ethernet broadcast domains
+
+You can use the DELETE API to delete a broadcast domain from the cluster configuration.
+
+== Example
+
+=== Deleting a specific broadcast domain
+
+The following DELETE request deletes a broadcast domain.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/broadcast-domains/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/network/ethernet/broadcast-domains/6cde03b2-f8a2-11e8-8d33-005056bb986f/"
+----
+
+'''
+
+

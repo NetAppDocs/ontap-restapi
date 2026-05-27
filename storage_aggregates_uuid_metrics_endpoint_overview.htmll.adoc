@@ -1,0 +1,214 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_aggregates_uuid_metrics_endpoint_overview.htmll'
+summary: 'Manage storage aggregate metrics'
+---
+
+= Manage storage aggregate metrics
+
+
+
+== Overview
+
+The Storage Aggregate Metrics API provides historical performance metrics for the specified aggregate.
+The collection GET operation retrieves read, write, other and total metrics for a given aggregate, in terms of IOPS, latency and throughput. The read and write categories display the I/O operations that service user reads and writes across all the hosted volumes on a given aggregate. The other category encompasses background I/O operations that implement data protection services currently running on the aggregate. IOPs are the number of I/O operations reported per second, throughput is the amount of I/O operations measured in bytes per second and latency is the average response time for an IOP, reported in microseconds.
+Without a specified time interval, the output is limited to statistics collected at 15 second intervals over the last hour.
+
+== Examples
+
+=== Retrieving metrics for an aggregate
+
+In this example, the API returns a set of records that exist for the aggregate with the given UUID for the last hour.
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}/metrics
+
+#The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/538bf337-1b2c-11e8-bad0-005056b48388/metrics?max_records=4" -H "accept: application/json"
+
+#The response:
+{
+"records": [
+  {
+    "timestamp": "2019-01-14T23:33:45Z"
+  },
+  {
+    "timestamp": "2019-01-14T23:33:30Z"
+  },
+  {
+    "timestamp": "2019-01-14T23:33:15Z"
+  },
+  {
+    "timestamp": "2019-01-14T23:33:00Z"
+  }
+],
+"num_records": 4
+}
+----
+
+=== Retrieving metrics for an aggregate with a set timestamp
+
+In this example, the API returns metric values for latency, IOPS, and throughput properties such as read, write and total. The status and duration
+for which the metrics are requested are also returned.
+
+----
+
+#The API:
+/api/storage/aggregates/{uuid}/metrics?timestamp={timestamp}
+
+#The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/538bf337-1b2c-11e8-bad0-005056b48388/metrics?timestamp=2019-01-1T23:33:00Z" -H "accept: application/json"
+
+#The response:
+{
+"records": [
+  {
+    "uuid": "538bf337-1b2c-11e8-bad0-005056b48388",
+    "timestamp": "2019-01-01T23:33:00Z",
+    "status": "ok",
+    "duration": "PT15S",
+    "throughput": {
+      "read": 6826,
+      "write": 205892,
+      "other": 0,
+      "total": 212718
+    },
+    "latency": {
+      "read": 148,
+      "write": 216,
+      "other": 0,
+      "total": 199
+    },
+    "iops": {
+      "read": 1,
+      "write": 5,
+      "other": 0,
+      "total": 6
+    }
+  }
+]
+}
+----
+
+=== Retrieving metrics for an aggregate for a set time interval
+
+In this example, the API returns the requested metrics for the given time interval of 1 week. The interval value can be
+1 hour, 1 day, 1 week, 1 month or 1 year. If the interval value is not set, a default value of 1 hour is used.
+
+----
+
+#The API:
+/api/storage/aggregates/{uuid}/metrics
+
+#The call:
+  curl -X GET "https://<mgmt-ip>/api/storage/aggregates/538bf337-1b2c-11e8-bad0-005056b48388/metrics?return_timeout=15&fields=*&interval=1w&max_records=4"  -H "accept: application/json"
+
+#The response:
+{
+"records": [
+  {
+     "timestamp": "2019-01-01T23:30:00Z",
+     "status": "ok",
+     "duration": "PT30M",
+     "throughput": {
+       "read": 268328,
+       "write": 5556255,
+       "other": 0,
+       "total": 5824584
+     },
+     "latency": {
+       "read": 156,
+       "write": 430,
+       "other": 0,
+       "total": 318
+     },
+     "iops": {
+       "read": 18,
+       "write": 26,
+       "other": 0,
+       "total": 45
+     }
+  },
+  {
+     "timestamp": "2019-01-01T23:00:00Z",
+     "status": "ok",
+     "duration": "PT30M",
+     "throughput": {
+       "read": 474266,
+       "write": 6121908,
+       "other": 0,
+       "total": 6596175
+     },
+     "latency": {
+       "read": 154,
+       "write": 448,
+       "other": 0,
+       "total": 262
+     },
+     "iops": {
+       "read": 48,
+       "write": 28,
+       "other": 0,
+       "total": 76
+     }
+  },
+  {
+     "timestamp": "2019-01-01T22:30:00Z",
+     "status": "ok",
+     "duration": "PT30M",
+     "throughput": {
+       "read": 540164,
+       "write": 2411356,
+       "other": 26244685,
+       "total": 29196206
+     },
+     "latency": {
+       "read": 159,
+       "write": 394,
+       "other": 192,
+       "total": 193
+     },
+     "iops": {
+       "read": 94,
+       "write": 16,
+       "other": 437,
+       "total": 548
+     }
+  },
+  {
+     "timestamp": "2019-01-01T22:00:00Z",
+     "status": "ok",
+     "duration": "PT30M",
+     "throughput": {
+       "read": 2842,
+       "write": 2765407,
+       "other": 0,
+       "total": 2768249
+     },
+     "latency": {
+       "read": 189,
+       "write": 540,
+       "other": 0,
+       "total": 523
+     },
+     "iops": {
+       "read": 0,
+       "write": 13,
+       "other": 0,
+       "total": 13
+     }
+  }
+],
+"num_records": 4
+}
+----
+
+=== Related ONTAP commands
+
+* `statistics aggregate show`
+
+

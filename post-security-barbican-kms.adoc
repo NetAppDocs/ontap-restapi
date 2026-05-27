@@ -1,0 +1,655 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-barbican-kms.html'
+summary: 'Create a Barbican KMS configuration for an SVM'
+---
+
+= Create a Barbican KMS configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/barbican-kms`#
+
+*Introduced In:* 9.17
+
+Creates a Barbican KMS configuration for the specified SVM.
+
+== Required properties
+
+* `configuration.name` - Name for the new Barbican configuration.
+* `svm.uuid` or `svm.name` - Existing SVM in which to create a Barbican KMS.
+* `key_id` - Barbican key URL.
+* `keystone_url` - Keystone authentication URL.
+* `application_cred_id` - Keystone authentication application ID with access to the Barbican KMS.
+* `application_cred_secret`- Application credentials secret to authenticate the application credentials ID with Keystone.
+
+== Optional properties
+
+* `proxy_type` - Type of proxy (http/https) if proxy configuration is used.
+* `proxy_host` - Proxy hostname if proxy configuration is used.
+* `proxy_port` - Proxy port number if proxy configuration is used.
+* `proxy_username` - Proxy username if proxy configuration is used.
+* `proxy_password` - Proxy password if proxy configuration is used.
+* `verify` - Verify the identity of the Barbican KMS?
+* `verify_host` - Verify the identity of the Barbican KMS host name?
+* `timeout` - Connection timeout in seconds.
+
+== Related ONTAP commands
+
+* `security key-manager external barbican create-config`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application_cred_id
+|string
+a|Keystone application credentials ID required to access the specified Barbican KMS.
+
+
+|application_cred_secret
+|string
+a|Keystone application credentials secret required to access the specified Barbican KMS. It is not audited.
+
+
+|barbican_reachability
+|link:#barbican_reachability[barbican_reachability]
+a|Indicates whether the Barbican KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET request or an instance GET request unless it is explicitly requested using the field's query parameter or GET for all advanced properties is enabled.
+
+
+|configuration
+|link:#configuration[configuration]
+a|Security keystore object reference.
+
+
+|enabled
+|boolean
+a|Indicates whether the configuration is enabled.
+
+
+|key_id
+|string
+a|Key Identifier URL of the Barbican KMS key encryption key. Must be an HTTPS URL.
+
+
+|keystone_url
+|string
+a|Keystone URL for the access token. Must be an HTTPS URL.
+
+
+|proxy_host
+|string
+a|Proxy host name.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port number.
+
+
+|proxy_type
+|string
+a|Type of proxy.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|state
+|link:#state[state]
+a|Indicates whether or not the SVM key encryption key (KEK) is available cluster wide.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|timeout
+|integer
+a|Connection timeout in seconds.
+
+
+|uuid
+|string
+a|A unique identifier of the Barbican KMS.
+
+
+|verify
+|boolean
+a|Verify the identity of the Barbican KMS.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the Barbican KMS host name.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "application_cred_id": "63e3cb77f84f42b7a0395a3efb7636f9",
+  "application_cred_secret": "secret",
+  "barbican_reachability": {
+    "code": "346758",
+    "message": "Barbican KMS is not reachable from all nodes - <reason>.",
+    "reachable": ""
+  },
+  "configuration": {
+    "name": "default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563434"
+  },
+  "key_id": "https://172.29.58.184:9311/v1/secrets/5c610a4f-ea97-44b5-8682-f4daeafa9647",
+  "keystone_url": "https://keystoneip:5000/v3/auth/tokens",
+  "proxy_host": "proxy.eng.com",
+  "proxy_password": "proxypassword",
+  "proxy_port": 1234,
+  "proxy_type": "http",
+  "proxy_username": "proxyuser",
+  "scope": "string",
+  "state": {
+    "cluster_state": "",
+    "code": "346758",
+    "message": "Top-level internal key encryption key is unavailable on the following nodes with the associated reasons: Node: node1. Reason: No volumes created yet for the SVM. Wrapped KEK status will be available after creating encrypted volumes."
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "timeout": 60,
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563434"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1115127
+| Package MT_EK_MGMT is not licensed in the cluster.
+
+| 65539805
+| Failed to create a Barbican Key Management Service configuration because the "application-cred-secret" field is invalid or was not provided.
+
+| 65539806
+| Barbican Key Management Service (KMS) cannot be configured because not all nodes in the cluster are running an effective cluster version of 9.17 or later to support the Barbican KMS feature.
+
+| 65539807
+| Barbican Key Management Service is not supported for the admin SVM.
+
+| 65539808
+| Failed to create the specified Barbican Key Management Service configuration because a Barbican Key Management Service configuration with the same name already exists.
+
+| 65539809
+| Barbican Key Management Service is not supported in MetroCluster configurations.
+
+| 65539810
+| Failed to create a Barbican Key Management Service configuration because the "key-id" field is invalid or was not provided. The URI scheme must be HTTPS.
+
+| 65539811
+| Failed to create a Barbican Key Management Service configuration because the "keystone-url" field is invalid or was not provided. The URI scheme must be HTTPS.
+
+| 65539835
+| Failed to create a Barbican Key Management Service configuration because the "application-cred-id" field cannot be empty.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#barbican_reachability]
+[.api-collapsible-fifth-title]
+barbican_reachability
+
+Indicates whether the Barbican KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET request or an instance GET request unless it is explicitly requested using the field's query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns 0 if Barbican KMS is reachable from all nodes in the cluster.
+
+
+|message
+|string
+a|Set to the appropriate error message when 'reachable' is false.
+
+
+|reachable
+|boolean
+a|Set to true if the Barbican KMS is reachable from all nodes of the cluster.
+
+
+|===
+
+
+[#configuration]
+[.api-collapsible-fifth-title]
+configuration
+
+Security keystore object reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the configuration.
+
+
+|uuid
+|string
+a|Keystore UUID.
+
+
+|===
+
+
+[#state]
+[.api-collapsible-fifth-title]
+state
+
+Indicates whether or not the SVM key encryption key (KEK) is available cluster wide.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_state
+|boolean
+a|Set to true when an SVM-KEK is present on all nodes of the cluster.
+
+
+|code
+|string
+a|Code corresponding to the status message. Returns a 0 if the SVM-KEK is available on all nodes in the cluster.
+
+
+|message
+|string
+a|Error message returned when there's no SVM-KEK availability on the cluster.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#barbican]
+[.api-collapsible-fifth-title]
+barbican
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application_cred_id
+|string
+a|Keystone application credentials ID required to access the specified Barbican KMS.
+
+
+|application_cred_secret
+|string
+a|Keystone application credentials secret required to access the specified Barbican KMS. It is not audited.
+
+
+|barbican_reachability
+|link:#barbican_reachability[barbican_reachability]
+a|Indicates whether the Barbican KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET request or an instance GET request unless it is explicitly requested using the field's query parameter or GET for all advanced properties is enabled.
+
+
+|configuration
+|link:#configuration[configuration]
+a|Security keystore object reference.
+
+
+|enabled
+|boolean
+a|Indicates whether the configuration is enabled.
+
+
+|key_id
+|string
+a|Key Identifier URL of the Barbican KMS key encryption key. Must be an HTTPS URL.
+
+
+|keystone_url
+|string
+a|Keystone URL for the access token. Must be an HTTPS URL.
+
+
+|proxy_host
+|string
+a|Proxy host name.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port number.
+
+
+|proxy_type
+|string
+a|Type of proxy.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|state
+|link:#state[state]
+a|Indicates whether or not the SVM key encryption key (KEK) is available cluster wide.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|timeout
+|integer
+a|Connection timeout in seconds.
+
+
+|uuid
+|string
+a|A unique identifier of the Barbican KMS.
+
+
+|verify
+|boolean
+a|Verify the identity of the Barbican KMS.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the Barbican KMS host name.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,323 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-mediator-ping.html'
+summary: 'Ping the BlueXP cloud service'
+---
+
+= Ping the BlueXP cloud service
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/mediator-ping`#
+
+*Introduced In:* 9.17
+
+Pings BlueXP cloud service.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configurable
+|boolean
+a|Indicates if the BlueXP cloud mediator is configurable. This depends on whether the ping latency is within a threshold.
+
+
+|high_latency
+|boolean
+a|Indicates if the ping latency of the BlueXP cloud server is greater than a threshold.
+
+
+|latency_ms
+|integer
+a|Ping latency in milliseconds.
+
+
+|proxy_configured
+|boolean
+a|Indicates if the HTTP proxy is configured on the cluster for the REST API calls to the BlueXP cloud server.
+
+
+|proxy_used
+|boolean
+a|Indicates if the HTTP proxy is used for the ping to the BlueXP cloud server.
+
+
+|reachable
+|boolean
+a|Ping status of the BlueXP cloud service.
+
+
+|timeout_occurred
+|boolean
+a|Indicates if the ping to the BlueXP cloud server failed due to a timeout.
+
+
+|type
+|string
+a|Mediator type.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "configurable": 1,
+  "high_latency": "",
+  "latency_ms": 150,
+  "proxy_configured": 1,
+  "proxy_used": 1,
+  "reachable": 1,
+  "timeout_occurred": "",
+  "type": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configurable
+|boolean
+a|Indicates if the BlueXP cloud mediator is configurable. This depends on whether the ping latency is within a threshold.
+
+
+|high_latency
+|boolean
+a|Indicates if the ping latency of the BlueXP cloud server is greater than a threshold.
+
+
+|latency_ms
+|integer
+a|Ping latency in milliseconds.
+
+
+|proxy_configured
+|boolean
+a|Indicates if the HTTP proxy is configured on the cluster for the REST API calls to the BlueXP cloud server.
+
+
+|proxy_used
+|boolean
+a|Indicates if the HTTP proxy is used for the ping to the BlueXP cloud server.
+
+
+|reachable
+|boolean
+a|Ping status of the BlueXP cloud service.
+
+
+|timeout_occurred
+|boolean
+a|Indicates if the ping to the BlueXP cloud server failed due to a timeout.
+
+
+|type
+|string
+a|Mediator type.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "configurable": 1,
+  "high_latency": "",
+  "latency_ms": 150,
+  "proxy_configured": 1,
+  "proxy_used": 1,
+  "reachable": 1,
+  "timeout_occurred": "",
+  "type": "string"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 13369414
+| Failed to talk to the BlueXP cloud service. Check the need for an HTTP proxy and network settings like firewall.
+
+| 13369417
+| Failed to check if an HTTP proxy is configured on the cluster.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configurable
+|boolean
+a|Indicates if the BlueXP cloud mediator is configurable. This depends on whether the ping latency is within a threshold.
+
+
+|error
+|link:#error[error]
+a|
+
+|reachable
+|boolean
+a|Ping status of the BlueXP cloud service.
+
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "configurable": "",
+  "error": {
+    "message": "string"
+  },
+  "reachable": ""
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#mediator_ping]
+[.api-collapsible-fifth-title]
+mediator_ping
+
+BlueXP cloud service ping API.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configurable
+|boolean
+a|Indicates if the BlueXP cloud mediator is configurable. This depends on whether the ping latency is within a threshold.
+
+
+|high_latency
+|boolean
+a|Indicates if the ping latency of the BlueXP cloud server is greater than a threshold.
+
+
+|latency_ms
+|integer
+a|Ping latency in milliseconds.
+
+
+|proxy_configured
+|boolean
+a|Indicates if the HTTP proxy is configured on the cluster for the REST API calls to the BlueXP cloud server.
+
+
+|proxy_used
+|boolean
+a|Indicates if the HTTP proxy is used for the ping to the BlueXP cloud server.
+
+
+|reachable
+|boolean
+a|Ping status of the BlueXP cloud service.
+
+
+|timeout_occurred
+|boolean
+a|Indicates if the ping to the BlueXP cloud server failed due to a timeout.
+
+
+|type
+|string
+a|Mediator type.
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Error code.
+
+
+|message
+|string
+a|Error message string.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

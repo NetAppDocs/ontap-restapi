@@ -1,0 +1,436 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-group-policies-central-access-policies.html'
+summary: 'Retrieve applied central access policies for an SVM'
+---
+
+= Retrieve applied central access policies for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/group-policies/{svm.uuid}/central-access-policies`#
+
+*Introduced In:* 9.12
+
+Retrieves applied central access policies for specified SVM.
+
+== Related ONTAP commands
+
+* `vserver cifs group-policy central-access-policy show-applied`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* minLength: 1
+
+
+|update_time
+|string
+|query
+|False
+a|Filter by update_time
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|description
+|string
+|query
+|False
+a|Filter by description
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|sid
+|string
+|query
+|False
+a|Filter by sid
+
+
+|member_rules
+|string
+|query
+|False
+a|Filter by member_rules
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of central access policies.
+
+
+|records
+|array[link:#group_policy_object_central_access_policy[group_policy_object_central_access_policy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "create_time": "2018-01-01 12:00:00 -0400",
+      "description": "policy #1",
+      "member_rules": [
+        "r1",
+        "r2"
+      ],
+      "name": "p1",
+      "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "update_time": "2018-01-01 12:00:00 -0400"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Will not be populated for objects that are yet to be applied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#group_policy_object_central_access_policy]
+[.api-collapsible-fifth-title]
+group_policy_object_central_access_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|create_time
+|string
+a|Policy creation timestamp.
+
+
+|description
+|string
+a|Description about the policy.
+
+
+|member_rules
+|array[string]
+a|Names of all central access rules applied to members.
+
+
+|name
+|string
+a|
+
+|sid
+|string
+a|Security ID, unique identifier of the central policy.
+
+
+|svm
+|link:#svm[svm]
+a|Will not be populated for objects that are yet to be applied.
+
+
+|update_time
+|string
+a|Last policy modification timestamp.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

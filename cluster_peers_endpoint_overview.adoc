@@ -1,0 +1,553 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_peers_endpoint_overview.html'
+summary: 'Manage cluster peers'
+---
+
+= Manage cluster peers
+
+
+
+== Overview
+
+Cluster peering allows administrators of ONTAP systems to establish relationships between two or more independent clusters. When a relationship exists between two clusters, the clusters can exchange user data and configuration information, and coordinate operations. The /cluster/peers endpoint supports create, get, modify, and delete operations using GET, PATCH, POST and DELETE HTTP requests.
+
+== Create a cluster peer
+
+You can set up a new cluster peer relationship by issuing a POST request to /cluster/peers. Parameters in the POST body define the settings of the peering relationship. A successful POST request that succeeds in creating a peer returns HTTP status code "201", along with the details of the created peer, such as peer UUID, name, and authentication information. A failed POST request returns an HTTP error code along with a message indicating the reason for the error. This can include malformed requests and invalid operations.
+
+== Examples of creating cluster peers
+
+=== Creating a cluster peer request with an empty request to accept the defaults
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/cluster/peers'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "86de6c46-bdad-11eb-83cd-005056bb267e",
+    "name": "Clus_fghf",
+    "authentication": {
+      "passphrase": "pLznaom1ctesJFq4kt5Qfghf",
+      "expiry_time": "2021-05-25T20:04:15-04:00"
+    },
+    "ip_address": "0.0.0.0",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/86de6c46-bdad-11eb-83cd-005056bb267e"
+      }
+    }
+  }
+]
+}
+----
+
+=== Creating a cluster peer request with a system-generated passphrase that will expire on 05/26/2021 at 12:34:56
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/cluster/peers' -d '{"authentication": {"expiry_time": "05/26/2021 12:34:56", "generate_passphrase": true}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "14c817c7-bdad-11eb-83cd-005056bb267e",
+    "name": "Clus_F6ht",
+    "authentication": {
+      "passphrase": "dZNOKkpVfntNZHf3MjpNF6ht",
+      "expiry_time": "2021-05-26T12:34:56-04:00"
+    },
+    "ip_address": "0.0.0.0",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/14c817c7-bdad-11eb-83cd-005056bb267e"
+      }
+    }
+  }
+]
+}
+----
+
+=== Creating a cluster peer request with a peer address and the generated passphrase is returned in the response
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/cluster/peers' -d '{"remote": {"ip_addresses": ["1.2.3.4"]}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "b404cc52-bdae-11eb-812c-005056bb0af1",
+    "name": "",
+    "authentication": {
+      "passphrase": "yDhdOteVGEOhkeXF+DJYwDro",
+      "expiry_time": "2021-05-25T20:28:12-04:00"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1"
+      }
+    }
+  }
+]
+}
+----
+
+=== Creating a cluster peer request with a peer name and the generated passphrase is returned in the response
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/cluster/peers' -d '{"name": "cp_xyz123", "authentication": {"generate_passphrase": true}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "125f8dc6-bdb1-11eb-83cd-005056bb267e",
+    "name": "cp_xyz123",
+    "authentication": {
+      "passphrase": "eeGTerZlh2qSAt2akpYEcM1c",
+      "expiry_time": "2021-05-25T20:29:38-04:00"
+    },
+    "ip_address": "1.2.3.5",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/125f8dc6-bdb1-11eb-83cd-005056bb267e"
+      }
+    }
+  }
+]
+}
+----
+
+=== Creating a cluster peer request with a name, a peer address, and a passphrase
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/cluster/peers' -d '{"name": "cp_xyz123", "remote": {"ip_addresses": ["1.2.3.4"]}, "authentication": {"passphrase": "xyz12345"}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "b404cc52-bdae-11eb-812c-005056bb0af1",
+    "authentication": {
+      "expiry_time": "2021-05-25T20:32:49-04:00"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1"
+      }
+    }
+  }
+]
+}
+----
+
+=== Creating a cluster peer request with a proposed encryption protocol
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/cluster/peers' -d '{"encryption": {"proposed": "tls-psk"}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "b33a23a6-bdb1-11eb-83cd-005056bb267e",
+    "name": "Clus_Pslc",
+    "authentication": {
+      "passphrase": "Gy8SqsXVhcUkS1AfepH7Pslc",
+      "expiry_time": "2021-05-25T20:34:07-04:00"
+    },
+    "ip_address": "1.2.3.5",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/b33a23a6-bdb1-11eb-83cd-005056bb267e"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+== Creating local intercluster LIFs
+
+The local cluster must have an intercluster LIF on each node for the correct operation of cluster peering. If no local intercluster LIFs exist, you can optionally specify LIFs to be created for each node in the local cluster. These local interfaces, if specified, are created on each node before proceeding with the creation of the cluster peering relationship. Cluster peering relationships are not established if there is an error preventing the LIFs from being created.
+After local interfaces have been created, do not specify them for subsequent cluster peering relationships.
+
+=== Local LIF creation fields
+
+* local_network.ip_addresses - List of IP addresses to assign, one per node in the local cluster.
+* local_network.netmask - IPv4 mask or subnet mask length.
+* local_network.broadcast_domain - Broadcast domain that is in use within the IPspace.
+* local_network.gateway - The IPv4 or IPv6 address of the default router.
+
+=== Additional information on network routes
+
+When creating LIFs, the network route discovery mechanism might take additional time (1-5 seconds) to become visible in the network outside of the cluster. This delay in publishing the routes might cause an initial cluster peer "create" request to fail. This error disappears with a retry of the same request.
+
+=== This example shows the POST body when creating four intercluster LIFs on a 4-node cluster before creating a cluster peer relationship.
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+cluster_peer_4_node.txt:
+{
+  "local_network":
+  {
+      "interfaces": [
+          {"ip_address":"1.2.3.4"},
+          {"ip_address":"1.2.3.5"},
+          {"ip_address":"1.2.3.6"}
+      ],
+      "netmask": "255.255.0.0",
+      "broadcast_domain": "Default",
+      "gateway": "1.2.0.1"
+  },
+  "remote": {"ip_addresses": ["1.2.9.9"]},
+  "authentication": {"passphrase": "xyz12345"}
+}
+curl -X POST "https://<mgmt-ip>/api/cluster/peers" -d "@cluster_peer_4_node.txt"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "b404cc52-bdae-11eb-812c-005056bb0af1",
+    "local_network": {
+      "interfaces": [
+        {
+          "ip_address": "1.2.3.4"
+        },
+        {
+          "ip_address": "1.2.3.5"
+        },
+        {
+          "ip_address": "1.2.3.6"
+        }
+      ]
+    },
+    "authentication": {
+      "expiry_time": "2021-05-25T21:28:26-04:00"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+== Examples of retrieving existing cluster peers
+
+You can retrieve peers in a cluster by issuing a GET request to /cluster/peers. It is also possible to retrieve a specific peer when qualified by its UUID to /cluster/peers/\{uuid}.
+A GET request might have no query parameters or a valid cluster UUID. The former retrieves all records while the latter retrieves the record for the cluster peer with that UUID.
+
+=== Retrieving all cluster peer relationships, both established and pending
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl 'https://<mgmt-ip>/api/cluster/peers'
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "a6001076-bdb2-11eb-83cd-005056bb267e",
+    "name": "Clus_bH6l",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/a6001076-bdb2-11eb-83cd-005056bb267e"
+      },
+      "interfaces": {
+        "href": "/api/network/ip/interfaces?services=intercluster_core&ipspace.uuid=0bac5ced-a911-11eb-83cd-005056bb267e"
+      }
+    }
+  },
+  {
+    "uuid": "b404cc52-bdae-11eb-812c-005056bb0af1",
+    "name": "remote-cluster",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1"
+      },
+      "interfaces": {
+        "href": "/api/network/ip/interfaces?services=intercluster_core&ipspace.uuid=0bac5ced-a911-11eb-83cd-005056bb267e"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/peers"
+  }
+}
+}
+----
+
+=== Retrieving all cluster peer relationships which are not in an available state
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl 'https://<mgmt-ip>/api/cluster/peers?status.state=!available'
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "a6001076-bdb2-11eb-83cd-005056bb267e",
+    "name": "Clus_bH6l",
+    "status": {
+      "state": "unidentified"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/a6001076-bdb2-11eb-83cd-005056bb267e"
+      },
+      "interfaces": {
+        "href": "/api/network/ip/interfaces?services=intercluster_core&ipspace.uuid=0bac5ced-a911-11eb-83cd-005056bb267e"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/cluster/peers?status.state=!available"
+  }
+}
+}
+----
+
+=== Retrieving information about a single cluster peer relationship
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl 'https://<mgmt-ip>/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1'
+
+# The response:
+{
+"uuid": "b404cc52-bdae-11eb-812c-005056bb0af1",
+"name": "remote-cluster",
+"version": {
+  "full": "NetApp Release 9.10.1: Tue May 25 08:08:44 UTC 2021",
+  "generation": 9,
+  "major": 10,
+  "minor": 1
+},
+"status": {
+  "state": "available",
+  "update_time": "2021-05-25T19:38:55-04:00"
+},
+"ipspace": {
+  "uuid": "0bac5ced-a911-11eb-83cd-005056bb267e",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/0bac5ced-a911-11eb-83cd-005056bb267e"
+    }
+  }
+},
+"remote": {
+  "name": "remote-cluster",
+  "serial_number": "1-80-000011",
+  "ip_addresses": [
+    "1.2.3.4"
+  ]
+},
+"authentication": {
+  "in_use": "ok",
+  "state": "ok"
+},
+"encryption": {
+  "state": "tls_psk"
+},
+"_links": {
+  "self": {
+    "href": "/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1"
+  },
+  "interfaces": {
+    "href": "/api/network/ip/interfaces?services=intercluster_core&ipspace.uuid=0bac5ced-a911-11eb-83cd-005056bb267e"
+  }
+}
+}
+----
+
+'''
+
+== Examples of updating an existing cluster peer
+
+You can update a cluster peer relationship by issuing a PATCH request to /cluster/peers/\{uuid}. As in the CLI mode, you can toggle the proposed encryption protocol, update the passphrase, or specify a new set of stable addresses. All PATCH requests take the parameters that are to be updated in the request body. If generate_passphrase is "true", the passphrase is returned in the PATCH response.
+
+=== Updating the proposed encryption protocol from tls-psk to none
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1' -d '{"authentication": {"passphrase": "xyz12345", "in_use": "ok"}, "encryption": {"proposed": "none"}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "authentication": {
+      "passphrase": "xyz12345",
+      "in_use": "ok"
+    },
+    "encryption": {
+      "proposed": "none"
+    }
+  }
+]
+}
+----
+
+=== Updating the passphrase
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1' -d '{"authentication": {"passphrase": "xyz12345", "in_use": "ok"}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "authentication": {
+      "passphrase": "xyz12345",
+      "in_use": "ok"
+    }
+  }
+]
+}
+----
+
+=== Setting an auto-generated passphrase
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1' -d '{"authentication": {"generate_passphrase": true, "in_use": "ok"}}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "authentication": {
+      "passphrase": "GpxQquKVLgh2skH+hQ4jRiSf",
+      "expiry_time": "2025-03-20T12:11:20-04:00",
+      "in_use": "ok"
+    }
+  }
+]
+}
+----
+
+=== Updating remote IP addresses
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1' -d '{"remote": {"ip_addresses": ["1.2.3.6"]}}'
+
+# The response:
+{}
+----
+
+'''
+
+== An example of deleting an existing cluster peer
+
+You can delete a cluster peer using the HTTP DELETE request.
+
+=== Deleting a peer with peer UUID "8becc0d4-c12c-11e8-9ceb-005056bbd143"
+
+----
+
+# The API:
+/api/cluster/peers
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/cluster/peers/b404cc52-bdae-11eb-812c-005056bb0af1"
+
+# The response:
+{}
+----
+
+

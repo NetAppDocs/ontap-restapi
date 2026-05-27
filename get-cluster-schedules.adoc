@@ -1,0 +1,610 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-schedules.html'
+summary: 'Retrieve schedules'
+---
+
+= Retrieve schedules
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/schedules`#
+
+*Introduced In:* 9.6
+
+Retrieves a schedule.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 256
+* minLength: 1
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+* Introduced in: 9.10
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+* Introduced in: 9.10
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|cron.hours
+|integer
+|query
+|False
+a|Filter by cron.hours
+
+* Max value: 23
+* Min value: 0
+
+
+|cron.days
+|integer
+|query
+|False
+a|Filter by cron.days
+
+* Max value: 31
+* Min value: 1
+
+
+|cron.months
+|integer
+|query
+|False
+a|Filter by cron.months
+
+* Max value: 12
+* Min value: 1
+
+
+|cron.minutes
+|integer
+|query
+|False
+a|Filter by cron.minutes
+
+* Max value: 59
+* Min value: 0
+
+
+|cron.weekdays
+|integer
+|query
+|False
+a|Filter by cron.weekdays
+
+* Max value: 6
+* Min value: 0
+
+
+|interval
+|string
+|query
+|False
+a|Filter by interval
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+* Introduced in: 9.10
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|cluster.name
+|string
+|query
+|False
+a|Filter by cluster.name
+
+
+|cluster.uuid
+|string
+|query
+|False
+a|Filter by cluster.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#schedule[schedule]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "cluster": {
+        "name": "cluster1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "cron": {
+        "days": [
+          "integer"
+        ],
+        "hours": [
+          "integer"
+        ],
+        "minutes": [
+          "integer"
+        ],
+        "months": [
+          "integer"
+        ],
+        "weekdays": [
+          "integer"
+        ]
+      },
+      "interval": "P1DT2H3M4S",
+      "name": "string",
+      "scope": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "string",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 459760
+| The schedule specified is not a valid schedule.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+The cluster that owns the schedule. Defaults to the local cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Cluster name
+
+
+|uuid
+|string
+a|Cluster UUID
+
+
+|===
+
+
+[#cron]
+[.api-collapsible-fifth-title]
+cron
+
+Details for schedules of type cron.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|days
+|array[integer]
+a|The days of the month the schedule runs. Leave empty for all.
+
+
+|hours
+|array[integer]
+a|The hours of the day the schedule runs. Leave empty for all.
+
+
+|minutes
+|array[integer]
+a|The minutes the schedule runs. Required on POST for a cron schedule.
+
+
+|months
+|array[integer]
+a|The months of the year the schedule runs. Leave empty for all.
+
+
+|weekdays
+|array[integer]
+a|The weekdays the schedule runs. Leave empty for all.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+Complete schedule information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|cluster
+|link:#cluster[cluster]
+a|The cluster that owns the schedule. Defaults to the local cluster.
+
+
+|cron
+|link:#cron[cron]
+a|Details for schedules of type cron.
+
+
+|interval
+|string
+a|An ISO-8601 duration formatted string.
+
+
+|name
+|string
+a|Schedule name. Required in the URL or POST body.
+
+
+|scope
+|string
+a|If the schedule is owned by a data SVM, then the scope is set to svm. Otherwise it will be set to cluster.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Schedule type
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

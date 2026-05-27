@@ -1,0 +1,496 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-san-portsets-interfaces.html'
+summary: 'Add portset network interfaces'
+---
+
+= Add portset network interfaces
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/san/portsets/{portset.uuid}/interfaces`#
+
+*Introduced In:* 9.9
+
+Adds one or more interfaces to a portset.
+
+== Required properties
+
+* `fc`, `ip` or `records` - Network interface(s) to add to the portset.
+
+== Related ONTAP commands
+
+* `lun portset add`
+
+== Learn more
+
+* link:protocols_san_portsets_endpoint_overview.html[DOC /protocols/san/portsets]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|portset.uuid
+|string
+|path
+|True
+a|The unique identifier of the portset.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fc
+|link:#fc[fc]
+a|An FC interface.
+
+
+|ip
+|link:#ip[ip]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|portset
+|link:#portset[portset]
+a|The portset in which the network interface is found.
+
+Note that this does not mean that the network interface cannot also be found in other portsets.
+
+
+|records
+|array[link:#records[records]]
+a|An array of network interfaces specified to add multiple interfaces to a portset in a single API call. Valid in POST only and not allowed when the `fc` or `ip` property is used.
+
+
+|uuid
+|string
+a|The unique identifier of the network interface.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "fc": {
+    "name": "fc_lif1",
+    "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+    "wwpn": "20:00:00:50:56:b4:13:a8"
+  },
+  "ip": {
+    "name": "lif1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "portset": {
+    "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+  },
+  "records": [
+    {
+      "fc": {
+        "name": "fc_lif1",
+        "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+        "wwpn": "20:00:00:50:56:b4:13:a8"
+      },
+      "ip": {
+        "name": "lif1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#portset_interface[portset_interface]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "fc": {
+        "name": "fc_lif1",
+        "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+        "wwpn": "20:00:00:50:56:b4:13:a8"
+      },
+      "ip": {
+        "name": "lif1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "portset": {
+        "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+      },
+      "records": [
+        {
+          "fc": {
+            "name": "fc_lif1",
+            "uuid": "3a09ab42-4da1-32cf-9d35-3385a6101a0b",
+            "wwpn": "20:00:00:50:56:b4:13:a8"
+          },
+          "ip": {
+            "name": "lif1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374906
+| A specified network interface was not found.
+
+| 5374907
+| The specified network interface UUID and name don't identify the same network interface.
+
+| 5374909
+| An invalid combination of network interface properties was specified.
+
+| 5374910
+| An incomplete set of network interface properties was specified.
+
+| 5374914
+| An attempt was made to add a network interface of an incompatible protocol to a portset.
+
+| 5374915
+| An attempt was made to add a duplicate network interface to a portset.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#fc]
+[.api-collapsible-fifth-title]
+fc
+
+An FC interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the FC interface.
+
+
+|uuid
+|string
+a|The unique identifier of the FC interface.
+
+
+|wwpn
+|string
+a|The WWPN of the FC interface.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#portset]
+[.api-collapsible-fifth-title]
+portset
+
+The portset in which the network interface is found.
+
+Note that this does not mean that the network interface cannot also be found in other portsets.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the portset.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+A container for either a Fibre Channel network interface or an IP network interface. On POST `fc` and `ip` are mutually exclusive.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fc
+|link:#fc[fc]
+a|An FC interface.
+
+
+|ip
+|link:#ip[ip]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|uuid
+|string
+a|The unique identifier of the network interface.
+
+
+|===
+
+
+[#portset_interface]
+[.api-collapsible-fifth-title]
+portset_interface
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fc
+|link:#fc[fc]
+a|An FC interface.
+
+
+|ip
+|link:#ip[ip]
+a|A network interface. Either UUID or name may be supplied on input.
+
+
+|portset
+|link:#portset[portset]
+a|The portset in which the network interface is found.
+
+Note that this does not mean that the network interface cannot also be found in other portsets.
+
+
+|records
+|array[link:#records[records]]
+a|An array of network interfaces specified to add multiple interfaces to a portset in a single API call. Valid in POST only and not allowed when the `fc` or `ip` property is used.
+
+
+|uuid
+|string
+a|The unique identifier of the network interface.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

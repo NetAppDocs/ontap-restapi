@@ -1,0 +1,156 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_filters_endpoint_overview.html'
+summary: 'Create or retrieve event filters'
+---
+
+= Create or retrieve event filters
+
+
+
+== Overview
+
+Manages the list of available filters. A filter is a named collection of rules that enable the system to identify events that require additional handling. A filter is linked with a destination to which the system sends specific events.
+
+When EMS processes an event, each filter is evaluated for a match. More than one filter can handle a single event.
+
+NOTE: The system defines default filters that cannot be removed or modified. These filters are specified by setting the "system_defined" field to "true".
+
+=== Filter rule position
+
+A filter's rules are evaluated sequentially, according to their position index. When a rule is added or modified, the position can be set to customize the filter's logic. If no position is specified, a new rule is appended to the end of the list.
+
+=== Filter rule types
+
+A filter rule can be one of two types: 'include' or 'exclude'.
+If an event matches the criteria of the rule, the type dictates whether it should be forwarded to the destination or ignored.
+
+=== Filter rule matching criteria
+
+A valid filter rule must contain at least one set of criteria.
+
+==== Name pattern
+
+A name pattern is matched against an event's name. Multiple characters can be matched using the wildcard character '*'.
+
+==== Severity
+
+The severity pattern is matched against an event's severity. Multiple severities can be specified in a comma separated list. A single wildcard `+*+`  will match all severities.
+When multiple severities are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard `+*+`  characters. Valid values are:
+
+* emergency
+* alert
+* error
+* notice
+* informational
+* debug
+
+==== SNMP trap type
+
+The SNMP trap type pattern is matched against an event's trap type. Multiple trap types can be specified in a comma separated list. A single wildcard `+*+`  matches all trap types.
+When multiple trap types are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard `+*+`  characters. Valid values are:
+
+* standard
+* built_in
+* severity_based
+
+==== Parameter criteria
+
+A parameter criterion is matched against events' parameters. Each parameter consists of a name and a value. When multiple parameter criteria are provided in a rule, all must match for the rule to be considered matched. A pattern can include one or more wildcard '*' characters.
+
+== Examples
+
+=== Retrieving a list of filters whose names contain a hyphen
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/filters
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/filters?name=*-*" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"records": [
+  {
+    "name": "default-trap-events",
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/filters/default-trap-events"
+      }
+    }
+  },
+  {
+    "name": "important-events",
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/filters/important-events"
+      }
+    }
+  },
+  {
+    "name": "no-info-debug-events",
+    "_links": {
+      "self": {
+        "href": "/api/support/ems/filters/no-info-debug-events"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/support/ems/filters?name=*-*"
+  }
+}
+}
+----
+
+=== Creating a new filter using various matching criteria
+
+[,json]
+----
+
+# The API:
+POST /api/support/ems/filters
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/support/ems/filters" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@test_ems_filters_post.txt"
+test_ems_filters_post.txt(body):
+{
+"name": "test-filter",
+"rules": [
+  {
+    "index": 1,
+    "type": "include",
+    "message_criteria": {
+      "name_pattern": "LUN.*",
+      "severities": "alert,error",
+      "snmp_trap_types": "severity_based"
+    },
+    "parameter_criteria": [
+      {
+        "name_pattern": "type",
+        "value_pattern": "volume"
+      },
+      {
+        "name_pattern": "vol",
+        "value_pattern": "cloud*"
+      }
+    ]
+  }
+]
+}
+
+# The response:
+201 Created
+----
+
+

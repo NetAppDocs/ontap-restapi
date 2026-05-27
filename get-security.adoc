@@ -1,0 +1,397 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security.html'
+summary: 'Retrieve information about security configured on the cluster'
+---
+
+= Retrieve information about security configured on the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security`#
+
+*Introduced In:* 9.7
+
+Retrieves information about the security configured on the cluster.
+
+== Related ONTAP commands
+
+* `security config show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|fips
+|link:#fips[fips]
+a|Cluster-wide Federal Information Processing Standards (FIPS) mode information.
+
+
+|management_protocols
+|link:#management_protocols[management_protocols]
+a|Cluster-wide security protocols related information.
+
+
+|onboard_key_manager_configurable_status
+|link:#onboard_key_manager_configurable_status[onboard_key_manager_configurable_status]
+a|Indicates whether the Onboard Key Manager can be configured in the cluster.
+
+
+|software_data_encryption
+|link:#software_data_encryption[software_data_encryption]
+a|Cluster-wide software data encryption related information.
+
+
+|tls
+|link:#tls[tls]
+a|Cluster-wide Transport Layer Security (TLS) configuration information
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "onboard_key_manager_configurable_status": {
+    "code": 65537300,
+    "message": "No platform support for volume encryption in following nodes - node1, node2."
+  },
+  "software_data_encryption": {
+    "encryption_state": "string"
+  },
+  "tls": {
+    "cipher_suites": [
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    ],
+    "protocol_versions": [
+      "string"
+    ]
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#fips]
+[.api-collapsible-fifth-title]
+fips
+
+Cluster-wide Federal Information Processing Standards (FIPS) mode information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not the software FIPS mode is enabled on the cluster. Our FIPS compliance involves configuring the use of only approved algorithms in applicable contexts (for example TLS), as well as the use of formally validated cryptographic module software implementations, where applicable. The US government documents concerning FIPS 140-2 outline the relevant security policies in detail.
+
+
+|===
+
+
+[#management_protocols]
+[.api-collapsible-fifth-title]
+management_protocols
+
+Cluster-wide security protocols related information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|rsh_enabled
+|boolean
+a|Indicates whether or not security protocol rsh is enabled on the cluster.
+
+
+|telnet_enabled
+|boolean
+a|Indicates whether or not security protocol telnet is enabled on the cluster.
+
+
+|===
+
+
+[#onboard_key_manager_configurable_status]
+[.api-collapsible-fifth-title]
+onboard_key_manager_configurable_status
+
+Indicates whether the Onboard Key Manager can be configured in the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message. Returns a 0 if the Onboard Key Manager can be configured in the cluster.
+
+
+|message
+|string
+a|Reason that Onboard Key Manager cannot be configured in the cluster.
+
+
+|supported
+|boolean
+a|Set to true if the Onboard Key Manager can be configured in the cluster.
+
+
+|===
+
+
+[#software_data_encryption]
+[.api-collapsible-fifth-title]
+software_data_encryption
+
+Cluster-wide software data encryption related information.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|conversion_enabled
+|boolean
+a|Indicates whether or not software encryption conversion is enabled on the cluster. A PATCH request initiates the conversion of all non-encrypted metadata volumes in the cluster to encrypted metadata volumes and all non-NAE aggregates to NAE aggregates. For the PATCH request to start, the cluster must have either an Onboard or an external key manager set up and the aggregates should either be empty or have only metadata volumes. No data volumes should be present in any of the aggregates in the cluster. For MetroCluster configurations, a PATCH request enables conversion on all the aggregates and metadata volumes of both local and remote clusters and is not allowed when the MetroCluster is in switchover state.
+
+
+|disabled_by_default
+|boolean
+a|Indicates whether or not default software data at rest encryption is disabled on the cluster.
+
+
+|encryption_state
+|string
+a|Software data encryption state.
+encrypted &dash; All the volumes are encrypted.
+encrypting &dash; Encryption conversion operation is in progress.
+partial &dash; Some volumes are encrypted, and others remains in plain text.
+rekeying &dash; All volumes are currently being encrypted with a new key.
+unencrypted &dash; None of the volumes are encrypted.
+conversion_paused &dash; Encryption conversion operation is paused on one or more volumes.
+rekey_paused &dash; Encryption rekey operation is paused on one or more volumes.
+
+
+|rekey
+|boolean
+a|
+
+|===
+
+
+[#tls]
+[.api-collapsible-fifth-title]
+tls
+
+Cluster-wide Transport Layer Security (TLS) configuration information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cipher_suites
+|array[string]
+a|Names a cipher suite that the system can select during TLS handshakes. A list of available options can be found on the Internet Assigned Number Authority (IANA) website.
+
+
+|protocol_versions
+|array[string]
+a|Names a TLS protocol version that the system can select during TLS handshakes. The use of SSLv3 or TLSv1 is discouraged.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

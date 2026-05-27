@@ -1,0 +1,363 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_ip_bgp_peer-groups_endpoint_overview.html'
+summary: 'Manage BGP peer groups'
+---
+
+= Manage BGP peer groups
+
+
+
+== Overview
+
+The following operations are supported:
+
+* Creation: POST network/ip/bgp/peer-groups
+* Collection Get: GET network/ip/bgp/peer-groups
+* Instance Get: GET network/ip/bgp/peer-groups/\{uuid}
+* Instance Patch: PATCH network/ip/bgp/peer-groups/\{uuid}
+* Instance Delete: DELETE network/ip/bgp/peer-groups/\{uuid}
+
+== Retrieving network BGP sessions information
+
+The IP BGP peer-groups GET API retrieves and displays relevant information pertaining to the BGP peer-groups configured in the cluster. The response can contain a list of multiple BGP peer-groups or a specific peer-group. Each BGP peer-group represents a BGP session configured between a local interface and a peer router.
+
+== Examples
+
+=== Retrieving all BGP peer-groups in the cluster
+
+The following example shows the list of all BGP peer-groups configured in a cluster.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/bgp/peer-groups" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "5f22ae9d-87b2-11e9-a3a6-005056bb81a4",
+    "name": "pg1",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/bgp/peer-groups/5f22ae9d-87b2-11e9-a3a6-005056bb81a4"
+      }
+    }
+  },
+  {
+    "uuid": "5fd08be3-87b2-11e9-952f-005056bb2170",
+    "name": "pg2",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/bgp/peer-groups/5fd08be3-87b2-11e9-952f-005056bb2170"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/bgp/peer-groups"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific BGP peer-group
+
+The following example shows the response when a specific BGP peer-group is requested. The system returns an error when there is no peer-group with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/bgp/peer-groups/5fd08be3-87b2-11e9-952f-005056bb2170" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "5fd08be3-87b2-11e9-952f-005056bb2170",
+"name": "pg2",
+"ipspace": {
+  "uuid": "84fd3375-879a-11e9-a3a6-005056bb81a4",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/84fd3375-879a-11e9-a3a6-005056bb81a4"
+    }
+  }
+},
+"local": {
+  "interface": {
+    "uuid": "5e76a305-87b2-11e9-952f-005056bb2170",
+    "name": "bgp2",
+    "ip": {
+      "address": "10.10.10.2"
+    }
+  },
+  "port": {
+    "uuid": "f8ff73de-879a-11e9-952f-005056bb2170",
+    "name": "e0h",
+    "node": {
+      "name": "node1"
+    }
+  }
+},
+"peer": {
+  "address": "10.10.10.1",
+  "asn": 65501
+},
+"state": "up",
+"_links": {
+  "self": {
+    "href": "/api/network/ip/bgp/peer-groups/5fd08be3-87b2-11e9-952f-005056bb2170"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving specific fields and limiting the output using filters
+
+The following example shows the response when a filter is applied (location.port.node.name=node1) and only certain fields are requested. Filtered fields are in the output in addition to the default fields and requested fields.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/bgp/peer-groups?local.port.node.name=node1&fields=local.interface.ip,peer" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "5f22ae9d-87b2-11e9-a3a6-005056bb81a4",
+    "name": "pg1",
+    "local": {
+      "interface": {
+        "ip": {
+          "address": "10.10.10.1"
+        }
+      },
+      "port": {
+        "node": {
+          "name": "node1"
+        }
+      }
+    },
+    "peer": {
+      "address": "10.10.10.2",
+      "asn": 65501
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/bgp/peer-groups/5f22ae9d-87b2-11e9-a3a6-005056bb81a4"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/bgp/peer-groups?local.port.node.name=node1&fields=local.interface.ip,peer"
+  }
+}
+}
+----
+
+'''
+
+== Creating a BGP peer-group
+
+The BGP peer-group POST API is used to create a peer-group as shown in the following examples.
+
+'''
+
+== Examples
+
+=== Creating a BGP peer-group with an existing interface
+
+The following example shows how to create a BGP peer-group between an existing interface "bgp1" and peer router with the address "10.10.10.10". The local interface "bgp1" needs to support the management-bgp service, otherwise the system returns an error.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/bgp/peer-groups?return_records=true" -d'{"name": "newPg", "ipspace.name":"Default", "local.interface.name": "bgp1", "peer.address":"10.10.10.10"}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "e3faacc6-87cb-11e9-a3a6-005056bb81a4",
+    "name": "newPg",
+    "ipspace": {
+      "name": "Default"
+    },
+    "local": {
+      "interface": {
+        "name": "bgp1"
+      }
+    },
+    "peer": {
+      "address": "10.10.10.10"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/bgp/peer-groups/e3faacc6-87cb-11e9-a3a6-005056bb81a4"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating a BGP peer-group and provisioning a new local interface
+
+The following example shows how to create a BGP peer-group with any local interface. If the local interface doesn't exist, the system will create it first before creating the peer-group.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/bgp/peer-groups?return_records=true" -d'{"name": "newPg1", "ipspace.name":"Default", "local": {"interface": {"name": "newlif"}, "ip": {"address": "9.9.9.9", "netmask": "24"}, "port": {"name": "e0f", "node": {"name": "node1"}}}, "peer.address":"10.10.10.10"}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "c292f069-8872-11e9-a3a6-005056bb81a4",
+    "name": "newPg1",
+    "ipspace": {
+      "name": "Default"
+    },
+    "local": {
+      "interface": {
+        "name": "newlif"
+      },
+      "port": {
+        "name": "e0f",
+        "node": {
+          "name": "node1"
+        }
+      }
+    },
+    "peer": {
+      "address": "10.10.10.10"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/bgp/peer-groups/c292f069-8872-11e9-a3a6-005056bb81a4"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+== Updating BGP peer-groups
+
+The BGP peer-groups PATCH API is used to update attributes of a peer-group.
+
+'''
+
+== Examples
+
+=== Updating the peer router address
+
+The following example shows how the PATCH request changes the peer router IP address.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ip/bgp/peer-groups/80d271c9-1f43-11e9-803e-005056a7646a" -H "accept: application/hal+json" -d '{"peer.address": "10.10.10.20" }'
+{
+}
+----
+
+'''
+
+=== Updating the peer-group to a new name
+
+The following example shows how the PATCH request renames the peer-group.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-groups/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ip/bgp/peer-groups/80d271c9-1f43-11e9-803e-005056a7646a" -H "accept: application/hal+json" -d '{"name": "NewName"}'
+{
+}
+----
+
+'''
+
+== Deleting BGP peer-groups
+
+The BGP peer-groups DELETE API is used to delete an BGP peer-group.
+
+'''
+
+== Example
+
+=== Deleting a BGP peer-group
+
+The following DELETE request deletes a BGP peer-group.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/bgp/peer-group/{uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/network/ip/bgp/peer-groups/80d271c9-1f43-11e9-803e-005056a7646a"
+{
+}
+----
+
+'''
+
+

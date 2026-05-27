@@ -1,0 +1,90 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'svm_svms_svm.uuid_web_endpoint_overview.html'
+summary: 'Manage web services security configuration'
+---
+
+= Manage web services security configuration
+
+
+
+You can use this API to update and retrieve the web services security configuration for each data SVM.
+
+== Updating the web services security configuration
+
+The following fields can be used to update the web services security configuration:
+
+* certificate.uuid
+* client_enabled
+* ocsp_enabled
+When updating the certificate, the certificate UUID of an existing certificate known to ONTAP must
+be provided. The certificate must be of type "server".
+
+A "client-ca" certificate must be installed on ONTAP to enable "client_enabled".
+
+== Examples
+
+=== Retrieving the web services security configuration
+
+[,json]
+----
+
+# API:
+GET /api/svm/svms/{svm.uuid}/web
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/svm/svms/3c1b259d-5789-a2eb-9301-10705682b34f/web" -H "accept: application/hal+json"
+
+# The response:
+{
+"svm": {
+  "uuid": "3c1b259d-5789-a2eb-9301-10705682b34f",
+  "name": "svm2",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/3c1b259d-5789-a2eb-9301-10705682b34f"
+    }
+  }
+},
+"certificate": {
+  "uuid": "a3bb219d-4382-1fe0-9c06-1070568ea23d",
+  "name": "cert1",
+  "_links": {
+    "self": {
+      "href": "/api/security/certificates/a3bb219d-4382-1fe0-9c06-1070568ea23d"
+    }
+  }
+},
+"client_enabled": false,
+"ocsp_enabled": false,
+"_links": {
+  "self": {
+    "href": "/api/svm/svms/3c1b259d-5789-a2eb-9301-10705682b34f/web"
+  }
+}
+}
+----
+
+=== Updating the web services security configuration
+
+[,json]
+----
+
+# The API:
+PATCH /api/svm/svms/{svm.uuid}/web
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/svm/svms/3c1b259d-5789-a2eb-9301-10705682b34f/web" -d '{ "certificate": {"uuid": "56da2799-13bc-2ae4-0c16-0c71244ea2ca" }}' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 28 May 2021 09:36:43 GMT
+Server: libzapid-httpd
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+----
+
+

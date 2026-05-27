@@ -1,0 +1,552 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-audit-messages.html'
+summary: 'Retrieve the administrative audit log viewer'
+---
+
+= Retrieve the administrative audit log viewer
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/audit/messages`#
+
+*Introduced In:* 9.6
+
+Retrieves the administrative audit log viewer.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|user
+|string
+|query
+|False
+a|Filter by user
+
+
+|location
+|string
+|query
+|False
+a|Filter by location
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|command_id
+|string
+|query
+|False
+a|Filter by command_id
+
+
+|timestamp
+|string
+|query
+|False
+a|Filter by timestamp
+
+
+|application
+|string
+|query
+|False
+a|Filter by application
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|index
+|integer
+|query
+|False
+a|Filter by index
+
+
+|message
+|string
+|query
+|False
+a|Filter by message
+
+
+|session_id
+|string
+|query
+|False
+a|Filter by session_id
+
+
+|input
+|string
+|query
+|False
+a|Filter by input
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|role
+|string
+|query
+|False
+a|Filter by role
+
+* Introduced in: 9.17
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#security_audit_log[security_audit_log]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "application": "string",
+      "command_id": "string",
+      "index": 0,
+      "input": "string",
+      "location": "string",
+      "message": "string",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "role": "string",
+      "scope": "string",
+      "session_id": "string",
+      "state": "string",
+      "svm": {
+        "name": "string"
+      },
+      "timestamp": "string",
+      "user": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+Node where the audit message resides.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+This is the SVM through which the user connected.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#security_audit_log]
+[.api-collapsible-fifth-title]
+security_audit_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application
+|string
+a|This identifies the "application" by which the request was processed.
+
+
+|command_id
+|string
+a|This is the command ID for this request.
+Each command received on a CLI session is assigned a command ID. This enables you to correlate a request and response.
+
+
+|index
+|integer
+a|Internal index for accessing records with the same time and node. This is a 64-bit unsigned value that is used to order the audit log messages before they are displayed. If multiple entries for the same node and timestamp occur simultaneously, the index assigns an order to ensure logical consistency.
+
+
+|input
+|string
+a|The request.
+
+
+|location
+|string
+a|This identifies the location of the remote user. This is an IP address or "console".
+
+
+|message
+|string
+a|This is an optional field that might contain "error" or "additional information" about the status of a command.
+
+
+|node
+|link:#node[node]
+a|Node where the audit message resides.
+
+
+|role
+|string
+a|Role of the remote user.
+
+
+|scope
+|string
+a|Set to "svm" when the request is on a data SVM; otherwise set to "cluster".
+
+
+|session_id
+|string
+a|This is the session ID on which the request is received. Each SSH session is assigned a session ID.
+Each http/ontapi/snmp request is assigned a unique session ID.
+
+
+|state
+|string
+a|State of of this request.
+
+
+|svm
+|link:#svm[svm]
+a|This is the SVM through which the user connected.
+
+
+|timestamp
+|string
+a|Log entry timestamp. Valid in URL
+
+
+|user
+|string
+a|Username of the remote user.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,532 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-mediators.html'
+summary: 'Retrieve ONTAP Mediators configured in the cluster'
+---
+
+= Retrieve ONTAP Mediators configured in the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/mediators`#
+
+*Introduced In:* 9.8
+
+"Retrieves a Mediator configured in the cluster."
+
+== Related ONTAP commands
+
+* `storage iscsi-initiator show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|peer_mediator_connectivity
+|string
+|query
+|False
+a|Filter by peer_mediator_connectivity
+
+* Introduced in: 9.10
+
+
+|use_http_proxy_local
+|boolean
+|query
+|False
+a|Filter by use_http_proxy_local
+
+* Introduced in: 9.17
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+* Introduced in: 9.17
+
+
+|port
+|integer
+|query
+|False
+a|Filter by port
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|strict_cert_validation
+|boolean
+|query
+|False
+a|Filter by strict_cert_validation
+
+* Introduced in: 9.17
+
+
+|peer_cluster.name
+|string
+|query
+|False
+a|Filter by peer_cluster.name
+
+
+|peer_cluster.uuid
+|string
+|query
+|False
+a|Filter by peer_cluster.uuid
+
+
+|ip_address
+|string
+|query
+|False
+a|Filter by ip_address
+
+
+|local_mediator_connectivity
+|string
+|query
+|False
+a|Filter by local_mediator_connectivity
+
+* Introduced in: 9.17
+
+
+|reachable
+|boolean
+|query
+|False
+a|Filter by reachable
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#records[records]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "dr_group": {
+        "id": 0
+      },
+      "ip_address": "10.10.10.7",
+      "local_mediator_connectivity": "connected",
+      "peer_cluster": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "cluster2",
+        "uuid": "ebe27c49-1adf-4496-8335-ab862aebebf2"
+      },
+      "peer_mediator_connectivity": "connected",
+      "port": 31784,
+      "reachable": 1,
+      "strict_cert_validation": 1,
+      "type": "string",
+      "use_http_proxy_local": 1,
+      "use_http_proxy_remote": 1,
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 2430739
+| Unable to access Mediator. Reason: Invalid Mediator IP or Mediator does not exist.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#dr_group]
+[.api-collapsible-fifth-title]
+dr_group
+
+DR group reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|DR Group ID
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#peer_cluster]
+[.api-collapsible-fifth-title]
+peer_cluster
+
+The peer cluster that the mediator service is used for.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+Mediator information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dr_group
+|link:#dr_group[dr_group]
+a|DR group reference.
+
+
+|ip_address
+|string
+a|The IP address of the mediator.
+
+
+|local_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the local cluster. Possible values are connected, unreachable, unusable and down-high-latency. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|peer_cluster
+|link:#peer_cluster[peer_cluster]
+a|The peer cluster that the mediator service is used for.
+
+
+|peer_mediator_connectivity
+|string
+a|Indicates the mediator connectivity status of the peer cluster. Possible values are connected, unreachable, unknown and down-high-latency.
+
+
+|port
+|integer
+a|The REST server's port number on the mediator.
+
+
+|reachable
+|boolean
+a|Indicates the connectivity status of the mediator.
+
+
+|strict_cert_validation
+|boolean
+a|Indicates if strict validation of certificates is performed while making REST API calls to the mediator. This field is only applicable to the ONTAP Cloud Mediator.
+
+* Default value:
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|type
+|string
+a|Mediator type. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|use_http_proxy_local
+|boolean
+a|Indicates if the local cluster should use an http-proxy server while making REST API calls to the mediator. This field is only applicable to the ONTAP cloud mediator.
+
+* Default value:
+* example: true
+* Introduced in: 9.17
+* x-nullable: true
+
+
+|uuid
+|string
+a|The unique identifier for the mediator service.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

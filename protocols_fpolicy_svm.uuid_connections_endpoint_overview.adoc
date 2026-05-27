@@ -1,0 +1,279 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_fpolicy_svm.uuid_connections_endpoint_overview.html'
+summary: 'View and update FPolicy server configuration'
+---
+
+= View and update FPolicy server configuration
+
+
+
+== Overview
+
+This API is used to display and update connection status information for external FPolicy servers.
+You must keep the following in mind while using these endpoints:
+
+* If the passthrough_read field is set to true in a GET collection call, only FPolicy passthrough-read connections are returned.
+* If the passthrough_read field is not provided or set to false in a GET collection call, only FPolicy server connections are returned.
+
+== Examples
+
+=== Retrieving the FPolicy server connections for all SVMs in the cluster
+
+'''
+
+----
+
+# The API:
+GET /protocols/fpolicy/{svm.uuid}/connections
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/fpolicy/*/connections?passthrough_read=false&fields=*&return_records=true" -H  "accept: application/json"
+
+# The Response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "8ca36b68-c501-11eb-b82c-0050568e5902",
+      "name": "user-vsim4"
+    },
+    "svm": {
+      "uuid": "9f738ac5-c502-11eb-b82c-0050568e5902",
+      "name": "vs1"
+    },
+    "policy": {
+      "name": "p1"
+    },
+    "server": "192.168.137.78",
+    "state": "disconnected",
+    "update_time": "2021-06-17T16:05:15+05:30",
+    "disconnected_reason": {
+      "message": "No local lif present to connect to FPolicy server.",
+      "code": 9305
+    },
+    "type": "primary"
+  },
+  {
+    "node": {
+      "uuid": "8ca36b68-c501-11eb-b82c-0050568e5902",
+      "name": "user-vsim4"
+    },
+    "svm": {
+      "uuid": "9f738ac5-c502-11eb-b82c-0050568e5902",
+      "name": "vs1"
+    },
+    "policy": {
+      "name": "p2"
+    },
+    "server": "192.168.136.38",
+    "state": "disconnected",
+    "update_time": "2021-06-17T16:05:15+05:30",
+    "disconnected_reason": {
+      "message": "No local lif present to connect to FPolicy server.",
+      "code": 9305
+    },
+    "type": "primary"
+  },
+  {
+    "node": {
+      "uuid": "8ca36b68-c501-11eb-b82c-0050568e5902",
+      "name": "user-vsim4"
+    },
+    "svm": {
+      "uuid": "b6df362b-c502-11eb-b82c-0050568e5902",
+      "name": "vs2"
+    },
+    "policy": {
+      "name": "pol1"
+    },
+    "server": "192.168.129.146",
+    "state": "disconnected",
+    "update_time": "2021-06-17T16:05:15+05:30",
+    "disconnected_reason": {
+      "message": "No local lif present to connect to FPolicy server.",
+      "code": 9305
+    },
+    "type": "primary"
+  }
+],
+"num_records": 3
+}
+----
+
+'''
+
+=== Retrieving all FPolicy passthrough read connections for all SVMs in the cluster
+
+'''
+
+----
+
+# The API:
+GET /protocols/fpolicy/{svm.uuid}/connections
+
+# The Call:
+curl-X GET "https://<mgmt-ip>/api/protocols/fpolicy/*/connections?passthrough_read=true&fields=*&return_records=true&return_timeout=15"
+
+# The Response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "55693090-c7c8-11eb-a07a-0050568ebc01",
+      "name": "user-vsim3",
+    },
+    "svm": {
+      "uuid": "a69e938d-c7ca-11eb-a07a-0050568ebc01",
+      "name": "vs2",
+    },
+    "policy": {
+      "name": "pol1",
+    },
+    "server": "192.168.129.146",
+    "session_uuid": "2410d348-c7cb-11eb-a07a-0050568ebc01",
+    "state": "connected",
+  },
+  {
+    "node": {
+      "uuid": "55693090-c7c8-11eb-a07a-0050568ebc01",
+      "name": "user-vsim3",
+    },
+    "svm": {
+      "uuid": "a69e938d-c7ca-11eb-a07a-0050568ebc01",
+      "name": "vs2",
+    },
+    "policy": {
+      "name": "pol2",
+    },
+    "server": "192.168.129.146",
+    "session_uuid": "288f7002-c7cb-11eb-a07a-0050568ebc01",
+    "state": "connected",
+  }
+],
+"num_records": 2,
+}
+----
+
+'''
+
+=== Retrieving the FPolicy server connections for a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /protocols/fpolicy/{svm.uuid}/connections
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/fpolicy/9f738ac5-c502-11eb-b82c-0050568e5902/connections?passthrough_read=false&fields=*&return_records=true" -H  "accept: application/json"
+
+# The Response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "8ca36b68-c501-11eb-b82c-0050568e5902",
+      "name": "user-vsim4"
+    },
+    "svm": {
+      "uuid": "9f738ac5-c502-11eb-b82c-0050568e5902",
+      "name": "vs1"
+    },
+    "policy": {
+      "name": "p1"
+    },
+    "server": "192.168.137.78",
+    "state": "disconnected",
+    "update_time": "2021-06-17T16:05:15+05:30",
+    "disconnected_reason": {
+      "message": "No local lif present to connect to FPolicy server.",
+      "code": 9305
+    },
+    "type": "primary"
+  },
+  {
+    "node": {
+      "uuid": "8ca36b68-c501-11eb-b82c-0050568e5902",
+      "name": "user-vsim4"
+    },
+    "svm": {
+      "uuid": "9f738ac5-c502-11eb-b82c-0050568e5902",
+      "name": "vs1"
+    },
+    "policy": {
+      "name": "p2"
+    },
+    "server": "192.168.136.38",
+    "state": "disconnected",
+    "update_time": "2021-06-17T16:05:15+05:30",
+    "disconnected_reason": {
+      "message": "No local lif present to connect to FPolicy server.",
+      "code": 9305
+    },
+    "type": "primary"
+  },
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving a specific FPolicy server connection
+
+'''
+
+----
+
+# The API:
+GET /protocols/fpolicy/{svm.uuid}/connections/{node.uuid}/{policy.name}/{server}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/fpolicy/9f738ac5-c502-11eb-b82c-0050568e5902/connections/8ca36b68-c501-11eb-b82c-0050568e5902/p1/192.168.137.78" -H  "accept: application/json"
+
+# The Response:
+{
+"node": {
+  "uuid": "8ca36b68-c501-11eb-b82c-0050568e5902",
+  "name": "user-vsim4"
+},
+"svm": {
+  "uuid": "9f738ac5-c502-11eb-b82c-0050568e5902",
+  "name": "vs1"
+},
+"policy": {
+  "name": "p1"
+},
+"server": "192.168.137.78",
+"state": "disconnected",
+"update_time": "2021-06-17T16:05:15+05:30",
+"disconnected_reason": {
+  "message": "No local lif present to connect to FPolicy server.",
+  "code": 9305
+},
+"type": "primary"
+}
+----
+
+'''
+
+=== Updating the FPolicy server connection
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/fpolicy/{svm.uuid}/connections/{node.uuid}/{policy.name}/{server}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/fpolicy/9f738ac5-c502-11eb-b82c-0050568e5902/connections/8ca36b68-c501-11eb-b82c-0050568e5902/p1/192.168.137.78" -H  "accept: application/json"
+----
+
+'''
+
+

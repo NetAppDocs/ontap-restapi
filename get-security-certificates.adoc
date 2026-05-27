@@ -1,0 +1,671 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-certificates.html'
+summary: 'Retrieve security certificates'
+---
+
+= Retrieve security certificates
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/certificates`#
+
+*Introduced In:* 9.6
+
+Retrieves security certificates.
+
+== Related ONTAP commands
+
+* `security certificate show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|subject_key_identifier
+|string
+|query
+|False
+a|Filter by subject_key_identifier
+
+* Introduced in: 9.8
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|ca
+|string
+|query
+|False
+a|Filter by ca
+
+* maxLength: 256
+* minLength: 1
+
+
+|serial_number
+|string
+|query
+|False
+a|Filter by serial_number
+
+* maxLength: 40
+* minLength: 1
+
+
+|common_name
+|string
+|query
+|False
+a|Filter by common_name
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|hash_function
+|string
+|query
+|False
+a|Filter by hash_function
+
+
+|expiry_time
+|string
+|query
+|False
+a|Filter by expiry_time
+
+
+|public_certificate
+|string
+|query
+|False
+a|Filter by public_certificate
+
+* Introduced in: 9.8
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* Introduced in: 9.8
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|subject_alternatives.uri
+|string
+|query
+|False
+a|Filter by subject_alternatives.uri
+
+* Introduced in: 9.15
+
+
+|subject_alternatives.ip
+|string
+|query
+|False
+a|Filter by subject_alternatives.ip
+
+* Introduced in: 9.15
+
+
+|subject_alternatives.email
+|string
+|query
+|False
+a|Filter by subject_alternatives.email
+
+* Introduced in: 9.15
+
+
+|subject_alternatives.dns
+|string
+|query
+|False
+a|Filter by subject_alternatives.dns
+
+* Introduced in: 9.15
+
+
+|authority_key_identifier
+|string
+|query
+|False
+a|Filter by authority_key_identifier
+
+* Introduced in: 9.8
+
+
+|key_size
+|integer
+|query
+|False
+a|Filter by key_size
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+* Introduced in: 9.8
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#security_certificate[security_certificate]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "authority_key_identifier": "26:1F:C5:53:5B:D7:9E:E2:37:74:F4:F4:06:09:03:3D:EB:41:75:D7",
+      "azure": {
+        "verify_host": true
+      },
+      "ca": "string",
+      "common_name": "test.domain.com",
+      "expiry_time": "2030-01-25 11:20:13 +0000",
+      "hash_function": "string",
+      "key_size": 512,
+      "name": "string",
+      "public_certificate": "<CERTIFICATE-CONTENT>",
+      "scope": "string",
+      "serial_number": "string",
+      "subject_alternatives": {
+        "dns": [
+          "*.example.com"
+        ],
+        "email": [
+          "abc@example.com"
+        ],
+        "ip": [
+          "10.225.34.10"
+        ],
+        "uri": [
+          "http://example.com"
+        ]
+      },
+      "subject_key_identifier": "26:1F:C5:53:5B:D7:9E:E2:37:74:F4:F4:06:09:03:3D:EB:41:75:D8",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "string",
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#proxy]
+[.api-collapsible-fifth-title]
+proxy
+[#azure]
+[.api-collapsible-fifth-title]
+azure
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|proxy
+|link:#proxy[proxy]
+a|
+
+|===
+
+
+[#subject_alternatives]
+[.api-collapsible-fifth-title]
+subject_alternatives
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dns
+|array[string]
+a|A list of DNS names for Subject Alternate name extension.
+
+
+|email
+|array[string]
+a|A list of email addresses for Subject Alternate name extension
+
+
+|ip
+|array[string]
+a|A list of IP addresses for Subject Alternate name extension.
+
+
+|uri
+|array[string]
+a|A list of URIs for Subject Alternate name extension.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#security_certificate]
+[.api-collapsible-fifth-title]
+security_certificate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authority_key_identifier
+|string
+a|Provides the key identifier of the issuing CA certificate that signed the SSL certificate.
+
+
+|azure
+|link:#azure[azure]
+a|
+
+|ca
+|string
+a|Certificate authority
+
+
+|common_name
+|string
+a|FQDN or custom common name. Provide on POST when creating a self-signed certificate.
+
+
+|expiry_time
+|string
+a|Certificate expiration time, in ISO 8601 duration format or date and time format. Can be provided on POST if creating self-signed certificate. The expiration time range is between 1 day to 10 years.
+
+
+|hash_function
+|string
+a|Hashing function. Can be provided on POST when creating a self-signed certificate. Hash functions md5 and sha1 are not allowed on POST.
+
+
+|key_size
+|integer
+a|Key size of requested Certificate in bits. One of 512, 1024, 1536, 2048, 3072. Can be provided on POST if creating self-signed certificate with a minimum permissible value of 2048.
+
+
+|name
+|string
+a|Certificate name or name of the certificate to be downloaded from the Azure Key Vault (AKV). If not provided in POST, a unique name specific to the SVM is automatically generated.
+
+
+|public_certificate
+|string
+a|Public key Certificate in PEM format. If this is not provided in POST, a self-signed certificate is created.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|serial_number
+|string
+a|Serial number of certificate.
+
+
+|subject_alternatives
+|link:#subject_alternatives[subject_alternatives]
+a|
+
+|subject_key_identifier
+|string
+a|Provides the key identifier used to identify the public key in the SSL certificate.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Type of Certificate. The following types are supported:
+
+* client - a certificate and its private key used by an SSL client in ONTAP.
+* server - a certificate and its private key used by an SSL server in ONTAP.
+* client_ca - a Certificate Authority certificate used by an SSL server in ONTAP to verify an SSL client certificate.
+* server_ca - a Certificate Authority certificate used by an SSL client in ONTAP to verify an SSL server certificate.
+* root_ca - a self-signed certificate used by ONTAP to sign other certificates by acting as a Certificate Authority.
+* enum: ["client", "server", "client_ca", "server_ca", "root_ca"]
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|uuid
+|string
+a|Unique ID that identifies a certificate.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

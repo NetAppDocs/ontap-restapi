@@ -1,0 +1,264 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_local-groups_endpoint_overview.html'
+summary: 'Manage local groups'
+---
+
+= Manage local groups
+
+
+
+== Overview
+
+The CIFS server can use local groups for authorization when determining share, file and directory access rights.
+You can use this API to display local group information and to control local group configurations.
+
+== Retrieving local group information
+
+The local group GET endpoint retrieves all of the local groups configurations for data SVMs.
+
+== Examples
+
+=== Retrieving all of the fields for all of the local group configurations
+
+The local group GET endpoint retrieves all of the local groups configurations for data SVMs.
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/local-groups?fields=**" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-32-544",
+    "name": "BUILTIN\\Administrators",
+    "description": "Built-in Administrators group",
+    "members": [
+      {
+        "name": "CIFS_SERVER\\Administrator"
+      },
+      {
+        "name": "AD_DOMAIN\\Domain Admins"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-32-545",
+    "name": "BUILTIN\\Users",
+    "description": "All users",
+    "members": [
+      {
+        "name": "AD_DOMAIN\\Domain Users"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-32-546",
+    "name": "BUILTIN\\Guests",
+    "description": "Built-in Guests Group",
+    "members": [
+      {
+        "name": "SACHILDAP02\\Domain Guests"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-32-547",
+    "name": "BUILTIN\\Power Users",
+    "description": "Restricted administrative privileges"
+  },
+  {
+    "svm": {
+      "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-32-551",
+    "name": "BUILTIN\\Backup Operators",
+    "description": "Backup Operators group"
+  },
+  {
+    "svm": {
+      "uuid": "b009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "vs1"
+    },
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+    "name": "CIFS_SERVER\\group2",
+    "description": "local group2"
+  },
+  {
+    "svm": {
+      "uuid": "5060077c-5be6-11eb-90b7-0050568e5169",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-32-544",
+    "name": "BUILTIN\\Administrators",
+    "description": "Built-in Administrators group",
+    "members": [
+      {
+        "name": "VS2.CIFS\\Administrator"
+      },
+      {
+        "name": "VS2.CIFS\\user3"
+      },
+      {
+        "name": "SACHILDAP02\\Domain Admins"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "5060077c-5be6-11eb-90b7-0050568e5169",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-32-545",
+    "name": "BUILTIN\\Users",
+    "description": "All users",
+    "members": [
+      {
+        "name": "SACHILDAP02\\Domain Users"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "5060077c-5be6-11eb-90b7-0050568e5169",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-32-546",
+    "name": "BUILTIN\\Guests",
+    "description": "Built-in Guests Group",
+    "members": [
+      {
+        "name": "SACHILDAP02\\Domain Guests"
+      }
+    ]
+  },
+  {
+    "svm": {
+      "uuid": "5060077c-5be6-11eb-90b7-0050568e5169",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-32-547",
+    "name": "BUILTIN\\Power Users",
+    "description": "Restricted administrative privileges"
+  },
+  {
+    "svm": {
+      "uuid": "5060077c-5be6-11eb-90b7-0050568e5169",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-32-551",
+    "name": "BUILTIN\\Backup Operators",
+    "description": "Backup Operators group"
+  },
+  {
+    "svm": {
+      "uuid": "5060077c-5be6-11eb-90b7-0050568e5169",
+      "name": "vs2"
+    },
+    "sid": "S-1-5-21-1625922807-3304708894-3529444428-1001",
+    "name": "CIFS_SERVER\\group1",
+    "description": "local group1"
+  }
+],
+"num_records": 12
+}
+----
+
+=== Retrieving a local group configuration of a specific SVM and group
+
+'''
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups/{svm.uuid}/{sid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/local-groups/25b363a6-2971-11eb-88e1-0050568eefd4/S-1-5-21-256008430-3394229847-3930036330-1001" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "25b363a6-2971-11eb-88e1-0050568eefd4",
+  "name": "vs1"
+},
+"sid": "S-1-5-21-256008430-3394229847-3930036330-1001",
+"name": "CIFS_SERVER\\group1",
+"description": "local group"
+}
+----
+
+== Creating a local group configuration
+
+The local group POST endpoint creates a local group configuration for the specified SVM.
+
+== Example
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/local-groups" -H "accept: application/json" -H "Content-Type: application/json" -d '{ "svm": {"uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1"}, "name": "group1"}'
+----
+
+== Updating a local group configuration
+
+The local group PATCH endpoint updates the name and description of the specified local group and the specified SVM.
+
+== Example
+
+=== Update the local group name from 'group1' to 'group2'
+
+----
+
+# The API:
+/api/protocols/local-groups/{svm.uuid}/{sid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/local-groups/179d3c85-7053-11e8-b9b8-005056b41bd1/S-1-5-21-256008430-3394229847-3930036330-1257" -H "accept: application/json" -H "Content-Type: application/json" -d '{ "name": "group2", "description": "local group"}'
+----
+
+== Deleting a local group configuration
+
+The local group DELETE endpoint deletes the specified local group of the specified SVM.
+
+== Example
+
+=== Delete the local group 'group1'
+
+----
+
+# The API:
+/api/protocols/cifs/local-groups/{svm.uuid}/{sid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/local-groups/179d3c85-7053-11e8-b9b8-005056b41bd1/S-1-5-21-256008430-3394229847-3930036330-1001" -H "accept: application/json"
+----
+
+

@@ -1,0 +1,1014 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_aggregates_uuid_endpoint_overview.html'
+summary: 'Manage storage aggregates'
+---
+
+= Manage storage aggregates
+
+
+
+== Updating storage aggregates
+
+The PATCH operation is used to modify properties of the aggregate. There are several properties that can be modified on an aggregate. Only one property can be modified for each PATCH request.
+PATCH operations on the aggregate's disk count will be blocked while one or more nodes in the cluster are simulating or implementing automatic aggregate creation.
+
+Aggregates are automatically managed in the ASA r2 system. Therefore, PATCH and DELETE operations are not supported in ASA r2.
+
+The following is a list of properties that can be modified using the PATCH operation including a brief description for each:
+
+* name - This property can be changed to rename the aggregate.
+* node.name and node.uuid - Either property can be updated in order to relocate the aggregate to a different node in the cluster.
+* state - This property can be changed to 'online' or 'offline'. Setting an aggregate 'offline' would automatically offline all the volumes currently hosted on the aggregate.
+* block_storage.mirror.enabled - This property can be changed from 'false' to 'true' in order to mirror the aggregate, if the system is capable of doing so.
+* block_storage.primary.disk_count - This property can be updated to increase the number of disks in an aggregate.
+* block_storage.primary.raid_size - This property can be updated to set the desired RAID size.
+* block_storage.primary.raid_type - This property can be updated to set the desired RAID type.
+* cloud_storage.tiering_fullness_threshold - This property can be updated to set the desired tiering fullness threshold if using FabricPool.
+* cloud_storage.migrate_threshold - This property can be updated to set the desired migrate threshold if using FabricPool.
+* data_encryption.software_encryption_enabled - This property enables or disables NAE on the aggregate.
+* block_storage.hybrid_cache.storage_pools.allocation_units_count - This property can be updated to add a storage pool to the aggregate specifying the number of allocation units.
+* block_storage.hybrid_cache.storage_pools.name - This property can be updated to add a storage pool to the aggregate specifying the storage pool name. block_storage.hybrid_cache.storage_pools.uuid or this field must be specified with block_storage.hybrid_cache.storage_pools.allocation_units_count.
+* block_storage.hybrid_cache.storage_pools.uuid - This property can be updated to add a storage pool to the aggregate specifying the storage pool uuid. block_storage.hybrid_cache.storage_pools.name or this field must be specified with block_storage.hybrid_cache.storage_pools.allocation_units_count.
+* block_storage.hybrid_cache.raid_size - This property can be updated to set the desired RAID size. This property can also be specified on the first time addition of a storage pool to the aggregate.
+* block_storage.hybrid_cache.raid_type - This property can be updated to set the desired RAID type of a physical SSD Flash Pool. This property can also be specified on the first time addition of a storage pool to the aggregate. When specifying a raidtype of raid4, the node is required to have spare SSDs for the storage pool as well.
+* block_storage.hybrid_cache.disk_count - This property can be specified on the first time addition of physical SSD cache to the aggregate. It can also be updated to increase the number of disks in the physical SSD cache of a hybrid aggregate.
+
+=== Aggregate expansion
+
+The PATCH operation also supports automatically expanding an aggregate based on the spare disks which are present within the system. Running PATCH with the query "auto_provision_policy" set to "expand" starts the recommended expansion job. In order to see the expected change in capacity before starting the job, call GET on an aggregate instance with the query "auto_provision_policy" set to "expand".
+
+=== Manual simulated aggregate expansion
+
+The PATCH operation also supports simulated manual expansion of an aggregate.
+Running PATCH with the query "simulate" set to "true" and "block_storage.primary.disk_count" set to the final disk count will start running the prechecks associated with expanding the aggregate to the proposed size.
+The response body will include information on how many disks the aggregate can be expanded to, any associated warnings, along with the proposed final size of the aggregate.
+
+== Deleting storage aggregates
+
+If volumes exist on an aggregate, they must be deleted or moved before the aggregate can be deleted.
+See the /storage/volumes API for details on moving or deleting volumes.
+
+== Adding a storage pool to an aggregate
+
+A storage pool can be added to an aggregate by patching the field "block_storage.hybrid_cache.storage_pools.allocation_units_count" while also specifying the specific storage pool using the
+"block_storage.hybrid_cache.storage_pools.name" or "block_storage.hybrid_cache.storage_pools.uuid". Subsequent patches to the aggregate can be completed to increase allocation unit counts
+or adding additional storage pools. On the first time addition of a storage pool to the aggregate, the raidtype can be optionally specified using the "block_storage.hybrid_cache.raid_type" field.
+
+== Adding physical SSD cache capacity to an aggregate
+
+The PATCH operation supports addition of a new physical SSD cache to an aggregate. It also supports expansion of existing physical SSD cache in the hybrid aggregate.
+Running PATCH with "block_storage.hybrid_cache.disk_count" set to the final disk count will expand the physical SSD cache of the hybrid aggregate to the proposed size.
+The RAID type can be optionally specified using the "block_storage.hybrid_cache.raid_type" field.
+The RAID size can be optionally specified using the "block_storage.hybrid_cache.raid_size" field.
+These operations can also be simulated by setting the query "simulate" to "true".
+
+'''
+
+== Examples
+
+=== Retrieving a specific aggregate from the cluster
+
+The following example shows the response of the requested aggregate. If there is no aggregate with the requested UUID, an error is returned.
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/870dd9f2-bdfa-4167-b692-57d1cec874d4" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+"name": "test1",
+"node": {
+  "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+  "name": "node-1",
+},
+"home_node": {
+  "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+  "name": "node-1",
+},
+"space": {
+  "block_storage": {
+    "size": 235003904,
+    "available": 191942656,
+    "used": 43061248,
+    "full_threshold_percent": 98,
+    "physical_used": 5271552,
+    "physical_used_percent": 1,
+    "volume_footprints_percent": 14,
+    "aggregate_metadata": 2655,
+    "aggregate_metadata_percent": 8,
+    "used_including_snapshot_reserve": 674685,
+    "used_including_snapshot_reserve_percent": 35,
+    "data_compacted_count": 666666,
+    "data_compaction_space_saved": 654566,
+    "data_compaction_space_saved_percent": 47,
+    "volume_deduplication_shared_count": 567543,
+    "volume_deduplication_space_saved": 23765,
+    "volume_deduplication_space_saved_percent": 32,
+    "used_percent": 50,
+  },
+  "snapshot": {
+    "used_percent": 45,
+    "available": 2000,
+    "total": 5000,
+    "used": 3000,
+    "reserve_percent": 20
+  },
+  "cloud_storage": {
+    "used": 0
+  },
+  "efficiency": {
+    "savings": 1408029,
+    "ratio": 6.908119720880661,
+    "logical_used": 1646350,
+    "cross_volume_background_dedupe": true,
+    "cross_volume_inline_dedupe": false,
+    "cross_volume_dedupe_savings": true,
+    "auto_adaptive_compression_savings": false,
+    "enable_workload_informed_tsse": true,
+    "wise_tsse_min_used_capacity_pct": 2
+  },
+  "efficiency_without_snapshots": {
+    "savings": 0,
+    "ratio": 1,
+    "logical_used": 737280
+  },
+  "efficiency_without_snapshots_flexclones": {
+    "savings": 5000,
+    "ratio": 2,
+    "logical_used": 10000
+  }
+},
+"snapshot": {
+  "files_total": 10,
+  "files_used": 3,
+  "max_files_available": 5,
+  "max_files_used": 50
+},
+"state": "online",
+"snaplock_type": "non_snaplock",
+"create_time": "2018-12-04T15:40:38-05:00",
+"data_encryption": {
+  "software_encryption_enabled": false,
+  "drive_protection_enabled": false
+},
+"block_storage": {
+  "uses_partitions": false,
+  "storage_type": "vmdisk",
+  "primary": {
+    "disk_count": 6,
+    "disk_class": "solid_state",
+    "raid_type": "raid_dp",
+    "raid_size": 24,
+    "checksum_style": "block",
+    "disk_type": "ssd"
+  },
+  "hybrid_cache": {
+    "enabled": false
+  },
+  "mirror": {
+    "enabled": false,
+    "state": "unmirrored"
+  },
+  "plexes": [
+    {
+      "name": "plex0",
+    }
+  ]
+},
+"cloud_storage": {
+  "attach_eligible": false
+},
+"inode_attributes": {
+  "files_total": 31136,
+  "files_used": 97,
+  "max_files_available": 31136,
+  "max_files_possible": 2844525,
+  "max_files_used": 97,
+  "used_percent": 5
+},
+"volume_count": 0,
+}
+----
+
+=== Retrieving statistics and metric for an aggregate
+
+In this example, the API returns the "statistics" and "metric" properties for the aggregate requested.
+
+----
+
+#The API:
+/api/storage/aggregates/{uuid}?fields=statistics,metric
+
+#The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/538bf337-1b2c-11e8-bad0-005056b48388?fields=statistics,metric" -H "accept: application/json"
+
+#The response:
+{
+"uuid": "538bf337-1b2c-11e8-bad0-005056b48388",
+"name": "aggr4",
+"metric": {
+     "timestamp": "2019-07-08T22:16:45Z",
+     "duration": "PT15S",
+     "status": "ok",
+     "throughput": {
+       "read": 7099,
+       "write": 840226,
+       "other": 193293789,
+       "total": 194141115
+       },
+     "latency": {
+       "read": 149,
+       "write": 230,
+       "other": 123,
+       "total": 124
+     },
+     "iops": {
+       "read": 1,
+       "write": 17,
+       "other": 11663,
+       "total": 11682
+     },
+ },
+  "statistics": {
+     "timestamp": "2019-07-08T22:17:09Z",
+     "status": "ok",
+     "throughput_raw": {
+       "read": 3106045952,
+       "write": 63771742208,
+       "other": 146185560064,
+       "total": 213063348224
+     },
+     "latency_raw": {
+       "read": 54072313,
+       "write": 313354426,
+       "other": 477201985,
+       "total": 844628724
+     },
+     "iops_raw": {
+       "read": 328267,
+       "write": 1137230,
+       "other": 1586535,
+       "total": 3052032
+     }
+  },
+}
+----
+
+For more information and examples on viewing historical performance metrics for any given aggregate, see link:storage_aggregates_uuid_metrics_endpoint_overview.htmll[DOC /storage/aggregates/\{uuid}/metrics]
+
+=== Simulating aggregate expansion
+
+The following example shows the response for a simulated data aggregate expansion based on the values of the 'block_storage.primary.disk_count' attribute passed in.
+The query does not modify the existing aggregate but returns how the aggregate will look after the expansion along with any associated warnings.
+Simulated data aggregate expansion will be blocked while one or more nodes in the cluster are simulating or implementing automatic aggregate creation.
+This will be reflected in the following attributes:
+
+* space.block_storage.size - Total usable space in bytes, not including WAFL reserve and aggregate snapshot reserve.
+* block_storage.primary.disk_count - Number of disks that could be used to create the aggregate.
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}?simulate=true
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/aggregates/cae60cfe-deae-42bd-babb-ef437d118314?simulate=true" -H "accept: application/json" -d "{\"block_storage\": {\"primary\": {\"disk_count\": 13}}}"
+
+# The response:
+{
+"warnings": [
+  {
+    "name": "node_2_SSD_1",
+    "warning": {
+      "message": "One or more disks will not be added. 10 disks specified, 9 disks will be added.",
+      "code": 787170,
+      "arguments": [
+        "10",
+        "9"
+      ]
+    }
+  }
+],
+"num_records": 1,
+"records": [
+  {
+    "uuid": "cae60cfe-deae-42bd-babb-ef437d118314",
+    "name": "node_2_SSD_1",
+    "node": {
+      "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+      "name": "node-2"
+    },
+    "space": {
+      "block_storage": {
+        "size": 1116180480
+      }
+    },
+    "block_storage": {
+      "primary": {
+        "disk_count": 12,
+        "disk_class": "solid_state",
+        "raid_type": "raid_dp",
+        "disk_type": "ssd",
+        "raid_size": 12,
+        "simulated_raid_groups": [
+           {
+             "name": "test/plex0/rg0",
+             "existing_parity_disk_count": 2,
+             "added_parity_disk_count": 0,
+             "existing_data_disk_count": 1,
+             "added_data_disk_count": 9,
+             "usable_size": 12309487,
+             "is_partition": false
+           }
+         ]
+      },
+      "hybrid_cache": {
+        "enabled": false
+      },
+      "mirror": {
+        "enabled": false
+      }
+    },
+  }
+]
+}
+----
+
+=== Manual aggregate expansion with disk size query
+
+The following example shows the response for aggregate expansion based on the values of the 'block_storage.hybrid_cache.disk_count' attribute based on the disk size passed in.
+
+----
+
+# The API:
+/api/storage/aggregate/{uuid}?disk_size={disk_size}
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/aggregates/cae60cfe-deae-42bd-babb-ef437d118314?disk_size=1902379008" -H "accept: application/json" -d "{\"block_storage\": {\"hybrid_cache\": {\"disk_count\": 4}}}"
+
+# The response:
+{
+"job": {
+  "uuid": "c103d15e-730b-11e8-a57f-005056b465d6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c103d15e-730b-11e8-a57f-005056b465d6"
+    }
+  }
+}
+}
+----
+
+=== Simulating a manual aggregate expansion with disk size query
+
+The following example shows the response for a manual aggregate expansion based on the values of the 'block_storage.hybrid_cache.disk_count' attribute based on the disk size passed in.
+The query internally maps out the appropriate expansion as well as warnings that may be associated for the hybrid enabled aggregate.
+
+----
+
+# The API:
+/api/storage/aggregate/{uuid}?simulate=true&disk_size=1902379008
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/aggregates/cae60cfe-deae-42bd-babb-ef437d118314?simulate=true&disk_size=1902379008" -H "accept: application/json" -d "{\"block_storage\": {\"hybrid_cache\": {\"disk_count\": 4}}}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "cae60cfe-deae-42bd-babb-ef437d118314",
+    "name": "ag1",
+    "node": {
+      "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+      "name": "node-2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4046dda8-f802-11e8-8f6d-005056bb2030"
+        }
+      }
+    },
+    "block_storage": {
+      "primary": {
+        "disk_count": 4,
+        "disk_class": "virtual",
+        "raid_type": "raid_dp",
+        "disk_type": "vm_disk",
+      },
+      "hybrid_cache": {
+        "disk_type": "ssd",
+        "enabled": true,
+        "disk_count": 4,
+        "raid_type": "raid_dp",
+        "size": 3761766400,
+        "simulated_raid_groups": [
+          {
+            "name": "test/plex0/rg0",
+            "existing_parity_disk_count": 2,
+            "existing_data_disk_count": 1,
+            "added_parity_disk_count": 0,
+            "added_data_disk_count": 1,
+            "usable_size": 1880883200,
+            "is_partition": false
+          },
+        ]
+      },
+      "mirror": {
+        "enabled": false
+      },
+      "_links": {
+        "self": {
+          "href": "/api/storage/aggregates/cae60cfe-deae-42bd-babb-ef437d118314"
+        }
+      }
+    }
+  }
+]
+}
+----
+
+=== Simulating a manual aggregate expansion with raid group query
+
+The following example shows the response for a manual aggregate expansion based on the values of the 'block_storage.primary.disk_count' attribute passed in.
+The query internally maps out the appropriate expansion as well as warnings that may be associated and lays out the new raidgroups in a more detailed view. An additional query can be passed in to specify
+raidgroup addition by new raidgroup, all raidgroups or a specific raidgroup.
+
+----
+
+# The API:
+/api/storage/aggregate/{uuid}?simulate=true&raid_group=[new&#124;all&#124;rgX]
+
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/aggregates/cae60cfe-deae-42bd-babb-ef437d118314?simulate=true&raid_group=new" -H "accept: application/json" -d "{\"block_storage\": {\"primary\": {\"disk_count\": 24}}}"
+
+# The response:
+{
+"warnings": [
+  {
+    "name": "test",
+    "warning": {
+      "code": 11,
+      "message": "Number of unassigned disks attached to node \"node-2\": 6.",
+      "arguments": [
+        "6",
+        "node-2"
+      ]
+    }
+  }
+],
+"num_records": 1,
+"records": [
+  {
+    "uuid": "cae60cfe-deae-42bd-babb-ef437d118314",
+    "name": "test",
+    "node": {
+      "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+      "name": "node-2"
+    },
+    "space": {
+      "block_storage": {
+        "size": 33292025856
+      }
+    },
+    "block_storage": {
+      "primary": {
+        "disk_count": 24,
+        "disk_class": "solid_state",
+        "raid_type": "raid_dp",
+        "disk_type": "ssd",
+        "raid_size": 24,
+        "simulated_raid_groups": [
+           {
+             "name": "test/plex0/rg0",
+             "existing_parity_disk_count": 0,
+             "added_parity_disk_count": 2,
+             "existing_data_disk_count": 0,
+             "added_data_disk_count": 10,
+             "usable_size": 12309487,
+             "is_partition": false
+           },
+           {
+             "name": "test/plex1/rg1",
+             "existing_parity_disk_count": 0,
+             "added_parity_disk_count": 2,
+             "existing_data_disk_count": 0,
+             "added_data_disk_count": 10,
+             "usable_size": 12309487,
+             "is_partition": false
+           }
+         ]
+      },
+      "hybrid_cache": {
+        "enabled": false
+      },
+      "mirror": {
+        "enabled": false
+      }
+    }
+  }
+]
+}
+----
+
+=== Retrieving the usable spare information for the cluster
+
+The following example shows the response from retrieving usable spare information for the expansion of this particular aggregate. The output is restricted to only spares that are compatible with this aggregate.
+
+----
+
+# The API:
+/api/storage/aggregates?show_spares=true&uuid={uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates?uuid=cae60cfe-deae-42bd-babb-ef437d118314&show_spares=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [],
+"num_records": 0,
+"spares": [
+  {
+    "node": {
+      "uuid": "0cdd84fa-b99c-11eb-b0ed-005056bb4fc2",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd",
+    "size": 3720609792,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "usable": 12,
+    "layout_requirements": [
+      {
+        "raid_type": "raid_dp",
+        "default": true,
+        "aggregate_min_disks": 3,
+        "raid_group": {
+          "min": 3,
+          "max": 28,
+          "default": 24
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Retrieving the SSD spare count for the cluster
+
+The following example shows the response from retrieving SSD spare count information for the expansion of this particular aggregate's hybrid cache tier. The output is restricted to only spares that are compatible with this aggregate.
+
+----
+
+# The API:
+/api/storage/aggregates?show_spares=true&uuid={uuid}&flash_pool_eligible=true
+
+# The response:
+{
+"records": [],
+"num_records": 0,
+"spares": [
+  {
+    "node": {
+      "uuid": "c35c5975-cbcb-11ec-a3e1-005056bbdb46",
+      "name": "node-2"
+    },
+    "disk_class": "solid_state",
+    "disk_type": "ssd",
+    "size": 1902379008,
+    "checksum_style": "block",
+    "syncmirror_pool": "pool0",
+    "is_partition": false,
+    "usable": 1,
+    "layout_requirements": [
+      {
+        "raid_type": "raid4",
+        "default": true,
+        "aggregate_min_disks": 2,
+        "raid_group": {
+          "min": 2,
+          "max": 14,
+          "default": 8
+        }
+      }
+    ]
+  }
+]
+}
+----
+
+=== Retrieving a recommendation for an aggregate expansion
+
+The following example shows the response with the recommended data aggregate expansion based on what disks are present within the system.
+The query does not modify the existing aggregate but returns how the aggregate will look after the expansion. The recommendation will be reflected in the attributes - 'space.block_storage.size' and 'block_storage.primary.disk_count'.
+Recommended data aggregate expansion will be blocked while one or more nodes in the cluster are simulating or implementing automatic aggregate creation.
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}?auto_provision_policy=expand
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/cae60cfe-deae-42bd-babb-ef437d118314?auto_provision_policy=expand" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "cae60cfe-deae-42bd-babb-ef437d118314",
+"name": "node_2_SSD_1",
+"node": {
+  "uuid": "4046dda8-f802-11e8-8f6d-005056bb2030",
+  "name": "node-2"
+},
+"space": {
+  "block_storage": {
+    "size": 1116180480
+  }
+},
+"block_storage": {
+  "primary": {
+    "disk_count": 12,
+    "disk_class": "solid_state",
+    "raid_type": "raid_dp",
+    "disk_type": "ssd",
+    "raid_size": 24,
+    "simulated_raid_groups": [
+       {
+         "name": "test/plex0/rg0",
+         "parity_disk_count": 2,
+         "data_disk_count": 10,
+         "usable_size": 12309487,
+         "is_partition": false
+       }
+     ]
+  },
+  "hybrid_cache": {
+    "enabled": false
+  },
+  "mirror": {
+    "enabled": false
+  }
+}
+}
+----
+
+=== Updating an aggregate in the cluster
+
+The following example shows the workflow of adding disks to the aggregate.
+
+Step 1: Check the current disk count on the aggregate.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c?fields=block_storage.primary.disk_count" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+"name": "test1",
+"block_storage": {
+  "primary": {
+    "disk_count": 6
+  }
+},
+}
+----
+
+Step 2: Update the aggregate with the new disk count in 'block_storage.primary.disk_count'. The response to PATCH is a job unless the request is invalid.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c" -H "accept: application/hal+json" -d "{\"block_storage\": {\"primary\": {\"disk_count\": 8}}}"
+
+# The response:
+{
+"job": {
+  "uuid": "c103d15e-730b-11e8-a57f-005056b465d6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c103d15e-730b-11e8-a57f-005056b465d6"
+    }
+  }
+}
+}
+----
+
+Step 3: Wait for the job to finish, then call GET to see the reflected change.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c?fields=block_storage.primary.disk_count" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+"name": "test1",
+"block_storage": {
+  "primary": {
+    "disk_count": 8
+  }
+},
+}
+----
+
+=== Adding a storage pool to an aggregate
+
+The following example shows how to add cache capacity from an existing storage pool to an aggregate.
+Step 1: Update the aggregate with the new storage pool allocation unit in 'block_storage.hybrid_cache.storage_pools.allocation_units_count'.
+Additionally, specify 'block_storage.hybrid_cache.storage_pools.name' or 'block_storage.hybrid_cache.storage_pools.uuid' to the storage pool.
+On the first storage pool, 'block_storage.hybrid_cache.raid_type' can be specified for the raidtype of the hybrid cache.
+The response to PATCH is a job unless the request is invalid.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c" -H "accept: application/json" -d "{\"block_storage\": {\"hybrid_cache\": {\"raid_type\": \"raid_dp\", \"storage_pools\": [{ \"allocation_units_count\": 2, \"storage_pool\": { \"name\": \"sp1\"}}]}}}"
+
+# The response:
+{
+"job": {
+  "uuid": "c103d15e-730b-11e8-a57f-005056b465d6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c103d15e-730b-11e8-a57f-005056b465d6"
+    }
+  }
+}
+}
+----
+
+Step 2: Wait for the job to finish, then call GET to see the reflected change.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/19425837-f2fa-4a9f-8f01-712f626c983c?fields=block_storage.hybrid_cache" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+"name": "test1",
+"hybrid_cache": {
+    "enabled": true,
+    "disk_count": 3,
+    "raid_size": 24,
+    "raid_type": "raid_dp",
+    "size": 880279552,
+    "used": 73728,
+    "storage_pools": [
+        {
+            "allocation_units_count": 2,
+            "storage_pool": {
+                "name": "sp1",
+                "uuid": "eeef0b24-846b-11ec-8fcb-005056bb12c7"
+            }
+        }
+    ]
+}
+}
+----
+
+=== Adding physical SSD cache capacity to an aggregate
+
+The following example shows how to add physical SSD cache capacity to an aggregate.
+Step 1: Specify the number of disks to be added to cache in 'block_storage.hybrid_cache.disk_count'.
+'block_storage.hybrid_cache.raid_type' can be specified for the RAID type of the hybrid cache.
+'block_storage.hybrid_cache.raid_size' can be specified for the RAID size of the hybrid cache.
+The response to PATCH is a job unless the request is invalid.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/aggregates/caa8a9f1-0219-4eaf-bcad-e29c05042fe1" -H "accept: application/json" -d '{"block_storage.hybrid_cache.disk_count":3,"block_storage.hybrid_cache.raid_type":"raid4"}'
+
+# The response:
+{
+"job": {
+  "uuid": "c103d15e-730b-11e8-a57f-005056b465d6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c103d15e-730b-11e8-a57f-005056b465d6"
+    }
+  }
+}
+}
+----
+
+Step 2: Wait for the job to finish, then call GET to see the reflected change.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/caa8a9f1-0219-4eaf-bcad-e29c05042fe1?fields=block_storage.hybrid_cache" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "caa8a9f1-0219-4eaf-bcad-e29c05042fe1",
+"name": "test1",
+"hybrid_cache": {
+    "enabled": true,
+    "disk_count": 3,
+    "raid_size": 24,
+    "raid_type": "raid4",
+    "size": 880279552,
+    "used": 73728
+}
+}
+----
+
+=== Simulated addition of physical SSD cache capacity to an aggregate
+
+The following example shows the response for a simulated addition of physical SSD cache capacity to an aggregate based on the values of the
+'block_storage.hybrid_cache.disk_count', 'block_storage.hybrid_cache.raid_type' and 'block_storage.hybrid_cache.raid_size' attributes passed in.
+The query does not modify the existing aggregate but returns how the aggregate will look after the expansion along with any associated warnings.
+Simulated addition of physical SSD cache capacity to an aggregate will be blocked while one or more nodes in the cluster are simulating or implementing automatic aggregate creation.
+This will be reflected in the following attributes:
+
+* block_storage.hybrid_cache.size - Total usable cache space in bytes, not including WAFL reserve and aggregate snapshot reserve.
+* block_storage.hybrid_cache.disk_count - Number of disks that can be added to the aggregate's cache tier.
+
+----
+
+# The API:
+/api/storage/aggregates/{uuid}?simulate=true
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/aggregates/7eb630d1-0e55-4cb6-8d90-957d6f4db54e?simulate=true" -H "accept: application/json" -d '{"block_storage.hybrid_cache.disk_count":6,"block_storage.hybrid_cache.raid_type":"raid4","block_storage.hybrid_cache.raid_size":3}'
+
+# The response:
+{
+ "warnings": [
+   {
+     "name": "test",
+     "warning": {
+       "code": 18316,
+       "message": "Operation will lead to creation of new raid group"
+     }
+   }
+ ],
+ "num_records": 1,
+ "records": [
+   {
+     "uuid": "7eb630d1-0e55-4cb6-8d90-957d6f4db54e",
+     "name": "test",
+     "node": {
+       "uuid": "30d69eb5-f046-11ec-9bba-005056bba492",
+       "name": "node-1",
+       "_links": {
+         "self": {
+           "href": "/api/cluster/nodes/30d69eb5-f046-11ec-9bba-005056bba492"
+         }
+       }
+     },
+     "space": {
+       "block_storage": {
+         "size": 833777664
+       }
+     },
+     "block_storage": {
+       "primary": {
+         "disk_count": 3,
+         "disk_class": "virtual",
+         "raid_type": "raid_dp",
+         "disk_type": "vm_disk"
+       },
+       "hybrid_cache": {
+         "disk_class": "solid_state",
+         "disk_type": "ssd",
+         "enabled": false,
+         "disk_count": 6,
+         "raid_type": "raid4",
+         "size": 6771179520,
+         "simulated_raid_groups": [
+           {
+             "name": "/test/plex0/rg1",
+             "existing_parity_disk_count": 0,
+             "existing_data_disk_count": 0,
+             "added_parity_disk_count": 1,
+             "added_data_disk_count": 2,
+             "usable_size": 1880883200,
+             "is_partition": false
+           },
+           {
+             "name": "/test/plex0/rg2",
+             "existing_parity_disk_count": 0,
+             "existing_data_disk_count": 0,
+             "added_parity_disk_count": 1,
+             "added_data_disk_count": 2,
+             "usable_size": 1880883200,
+             "is_partition": false
+           }
+         ]
+       },
+       "mirror": {
+         "enabled": false
+       }
+     },
+     "_links": {
+       "self": {
+         "href": "/api/storage/aggregates/7eb630d1-0e55-4cb6-8d90-957d6f4db54e"
+       }
+     }
+   }
+ ]
+ }
+----
+
+The following example shows the workflow to enable software encryption on an aggregate.
+
+Step 1: Check the current software encryption status of the aggregate.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/f3aafdc6-be35-4d93-9590-5a402bffbe4b?fields=data_encryption.software_encryption_enabled" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "f3aafdc6-be35-4d93-9590-5a402bffbe4b",
+"name": "aggr5",
+"data_encryption": {
+  "software_encryption_enabled": false
+},
+}
+----
+
+Step 2: Update the aggregate with the encryption status in 'data_encryption.software_encryption_enabled'. The response to PATCH is a job unless the request is invalid.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/aggregates/f3aafdc6-be35-4d93-9590-5a402bffbe4b" -H "accept: application/hal+json" -d '{"data_encryption": {"software_encryption_enabled": "true"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "6b7ab28e-168d-11ea-8a50-0050568eca76",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/6b7ab28e-168d-11ea-8a50-0050568eca76"
+    }
+  }
+}
+}
+----
+
+Step 3: Wait for the job to finish, then call GET to see the reflected change.
+
+----
+
+# The API:
+/api/storage/aggregates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/aggregates/f3aafdc6-be35-4d93-9590-5a402bffbe4b?fields=data_encryption.software_encryption_enabled" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "f3aafdc6-be35-4d93-9590-5a402bffbe4b",
+"name": "aggr5",
+"data_encryption": {
+  "software_encryption_enabled": true
+},
+}
+----
+
+

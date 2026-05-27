@@ -1,0 +1,618 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-name-services-ldap-.html'
+summary: 'Retrieve the LDAP configuration for an SVM'
+---
+
+= Retrieve the LDAP configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/name-services/ldap/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves LDAP configuration for an SVM. All parameters for the LDAP configuration are displayed by default.
+
+== Related ONTAP commands
+
+*** `ldap show`
+
+*** `ldap check -vserver vs0`
+
+*** `ldap check-ipv6 -vserver vs0`
+
+== Important notes
+
+*** The status.code, status.dn_message, status.message, and status.state fields have the same status fields that are returned using the "ldap check" CLI command.
+
+*** Refer to the ipv4 or ipv6 objects available in the status field to get specific information about the code, dn_messages, or message and state information for ipv4 or ipv6.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ad_domain
+|string
+a|This parameter specifies the name of the Active Directory domain
+used to discover LDAP servers for use by this client.
+This is mutually exclusive with `servers` during POST and PATCH.
+
+
+|base_dn
+|string
+a|Specifies the default base DN for all searches.
+
+
+|base_scope
+|string
+a|Specifies the default search scope for LDAP queries:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|bind_as_cifs_server
+|boolean
+a|Specifies whether or not CIFS server's credentials are used to bind to the LDAP server.
+
+
+|bind_dn
+|string
+a|Specifies the user that binds to the LDAP servers.
+
+
+|group_dn
+|string
+a|Specifies the group Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for group lookups.
+
+
+|group_membership_filter
+|string
+a|Specifies the custom filter used for group membership lookups from an LDAP server.
+
+
+|group_scope
+|string
+a|Specifies the default search scope for LDAP for group lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|is_netgroup_byhost_enabled
+|boolean
+a|Specifies whether or not netgroup by host querying is enabled.
+
+
+|is_owner
+|boolean
+a|Specifies whether or not the SVM owns the LDAP client configuration.
+
+
+|ldaps_enabled
+|boolean
+a|Specifies whether or not LDAPS is enabled.
+
+
+|min_bind_level
+|string
+a|The minimum bind authentication level. Possible values are:
+
+* anonymous - anonymous bind
+* simple - simple bind
+* sasl - Simple Authentication and Security Layer (SASL) bind
+
+
+|netgroup_byhost_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup by host lookups.
+
+
+|netgroup_byhost_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup by host lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|netgroup_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup lookups.
+
+
+|netgroup_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|port
+|integer
+a|The port used to connect to the LDAP Servers.
+
+
+|preferred_ad_servers
+|array[string]
+a|
+
+|query_timeout
+|integer
+a|Specifies the maximum time to wait for a query response from the LDAP server, in seconds.
+
+
+|referral_enabled
+|boolean
+a|Specifies whether or not LDAP referral is enabled.
+
+
+|restrict_discovery_to_site
+|boolean
+a|Specifies whether or not LDAP server discovery is restricted to site-scope.
+
+
+|schema
+|string
+a|The name of the schema template used by the SVM.
+
+* AD-IDMU - Active Directory Identity Management for UNIX
+* AD-SFU - Active Directory Services for UNIX
+* MS-AD-BIS - Active Directory Identity Management for UNIX
+* RFC-2307 - Schema based on RFC 2307
+* Custom schema
+
+
+|servers
+|array[string]
+a|
+
+|session_security
+|string
+a|Specifies the level of security to be used for LDAP communications:
+
+* none - no signing or sealing
+* sign - sign LDAP traffic
+* seal - seal and sign LDAP traffic
+
+
+|status
+|link:#status[status]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|try_channel_binding
+|boolean
+a|Specifies whether or not channel binding is attempted in the case of TLS/LDAPS.
+
+
+|use_start_tls
+|boolean
+a|Specifies whether or not to use Start TLS over LDAP connections.
+
+
+|user_dn
+|string
+a|Specifies the user Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for user lookups.
+
+
+|user_scope
+|string
+a|Specifies the default search scope for LDAP for user lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "ad_domain": "example.com",
+  "base_dn": "dc=domainB,dc=example,dc=com",
+  "base_scope": "string",
+  "bind_dn": "cn=Administrators,cn=users,dc=domainB,dc=example,dc=com",
+  "group_dn": "cn=abc,users,dc=com",
+  "group_membership_filter": "",
+  "group_scope": "string",
+  "min_bind_level": "string",
+  "netgroup_byhost_dn": "cn=abc,users,dc=com",
+  "netgroup_byhost_scope": "string",
+  "netgroup_dn": "cn=abc,users,dc=com",
+  "netgroup_scope": "string",
+  "port": 389,
+  "preferred_ad_servers": [
+    "11.11.11.11"
+  ],
+  "schema": "ad_idmu",
+  "servers": [
+    [
+      "10.10.10.10",
+      "domainB.example.com"
+    ]
+  ],
+  "session_security": "string",
+  "skip_config_validation": true,
+  "status": {
+    "code": 65537300,
+    "dn_message": [
+      "string"
+    ],
+    "ipv4": {
+      "code": 65537300,
+      "dn_messages": [
+        "string"
+      ],
+      "message": "string",
+      "state": "string"
+    },
+    "ipv4_state": "string",
+    "ipv6": {
+      "code": 65537300,
+      "dn_messages": [
+        "string"
+      ],
+      "message": "string",
+      "state": "string"
+    },
+    "ipv6_state": "string",
+    "message": "string",
+    "state": "string"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "user_dn": "cn=abc,users,dc=com",
+  "user_scope": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ipv4]
+[.api-collapsible-fifth-title]
+ipv4
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the error message. If there is no error, it is 0 to indicate success.
+
+
+|dn_messages
+|array[string]
+a|
+
+|message
+|string
+a|Provides additional details on the error.
+
+
+|state
+|string
+a|Status of the LDAP service.
+
+
+|===
+
+
+[#ipv6]
+[.api-collapsible-fifth-title]
+ipv6
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the error message. If there is no error, it is 0 to indicate success.
+
+
+|dn_messages
+|array[string]
+a|
+
+|message
+|string
+a|Provides additional details on the error.
+
+
+|state
+|string
+a|Status of the LDAP service.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|This field is no longer supported. Use ipv4.code or ipv6.code instead.
+
+
+|dn_message
+|array[string]
+a|
+
+|ipv4
+|link:#ipv4[ipv4]
+a|
+
+|ipv4_state
+|string
+a|This field is no longer supported. Use ipv4.state instead.
+
+
+|ipv6
+|link:#ipv6[ipv6]
+a|
+
+|ipv6_state
+|string
+a|This field is no longer supported. Use ipv6.state instead.
+
+
+|message
+|string
+a|This field is no longer supported. Use ipv4.message or ipv6.message instead.
+
+
+|state
+|string
+a|The status of the LDAP service for the SVM. The LDAP service is up if either `ipv4_state` or `ipv6_state` is up.
+The LDAP service is down if both `ipv4_state` and `ipv6_state` are down.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

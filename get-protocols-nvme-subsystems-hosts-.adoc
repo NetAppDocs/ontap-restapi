@@ -1,0 +1,570 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nvme-subsystems-hosts-.html'
+summary: 'Retrieve an NVMe subsystem host'
+---
+
+= Retrieve an NVMe subsystem host
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nvme/subsystems/{subsystem.uuid}/hosts/{nqn}`#
+
+*Introduced In:* 9.6
+
+Retrieves an NVMe subsystem host of an NVMe subsystem.
+
+== Related ONTAP commands
+
+* `vserver nvme subsystem host show`
+
+== Learn more
+
+* link:protocols_nvme_subsystems_endpoint_overview.html[DOC /protocols/nvme/subsystems]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|subsystem.uuid
+|string
+|path
+|True
+a|The unique identifier of the NVMe subsystem.
+
+
+|nqn
+|string
+|path
+|True
+a|The NVMe qualified name (NQN) used to identify the NVMe subsystem host.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|dh_hmac_chap
+|link:#dh_hmac_chap[dh_hmac_chap]
+a|A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+|io_queue
+|link:#io_queue[io_queue]
+a|The properties of the submission queue used to submit I/O commands for execution by the NVMe controller.
+
+
+|nqn
+|string
+a|The NVMe qualified name (NQN) used to identify the NVMe storage target.
+
+
+|priority
+|string
+a|The host priority setting allocates appropriate NVMe I/O queues (count and depth) for the host to submit I/O commands. Absence of this property in GET implies io_queue count and I/O queue depth are being used.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+|subsystem
+|link:#subsystem[subsystem]
+a|The NVMe subsystem to which the NVMe host has been provisioned.
+
+
+|tls
+|link:#tls[tls]
+a|A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "dh_hmac_chap": {
+    "group_size": "string",
+    "hash_function": "string",
+    "mode": "bidirectional"
+  },
+  "io_queue": {
+    "count": 4,
+    "depth": 32
+  },
+  "nqn": "nqn.1992-01.example.com:string",
+  "priority": "string",
+  "proximity": {
+    "peer_svms": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "peer1",
+        "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+      }
+    ]
+  },
+  "subsystem": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "subsystem1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "tls": {
+    "key_type": "configured"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 72090001
+| The NVMe subsystem does not exist.
+
+| 72090004
+| The NVMe subsystem host does not exist.
+
+| 72090022
+| The NVMe subsystem host does not exist in the specified subsystem.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#dh_hmac_chap]
+[.api-collapsible-fifth-title]
+dh_hmac_chap
+
+A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group_size
+|string
+a|The Diffie-Hellman group size for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `2048_bit`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|hash_function
+|string
+a|The hash function for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `sha_256`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|mode
+|string
+a|The expected NVMe in-band authentication mode for the host. This property is an indication of which secrets are configured for the host. When set to:
+
+* none: The host has neither the host nor controller secret configured, and no authentication is performed.
+* unidirectional: The host has a host secret configured. The controller will authenticate the host.
+* bidirectional: The host has both a host and controller secret configured. The controller will authenticate the host and the host will authenticate the controller.
+
+
+|===
+
+
+[#io_queue]
+[.api-collapsible-fifth-title]
+io_queue
+
+The properties of the submission queue used to submit I/O commands for execution by the NVMe controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of I/O queue pairs. Absence of this property in GET implies property priority is set and platform and transport protocol specific values for I/O queue count is being used. Valid in GET only.
+
+
+|depth
+|integer
+a|The I/O queue depth. Absence of this property in GET implies property priority is set and platform and transport protocol specific values for I/O queue depth is being used. Valid in GET only.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the host is proximal to the SVM for which it is configured.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the host is proximal.
+
+
+|===
+
+
+[#io_queue]
+[.api-collapsible-fifth-title]
+io_queue
+
+The properties of the submission queue used to submit I/O commands for execution by the NVMe controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of I/O queue pairs. The default value is inherited from the owning NVMe subsystem.
+
+
+|depth
+|integer
+a|The I/O queue depth. The default value is inherited from the owning NVMe subsystem.
+
+
+|===
+
+
+[#subsystem]
+[.api-collapsible-fifth-title]
+subsystem
+
+The NVMe subsystem to which the NVMe host has been provisioned.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the NVMe subsystem.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe subsystem.
+
+
+|===
+
+
+[#tls]
+[.api-collapsible-fifth-title]
+tls
+
+A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_type
+|string
+a|The method by which the TLS pre-shared key (PSK) is configured for the host. Optional in POST.
+
+The values for property `key_type` and property `configured_psk` must logically agree.
+
+Possible values:
+
+* `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
+* `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+
+This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+The NVMe host provisioned to access NVMe namespaces mapped to a subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|dh_hmac_chap
+|link:#dh_hmac_chap[dh_hmac_chap]
+a|A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+|io_queue
+|link:#io_queue[io_queue]
+a|The properties of the submission queue used to submit I/O commands for execution by the NVMe controller.
+
+
+|nqn
+|string
+a|The NVMe qualified name (NQN) used to identify the NVMe storage target. Not allowed in POST when the `records` property is used.
+
+
+|subsystem
+|link:#subsystem[subsystem]
+a|The NVMe subsystem to which the NVMe host has been provisioned.
+
+
+|tls
+|link:#tls[tls]
+a|A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

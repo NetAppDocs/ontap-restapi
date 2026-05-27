@@ -1,0 +1,442 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-nfs-kerberos-interfaces-.html'
+summary: 'Update Kerberos interface properties'
+---
+
+= Update Kerberos interface properties
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/nfs/kerberos/interfaces/{interface.uuid}`#
+
+*Introduced In:* 9.6
+
+Updates the properties of a Kerberos interface.
+
+== Optional property
+
+* `force` - Specifies whether the server should ignore any error encountered while deleting the corresponding machine account on the KDC and also disables Kerberos on the LIF. This is applicable only when disabling Kerberos.
+
+== Related ONTAP commands
+
+* `vserver nfs kerberos interface modify`
+* `vserver nfs kerberos interface enable`
+* `vserver nfs kerberos interface disable`
+
+== Learn more
+
+* link:protocols_nfs_kerberos_interfaces_endpoint_overview.html[DOC /protocols/nfs/kerberos/interfaces]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|interface.uuid
+|string
+|path
+|True
+a|Network interface UUID
+
+* Introduced in: 9.7
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies if Kerberos is enabled.
+
+
+|encryption_types
+|array[string]
+a|
+
+|force
+|boolean
+a|Specifies whether the server should ignore any error encountered while deleting the corresponding machine account on the KDC and also disables Kerberos on the LIF.
+
+
+|interface
+|link:#interface[interface]
+a|Network interface
+
+
+|keytab_uri
+|string
+a|Load keytab from URI
+
+
+|machine_account
+|string
+a|Specifies the machine account to create in Active Directory.
+
+
+|organizational_unit
+|string
+a|Organizational unit
+
+
+|password
+|string
+a|Account creation password
+
+
+|spn
+|string
+a|Service principal name. Valid in PATCH.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|user
+|string
+a|Account creation user name
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "encryption_types": [
+    "string"
+  ],
+  "interface": {
+    "name": "lif1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "keytab_uri": "string",
+  "machine_account": "string",
+  "organizational_unit": "string",
+  "password": "string",
+  "spn": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "user": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error codes | Description
+
+| 4
+| The entry doesn't exist
+
+| 3276801
+| Failed to bind service principal name on LIF.
+
+| 3276809
+| Failed to disable NFS Kerberos on LIF.
+
+| 3276832
+| Failed to insert Kerberos attributes to database.
+
+| 3276842
+| Internal error. Failed to import Kerberos keytab file into the management databases. Contact technical support for assistance.
+
+| 3276861
+| Kerberos is already enabled/disabled on this LIF.
+
+| 3276862
+| Kerberos service principal name is required.
+
+| 3276889
+| Failed to enable NFS Kerberos on LIF.
+
+| 3276937
+| Failed to lookup the Vserver for the virtual interface.
+
+| 3276941
+| Kerberos is a required field.
+
+| 3276942
+| Service principal name is invalid. It must of the format:"nfs/+++<LIF-FQDN>+++@REALM"+++</LIF-FQDN>+++
+
+| 3276943
+| Lookup of Kerberos realm failed. The entry doesn't exist.
+
+| 3276944
+| Internal error. Reason: Failed to initialize the Kerberos context
+
+| 3276945
+| Internal error. Reason: Failed to parse the service principal name
+
+| 3276951
+| Warning: Skipping unsupported encryption type for service principal name
+
+| 3276952
+| "organizational_unit" option cannot be used for "Other" vendor.
+
+| 3276965
+| Account sharing across Vservers is not allowed. Use a different service principal name unique within the first 15 characters.
+
+| 3277019
+| Cannot specify -force when enabling Kerberos.
+
+| 3277020
+| Modifying the NFS Kerberos configuration for a LIF that is not configured for NFS is not supported.
+
+| 3277043
+| Keytab import failed due to missing keys. Keys for encryption types are required for  Vserver but found no matching keys for service principal name. Generate the keytab file with all required keys and try again.
+
+| 3277133
+| The _machine_account_ property can only be specified when the KDC vendor is Microsoft.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+Network interface
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#kerberos_interface]
+[.api-collapsible-fifth-title]
+kerberos_interface
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies if Kerberos is enabled.
+
+
+|encryption_types
+|array[string]
+a|
+
+|force
+|boolean
+a|Specifies whether the server should ignore any error encountered while deleting the corresponding machine account on the KDC and also disables Kerberos on the LIF.
+
+
+|interface
+|link:#interface[interface]
+a|Network interface
+
+
+|keytab_uri
+|string
+a|Load keytab from URI
+
+
+|machine_account
+|string
+a|Specifies the machine account to create in Active Directory.
+
+
+|organizational_unit
+|string
+a|Organizational unit
+
+
+|password
+|string
+a|Account creation password
+
+
+|spn
+|string
+a|Service principal name. Valid in PATCH.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|user
+|string
+a|Account creation user name
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

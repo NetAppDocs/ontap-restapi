@@ -1,0 +1,624 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-file-security-permissions-.html'
+summary: 'Update the SD information'
+---
+
+= Update the SD information
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/file-security/permissions/{svm.uuid}/{path}`#
+
+*Introduced In:* 9.9
+
+Updates SD specific Information. For example, owner, group and control-flags. SD specific information of SLAG ACLs is not modifiable.
+
+== Related ONTAP commands
+
+* `vserver security file-directory ntfs modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|path
+|string
+|path
+|True
+a|target path
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|control_flags
+|string
+a|Specifies the control flags in the SD. It is a Hexadecimal Value.
+
+
+|dos_attributes
+|string
+a|Specifies the file attributes on this file or directory.
+
+
+|effective_style
+|string
+a|Specifies the effective style of the SD. The following values are supported:
+
+* unix - UNIX style
+* ntfs - NTFS style
+* mixed - Mixed style
+* unified - Unified style
+
+
+|group
+|string
+a|Specifies the owner's primary group.
+You can specify the owner group using either a group name or SID.
+
+
+|group_id
+|string
+a|Specifies group ID on this file or directory.
+
+
+|inode
+|integer
+a|Specifies the File Inode number.
+
+
+|mode_bits
+|integer
+a|Specifies the mode bits on this file or directory.
+
+
+|owner
+|string
+a|Specifies the owner of the SD.
+You can specify the owner using either a user name or security identifier (SID).
+The owner of the SD can modify the permissions on the
+file (or folder) or files (or folders) to which the SD
+is applied and can give other users the right to take ownership
+of the object or objects to which the SD is applied.
+
+
+|security_style
+|string
+a|Specifies the security style of the SD. The following values are supported:
+
+* unix - UNIX style
+* ntfs - NTFS style
+* mixed - Mixed style
+* unified - Unified style
+
+
+|text_dos_attr
+|string
+a|Specifies the textual format of file attributes on this file or directory.
+
+
+|text_mode_bits
+|string
+a|Specifies the textual format of mode bits on this file or directory.
+
+
+|user_id
+|string
+a|Specifies user ID of this file or directory.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "control_flags": "8014",
+  "dos_attributes": "10",
+  "effective_style": "mixed",
+  "group": "S-1-5-21-2233347455-2266964949-1780268902-69700",
+  "group_id": "2",
+  "inode": 64,
+  "mode_bits": 777,
+  "owner": "S-1-5-21-2233347455-2266964949-1780268902-69304",
+  "security_style": "ntfs",
+  "text_dos_attr": "---A----",
+  "text_mode_bits": "rwxrwxrwx",
+  "user_id": "10"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655865
+| The specified file or directory does not exist.
+
+| 1260882
+| Specified SVM not found.
+
+| 6691623
+| User is not authorized.
+
+| 4849676
+| The specified Windows user or group does not exist.
+
+| 10485814
+| The value provided for field control_flags is invalid.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#advanced_rights]
+[.api-collapsible-fifth-title]
+advanced_rights
+
+Specifies the advanced access right controlled by the ACE for the account specified.
+ You can specify more than one "advanced-rights" value by using a comma-delimited list.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|append_data
+|boolean
+a|Append DAta
+
+
+|delete
+|boolean
+a|Delete
+
+
+|delete_child
+|boolean
+a|Delete Child
+
+
+|execute_file
+|boolean
+a|Execute File
+
+
+|full_control
+|boolean
+a|Full Control
+
+
+|read_attr
+|boolean
+a|Read Attributes
+
+
+|read_data
+|boolean
+a|Read Data
+
+
+|read_ea
+|boolean
+a|Read Extended Attributes
+
+
+|read_perm
+|boolean
+a|Read Permissions
+
+
+|synchronize
+|boolean
+a|Synchronize
+
+
+|write_attr
+|boolean
+a|Write Attributes
+
+
+|write_data
+|boolean
+a|Write Data
+
+
+|write_ea
+|boolean
+a|Write Extended Attributes
+
+
+|write_owner
+|boolean
+a|Write Owner
+
+
+|write_perm
+|boolean
+a|Write Permission
+
+
+|===
+
+
+[#apply_to]
+[.api-collapsible-fifth-title]
+apply_to
+
+Specifies where to apply the DACL or SACL entries.
+You can specify more than one value by using a comma-delimited list.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|files
+|boolean
+a|Apply to Files
+
+
+|sub_folders
+|boolean
+a|Apply to all sub-folders
+
+
+|this_folder
+|boolean
+a|Apply only to this folder
+
+
+|===
+
+
+[#acl]
+[.api-collapsible-fifth-title]
+acl
+
+An ACE is an element in an access control list (ACL).
+An ACL can have zero or more ACEs. Each ACE controls or monitors access to
+an object by a specified trustee.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access
+|string
+a|Specifies whether the ACL is for DACL or SACL.
+The available values are:
+
+* access_allow                     - DACL for allow access
+* access_deny                      - DACL for deny access
+* access_allowed_callback          - CALLBACK for allowed access
+* access_denied_callback           - CALLBACK for denied access
+* access_allowed_callback_object   - CALLBACK OBJECT for allowed access
+* access_denied_callback_object    - CALLBACK OBJECT for denied access
+* system_audit_callback            - SYSTEM Audit Callback ace
+* system_audit_callback_object     - SYSTEM Audit Callback Object ace
+* system_resource_attribute        - SYSTEM Resource Attribute
+* system_scoped_policy_id          - SYSTEM Scope Policy ID
+* audit_success                    - SACL for success access
+* audit_failure                    - SACL for failure access
+* audit_success_and_failure        - SACL for both success and failure access
+
+
+|access_control
+|string
+a|An Access Control Level specifies the access control of the task to be applied. Valid values
+are "file-directory" or "Storage-Level Access Guard (SLAG)". SLAG is used to apply the
+specified security descriptors with the task for the volume or qtree. Otherwise, the security
+descriptors are applied on files and directories at the specified path. The value SLAG is not
+supported on FlexGroups volumes. The default value is "file-directory"
+('-' and '_' are interchangeable).
+
+
+|advanced_rights
+|link:#advanced_rights[advanced_rights]
+a|Specifies the advanced access right controlled by the ACE for the account specified.
+ You can specify more than one "advanced-rights" value by using a comma-delimited list.
+
+
+|apply_to
+|link:#apply_to[apply_to]
+a|Specifies where to apply the DACL or SACL entries.
+You can specify more than one value by using a comma-delimited list.
+
+
+|inherited
+|boolean
+a|Indicates whether or not the ACE flag is inherited.
+
+
+|rights
+|string
+a|Specifies the access rights controlled by the ACE for the account specified.
+The "rights" parameter is mutually exclusive with the "advanced_rights"
+parameter. If you specify the "rights" parameter, you can specify one
+of the following "rights" values ("-" or "_" is accepted as the delimiter).
+
+
+|===
+
+
+[#file_directory_security]
+[.api-collapsible-fifth-title]
+file_directory_security
+
+Manages New Technology File System (NTFS) security and NTFS audit policies.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|control_flags
+|string
+a|Specifies the control flags in the SD. It is a Hexadecimal Value.
+
+
+|dos_attributes
+|string
+a|Specifies the file attributes on this file or directory.
+
+
+|effective_style
+|string
+a|Specifies the effective style of the SD. The following values are supported:
+
+* unix - UNIX style
+* ntfs - NTFS style
+* mixed - Mixed style
+* unified - Unified style
+
+
+|group
+|string
+a|Specifies the owner's primary group.
+You can specify the owner group using either a group name or SID.
+
+
+|group_id
+|string
+a|Specifies group ID on this file or directory.
+
+
+|inode
+|integer
+a|Specifies the File Inode number.
+
+
+|mode_bits
+|integer
+a|Specifies the mode bits on this file or directory.
+
+
+|owner
+|string
+a|Specifies the owner of the SD.
+You can specify the owner using either a user name or security identifier (SID).
+The owner of the SD can modify the permissions on the
+file (or folder) or files (or folders) to which the SD
+is applied and can give other users the right to take ownership
+of the object or objects to which the SD is applied.
+
+
+|security_style
+|string
+a|Specifies the security style of the SD. The following values are supported:
+
+* unix - UNIX style
+* ntfs - NTFS style
+* mixed - Mixed style
+* unified - Unified style
+
+
+|text_dos_attr
+|string
+a|Specifies the textual format of file attributes on this file or directory.
+
+
+|text_mode_bits
+|string
+a|Specifies the textual format of mode bits on this file or directory.
+
+
+|user_id
+|string
+a|Specifies user ID of this file or directory.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

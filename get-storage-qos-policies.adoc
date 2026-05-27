@@ -1,0 +1,730 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-qos-policies.html'
+summary: 'Retrieve QoS policies'
+---
+
+= Retrieve QoS policies
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/qos/policies`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of QoS policies.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|object_count
+|integer
+|query
+|False
+a|Filter by object_count
+
+
+|fixed.max_throughput_iops
+|integer
+|query
+|False
+a|Filter by fixed.max_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
+
+
+|fixed.min_throughput_mbps
+|integer
+|query
+|False
+a|Filter by fixed.min_throughput_mbps
+
+* Introduced in: 9.8
+* Max value: 4194303
+* Min value: 0
+
+
+|fixed.capacity_shared
+|boolean
+|query
+|False
+a|Filter by fixed.capacity_shared
+
+
+|fixed.max_throughput_mbps
+|integer
+|query
+|False
+a|Filter by fixed.max_throughput_mbps
+
+* Max value: 4194303
+* Min value: 0
+
+
+|fixed.min_throughput_iops
+|integer
+|query
+|False
+a|Filter by fixed.min_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
+
+
+|fixed.max_throughput
+|string
+|query
+|False
+a|Filter by fixed.max_throughput
+
+* Introduced in: 9.17
+
+
+|fixed.min_throughput
+|string
+|query
+|False
+a|Filter by fixed.min_throughput
+
+* Introduced in: 9.17
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+* Introduced in: 9.11
+
+
+|pgid
+|integer
+|query
+|False
+a|Filter by pgid
+
+* Introduced in: 9.10
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|policy_class
+|string
+|query
+|False
+a|Filter by policy_class
+
+* Introduced in: 9.10
+
+
+|adaptive.absolute_min_iops
+|integer
+|query
+|False
+a|Filter by adaptive.absolute_min_iops
+
+
+|adaptive.expected_iops_allocation
+|string
+|query
+|False
+a|Filter by adaptive.expected_iops_allocation
+
+* Introduced in: 9.10
+
+
+|adaptive.block_size
+|string
+|query
+|False
+a|Filter by adaptive.block_size
+
+* Introduced in: 9.10
+
+
+|adaptive.expected_iops
+|integer
+|query
+|False
+a|Filter by adaptive.expected_iops
+
+
+|adaptive.peak_iops
+|integer
+|query
+|False
+a|Filter by adaptive.peak_iops
+
+
+|adaptive.peak_iops_allocation
+|string
+|query
+|False
+a|Filter by adaptive.peak_iops_allocation
+
+* Introduced in: 9.10
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|error
+|link:#error[error]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#qos_policy[qos_policy]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist"
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "adaptive": {
+        "block_size": "string",
+        "expected_iops_allocation": "string",
+        "peak_iops_allocation": "string"
+      },
+      "fixed": {
+        "max_throughput": [
+          "900KB/s",
+          "500MB/s",
+          "120GB/s",
+          "5000IOPS",
+          "5000IOPS,500KB/s",
+          "2500IOPS,100MB/s",
+          "1000IOPS,25MB/s"
+        ],
+        "min_throughput": [
+          "900KB/s",
+          "500MB/s",
+          "120GB/s",
+          "5000IOPS",
+          "5000IOPS,500KB/s",
+          "2500IOPS,100MB/s",
+          "1000IOPS,25MB/s"
+        ]
+      },
+      "name": "extreme",
+      "object_count": 0,
+      "pgid": 0,
+      "policy_class": "string",
+      "scope": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#adaptive]
+[.api-collapsible-fifth-title]
+adaptive
+
+Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|absolute_min_iops
+|integer
+a|Specifies the absolute minimum IOPS that is used as an override when the expected_iops is less than this value. These floors are not guaranteed on non-AFF platforms or when FabricPool tiering policies are set.
+
+
+|block_size
+|string
+a|Specifies the block size
+
+
+|expected_iops
+|integer
+a|Expected IOPS. Specifies the minimum expected IOPS per TB allocated based on the storage object allocated size. These floors are not guaranteed on non-AFF platforms or when FabricPool tiering policies are set.
+
+
+|expected_iops_allocation
+|string
+a|Specifies the size to be used to calculate expected IOPS per TB. The size options are either the storage object allocated space or the storage object used space.
+
+
+|peak_iops
+|integer
+a|Peak IOPS. Specifies the maximum possible IOPS per TB allocated based on the storage object allocated size or the storage object used size.
+
+
+|peak_iops_allocation
+|string
+a|Specifies the size to be used to calculate peak IOPS per TB. The size options are either the storage object allocated space or the storage object used space.
+
+
+|===
+
+
+[#fixed]
+[.api-collapsible-fifth-title]
+fixed
+
+QoS policy-groups define a fixed service level objective (SLO) for a storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|capacity_shared
+|boolean
+a|Specifies whether the capacities are shared across all objects that use this QoS policy-group. Default is false.
+
+
+|max_throughput
+|string
+a|Maximum throughput defined by this policy. It is specified in terms of Kbps, Mbps or Gbps along with or without IOPS. 0 means no maximum throughput is enforced.
+
+
+|max_throughput_iops
+|integer
+a|Maximum throughput defined by this policy. It is specified in terms of IOPS. 0 means no maximum throughput is enforced.
+
+
+|max_throughput_mbps
+|integer
+a|Maximum throughput defined by this policy. It is specified in terms of Mbps. 0 means no maximum throughput is enforced.
+
+
+|min_throughput
+|string
+a|Minimum throughput defined by this policy. It is specified in terms of Kbps, Mbps or Gbps along with or without IOPS. 0 means no minimum throughput is enforced.
+
+
+|min_throughput_iops
+|integer
+a|Minimum throughput defined by this policy. It is specified in terms of IOPS. 0 means no minimum throughput is enforced. These floors are not guaranteed on non-AFF platforms or when FabricPool tiering policies are set.
+
+
+|min_throughput_mbps
+|integer
+a|Minimum throughput defined by this policy. It is specified in terms of Mbps. 0 means no minimum throughput is enforced.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|adaptive
+|link:#adaptive[adaptive]
+a|Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+|fixed
+|link:#fixed[fixed]
+a|QoS policy-groups define a fixed service level objective (SLO) for a storage object.
+
+
+|name
+|string
+a|Name of the QoS policy.
+
+
+|object_count
+|integer
+a|Number of objects attached to this policy.
+
+
+|pgid
+|integer
+a|Policy group ID of the QoS policy.
+
+
+|policy_class
+|string
+a|Class of the QoS policy.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

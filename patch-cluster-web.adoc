@@ -1,0 +1,461 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-cluster-web.html'
+summary: 'Update the web services configuration'
+---
+
+= Update the web services configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/cluster/web`#
+
+*Introduced In:* 9.10
+
+Updates the web services configuration.
+
+== Related ONTAP commands
+
+* `system services web modify`
+* `security ssl modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate used by cluster and node management interfaces for TLS connection requests.
+
+
+|client_enabled
+|boolean
+a|Indicates whether client authentication is enabled.
+
+
+|csrf
+|link:#csrf[csrf]
+a|
+
+|enabled
+|boolean
+a|Indicates whether remote clients can connect to the web services.
+
+
+|hsts
+|link:#hsts[hsts]
+a|
+
+|http_enabled
+|boolean
+a|Indicates whether HTTP is enabled.
+
+
+|http_port
+|integer
+a|HTTP port for cluster-level web services.
+
+
+|https_port
+|integer
+a|HTTPS port for cluster-level web services.
+
+
+|ocsp_enabled
+|boolean
+a|Indicates whether online certificate status protocol verification is enabled.
+
+
+|per_address_limit
+|integer
+a|The number of connections that can be processed concurrently from the same remote address.
+
+
+|state
+|string
+a|State of the cluster-level web services.
+
+
+|wait_queue_capacity
+|integer
+a|The maximum size of the wait queue for connections exceeding the per-address-limit.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": {
+    "name": "cert1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "csrf": {
+    "token": {
+      "concurrent_limit": 120,
+      "idle_timeout": 200,
+      "max_timeout": 1200
+    }
+  },
+  "hsts": {
+    "max_age": 31536000
+  },
+  "per_address_limit": 42,
+  "state": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 9830406
+| Reconfiguration of the web services failed.
+
+| 9830407
+| The web services failed to restart.
+
+| 9830408
+| Reconfiguration and/or restart of the web services failed.
+
+| 9830442
+| Client authentication cannot be enabled without a client ca certificate.
+
+| 9830463
+| The cluster must be fully upgraded before modifying this resource.
+
+| 9830464
+| HTTP cannot be enabled when FIPS is also enabled.
+
+| 9830483
+| The CSRF token timeout is invalid.
+
+| 9830484
+| The maximum concurrent CSRF token count cannot be lower than 100.
+
+| 9830485
+| The CSRF idle timeout cannot be greater than the CSRF absolute timeout.
+
+| 9830486
+| CSRF requires an effective cluster version of 9.7 or later.
+
+| 9830487
+| The HTTP and HTTPS ports must not have the same value.
+
+| 9830488
+| The certificate is not a "server" certificate.
+
+| 9830489
+| The certificate does not exist for the given SVM.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Certificate used by cluster and node management interfaces for TLS connection requests.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#token]
+[.api-collapsible-fifth-title]
+token
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|concurrent_limit
+|integer
+a|Maximum number of concurrent CSRF tokens.
+
+
+|idle_timeout
+|integer
+a|Time for which an unused CSRF token is retained, in seconds.
+
+
+|max_timeout
+|integer
+a|Time for which an unused CSRF token, regardless of usage is retained, in seconds.
+
+
+|===
+
+
+[#csrf]
+[.api-collapsible-fifth-title]
+csrf
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|protection_enabled
+|boolean
+a|Indicates whether CSRF protection is enabled.
+
+
+|token
+|link:#token[token]
+a|
+
+|===
+
+
+[#hsts]
+[.api-collapsible-fifth-title]
+hsts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether HTTP Strict Transport Security (HSTS) is enabled.
+
+
+|max_age
+|integer
+a|HTTPS Strict Transport Security (HSTS) max-age value in seconds. The maximum time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS.
+
+
+|===
+
+
+[#web]
+[.api-collapsible-fifth-title]
+web
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate used by cluster and node management interfaces for TLS connection requests.
+
+
+|client_enabled
+|boolean
+a|Indicates whether client authentication is enabled.
+
+
+|csrf
+|link:#csrf[csrf]
+a|
+
+|enabled
+|boolean
+a|Indicates whether remote clients can connect to the web services.
+
+
+|hsts
+|link:#hsts[hsts]
+a|
+
+|http_enabled
+|boolean
+a|Indicates whether HTTP is enabled.
+
+
+|http_port
+|integer
+a|HTTP port for cluster-level web services.
+
+
+|https_port
+|integer
+a|HTTPS port for cluster-level web services.
+
+
+|ocsp_enabled
+|boolean
+a|Indicates whether online certificate status protocol verification is enabled.
+
+
+|per_address_limit
+|integer
+a|The number of connections that can be processed concurrently from the same remote address.
+
+
+|state
+|string
+a|State of the cluster-level web services.
+
+
+|wait_queue_capacity
+|integer
+a|The maximum size of the wait queue for connections exceeding the per-address-limit.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

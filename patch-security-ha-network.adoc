@@ -1,0 +1,256 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-ha-network.html'
+summary: 'Update the HA network security configuration'
+---
+
+= Update the HA network security configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/ha-network`#
+
+*Introduced In:* 9.18
+
+Updates the HA network security configuration.
+
+== Optional properties
+
+* 'enabled' - Indicates if HA network security for NVLog traffic is enabled.
+
+== Related ONTAP commands
+
+* 'security ha-network modify'
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|enabled
+|boolean
+|query
+|False
+a|Specifies if HA network security is enabled.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates if HA network security is enabled.
+
+
+|node.name
+|link:#node_name[node.name]
+a|Node name
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "node.name": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 70385664
+| Modifying the HA network security configuration requires an effective HA version of ONTAP 9.18.1 or later.
+
+| 70385666
+| Failed to get node information for node "+++<name>+++\".+++</name>+++
+
+| 70385667
+| Failed to enable encryption on node "+++<name>+++\".+++</name>+++
+
+| 70385671
+| Failed to disable encryption on node "+++<name>+++\".+++</name>+++
+
+| 70385673
+| HA network security does not support MetroCluster configurations.
+
+| 70385677
+| Failed to modify HA network security because the "enabled" field was not specified.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node_name]
+[.api-collapsible-fifth-title]
+node.name
+
+Node name
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#security_ha_network]
+[.api-collapsible-fifth-title]
+security_ha_network
+
+Manages the HA network security configuration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates if HA network security is enabled.
+
+
+|node.name
+|link:#node_name[node.name]
+a|Node name
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

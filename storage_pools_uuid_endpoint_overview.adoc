@@ -1,0 +1,410 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_pools_uuid_endpoint_overview.html'
+summary: 'Manage specific storage pools'
+---
+
+= Manage specific storage pools
+
+
+
+== Updating storage pools
+
+The PATCH operation is used to modify properties of the storage pool. There are several properties that can be modified on a storage pool.
+PATCH operations on a storage pool are restricted when another PATCH operation is in progress.
+The following is a list of properties that can be modified using the PATCH operation including a brief description for each:
+
+* name - Can be updated to rename the storage pool.
+* capacity.disk_count - Can be updated to increase the number of disks in a storage pool.
+* capacity.spare_allocation_units[].count - Modifying this value requires that the user specify capacity.spare_allocation_units[].node as well. Modifying this value redistributes spare cache capacity among the nodes specified in the operation
+When expanding a storage pool, the cache tiers of all aggregates using the storage pool's allocation units are expanded automatically.
+
+=== Simulated storage pool expansion
+
+The PATCH operation also supports simulated expansion of a storage pool.
+Running PATCH with the query "simulate" set to "true", and "capacity.disk_count" set to the final disk count will return a response containing the projected new capacity and the new constituent disk list for the storage pool.
+
+== Deleting storage pools
+
+If cache capacity from a storage pool is being used in an aggregate, it cannot be deleted.
+See the /storage/aggregates API for details on deleting aggregates.
+
+'''
+
+== Examples
+
+=== Retrieving a specific pool from the cluster
+
+The following example shows the response of the requested storage pool. If there is no storage pool with the requested UUID, an error is returned.
+
+----
+
+# The API:
+/api/storage/pools/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools/870dd9f2-bdfa-4167-b692-57d1cec874d4" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "8255fef7-4737-11ec-bd1b-005056bbb879",
+"name": "new_sp",
+"storage_type": "ssd",
+"nodes": [
+  {
+    "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+    "name": "node-1",
+  },
+  {
+    "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+    "name": "node-2",
+  }
+],
+"capacity": {
+    "remaining": 1846542336,
+    "total": 7386169344,
+    "spare_allocation_units": [
+    {
+      "node": {
+        "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+        "name": "node-1",
+      },
+      "count": 1,
+      "syncmirror_pool": "pool0",
+      "size": 1846542336,
+      "available_size": 1846542336
+    },
+    {
+      "node": {
+        "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+        "name": "node-2",
+      },
+      "count": 0,
+      "syncmirror_pool": "pool0",
+      "size": 1846542336,
+      "available_size": 0
+    }
+    ],
+    "used_allocation_units": [
+    {
+      "aggregate": {
+        "uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+        "name": "test_a"
+      },
+      "allocated_unit_count": 2,
+      "node": {
+        "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+        "name": "node-1",
+      },
+      "capacity": 2769813504
+    },
+    {
+      "aggregate": {
+        "uuid": "f4cc30d5-b052-493a-a49f-19781425f987",
+        "name": "test_b"
+      },
+      "allocated_unit_count": 1,
+      "node": {
+        "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+        "name": "node-2",
+      },
+      "capacity": 1384906752
+    }
+    ],
+    "disk_count": 4,
+    "disks": [
+      {
+        "disk": {
+          "name": "VMw-1.11"
+        },
+        "usable_size": 1902379008,
+        "total_size": 1908871168,
+      },
+      {
+        "disk": {
+          "name": "VMw-1.12"
+        },
+        "usable_size": 1902379008,
+        "total_size": 1908871168,
+      },
+      {
+        "disk": {
+          "name": "VMw-1.23"
+        },
+        "usable_size": 1902379008,
+        "total_size": 1908871168,
+      },
+      {
+        "disk": {
+          "name": "VMw-1.24"
+        },
+        "usable_size": 1902379008,
+        "total_size": 1908871168,
+      }
+    ]
+  },
+  "health": {
+    "state": "normal",
+    "is_healthy": true
+  },
+}
+----
+
+=== Simulating storage pool expansion
+
+The following example shows the response for a simulated storage pool expansion based on the values of the 'capacity.disk_count' attribute passed in.
+The query does not modify the existing storage pool, but rather returns how it will look after the expansion.
+This will be reflected in the following attributes:
+
+* capacity.total- Total space, in bytes.
+* capacity.remaining - New remaining capacity, in bytes.
+* capacity.disks.disk - New list of constituent disks.
+* capacity.disk_count - New number of disks in the pool.
+
+----
+
+# The API:
+/api/storage/pools/{uuid}?simulate=true
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/pools/cae60cfe-deae-42bd-babb-ef437d118314?simulate=true" -H "accept: application/json" -d "{\"capacity\": {\"disk_count\": 6}}"
+
+# The response:
+{
+"records": [
+{
+  "uuid": "cae60cfe-deae-42bd-babb-ef437d118314",
+  "name": "new_sp",
+  "capacity": {
+      "remaining": 1846542336,
+      "total": 7386169344,
+      "used_allocation_units": [
+      {
+        "aggregate": {
+          "uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+          "name": "test_a"
+        },
+        "current_usage": 2769813504
+      },
+      {
+        "aggregate": {
+          "uuid": "f4cc30d5-b052-493a-a49f-19781425f987",
+          "name": "test_b"
+        },
+        "current_usage": 1384906752
+      }
+      ],
+      "disk_count": 6,
+      "disks": [
+        {
+          "disk": {
+            "name": "VMw-1.11"
+          },
+        },
+        {
+          "disk": {
+            "name": "VMw-1.12"
+          },
+        },
+        {
+          "disk": {
+            "name": "VMw-1.23"
+          },
+        },
+        {
+          "disk": {
+            "name": "VMw-1.24"
+          },
+        },
+        {
+          "disk": {
+            "name": "VMw-1.13"
+          },
+        },
+        {
+          "disk": {
+            "name": "VMw-1.14"
+          },
+        }
+      ]
+    }
+}
+]
+}
+----
+
+=== Adding capacity to a storage pool
+
+The following example shows the workflow of adding disks to the storage pool.
+
+Step 1: Check the current disk count on the storage pool.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools/19425837-f2fa-4a9f-8f01-712f626c983c?fields=capacity.disk_count" -H "accept: application/json"
+
+# The response:{
+"uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+"name": "sp1",
+"capacity": {
+  "disk_count": 4
+}
+}
+----
+
+Step 2: Update the pool with the new disk count in 'capacity.disk_count'. The response to PATCH is a job unless the request is invalid.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/pools/19425837-f2fa-4a9f-8f01-712f626c983c" -H "accept: application/hal+json" -d "{\"capacity\": {\"disk_count\": 6}}"
+
+# The response:
+{
+"job": {
+  "uuid": "c103d15e-730b-11e8-a57f-005056b465d6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c103d15e-730b-11e8-a57f-005056b465d6"
+    }
+  }
+}
+}
+----
+
+Step 3: Wait for the job to finish, then call GET to see the reflected change.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools/19425837-f2fa-4a9f-8f01-712f626c983c?fields=capacity.disk_count" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "19425837-f2fa-4a9f-8f01-712f626c983c",
+"name": "sp1",
+"capacity": {
+  "disk_count": 6
+}
+}
+----
+
+The following example shows the workflow to redistribute spare capacity among nodes sharing the storage pool
+Step 1: Check the current spare capacity distribution of the pool.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools/f3aafdc6-be35-4d93-9590-5a402bffbe4b?fields=capacity.spare_allocation_units" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "f3aafdc6-be35-4d93-9590-5a402bffbe4b",
+"name": "sp1",
+"capacity": {
+    "spare_allocation_units": [
+    {
+      "node": {
+        "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+        "name": "node-1",
+      },
+      "count": 1,
+      "syncmirror_pool": "pool0",
+      "size": 1846542336,
+      "available_size": 1846542336
+    },
+    {
+      "node": {
+        "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+        "name": "node-2",
+      },
+      "count": 0,
+      "syncmirror_pool": "pool0",
+      "size": 1846542336,
+      "available_size": 0
+    }
+    ],
+}
+}
+----
+
+Step 2: Update the pool so that the spare allocation unit count is symmetrically modified for each node. The response to PATCH is a job unless the request is invalid.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/pools/f3aafdc6-be35-4d93-9590-5a402bffbe4b" -H "accept: application/hal+json" -d '{ "capacity" : { "spare_allocation_units": [{"node": {"name": "node-1"}, "count":0}, {"node": {"name": "node-2"}, "count": 1}]}}'
+
+# The response:
+{
+"job": {
+  "uuid": "6b7ab28e-168d-11ea-8a50-0050568eca76",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/6b7ab28e-168d-11ea-8a50-0050568eca76"
+    }
+  }
+}
+}
+----
+
+Step 3: Wait for the job to finish, then call GET to see the reflected change.
+
+----
+
+# The API:
+/api/storage/pools
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/pools/f3aafdc6-be35-4d93-9590-5a402bffbe4b?fields=capacity.spare_allocation_units" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "f3aafdc6-be35-4d93-9590-5a402bffbe4b",
+"name": "sp1",
+"capacity": {
+    "spare_allocation_units": [
+    {
+      "node": {
+        "uuid": "caf95bec-f801-11e8-8af9-005056bbe5c1",
+        "name": "node-1",
+      },
+      "count": 0,
+      "syncmirror_pool": "pool0",
+      "size": 1846542336,
+      "available_size": 0
+    },
+    {
+      "node": {
+        "uuid": "cf9ab500-ff3e-4bce-bfd7-d679e6078f47",
+        "name": "node-2",
+      },
+      "count": 1,
+      "syncmirror_pool": "pool0",
+      "size": 1846542336,
+      "available_size": 1846542336
+    }
+    ],
+}
+}
+----
+
+

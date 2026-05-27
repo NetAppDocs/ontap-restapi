@@ -1,0 +1,203 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-gcp-kms-.html'
+summary: 'Delete a Google Cloud KMS configuration'
+---
+
+= Delete a Google Cloud KMS configuration
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/gcp-kms/{uuid}`#
+
+*Introduced In:* 9.9
+
+Deletes a Google Cloud KMS configuration.
+
+== Related ONTAP commands
+
+* `security key-manager external gcp disable`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Google Cloud KMS UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536817
+| Internal error. Failed to determine if it is safe to disable key manager.
+
+| 65536827
+| Internal error. Failed to determine if the given SVM has any encrypted volumes.
+
+| 65536834
+| Internal error. Failed to get existing key-server details for the given SVM.
+
+| 65536867
+| Volume encryption keys (VEK) for one or more encrypted volumes are stored on the key manager configured for the given SVM.
+
+| 65536883
+| Internal error. Volume encryption key is missing for a volume.
+
+| 65536884
+| Internal error. Volume encryption key is invalid for a volume.
+
+| 65537721
+| The Google Cloud Key Management Service is not configured for the SVM.
+
+| 196608080
+| One or more nodes in the cluster have the root volume encrypted using NVE (NetApp Volume Encryption).
+
+| 196608301
+| Internal error. Failed to get encryption type.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

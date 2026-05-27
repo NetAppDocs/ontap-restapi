@@ -1,0 +1,487 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-unix-symlink-mapping.html'
+summary: 'Retrieve UNIX symbolic link mappings for CIFS clients'
+---
+
+= Retrieve UNIX symbolic link mappings for CIFS clients
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/unix-symlink-mapping`#
+
+*Introduced In:* 9.6
+
+Retrieves UNIX symbolic link mappings for CIFS clients.
+
+== Related ONTAP commands
+
+* `vserver cifs symlink show`
+
+== Learn more
+
+* link:protocols_cifs_unix-symlink-mapping_endpoint_overview.html[DOC /protocols/cifs/unix-symlink-mapping]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|target.home_directory
+|boolean
+|query
+|False
+a|Filter by target.home_directory
+
+
+|target.locality
+|string
+|query
+|False
+a|Filter by target.locality
+
+
+|target.path
+|string
+|query
+|False
+a|Filter by target.path
+
+* maxLength: 256
+
+
+|target.server
+|string
+|query
+|False
+a|Filter by target.server
+
+* maxLength: 45
+
+
+|target.share
+|string
+|query
+|False
+a|Filter by target.share
+
+* maxLength: 80
+
+
+|unix_path
+|string
+|query
+|False
+a|Filter by unix_path
+
+* maxLength: 256
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cifs_symlink_mapping[cifs_symlink_mapping]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "target": {
+        "locality": "string",
+        "path": "/dir1/dir2/",
+        "server": "ENGCIFS",
+        "share": "ENG_SHARE"
+      },
+      "unix_path": "/mnt/eng_volume/"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cifs_target]
+[.api-collapsible-fifth-title]
+cifs_target
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|home_directory
+|boolean
+a|Specify if the destination share is a home directory.
+
+
+|locality
+|string
+a|Specifies whether the CIFS symbolic link is a local link or wide link.
+The following values are supported:
+
+* local - Local symbolic link maps only to the same CIFS share.
+* widelink - Wide symbolic link maps to any CIFS share on the network.
+
+
+|path
+|string
+a|Specifies the CIFS path on the destination to which the symbolic link maps. The final path is generated by concatenating the CIFS server name, the share name, the cifs-path and the remaining path in the symbolic link left after the prefix match. This value is specified by using a UNIX-style path name. The trailing forward slash is required for the full path name to be properly interpreted.
+
+
+|server
+|string
+a|Specifies the destination CIFS server where the
+UNIX symbolic link is pointing. This field is mandatory if the
+locality of the symbolic link is 'widelink'.
+You can specify the value in any of the following formats:
+
+*** DNS name of the CIFS server.
+
+*** IP address of the CIFS server.
+
+*** NetBIOS name of the CIFS server.
+
+
+|share
+|string
+a|Specifies the CIFS share name on the destination CIFS server to which the UNIX symbolic link is pointing.
+
+
+|===
+
+
+[#cifs_symlink_mapping]
+[.api-collapsible-fifth-title]
+cifs_symlink_mapping
+
+ONTAP allows for both CIFS and NFS access to the same datastore. This datastore can contain symbolic links created by UNIX clients which can point anywhere from the perspective of the UNIX client. To Access such UNIX symlink from CIFS share, we need to create a CIFS symbolic link path mapping from a UNIX symlink and target it as a CIFS path.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|target
+|link:#cifs_target[cifs_target]
+a|
+
+|unix_path
+|string
+a|Specifies the UNIX path prefix to be matched for the mapping.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

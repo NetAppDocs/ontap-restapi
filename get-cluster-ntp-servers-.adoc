@@ -1,0 +1,276 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-ntp-servers-.html'
+summary: 'Retrieve an external NTP server configuration'
+---
+
+= Retrieve an external NTP server configuration
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/ntp/servers/{server}`#
+
+*Introduced In:* 9.7
+
+Retrieves the configuration of an external NTP server used by ONTAP.
+
+== Related ONTAP commands
+
+* `cluster time-service ntp server show`
+
+== Learn more
+
+* link:cluster_ntp_servers_endpoint_overview.html[DOC /cluster/ntp/servers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|server
+|string
+|path
+|True
+a|NTP server host name, IPv4, or IPv6 address.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authentication_enabled
+|boolean
+a|Set NTP symmetric authentication on (true) or off (false).
+
+
+|key
+|link:#ntp_key_reference[ntp_key_reference]
+a|
+
+|server
+|string
+a|NTP server host name, IPv4, or IPv6 address.
+
+
+|version
+|string
+a|NTP protocol version for server. Valid versions are 3, 4, or auto.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "authentication_enabled": 1,
+  "key": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "id": 10
+  },
+  "server": "time.nist.gov",
+  "version": "auto"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ntp_key_reference]
+[.api-collapsible-fifth-title]
+ntp_key_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|id
+|integer
+a|NTP symmetric authentication key identifier or index number (ID). This ID,
+the type of cryptographic hash, and the cryptographic hash value are all
+provided by the remote NTP server.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

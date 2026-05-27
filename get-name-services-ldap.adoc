@@ -1,0 +1,1134 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-name-services-ldap.html'
+summary: 'Retrieve the LDAP configuration for all SVMs'
+---
+
+= Retrieve the LDAP configuration for all SVMs
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/name-services/ldap`#
+
+*Introduced In:* 9.6
+
+Retrieves the LDAP configurations for all SVMs.
+
+== Related ONTAP commands
+
+*** `ldap show`
+
+*** `ldap check -vserver vs0`
+
+*** `ldap check-ipv6 -vserver vs0`
+
+== Important notes
+
+*** The status.code, status.dn_message, status.message, and status.state fields have the same status fields that are returned using the "ldap check" CLI command.
+
+*** Refer to the ipv4 or ipv6 objects available in the status field to get specific information about the code, dn_messages, or message and state information for ipv4 or ipv6.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|min_bind_level
+|string
+|query
+|False
+a|Filter by min_bind_level
+
+* Introduced in: 9.7
+
+
+|bind_dn
+|string
+|query
+|False
+a|Filter by bind_dn
+
+* Introduced in: 9.7
+
+
+|netgroup_dn
+|string
+|query
+|False
+a|Filter by netgroup_dn
+
+* Introduced in: 9.9
+
+
+|bind_as_cifs_server
+|boolean
+|query
+|False
+a|Filter by bind_as_cifs_server
+
+* Introduced in: 9.9
+
+
+|restrict_discovery_to_site
+|boolean
+|query
+|False
+a|Filter by restrict_discovery_to_site
+
+* Introduced in: 9.13
+
+
+|user_dn
+|string
+|query
+|False
+a|Filter by user_dn
+
+* Introduced in: 9.9
+
+
+|use_start_tls
+|boolean
+|query
+|False
+a|Filter by use_start_tls
+
+* Introduced in: 9.7
+
+
+|ldaps_enabled
+|boolean
+|query
+|False
+a|Filter by ldaps_enabled
+
+* Introduced in: 9.9
+
+
+|netgroup_byhost_scope
+|string
+|query
+|False
+a|Filter by netgroup_byhost_scope
+
+* Introduced in: 9.9
+
+
+|is_owner
+|boolean
+|query
+|False
+a|Filter by is_owner
+
+* Introduced in: 9.9
+
+
+|base_scope
+|string
+|query
+|False
+a|Filter by base_scope
+
+* Introduced in: 9.7
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+* Introduced in: 9.7
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+* Introduced in: 9.7
+
+
+|ad_domain
+|string
+|query
+|False
+a|Filter by ad_domain
+
+* Introduced in: 9.7
+
+
+|netgroup_byhost_dn
+|string
+|query
+|False
+a|Filter by netgroup_byhost_dn
+
+* Introduced in: 9.9
+
+
+|session_security
+|string
+|query
+|False
+a|Filter by session_security
+
+* Introduced in: 9.7
+
+
+|user_scope
+|string
+|query
+|False
+a|Filter by user_scope
+
+* Introduced in: 9.9
+
+
+|schema
+|string
+|query
+|False
+a|Filter by schema
+
+* Introduced in: 9.7
+
+
+|base_dn
+|string
+|query
+|False
+a|Filter by base_dn
+
+* Introduced in: 9.7
+
+
+|group_dn
+|string
+|query
+|False
+a|Filter by group_dn
+
+* Introduced in: 9.9
+
+
+|group_scope
+|string
+|query
+|False
+a|Filter by group_scope
+
+* Introduced in: 9.9
+
+
+|netgroup_scope
+|string
+|query
+|False
+a|Filter by netgroup_scope
+
+* Introduced in: 9.9
+
+
+|group_membership_filter
+|string
+|query
+|False
+a|Filter by group_membership_filter
+
+* Introduced in: 9.9
+
+
+|port
+|integer
+|query
+|False
+a|Filter by port
+
+* Introduced in: 9.7
+* Max value: 65535
+* Min value: 1
+
+
+|preferred_ad_servers
+|string
+|query
+|False
+a|Filter by preferred_ad_servers
+
+* Introduced in: 9.7
+
+
+|try_channel_binding
+|boolean
+|query
+|False
+a|Filter by try_channel_binding
+
+* Introduced in: 9.10
+
+
+|servers
+|string
+|query
+|False
+a|Filter by servers
+
+* Introduced in: 9.7
+
+
+|status.ipv4_state
+|string
+|query
+|False
+a|Filter by status.ipv4_state
+
+* Introduced in: 9.13
+
+
+|status.ipv6.message
+|string
+|query
+|False
+a|Filter by status.ipv6.message
+
+* Introduced in: 9.14
+
+
+|status.ipv6.dn_messages
+|string
+|query
+|False
+a|Filter by status.ipv6.dn_messages
+
+* Introduced in: 9.14
+
+
+|status.ipv6.code
+|integer
+|query
+|False
+a|Filter by status.ipv6.code
+
+* Introduced in: 9.14
+
+
+|status.ipv6.state
+|string
+|query
+|False
+a|Filter by status.ipv6.state
+
+* Introduced in: 9.14
+
+
+|status.ipv4.message
+|string
+|query
+|False
+a|Filter by status.ipv4.message
+
+* Introduced in: 9.14
+
+
+|status.ipv4.dn_messages
+|string
+|query
+|False
+a|Filter by status.ipv4.dn_messages
+
+* Introduced in: 9.14
+
+
+|status.ipv4.code
+|integer
+|query
+|False
+a|Filter by status.ipv4.code
+
+* Introduced in: 9.14
+
+
+|status.ipv4.state
+|string
+|query
+|False
+a|Filter by status.ipv4.state
+
+* Introduced in: 9.14
+
+
+|status.state
+|string
+|query
+|False
+a|Filter by status.state
+
+* Introduced in: 9.9
+
+
+|status.ipv6_state
+|string
+|query
+|False
+a|Filter by status.ipv6_state
+
+* Introduced in: 9.13
+
+
+|status.message
+|string
+|query
+|False
+a|Filter by status.message
+
+* Introduced in: 9.9
+
+
+|status.code
+|integer
+|query
+|False
+a|Filter by status.code
+
+* Introduced in: 9.9
+
+
+|status.dn_message
+|string
+|query
+|False
+a|Filter by status.dn_message
+
+* Introduced in: 9.9
+
+
+|referral_enabled
+|boolean
+|query
+|False
+a|Filter by referral_enabled
+
+* Introduced in: 9.9
+
+
+|is_netgroup_byhost_enabled
+|boolean
+|query
+|False
+a|Filter by is_netgroup_byhost_enabled
+
+* Introduced in: 9.9
+
+
+|query_timeout
+|integer
+|query
+|False
+a|Filter by query_timeout
+
+* Introduced in: 9.9
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of LDAP records.
+
+
+|records
+|array[link:#ldap_service[ldap_service]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "ad_domain": "example.com",
+      "base_dn": "dc=domainB,dc=example,dc=com",
+      "base_scope": "string",
+      "bind_dn": "cn=Administrators,cn=users,dc=domainB,dc=example,dc=com",
+      "group_dn": "cn=abc,users,dc=com",
+      "group_membership_filter": "",
+      "group_scope": "string",
+      "min_bind_level": "string",
+      "netgroup_byhost_dn": "cn=abc,users,dc=com",
+      "netgroup_byhost_scope": "string",
+      "netgroup_dn": "cn=abc,users,dc=com",
+      "netgroup_scope": "string",
+      "port": 389,
+      "preferred_ad_servers": [
+        "11.11.11.11"
+      ],
+      "schema": "ad_idmu",
+      "servers": [
+        [
+          "10.10.10.10",
+          "domainB.example.com"
+        ]
+      ],
+      "session_security": "string",
+      "skip_config_validation": true,
+      "status": {
+        "code": 65537300,
+        "dn_message": [
+          "string"
+        ],
+        "ipv4": {
+          "code": 65537300,
+          "dn_messages": [
+            "string"
+          ],
+          "message": "string",
+          "state": "string"
+        },
+        "ipv4_state": "string",
+        "ipv6": {
+          "code": 65537300,
+          "dn_messages": [
+            "string"
+          ],
+          "message": "string",
+          "state": "string"
+        },
+        "ipv6_state": "string",
+        "message": "string",
+        "state": "string"
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "user_dn": "cn=abc,users,dc=com",
+      "user_scope": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+Following error codes can be thrown as part of LDAP status information, if LDAP status is needed to be retrieved.
+
+|===
+| Error Code | Description
+
+| 4915229
+| DNS resolution failed due to an internal error. Contact technical support if this issue persists
+
+| 4915231
+| DNS resolution failed for one or more of the specified LDAP servers. Verify that a valid DNS server is configured
+
+| 23724132
+| DNS resolution failed for all the specified LDAP servers. Verify that a valid DNS server is configured
+
+| 4915258
+| The LDAP configuration is invalid. Verify that the Active Directory domain or servers are reachable and that the network configuration is correct
+
+| 4915263
+| Failed to check the current status of LDAP server. Reason:+++<Reason for="" the="" failure="">++++++</Reason>+++
+
+| 4915234
+| The specified LDAP server or preferred Active Directory server is not supported because it is one of the following: multicast, loopback, 0.0.0.0, or broadcast
+
+| 4915265
+| The specified bind password or bind DN is invalid
+
+| 4915264
+| Certificate verification failed. Verify that a valid certificate is installed
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ipv4]
+[.api-collapsible-fifth-title]
+ipv4
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the error message. If there is no error, it is 0 to indicate success.
+
+
+|dn_messages
+|array[string]
+a|
+
+|message
+|string
+a|Provides additional details on the error.
+
+
+|state
+|string
+a|Status of the LDAP service.
+
+
+|===
+
+
+[#ipv6]
+[.api-collapsible-fifth-title]
+ipv6
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the error message. If there is no error, it is 0 to indicate success.
+
+
+|dn_messages
+|array[string]
+a|
+
+|message
+|string
+a|Provides additional details on the error.
+
+
+|state
+|string
+a|Status of the LDAP service.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|This field is no longer supported. Use ipv4.code or ipv6.code instead.
+
+
+|dn_message
+|array[string]
+a|
+
+|ipv4
+|link:#ipv4[ipv4]
+a|
+
+|ipv4_state
+|string
+a|This field is no longer supported. Use ipv4.state instead.
+
+
+|ipv6
+|link:#ipv6[ipv6]
+a|
+
+|ipv6_state
+|string
+a|This field is no longer supported. Use ipv6.state instead.
+
+
+|message
+|string
+a|This field is no longer supported. Use ipv4.message or ipv6.message instead.
+
+
+|state
+|string
+a|The status of the LDAP service for the SVM. The LDAP service is up if either `ipv4_state` or `ipv6_state` is up.
+The LDAP service is down if both `ipv4_state` and `ipv6_state` are down.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#ldap_service]
+[.api-collapsible-fifth-title]
+ldap_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ad_domain
+|string
+a|This parameter specifies the name of the Active Directory domain
+used to discover LDAP servers for use by this client.
+This is mutually exclusive with `servers` during POST and PATCH.
+
+
+|base_dn
+|string
+a|Specifies the default base DN for all searches.
+
+
+|base_scope
+|string
+a|Specifies the default search scope for LDAP queries:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|bind_as_cifs_server
+|boolean
+a|Specifies whether or not CIFS server's credentials are used to bind to the LDAP server.
+
+
+|bind_dn
+|string
+a|Specifies the user that binds to the LDAP servers.
+
+
+|group_dn
+|string
+a|Specifies the group Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for group lookups.
+
+
+|group_membership_filter
+|string
+a|Specifies the custom filter used for group membership lookups from an LDAP server.
+
+
+|group_scope
+|string
+a|Specifies the default search scope for LDAP for group lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|is_netgroup_byhost_enabled
+|boolean
+a|Specifies whether or not netgroup by host querying is enabled.
+
+
+|is_owner
+|boolean
+a|Specifies whether or not the SVM owns the LDAP client configuration.
+
+
+|ldaps_enabled
+|boolean
+a|Specifies whether or not LDAPS is enabled.
+
+
+|min_bind_level
+|string
+a|The minimum bind authentication level. Possible values are:
+
+* anonymous - anonymous bind
+* simple - simple bind
+* sasl - Simple Authentication and Security Layer (SASL) bind
+
+
+|netgroup_byhost_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup by host lookups.
+
+
+|netgroup_byhost_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup by host lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|netgroup_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup lookups.
+
+
+|netgroup_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|port
+|integer
+a|The port used to connect to the LDAP Servers.
+
+
+|preferred_ad_servers
+|array[string]
+a|
+
+|query_timeout
+|integer
+a|Specifies the maximum time to wait for a query response from the LDAP server, in seconds.
+
+
+|referral_enabled
+|boolean
+a|Specifies whether or not LDAP referral is enabled.
+
+
+|restrict_discovery_to_site
+|boolean
+a|Specifies whether or not LDAP server discovery is restricted to site-scope.
+
+
+|schema
+|string
+a|The name of the schema template used by the SVM.
+
+* AD-IDMU - Active Directory Identity Management for UNIX
+* AD-SFU - Active Directory Services for UNIX
+* MS-AD-BIS - Active Directory Identity Management for UNIX
+* RFC-2307 - Schema based on RFC 2307
+* Custom schema
+
+
+|servers
+|array[string]
+a|
+
+|session_security
+|string
+a|Specifies the level of security to be used for LDAP communications:
+
+* none - no signing or sealing
+* sign - sign LDAP traffic
+* seal - seal and sign LDAP traffic
+
+
+|status
+|link:#status[status]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|try_channel_binding
+|boolean
+a|Specifies whether or not channel binding is attempted in the case of TLS/LDAPS.
+
+
+|use_start_tls
+|boolean
+a|Specifies whether or not to use Start TLS over LDAP connections.
+
+
+|user_dn
+|string
+a|Specifies the user Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for user lookups.
+
+
+|user_scope
+|string
+a|Specifies the default search scope for LDAP for user lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

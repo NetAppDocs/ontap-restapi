@@ -1,0 +1,144 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_firmware_history_endpoint_overview.html'
+summary: 'Manage cluster firmware history'
+---
+
+= Manage cluster firmware history
+
+
+
+== Overview
+
+Use this API to retrieve a history of firmware update requests. This API supports GET calls.
+
+'''
+
+== Examples
+
+=== Retrieving history of firmware updates
+
+The following example retrieves a history of firmware updates performed on the cluster.
+Note that if the _fields=*_ parameter is not specified, only the job ID and start time are returned.
+Filters can be added on the fields to limit the results.
+
+[,json]
+----
+
+# The API:
+GET /api/cluster/firmware/history
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/firmware/history/?fields=*" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+{
+"records": [
+  {
+    "start_time": "1970-01-01T00:02:03+00:00",
+    "job": {
+      "uuid": "adf700c2-b50e-11ea-a54f-005056bbec43"
+    },
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node1"
+    },
+    "fw_file_name": "all_disk_fw.zip",
+    "fw_update_state": "starting_workers",
+    "end_time": "1970-01-01T00:07:36+00:00",
+    "update_status": [
+      {
+        "worker": {
+          "node": {
+            "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+            "name": "node1"
+          },
+          "state": "failed",
+          "error": {
+            "message": "A firmware file already exists.",
+            "code": 2228327
+          }
+        }
+      },
+      {
+        "worker": {
+          "node": {
+            "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ef",
+            "name": "node2"
+          },
+          "state": "complete",
+          "error": {
+            "message": "Success",
+            "code": 0
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/cluster/firmware/history/1970-01-01T00%3A02%3A03-00%3A00/adf700c2-b50e-11ea-a54f-005056bbec43"
+      }
+    }
+  },
+  {
+    "start_time": "1970-01-01T00:02:03+00:00",
+    "job": {
+      "uuid": "f84adabe-b50e-11ea-a54f-005056bbec43"
+    },
+    "node": {
+      "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+      "name": "node1"
+    },
+    "fw_file_name": "all_shelf_fw.zip",
+    "fw_update_state": "completed",
+    "end_time": "1970-01-01T00:07:36+00:00",
+    "update_status": [
+      {
+        "worker": {
+          "node": {
+            "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ee",
+            "name": "node1"
+          },
+          "state": "failed",
+          "error": {
+            "message": "A firmware file already exists.",
+            "code": 2228327
+          }
+        }
+      },
+      {
+        "worker": {
+          "node": {
+            "uuid": "0530d6c1-8c6d-11e8-907f-00a0985a72ef",
+            "name": "node2"
+          },
+          "state": "complete",
+          "error": {
+            "message": "Success",
+            "code": 0
+          }
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/cluster/firmware/history/1970-01-01T00%3A02%3A03-00%3A00/f84adabe-b50e-11ea-a54f-005056bbec43"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/firmware/history/?fields=%2A"
+  }
+}
+}
+----
+
+'''
+
+

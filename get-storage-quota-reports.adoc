@@ -1,0 +1,818 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-quota-reports.html'
+summary: 'Retrieve the quota report records for all FlexVol and FlexGroup volumes'
+---
+
+= Retrieve the quota report records for all FlexVol and FlexGroup volumes
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/quota/reports`#
+
+*Introduced In:* 9.6
+
+Retrieves the quota report records for all FlexVol volumes and FlexGroup volumes.
+
+== Related ONTAP commands
+
+* `quota report`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|space.soft_limit
+|integer
+|query
+|False
+a|Filter by space.soft_limit
+
+
+|space.used.soft_limit_percent
+|integer
+|query
+|False
+a|Filter by space.used.soft_limit_percent
+
+
+|space.used.total
+|integer
+|query
+|False
+a|Filter by space.used.total
+
+
+|space.used.hard_limit_percent
+|integer
+|query
+|False
+a|Filter by space.used.hard_limit_percent
+
+
+|space.hard_limit
+|integer
+|query
+|False
+a|Filter by space.hard_limit
+
+
+|index
+|integer
+|query
+|False
+a|Filter by index
+
+
+|files.soft_limit
+|integer
+|query
+|False
+a|Filter by files.soft_limit
+
+
+|files.hard_limit
+|integer
+|query
+|False
+a|Filter by files.hard_limit
+
+
+|files.used.total
+|integer
+|query
+|False
+a|Filter by files.used.total
+
+
+|files.used.hard_limit_percent
+|integer
+|query
+|False
+a|Filter by files.used.hard_limit_percent
+
+
+|files.used.soft_limit_percent
+|integer
+|query
+|False
+a|Filter by files.used.soft_limit_percent
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
+|volume.uuid
+|string
+|query
+|False
+a|Filter by volume.uuid
+
+
+|qtree.id
+|integer
+|query
+|False
+a|Filter by qtree.id
+
+
+|qtree.name
+|string
+|query
+|False
+a|Filter by qtree.name
+
+
+|users.id
+|string
+|query
+|False
+a|Filter by users.id
+
+
+|users.name
+|string
+|query
+|False
+a|Filter by users.name
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|group.id
+|string
+|query
+|False
+a|Filter by group.id
+
+
+|group.name
+|string
+|query
+|False
+a|Filter by group.name
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|show_default_records
+|boolean
+|query
+|False
+a|The default is true for GET calls. When set to false, the default records are not reported.
+
+* Introduced in: 9.7
+* Default value: 1
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#quota_report[quota_report]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "files": {
+        "hard_limit": 0,
+        "soft_limit": 0,
+        "used": {
+          "hard_limit_percent": 0,
+          "soft_limit_percent": 0,
+          "total": 0
+        }
+      },
+      "group": {
+        "id": "string",
+        "name": "string"
+      },
+      "index": 0,
+      "qtree": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "id": 1,
+        "name": "qt1"
+      },
+      "space": {
+        "hard_limit": 0,
+        "soft_limit": 0,
+        "used": {
+          "hard_limit_percent": 0,
+          "soft_limit_percent": 0,
+          "total": 0
+        }
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "type": "string",
+      "users": [
+        {
+          "id": "string",
+          "name": "string"
+        }
+      ],
+      "volume": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "volume1",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#used]
+[.api-collapsible-fifth-title]
+used
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hard_limit_percent
+|integer
+a|Total files used as a percentage of file hard limit
+
+
+|soft_limit_percent
+|integer
+a|Total files used as a percentage of file soft limit
+
+
+|total
+|integer
+a|Total files used
+
+
+|===
+
+
+[#files]
+[.api-collapsible-fifth-title]
+files
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hard_limit
+|integer
+a|File hard limit
+
+
+|soft_limit
+|integer
+a|File soft limit
+
+
+|used
+|link:#used[used]
+a|
+
+|===
+
+
+[#group]
+[.api-collapsible-fifth-title]
+group
+
+This parameter specifies the target group associated with the given quota report record. This parameter is available for group quota records and is not available for user or tree quota records. The target group is identified by a UNIX group name and UNIX group identifier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Quota target group ID
+
+
+|name
+|string
+a|Quota target group name
+
+
+|===
+
+
+[#qtree]
+[.api-collapsible-fifth-title]
+qtree
+
+This parameter specifies the target qtree associated with the user, group, or tree record. For a user/group quota policy rule at volume level, this parameter is not valid. For a default tree quota policy rule, this parameter is specified as "" or "*". For a tree quota policy rule at qtree level, this parameter specifies a qtree name and a qtree identifier.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|id
+|integer
+a|The unique identifier for a qtree.
+
+
+|name
+|string
+a|The name of the qtree.
+
+
+|===
+
+
+[#used]
+[.api-collapsible-fifth-title]
+used
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hard_limit_percent
+|integer
+a|Total space used as a percentage of space hard limit
+
+
+|soft_limit_percent
+|integer
+a|Total space used as a percentage of space soft limit
+
+
+|total
+|integer
+a|Total space used
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hard_limit
+|integer
+a|Space hard limit in bytes
+
+
+|soft_limit
+|integer
+a|Space soft limit in bytes
+
+
+|used
+|link:#used[used]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#users]
+[.api-collapsible-fifth-title]
+users
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Quota target user ID
+
+
+|name
+|string
+a|Quota target user name
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#quota_report]
+[.api-collapsible-fifth-title]
+quota_report
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|files
+|link:#files[files]
+a|
+
+|group
+|link:#group[group]
+a|This parameter specifies the target group associated with the given quota report record. This parameter is available for group quota records and is not available for user or tree quota records. The target group is identified by a UNIX group name and UNIX group identifier.
+
+
+|index
+|integer
+a|Index that identifies a unique quota record. Valid in URL.
+
+
+|qtree
+|link:#qtree[qtree]
+a|This parameter specifies the target qtree associated with the user, group, or tree record. For a user/group quota policy rule at volume level, this parameter is not valid. For a default tree quota policy rule, this parameter is specified as "" or "*". For a tree quota policy rule at qtree level, this parameter specifies a qtree name and a qtree identifier.
+
+
+|space
+|link:#space[space]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|Quota type associated with the quota record.
+
+
+|users
+|array[link:#users[users]]
+a|This parameter specifies the target user or users associated with the given quota report record. This parameter is available for user quota records and is not available for group or tree quota records. The target user or users are identified by a user name and user identifier. The user name can be a UNIX user name or a Windows user name, and the identifier can be a UNIX user identifier or a Windows security identifier.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

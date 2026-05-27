@@ -1,0 +1,370 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-multi-admin-verify-requests-.html'
+summary: 'Update a multi-admin-verify request'
+---
+
+= Update a multi-admin-verify request
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/multi-admin-verify/requests/{index}`#
+
+*Introduced In:* 9.11
+
+Updates a multi-admin-verify request.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|index
+|string
+|path
+|True
+a|
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approve_expiry_time
+|string
+a|
+
+|approve_time
+|string
+a|
+
+|approved_users
+|array[string]
+a|The users that have approved the request.
+
+
+|create_time
+|string
+a|
+
+|execute_on_approval
+|boolean
+a|Specifies that the operation is executed automatically on final approval.
+
+
+|execution_expiry_time
+|string
+a|
+
+|index
+|integer
+a|Unique index that represents a request.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the request. This can identify the cluster or an SVM.
+
+
+|pending_approvers
+|integer
+a|The number of approvers remaining that are required to approve.
+
+
+|potential_approvers
+|array[string]
+a|The users that are able to approve the request.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|state
+|string
+a|The state of the request. PATCH supports approved and vetoed. The state only changes after setting to approved once no more approvers are required.
+
+
+|user_requested
+|string
+a|The user that created the request. Automatically set by ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|user_vetoed
+|string
+a|The user that vetoed the request.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "approve_expiry_time": "string",
+  "approve_time": "string",
+  "approved_users": [
+    "string"
+  ],
+  "create_time": "string",
+  "execution_expiry_time": "string",
+  "index": 0,
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "pending_approvers": 0,
+  "potential_approvers": [
+    "string"
+  ],
+  "required_approvers": 0,
+  "state": "string",
+  "user_requested": "string",
+  "user_vetoed": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262309
+| The feature must be enabled first.
+
+| 262329
+| Invalid state. State can be modified to approved, vetoed, or executed.
+
+| 262337
+| User not eligible to approve the request.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+The owner of the request. This can identify the cluster or an SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#multi_admin_verify_request]
+[.api-collapsible-fifth-title]
+multi_admin_verify_request
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|approve_expiry_time
+|string
+a|
+
+|approve_time
+|string
+a|
+
+|approved_users
+|array[string]
+a|The users that have approved the request.
+
+
+|create_time
+|string
+a|
+
+|execute_on_approval
+|boolean
+a|Specifies that the operation is executed automatically on final approval.
+
+
+|execution_expiry_time
+|string
+a|
+
+|index
+|integer
+a|Unique index that represents a request.
+
+
+|owner
+|link:#owner[owner]
+a|The owner of the request. This can identify the cluster or an SVM.
+
+
+|pending_approvers
+|integer
+a|The number of approvers remaining that are required to approve.
+
+
+|potential_approvers
+|array[string]
+a|The users that are able to approve the request.
+
+
+|required_approvers
+|integer
+a|The number of required approvers, excluding the user that made the request.
+
+
+|state
+|string
+a|The state of the request. PATCH supports approved and vetoed. The state only changes after setting to approved once no more approvers are required.
+
+
+|user_requested
+|string
+a|The user that created the request. Automatically set by ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.11
+* x-nullable: true
+
+
+|user_vetoed
+|string
+a|The user that vetoed the request.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

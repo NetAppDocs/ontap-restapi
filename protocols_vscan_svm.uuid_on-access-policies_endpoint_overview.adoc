@@ -1,0 +1,285 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_vscan_svm.uuid_on-access-policies_endpoint_overview.html'
+summary: 'Manage Vscan On-Access policies'
+---
+
+= Manage Vscan On-Access policies
+
+
+
+== Overview
+
+Use Vscan On-Access scanning to actively scan file objects for viruses when clients access files over SMB. To control which file operations trigger a vscan, use Vscan File-Operations Profile (vscan-fileop-profile) option in the CIFS share. The Vscan On-Access policy configuration defines the scope and status of On-Access scanning on file objects. Use this API to retrieve and manage Vscan On-Access policy configurations and Vscan On-Access policy statuses for the SVM.
+
+== Examples
+
+=== Retrieving all fields for all policies of an SVM
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-access-policies/
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/{svm.uuid}/on-access-policies?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "name": "default_CIFS",
+    "enabled": true,
+    "mandatory": true,
+    "scope": {
+      "max_file_size": 2147483648,
+      "include_extensions": [
+        "*"
+      ],
+      "scan_without_extension": true,
+      "scan_readonly_volumes": false,
+      "only_execute_access": false
+    },
+    "protocol": "CIFS",
+    "owner": "cluster",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/vscan/179d3c85-7053-11e8-b9b8-005056b41bd1/on-access-policies/default_CIFS"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+        }
+      }
+    },
+    "name": "on-access-policy",
+    "enabled": false,
+    "mandatory": true,
+    "scope": {
+      "max_file_size": 3221225472,
+      "exclude_paths": [
+        "\\vol\\a b\\",
+        "\\vol\\a,b\\"
+      ],
+      "include_extensions": [
+        "mp*",
+        "tx*"
+      ],
+      "exclude_extensions": [
+        "mp3",
+        "txt"
+      ],
+      "scan_without_extension": true,
+      "scan_readonly_volumes": false,
+      "only_execute_access": true
+    },
+    "protocol": "CIFS",
+    "owner": "vserver",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/vscan/179d3c85-7053-11e8-b9b8-005056b41bd1/on-access-policies/on-access-policy"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/protocols/vscan/179d3c85-7053-11e8-b9b8-005056b41bd1/on-access-policies?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the specific On-Access policy associated with the specified SVM
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-access-policies/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/179d3c85-7053-11e8-b9b8-005056b41bd1/on-access-policies/on-access-policy" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "179d3c85-7053-11e8-b9b8-005056b41bd1",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/179d3c85-7053-11e8-b9b8-005056b41bd1"
+    }
+  }
+},
+"name": "on-access-policy",
+"enabled": true,
+"mandatory": true,
+"scope": {
+  "max_file_size": 3221225472,
+  "exclude_paths": [
+    "\\vol\\a b\\",
+    "\\vol\\a,b\\"
+  ],
+  "include_extensions": [
+    "mp*",
+    "tx*"
+  ],
+  "exclude_extensions": [
+    "mp3",
+    "txt"
+  ],
+  "scan_without_extension": true,
+  "scan_readonly_volumes": false,
+  "only_execute_access": true
+},
+"_links": {
+  "self": {
+    "href": "/api/protocols/vscan/179d3c85-7053-11e8-b9b8-005056b41bd1/on-access-policies/task1"
+  }
+}
+}
+----
+
+'''
+
+=== Creating a Vscan On-Access policy
+
+The Vscan On-Access policy POST endpoint creates an On-Access policy for the specified SVM. Set enabled to "true" to enable scanning on the created policy.
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-access-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-access-policies?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"enabled\": false, \"mandatory\": true, \"name\": \"on-access-policy\", \"scope\": { \"exclude_extensions\": [ \"txt\", \"mp3\" ], \"exclude_paths\": [ \"\\\\dir1\\\\dir2\\\\ame\", \"\\\\vol\\\\a b\" ], \"include_extensions\": [  \"mp*\", \"txt\" ], \"max_file_size\": 3221225472, \"only_execute_access\": true, \"scan_readonly_volumes\": false, \"scan_without_extension\": true }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "name": "vs1"
+    },
+    "name": "on-access-policy",
+    "enabled": false,
+    "mandatory": true,
+    "scope": {
+      "max_file_size": 3221225472,
+      "exclude_paths": [
+        "\\dir1\\dir2\\ame",
+        "\\vol\\a b"
+      ],
+      "include_extensions": [
+        "mp*",
+        "txt"
+      ],
+      "exclude_extensions": [
+        "txt",
+        "mp3"
+      ],
+      "scan_without_extension": true,
+      "scan_readonly_volumes": false,
+      "only_execute_access": true
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating a Vscan On-Access policy where a number of optional fields are not specified
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-access-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-access-policies?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"enabled\": false, \"mandatory\": true, \"name\": \"on-access-policy\", \"scope\": { \"exclude_paths\": [ \"\\\\vol\\\\a b\", \"\\\\vol\\\\a,b\\\\\" ], \"max_file_size\": 1073741824, \"scan_without_extension\": true }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "name": "vs1"
+    },
+    "name": "on-access-policy",
+    "enabled": false,
+    "mandatory": true,
+    "scope": {
+      "max_file_size": 1073741824,
+      "exclude_paths": [
+        "\\vol\\a b",
+        "\\vol\\a,b\\"
+      ],
+      "scan_without_extension": true
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Updating a Vscan On-Access policy
+
+The policy being modified is identified by the UUID of the SVM and the policy name.
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-access-policies/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-access-policies/on-access-policy" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"scope\": { \"include_extensions\": [ \"txt\" ], \"only_execute_access\": true, \"scan_readonly_volumes\": false, \"scan_without_extension\": true }}"
+----
+
+'''
+
+=== Deleting a Vscan On-Access policy
+
+The policy to be deleted is identified by the UUID of the SVM and the policy name.
+
+----
+
+# The API:
+/api/protocols/vscan/{svm.uuid}/on-access-policies/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/vscan/86fbc414-f140-11e8-8e22-0050568e0945/on-access-policies/on-access-policy" -H "accept: application/hal+json"
+----
+
+'''
+
+

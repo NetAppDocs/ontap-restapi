@@ -1,0 +1,579 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_services_endpoint_overview.html'
+summary: 'Manage CIFS services'
+---
+
+= Manage CIFS services
+
+
+
+== Overview
+
+A CIFS server is necessary to provide SMB clients with access to the Storage Virtual Machine (SVM). Before you begin, the following prerequisites must be in place:
+
+** At least one SVM LIF must exist on the SVM.
+
+** The LIFs must be able to connect to the DNS servers configured on the SVM and to an Active Directory domain controller of the domain to which you want to join the CIFS server.
+
+** The DNS servers must contain the service location records that are needed to locate the Active Directory domain services.
+
+** The cluster time must be synchronized to within five minutes of the Active Directory domain controller.
+
+== Performance monitoring
+
+Performance of the SVM can be monitored by the `metric.+*+` and `statistics.+*+` properties. These show the performance of the SVM in terms of IOPS, latency and throughput. The `metric.+*+` properties denote an average whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+=== Information on the CIFS server
+
+You must keep the following in mind when creating the CIFS server:
+
+** The CIFS server name might or might not be the same as the SVM name.
+
+** The CIFS server name can be up to 15 characters in length.
+
+** The following characters are not allowed: @ # * ( ) = + [ ] \| ; : " , < > \ / ?
+
+** You must use the FQDN when specifying the domain.
+
+** The default is to add the CIFS server machine account to the Active Directory "CN=Computer" object.
+
+** You can choose to add the CIFS server to a different organizational unit (OU) by specifying the "organizational_unit" parameter. When specifying the OU, do not specify the domain portion of the distinguished name; only specify the OU or CN portion of the distinguished name. ONTAP appends the value provided for the required "-domain" parameter onto the value provided for the "-ou" parameter to create the Active Directory distinguished name, which is used when joining the Active Directory domain.
+
+** You can optionally choose to add a text comment of up to 256 characters about the CIFS server. If there is a space in the comment text, you must enclose the entire string in quotation marks.
+
+** You can optionally choose to add a comma-delimited list of one or more NetBIOS aliases for the CIFS server.
+
+** The initial administrative status of the CIFS server is "up".
+
+** The +++<i>+++large-mtu+++</i>+++ feature is enabled for the new CIFS server.
+
+** The +++<i>+++multichannel+++</i>+++ feature is disabled for the new CIFS server.
+
+** If LDAP is configured with the _use_start_tls_ and _session_security_ features, the new CIFS server will also have this property set.
+
+** The security.kdc_encryption and security.advertised_kdc_encryptions fields are mutually exclusive. Use the advertised_kdc_encryptions field to specify the encryption types to be advertised to the Key Distribution Center (KDC) server in the Active Directory domain.
+
+== Examples
+
+=== Creating a CIFS server
+
+To create a CIFS server, use the following API. Note the _return_records=true_ query parameter used to obtain the newly created entry in the response.
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/cifs/services
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/services?return_timeout=10&return_records=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"ad_domain\": { \"fqdn\": \"ontapavc.com\", \"organizational_unit\": \"CN=Computers\", \"password\": \"<PASSWORD-FOR-USER>\", \"user\": \"administrator\" }, \"comment\": \"This CIFS Server Belongs to CS Department\", \"default_unix_user\": \"string\", \"enabled\": true, \"name\": \"CIFS1\", \"netbios\": { \"aliases\": [ \"ALIAS_1\", \"ALIAS_2\", \"ALIAS_3\" ], \"enabled\": false, \"wins_servers\": [ \"10.224.65.20\", \"10.224.65.21\" ] }, \"options\": { \"admin_to_root_mapping\": true, \"advanced_sparse_file\": true, \"copy_offload\": true, \"fake_open\": true, \"fsctl_trim\": true, \"junction_reparse\": true, \"large_mtu\": true, \"multichannel\": true, \"null_user_windows_name\": \"string\", \"path_component_cache\": true, \"referral\": false, \"smb_credits\": 128, \"widelink_reparse_versions\": [ \"smb1\" ] }, \"security\": { \"encrypt_dc_connection\": false, \"kdc_encryption\": false, \"restrict_anonymous\": \"no_enumeration\", \"session_security\": \"none\", \"smb_encryption\": false, \"smb_signing\": false, \"use_ldaps\": false, \"use_start_tls\": false }, \"svm\": { \"name\": \"vs1\", \"uuid\": \"e0c20d9c-96cd-11eb-97da-0050568e684d\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "e0c20d9c-96cd-11eb-97da-0050568e684d",
+      "name": "vs1"
+    },
+    "name": "CIFS1",
+    "ad_domain": {
+      "fqdn": "ONTAPAVC.COM",
+      "organizational_unit": "CN=Computers"
+    },
+    "enabled": true,
+    "comment": "This CIFS Server Belongs to CS Department",
+    "security": {
+      "restrict_anonymous": "no_enumeration",
+      "smb_signing": false,
+      "smb_encryption": false,
+      "kdc_encryption": false,
+      "aes_netlogon_enabled": false,
+      "try_ldap_channel_binding": false,
+      "referral_enabled": false,
+      "lm_compatibility_level": "lm_ntlm_ntlmv2_krb",
+      "encrypt_dc_connection": false,
+      "use_start_tls": false,
+      "session_security": "none",
+      "use_ldaps": false
+    },
+    "netbios": {
+      "aliases": [
+        "ALIAS_1",
+        "ALIAS_2",
+        "ALIAS_3"
+      ],
+      "wins_servers": [
+        "10.224.65.20",
+        "10.224.65.21"
+      ],
+      "enabled": false
+    },
+    "default_unix_user": "string",
+    "options": {
+      "advanced_sparse_file": true,
+      "referral": false,
+      "widelink_reparse_versions": [
+        "smb1"
+      ],
+      "multichannel": true,
+      "path_component_cache": true,
+      "null_user_windows_name": "string",
+      "junction_reparse": true,
+      "fsctl_trim": true,
+      "large_mtu": true,
+      "fake_open": true,
+      "smb_credits": 128,
+      "admin_to_root_mapping": true,
+      "copy_offload": true
+    }
+  }
+],
+"job": {
+  "uuid": "825a0b4b-9703-11eb-8cc1-0050568e684d",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/825a0b4b-9703-11eb-8cc1-0050568e684d"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Creating a CIFS server when using AKV
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/cifs/services
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/services?return_timeout=10&return_records=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"key_vault_uri\": \"https://testkv.vault.azure.net\", \"client_secret\": \"<CLIENT-SECRET-ACCESS-KEY>\", \"authentication_method\": \"client_secret\", \"tenant_id\": \"c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe\", \"client_id\": \"e959d1b5-5a63-4284-9268-851e30e3eceb\", \"ad_domain\": { \"fqdn\": \"ontapavc.com\", \"organizational_unit\": \"CN=Computers\", \"user\": \"administrator\" }, \"comment\": \"This CIFS Server Belongs to CS Department\", \"default_unix_user\": \"string\", \"enabled\": true, \"name\": \"CIFS1\", \"netbios\": { \"aliases\": [ \"ALIAS_1\", \"ALIAS_2\", \"ALIAS_3\" ], \"enabled\": false, \"wins_servers\": [ \"10.224.65.20\", \"10.224.65.21\" ] }, \"options\": { \"admin_to_root_mapping\": true, \"advanced_sparse_file\": true, \"copy_offload\": true, \"fake_open\": true, \"fsctl_trim\": true, \"junction_reparse\": true, \"large_mtu\": true, \"multichannel\": true, \"null_user_windows_name\": \"string\", \"path_component_cache\": true, \"referral\": false, \"smb_credits\": 128, \"widelink_reparse_versions\": [ \"smb1\" ] }, \"security\": { \"encrypt_dc_connection\": false, \"kdc_encryption\": false, \"restrict_anonymous\": \"no_enumeration\", \"session_security\": \"none\", \"smb_encryption\": false, \"smb_signing\": false, \"use_ldaps\": false, \"use_start_tls\": false }, \"svm\": { \"name\": \"vs1\", \"uuid\": \"e0c20d9c-96cd-11eb-97da-0050568e684d\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "e0c20d9c-96cd-11eb-97da-0050568e684d",
+      "name": "vs1"
+    },
+    "name": "CIFS1",
+    "ad_domain": {
+      "fqdn": "ONTAPAVC.COM",
+      "organizational_unit": "CN=Computers"
+    },
+    "enabled": true,
+    "comment": "This CIFS Server Belongs to CS Department",
+    "security": {
+      "restrict_anonymous": "no_enumeration",
+      "smb_signing": false,
+      "smb_encryption": false,
+      "kdc_encryption": false,
+      "aes_netlogon_enabled": false,
+      "try_ldap_channel_binding": false,
+      "referral_enabled": false,
+      "lm_compatibility_level": "lm_ntlm_ntlmv2_krb",
+      "encrypt_dc_connection": false,
+      "use_start_tls": false,
+      "session_security": "none",
+      "use_ldaps": false
+    },
+    "netbios": {
+      "aliases": [
+        "ALIAS_1",
+        "ALIAS_2",
+        "ALIAS_3"
+      ],
+      "wins_servers": [
+        "10.224.65.20",
+        "10.224.65.21"
+      ],
+      "enabled": false
+    },
+    "default_unix_user": "string",
+    "options": {
+      "advanced_sparse_file": true,
+      "referral": false,
+      "widelink_reparse_versions": [
+        "smb1"
+      ],
+      "multichannel": true,
+      "path_component_cache": true,
+      "null_user_windows_name": "string",
+      "junction_reparse": true,
+      "fsctl_trim": true,
+      "large_mtu": true,
+      "fake_open": true,
+      "smb_credits": 128,
+      "admin_to_root_mapping": true,
+      "copy_offload": true
+    }
+  }
+],
+"job": {
+  "uuid": "825a0b4b-9703-11eb-8cc1-0050568e684d",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/825a0b4b-9703-11eb-8cc1-0050568e684d"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Creating a CIFS server for Hybrid user
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/cifs/services
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/services?return_timeout=10&return_records=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"auth_user_type\": \"hybrid_user\", \"client_certificate\": \"certificate added to azure application\", \"authentication_method\": \"certificate\", \"tenant_id\": \"c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe\", \"client_id\": \"e959d1b5-5a63-4284-9268-851e30e3eceb\", \"ad_domain\": { \"fqdn\": \"ontapavc.com\", \"organizational_unit\": \"CN=Computers\" }, \"comment\": \"This CIFS Server Belongs to CS Department\", \"enabled\": true, \"name\": \"CIFS1\", \"svm\": { \"name\": \"vs1\", \"uuid\": \"e0c20d9c-96cd-11eb-97da-0050568e684d\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "e0c20d9c-96cd-11eb-97da-0050568e684d",
+      "name": "vs1"
+    },
+    "name": "CIFS1",
+    "ad_domain": {
+      "fqdn": "ONTAPAVC.COM",
+      "organizational_unit": "CN=Computers"
+    },
+    "enabled": true,
+    "comment": "This CIFS Server Belongs to CS Department",
+  }
+],
+"job": {
+  "uuid": "825a0b4b-9703-11eb-8cc1-0050568e684d",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/825a0b4b-9703-11eb-8cc1-0050568e684d"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Creating a CIFS server when using the security.advertised_kdc_encryptions field
+
+'''
+
+----
+
+# The API:
+POST /api/protocols/cifs/services
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/services?return_timeout=120&return_records=true&force=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"ad_domain\": { \"fqdn\": \"testdomain.com\", \"organizational_unit\": \"CN=Computers\", \"password\": \"<PASSWORD-FOR-USER>\", \"user\": \"administrator\" }, \"enabled\": true, \"name\": \"CIFS_server1\", \"security\": { \"advertised_kdc_encryptions\": [ \"aes-128\" ] }, \"svm\": { \"name\": \"testvs\", \"uuid\": \"508375d4-fb16-11ee-a792-005056a75b5c\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "508375d4-fb16-11ee-a792-005056a75b5c",
+      "name": "testvs"
+    },
+    "name": "CIFS_SERVER1",
+    "domain_workgroup": "TESTDOMAIN",
+    "ad_domain": {
+      "fqdn": "TESTDOMAIN.COM",
+      "organizational_unit": "CN=Computers",
+      "default_site": ""
+    },
+    "enabled": true,
+    "comment": "",
+    "security": {
+      "restrict_anonymous": "no_enumeration",
+      "smb_signing": false,
+      "smb_encryption": false,
+      "kdc_encryption": true,
+      "lm_compatibility_level": "lm_ntlm_ntlmv2_krb",
+      "aes_netlogon_enabled": false,
+      "try_ldap_channel_binding": true,
+      "ldap_referral_enabled": false,
+      "advertised_kdc_encryptions": [
+        "aes_128"
+      ],
+      "encrypt_dc_connection": false,
+      "use_start_tls": false,
+      "session_security": "none",
+      "use_ldaps": false
+    },
+    "netbios": {
+      "wins_servers": [],
+      "enabled": false
+    },
+    "default_unix_user": "pcuser",
+    "statistics": {
+      "timestamp": "2024-04-16T15:17:41Z",
+      "status": "ok",
+      "throughput_raw": {
+        "read": 0,
+        "write": 0,
+        "total": 0
+      },
+      "iops_raw": {
+        "read": 0,
+        "write": 0,
+        "other": 0,
+        "total": 0
+      },
+      "latency_raw": {
+        "read": 0,
+        "write": 0,
+        "other": 0,
+        "total": 0
+      }
+    },
+    "options": {
+      "advanced_sparse_file": true,
+      "referral": false,
+      "widelink_reparse_versions": [
+        "smb1"
+      ],
+      "multichannel": false,
+      "path_component_cache": true,
+      "junction_reparse": true,
+      "fsctl_trim": true,
+      "large_mtu": true,
+      "fake_open": true,
+      "smb_credits": 512,
+      "admin_to_root_mapping": true,
+      "copy_offload": true,
+      "shadowcopy": true,
+      "shadowcopy_dir_depth": 5,
+      "export_policy_enabled": false
+    },
+    "group_policy_object_enabled": false
+  }
+],
+"job": {
+  "uuid": "73eec230-fc04-11ee-a792-005056a75b5c",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/73eec230-fc04-11ee-a792-005056a75b5c"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the full CIFS server configuration for all SVMs in the cluster
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/services
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/services?fields=*&return_records=true&return_timeout=15" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "e0c20d9c-96cd-11eb-97da-0050568e684d",
+      "name": "vs1"
+    },
+    "name": "CIFS1",
+    "ad_domain": {
+      "fqdn": "ONTAPAVC.COM",
+      "organizational_unit": "CN=Computers"
+    },
+    "enabled": true,
+    "comment": "This CIFS Server Belongs to CS Department",
+    "security": {
+      "restrict_anonymous": "no_enumeration",
+      "smb_signing": false,
+      "smb_encryption": false,
+      "kdc_encryption": false,
+      "aes_netlogon_enabled": false,
+      "try_ldap_channel_binding": false,
+      "referral_enabled": false,
+      "lm_compatibility_level": "lm_ntlm_ntlmv2_krb",
+      "encrypt_dc_connection": false,
+      "use_start_tls": false,
+      "session_security": "none",
+      "use_ldaps": false
+    },
+    "netbios": {
+      "aliases": [
+        "ALIAS_1",
+        "ALIAS_2",
+        "ALIAS_3"
+      ],
+      "wins_servers": [
+        "10.224.65.20",
+        "10.224.65.21"
+      ],
+      "enabled": false
+    },
+    "default_unix_user": "string",
+    "options": {
+      "advanced_sparse_file": true,
+      "referral": false,
+      "widelink_reparse_versions": [
+        "smb1"
+      ],
+      "multichannel": true,
+      "path_component_cache": true,
+      "null_user_windows_name": "string",
+      "junction_reparse": true,
+      "fsctl_trim": true,
+      "large_mtu": true,
+      "fake_open": true,
+      "smb_credits": 128,
+      "admin_to_root_mapping": true,
+      "copy_offload": true
+    }
+  }
+],
+"num_records": 1
+}
+----
+
+'''
+
+=== Retrieving CIFS server configuration details for a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/services/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/services/e0c20d9c-96cd-11eb-97da-0050568e684d" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"svm": {
+  "uuid": "e0c20d9c-96cd-11eb-97da-0050568e684d",
+  "name": "vs1"
+},
+"name": "CIFS1",
+"ad_domain": {
+  "fqdn": "ONTAPAVC.COM",
+  "organizational_unit": "CN=Computers"
+},
+"enabled": true,
+"comment": "This CIFS Server Belongs to CS Department",
+"security": {
+  "restrict_anonymous": "no_enumeration",
+  "smb_signing": false,
+  "smb_encryption": false,
+  "kdc_encryption": false,
+  "aes_netlogon_enabled": false,
+  "try_ldap_channel_binding": false,
+  "referral_enabled": false,
+  "lm_compatibility_level": "lm_ntlm_ntlmv2_krb",
+  "encrypt_dc_connection": false,
+  "use_start_tls": false,
+  "session_security": "none",
+  "use_ldaps": false
+},
+"netbios": {
+  "aliases": [
+    "ALIAS_1",
+    "ALIAS_2",
+    "ALIAS_3"
+  ],
+  "wins_servers": [
+    "10.224.65.20",
+    "10.224.65.21"
+  ],
+  "enabled": false
+},
+"default_unix_user": "string",
+"options": {
+  "advanced_sparse_file": true,
+  "referral": false,
+  "widelink_reparse_versions": [
+    "smb1"
+  ],
+  "multichannel": true,
+  "path_component_cache": true,
+  "null_user_windows_name": "string",
+  "junction_reparse": true,
+  "fsctl_trim": true,
+  "large_mtu": true,
+  "fake_open": true,
+  "smb_credits": 128,
+  "admin_to_root_mapping": true,
+  "copy_offload": true
+}
+}
+----
+
+'''
+
+=== Updating CIFS server properties for the specified SVM
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/services/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/services/e0c20d9c-96cd-11eb-97da-0050568e684d" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"comment\": \"CIFS SERVER MODIFICATION\"}"
+----
+
+'''
+
+=== Removing a CIFS server for a specific SVM
+
+To delete a CIFS server, use the following API. This will delete the CIFS server along with other CIFS configurations such as CIFS share, share ACLs, homedir search-path, and so on.
+
+'''
+
+----
+
+# The API:
+DELETE /api/protocols/cifs/services/{svm.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/services/e0c20d9c-96cd-11eb-97da-0050568e684d" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"ad_domain\": { \"fqdn\": \"ontapavc.com\", \"organizational_unit\": \"CN=Computers\", \"password\": \"<PASSWORD-FOR-USER>\", \"user\": \"administrator\" }, \"force\": true}"
+
+# The call when using AKV:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/services/e0c20d9c-96cd-11eb-97da-0050568e684d" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"key_vault_uri\": \"https://testkv.vault.azure.net\", \"client_secret\": \"<AWS-SECRET-ACCESS-KEY>\", \"authentication_method\": \"client_secret\", \"tenant_id\": \"c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe\", \"client_id\": \"e959d1b5-5a63-4284-9268-851e30e3eceb\", \"ad_domain\": { \"fqdn\": \"ontapavc.com\", \"organizational_unit\": \"CN=Computers\" , \"user\": \"administrator\" }, \"force\": true}"
+
+# The call when using EntraId:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/services/e0c20d9c-96cd-11eb-97da-0050568e684d" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"auth_user_type\": \"hybrid-user\", \"client_certificate\": \"client_certificate_added_to_azure_application\", \"authentication_method\": \"certificate\", \"tenant_id\": \"c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe\", \"client_id\": \"e959d1b5-5a63-4284-9268-851e30e3eceb\", \"ad_domain\": { \"fqdn\": \"ontapavc.com\", \"organizational_unit\": \"CN=Computers\"}, \"force\": true}"
+----
+
+'''
+
+

@@ -1,0 +1,70 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_cluster_ad-proxy_endpoint_overview.html'
+summary: 'Manage data SVM account information'
+---
+
+= Manage data SVM account information
+
+
+
+== Overview
+
+This API configures data SVM account information at the Active Directory. For Active Directory domain-based authentication for cluster accounts, a data SVM must be configured and registered as a machine account at the Active Directory. All authentication requests are proxied through this SVM.
+
+== Examples
+
+=== Creating a data SVM proxy for domain-based authentication for cluster accounts
+
+----
+
+# The API:
+POST  "/api/security/authentication/cluster/ad-proxy"
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/authentication/cluster/ad-proxy" -d '{"svm.uuid":"13f87d78-70c7-11e9-b722-0050568ec89f"}'
+----
+
+=== Updating a data SVM proxy for domain-based authentication for cluster accounts
+
+----
+
+# The API:
+PATCH "/api/security/authentication/cluster/ad-proxy"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/authentication/cluster/ad-proxy" -d '{"svm.uuid":"13f87d78-70c7-11e9-b722-0050568ec89f"}'
+----
+
+=== Retrieving a data SVM proxy for domain-based authentication for cluster accounts
+
+----
+
+# The API:
+GET "/api/security/authentication/cluster/ad-proxy"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/authentication/cluster/ad-proxy"
+
+# The response:
+{
+"svm": {
+  "uuid": "512eab7a-6bf9-11e9-a896-005056bb9ce1",
+  "name": "vs2",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/512eab7a-6bf9-11e9-a896-005056bb9ce1"
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/security/authentication/cluster/ad-proxy"
+  }
+}
+}
+----
+
+

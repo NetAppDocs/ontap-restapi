@@ -1,0 +1,569 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-support-snmp-users.html'
+summary: 'Create a cluster-scoped or an SVM-scoped SNMP user'
+---
+
+= Create a cluster-scoped or an SVM-scoped SNMP user
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/support/snmp/users`#
+
+*Introduced In:* 9.7
+
+Creates either a cluster-scoped or an SVM-scoped SNMP user. This user can be an SNMPv1 or SNMPv2c community user or an SNMPv3 user. An SNMPv3 user can be a local SNMPv3 user or a remote SNMPv3 user.
+
+== Required properties
+
+* `name` - SNMP user name
+
+== Optional properties
+
+* `owner` - Name and UUID of owning SVM.
+* `engine_id` - Engine ID of owning SVM or remote switch.
+* `authentication_method` - Authentication method
+* `switch_address` - Optional remote switch address
+* `snmpv3` - SNMPv3-specific credentials
+* `comment` - Comment text
+
+== Default property values
+
+* `snmpv3.authentication_protocol` - none
+* `snmpv3.privacy_protocol` - none
+
+== Related ONTAP commands
+
+* `security login create`
+* `system snmp community add`
+
+== Learn more
+
+* link:support_snmp_users_endpoint_overview.html[DOC /support/snmp/users]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_method
+|string
+a|Optional authentication method.
+
+
+|comment
+|string
+a|Optional comment text.
+
+
+|engine_id
+|string
+a|Optional SNMPv3 engine identifier. For a local SNMP user belonging to the administrative Storage Virtual Machine (SVM), the default value of this parameter is the SNMPv3 engine identifier for the administrative SVM. For a local SNMP user belonging to a data SVM, the default value of this parameter is the SNMPv3 engine identifier for that data SVM. For an SNMPv1/SNMPv2c community, this parameter should not be specified in "POST" method. For a remote switch SNMPv3 user, this parameter specifies the SNMPv3 engine identifier for the remote switch. This parameter can also optionally specify a custom engine identifier.
+
+
+|name
+|string
+a|SNMP user name.
+
+
+|owner
+|link:#owner[owner]
+a|Optional name and UUID of owning Storage Virtual Machine (SVM).
+
+
+|snmpv3
+|link:#snmpv3[snmpv3]
+a|Optional parameter that can be specified only for an SNMPv3 user i.e. when 'authentication_method' is either 'usm' or 'both'. This parameter defines the SNMPv3 credentials for an SNMPv3 user.
+
+
+|switch_address
+|string
+a|Optional remote switch address. It can be an IPv4 address or an IPv6 address. A remote switch can be queried over SNMPv3 using ONTAP SNMP client functionality. Querying such a switch requires an SNMPv3 user (remote switch user) to be configured on the switch. Since ONTAP requires remote switch user's SNMPv3 credentials (to query it), this user must be configured in ONTAP as well. This parameter is specified when configuring such a user.
+
+* example: 10.23.34.45
+* Introduced in: 9.7
+* readCreate: 1
+* x-nullable: true
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "authentication_method": "usm",
+  "comment": "This is a comment.",
+  "engine_id": "80000315055415ab26d4aae811ac4d005056bb792e",
+  "name": "snmpv3user2",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "snmpv3": {
+    "authentication_password": "humTdumt*@t0nAwa11",
+    "authentication_protocol": "sha2_256",
+    "privacy_password": "p@**GOandCLCt*200",
+    "privacy_protocol": "aes128"
+  },
+  "switch_address": "10.23.34.45"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_method
+|string
+a|Optional authentication method.
+
+
+|comment
+|string
+a|Optional comment text.
+
+
+|engine_id
+|string
+a|Optional SNMPv3 engine identifier. For a local SNMP user belonging to the administrative Storage Virtual Machine (SVM), the default value of this parameter is the SNMPv3 engine identifier for the administrative SVM. For a local SNMP user belonging to a data SVM, the default value of this parameter is the SNMPv3 engine identifier for that data SVM. For an SNMPv1/SNMPv2c community, this parameter should not be specified in "POST" method. For a remote switch SNMPv3 user, this parameter specifies the SNMPv3 engine identifier for the remote switch. This parameter can also optionally specify a custom engine identifier.
+
+
+|name
+|string
+a|SNMP user name.
+
+
+|owner
+|link:#owner[owner]
+a|Optional name and UUID of owning Storage Virtual Machine (SVM).
+
+
+|snmpv3
+|link:#snmpv3[snmpv3]
+a|Optional parameter that can be specified only for an SNMPv3 user i.e. when 'authentication_method' is either 'usm' or 'both'. This parameter defines the SNMPv3 credentials for an SNMPv3 user.
+
+
+|switch_address
+|string
+a|Optional remote switch address. It can be an IPv4 address or an IPv6 address. A remote switch can be queried over SNMPv3 using ONTAP SNMP client functionality. Querying such a switch requires an SNMPv3 user (remote switch user) to be configured on the switch. Since ONTAP requires remote switch user's SNMPv3 credentials (to query it), this user must be configured in ONTAP as well. This parameter is specified when configuring such a user.
+
+* example: 10.23.34.45
+* Introduced in: 9.7
+* readCreate: 1
+* x-nullable: true
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "authentication_method": "usm",
+  "comment": "This is a comment.",
+  "engine_id": "80000315055415ab26d4aae811ac4d005056bb792e",
+  "name": "snmpv3user2",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "snmpv3": {
+    "authentication_password": "humTdumt*@t0nAwa11",
+    "authentication_protocol": "sha2_256",
+    "privacy_password": "p@**GOandCLCt*200",
+    "privacy_protocol": "aes128"
+  },
+  "switch_address": "10.23.34.45"
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1263341
+| Invalid authentication protocol.
+
+| 1263342
+| Invalid privacy protocol.
+
+| 1263567
+| Authentication password not supplied.
+
+| 1263568
+| Privacy password not supplied.
+
+| 1263569
+| Authentication password does not conform to ONTAP requirements.
+
+| 1263570
+| Privacy password does not conform to ONTAP requirements.
+
+| 2621475
+| This operation is not allowed on a node SVM.
+
+| 2621601
+| This operation is not permitted on a system SVM.
+
+| 5636101
+| One role for all applications and authentication methods is recommended for a user account.
+
+| 5636106
+| Engine ID starting with first bit set as 1 in first octet should have a minimum of 5 or maximum of 32 octets.
+
+| 5636107
+| Engine ID specified is based on an IP address, and must therefore be 9 octets in length.
+
+| 5636108
+| Engine ID specified is based on an IPv6 address, and must therefore be 21 octets in length.
+
+| 5636109
+| Engine ID specified is based on a MAC address, and must therefore be 11 octets in length.
+
+| 5636110
+| Engine ID starting with first bit set as 0 in the first octet needs to be 12 octets in length.
+
+| 5636111
+| Engine ID cannot have all zeroes.
+
+| 5636112
+| Invalid Engine ID specified.
+
+| 5636113
+| Cannot enable SNMP user capability for data SVM.
+
+| 5636116
+| Cannot read SNMP user capability for data SVM.
+
+| 5636121
+| User account name is reserved for use by the system.
+
+| 5636123
+| Cannot create an SNMP user with a role other than readonly, none, or admin.
+
+| 5636124
+| Cannot create an SNMP user with a role other than vsadmin-readonly, none, or vsadmin.
+
+| 5636148
+| Failed to discover SNMPv3 engine ID of remote SNMP agent.
+
+| 5636150
+| The switch_address parameter can be specified only for administrative SVMs.
+
+| 5636152
+| 0.0.0.0 cannot be specified as the IP Address for the switch_address parameter.
+
+| 5636153
+| Engine ID is already associated with user.
+
+| 7077897
+| Invalid character in username. Valid characters":" A-Z, a-z, 0-9, ".", "_", and "-". Note that the user name cannot start with "-".
+
+| 7077899
+| Username does not meet length requirements.
+
+| 7077906
+| Cannot use given role with this SVM because a role with that name has not been defined for the SVM.
+
+| 9043995
+| Failed to create SNMP community. Reason":" SNMPv1 and SNMPv2c are not supported when cluster FIPS mode is enabled.
+
+| 9043999
+| ONTAP failed to create an SNMPv3 user because SNMPv3 is disabled in the cluster.
+
+| 9044020
+| Customized engine-id cannot be specified for community users.
+
+| 9044021
+| The specified authentication protocol is not supported when cluster FIPS mode is enabled.
+
+| 9044022
+| The specified privacy protocol is not supported when cluster FIPS mode is enabled.
+
+| 9044023
+| The switch_address parameter can be specified only for creating remote SNMPv3 users.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Optional name and UUID of owning Storage Virtual Machine (SVM).
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#snmpv3]
+[.api-collapsible-fifth-title]
+snmpv3
+
+Optional parameter that can be specified only for an SNMPv3 user i.e. when 'authentication_method' is either 'usm' or 'both'. This parameter defines the SNMPv3 credentials for an SNMPv3 user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_password
+|string
+a|Authentication protocol password.
+
+
+|authentication_protocol
+|string
+a|Authentication protocol.
+
+
+|privacy_password
+|string
+a|Privacy protocol password.
+
+
+|privacy_protocol
+|string
+a|Privacy protocol.
+
+
+|===
+
+
+[#snmp_user]
+[.api-collapsible-fifth-title]
+snmp_user
+
+An SNMP user can be an SNMPv1/SNMPv2c user or an SNMPv3 user. SNMPv1/SNMPv2c user is also called a "community" user. An SNMPv3 user, also called a User-based Security Model (USM) user, can be a local SNMPv3 user or a remote SNMPv3 user. A local SNMPv3 user can be used for querying ONTAP SNMP server over SNMPv3 and/or for sending SNMPv3 traps. The local SNMPv3 user used for sending SNMPv3 traps must be configured with the same authentication and privacy credentials on the traphost receiver as well. A remote SNMPv3 user is also configured on a remote switch and used by ONTAP SNMP client functionality to query the remote switch over SNMPv3. An SNMP user is scoped to its owning Storage Virtual Machine (SVM). Owning SVM could be a data SVM or the administrative SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|authentication_method
+|string
+a|Optional authentication method.
+
+
+|comment
+|string
+a|Optional comment text.
+
+
+|engine_id
+|string
+a|Optional SNMPv3 engine identifier. For a local SNMP user belonging to the administrative Storage Virtual Machine (SVM), the default value of this parameter is the SNMPv3 engine identifier for the administrative SVM. For a local SNMP user belonging to a data SVM, the default value of this parameter is the SNMPv3 engine identifier for that data SVM. For an SNMPv1/SNMPv2c community, this parameter should not be specified in "POST" method. For a remote switch SNMPv3 user, this parameter specifies the SNMPv3 engine identifier for the remote switch. This parameter can also optionally specify a custom engine identifier.
+
+
+|name
+|string
+a|SNMP user name.
+
+
+|owner
+|link:#owner[owner]
+a|Optional name and UUID of owning Storage Virtual Machine (SVM).
+
+
+|snmpv3
+|link:#snmpv3[snmpv3]
+a|Optional parameter that can be specified only for an SNMPv3 user i.e. when 'authentication_method' is either 'usm' or 'both'. This parameter defines the SNMPv3 credentials for an SNMPv3 user.
+
+
+|switch_address
+|string
+a|Optional remote switch address. It can be an IPv4 address or an IPv6 address. A remote switch can be queried over SNMPv3 using ONTAP SNMP client functionality. Querying such a switch requires an SNMPv3 user (remote switch user) to be configured on the switch. Since ONTAP requires remote switch user's SNMPv3 credentials (to query it), this user must be configured in ONTAP as well. This parameter is specified when configuring such a user.
+
+* example: 10.23.34.45
+* Introduced in: 9.7
+* readCreate: 1
+* x-nullable: true
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

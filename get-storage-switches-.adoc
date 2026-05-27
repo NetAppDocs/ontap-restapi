@@ -1,0 +1,950 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-switches-.html'
+summary: 'Retrieve a specific storage switch'
+---
+
+= Retrieve a specific storage switch
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/switches/{name}`#
+
+*Introduced In:* 9.9
+
+Retrieves a specific storage switch.
+
+== Related ONTAP commands
+
+* `storage switch show`
+
+== Learn more
+
+* link:storage_switches_endpoint_overview.html[DOC /storage/switches]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|path
+|True
+a|
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connections
+|array[link:#connections[connections]]
+a|
+
+|director_class
+|boolean
+a|
+
+|domain_id
+|integer
+a|Domain ID
+
+
+|errors
+|array[link:#errors[errors]]
+a|
+
+|fabric_name
+|string
+a|Storage switch fabric name
+
+
+|fans
+|array[link:#fans[fans]]
+a|
+
+|firmware_version
+|string
+a|Storage switch firmware version
+
+
+|ip_address
+|string
+a|IP Address
+
+
+|local
+|boolean
+a|Indicates whether the storage switch is directly connected to the reporting cluster.
+
+
+|model
+|string
+a|Storage switch model.
+
+
+|monitored_blades
+|array[integer]
+a|Indicates the blades that are being monitored for a director-class switch.
+
+
+|monitoring_enabled
+|boolean
+a|Indicates whether monitoring is enabled for the storage switch.
+
+
+|name
+|string
+a|Storage switch name
+
+
+|paths
+|array[link:#paths[paths]]
+a|
+
+|ports
+|array[link:#ports[ports]]
+a|
+
+|power_supply_units
+|array[link:#power_supply_units[power_supply_units]]
+a|
+
+|role
+|string
+a|Storage switch role in fabric.
+
+
+|state
+|string
+a|Storage switch state
+
+
+|symbolic_name
+|string
+a|Storage switch symbolic name
+
+
+|temperature_sensors
+|array[link:#temperature_sensors[temperature_sensors]]
+a|
+
+|vendor
+|string
+a|Storage switch vendor
+
+
+|vsans
+|array[link:#vsans[vsans]]
+a|
+
+|wwn
+|string
+a|Storage switch world wide name
+
+
+|zones
+|array[link:#zones[zones]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "connections": [
+    {
+      "peer_port": {
+        "connection": "string",
+        "type": "string",
+        "unique_id": "string",
+        "wwn": "string"
+      },
+      "source_port": {
+        "mode": "string",
+        "name": "string",
+        "wwn": "string"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "component": {
+        "name": "string"
+      },
+      "reason": {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": "4",
+        "message": "entry doesn't exist"
+      },
+      "severity": "string",
+      "type": "string"
+    }
+  ],
+  "fabric_name": "string",
+  "fans": [
+    {
+      "name": "string",
+      "state": "string"
+    }
+  ],
+  "firmware_version": "string",
+  "ip_address": "string",
+  "model": "string",
+  "monitored_blades": [
+    "integer"
+  ],
+  "name": "string",
+  "paths": [
+    {
+      "adapter": {
+        "name": "string",
+        "type": "string",
+        "wwn": "string"
+      },
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "port": {
+        "name": "string"
+      }
+    }
+  ],
+  "ports": [
+    {
+      "mode": "string",
+      "name": "string",
+      "sfp": {
+        "serial_number": "string",
+        "transmitter_type": "string",
+        "type": "string"
+      },
+      "state": "string",
+      "wwn": "string"
+    }
+  ],
+  "power_supply_units": [
+    {
+      "name": "string",
+      "state": "string"
+    }
+  ],
+  "role": "string",
+  "state": "string",
+  "symbolic_name": "string",
+  "temperature_sensors": [
+    {
+      "name": "string",
+      "state": "string"
+    }
+  ],
+  "vendor": "string",
+  "vsans": [
+    {
+      "load_balancing_types": "string",
+      "name": "string",
+      "state": "string"
+    }
+  ],
+  "wwn": "string",
+  "zones": [
+    {
+      "name": "string",
+      "port": {
+        "id": "string",
+        "name": "string"
+      },
+      "wwn": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#peer_port]
+[.api-collapsible-fifth-title]
+peer_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connection
+|string
+a|Storage switch peer port host and name
+
+
+|type
+|string
+a|Storage switch peer type
+
+
+|unique_id
+|string
+a|Storage switch peer unique ID
+
+
+|wwn
+|string
+a|Storage switch peer port world wide name
+
+
+|===
+
+
+[#source_port]
+[.api-collapsible-fifth-title]
+source_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mode
+|string
+a|Storage switch port operating mode
+
+
+|name
+|string
+a|Storage switch port name
+
+
+|wwn
+|string
+a|Storage switch peer port world wide name
+
+
+|===
+
+
+[#connections]
+[.api-collapsible-fifth-title]
+connections
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|peer_port
+|link:#peer_port[peer_port]
+a|
+
+|source_port
+|link:#source_port[source_port]
+a|
+
+|===
+
+
+[#component]
+[.api-collapsible-fifth-title]
+component
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|Error component ID
+
+
+|name
+|string
+a|Error component name
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#errors]
+[.api-collapsible-fifth-title]
+errors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|component
+|link:#component[component]
+a|
+
+|reason
+|link:#error[error]
+a|
+
+|severity
+|string
+a|Error component severity
+
+
+|type
+|string
+a|Error component type
+
+
+|===
+
+
+[#fans]
+[.api-collapsible-fifth-title]
+fans
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Storage switch fan name
+
+
+|speed
+|integer
+a|Storage switch fan speed
+
+
+|state
+|string
+a|Storage switch fan state
+
+
+|===
+
+
+[#adapter]
+[.api-collapsible-fifth-title]
+adapter
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Node adapter name
+
+
+|type
+|string
+a|Node adapter type
+
+
+|wwn
+|string
+a|Node adapter world wide name
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Storage switch port name
+
+
+|speed
+|integer
+a|Storage switch port speed, in Gbps
+
+
+|===
+
+
+[#paths]
+[.api-collapsible-fifth-title]
+paths
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|adapter
+|link:#adapter[adapter]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|port
+|link:#port[port]
+a|
+
+|===
+
+
+[#sfp]
+[.api-collapsible-fifth-title]
+sfp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|serial_number
+|string
+a|Storage switch port SFP serial number
+
+
+|transmitter_type
+|string
+a|Storage switch port SFP transmitter type
+
+
+|type
+|string
+a|Storage switch port SFP type
+
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether the storage switch port is enabled.
+
+
+|mode
+|string
+a|Storage switch port mode
+
+
+|name
+|string
+a|Storage switch port name
+
+
+|sfp
+|link:#sfp[sfp]
+a|
+
+|speed
+|integer
+a|Storage switch port speed, in Gbps
+
+
+|state
+|string
+a|Storage switch port state
+
+
+|wwn
+|string
+a|Storage switch port world wide name
+
+
+|===
+
+
+[#power_supply_units]
+[.api-collapsible-fifth-title]
+power_supply_units
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Power supply unit name
+
+
+|state
+|string
+a|Power supply unit state
+
+
+|===
+
+
+[#temperature_sensors]
+[.api-collapsible-fifth-title]
+temperature_sensors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Temperature sensor name
+
+
+|reading
+|integer
+a|Temperature sensor reading, in degrees celsius.
+
+
+|state
+|string
+a|Temperature sensor state
+
+
+|===
+
+
+[#vsans]
+[.api-collapsible-fifth-title]
+vsans
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|Storage switch VSAN ID
+
+
+|iod
+|boolean
+a|Indicates whether in-order delivery is set for a zone.
+
+
+|load_balancing_types
+|string
+a|Storage switch VSAN load balancing type
+
+
+|name
+|string
+a|Storage switch VSAN name
+
+
+|state
+|string
+a|Storage switch VSAN Port state
+
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Storage switch zone port ID
+
+
+|name
+|string
+a|Storage switch zone port
+
+
+|===
+
+
+[#zones]
+[.api-collapsible-fifth-title]
+zones
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|Storage switch zone ID
+
+
+|name
+|string
+a|Storage switch zone name
+
+
+|port
+|link:#port[port]
+a|
+
+|wwn
+|string
+a|Storage switch zone world wide name
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,568 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_disks_endpoint_overview.html'
+summary: 'Manage disks'
+---
+
+= Manage disks
+
+
+
+== Retrieving storage disk information
+
+The storage disk GET API retrieves all of the disks in the cluster.
+
+'''
+
+== Examples
+
+=== 1) Retrieve a list of disks from the cluster.
+
+==== The following example shows the response with a list of disks in the cluster:
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/disks" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "1.24.4",
+    "_links": {
+      "self": {
+        "href": "/api/storage/disks/1.24.4"
+      }
+    }
+  },
+  {
+    "name": "1.24.3",
+    "_links": {
+      "self": {
+        "href": "/api/storage/disks/1.24.3"
+      }
+    }
+  },
+  {
+    "name": "1.24.5",
+    "_links": {
+      "self": {
+        "href": "/api/storage/disks/1.24.5"
+      }
+    }
+  },
+  {
+    "name": "1.24.0",
+    "_links": {
+      "self": {
+        "href": "/api/storage/disks/1.24.0"
+      }
+    }
+  },
+  {
+    "name": "1.24.2",
+    "_links": {
+      "self": {
+        "href": "/api/storage/disks/1.24.2"
+      }
+    }
+  },
+  {
+    "name": "1.24.1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/disks/1.24.1"
+      }
+    }
+  }
+],
+"num_records": 6,
+"_links": {
+  "self": {
+    "href": "/api/storage/disks"
+  }
+}
+}
+----
+
+'''
+
+=== 2) Retrieve a specific disk from the cluster.
+
+==== The following example shows the response of the requested disk. If there is no disk with the requested name, an error is returned:
+
+'''
+
+----
+
+# The API:
+/api/storage/disks/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/disks/1.24.3" -H "accept: application/hal+json"
+
+# The response:
+{
+"name": "1.24.3",
+"uid": "50000394:0808AA88:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+"serial_number": "EC47PC5021SW",
+"model": "X421_FAL12450A10",
+"vendor": "NETAPP",
+"firmware_version": "NA02",
+"usable_size": 438304768000,
+"rpm": 10000,
+"type": "sas",
+"effective_type": "sas",
+"class": "performance",
+"container_type": "aggregate",
+"pool": "pool0",
+"state": "present",
+"node": {
+  "uuid": "3a89ed49-8c6d-11e8-93bc-00a0985a64b6",
+  "name": "node-2",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/3a89ed49-8c6d-11e8-93bc-00a0985a64b6"
+    }
+  }
+},
+"home_node": {
+  "uuid": "3a89ed49-8c6d-11e8-93bc-00a0985a64b6",
+  "name": "node-2",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/3a89ed49-8c6d-11e8-93bc-00a0985a64b6"
+    }
+  }
+},
+"aggregates": [
+  {
+    "uuid": "3fd9c345-ba91-4949-a7b1-6e2b898d74e3",
+    "name": "node_2_SAS_1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/aggregates/3fd9c345-ba91-4949-a7b1-6e2b898d74e3"
+      }
+    }
+  }
+],
+"shelf": {
+  "uid": "10318311901725526608",
+  "_links": {
+    "self": {
+      "href": "/api/storage/shelves/10318311901725526608"
+    }
+  }
+},
+"local": true,
+"paths": [
+{
+   "initiator": "3a",
+   "port_name": "B",
+   "port_type": "sas",
+   "wwnn": "5000cca02f0e6768",
+   "wwpn": "5000cca02f0e676a",
+   "node": {
+     "name": "vsim3",
+     "uuid": "3f7fa09a-5c56-11ec-b366-005056bbbb3f",
+     "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3f7fa09a-5c56-11ec-b366-005056bbbb3f"
+        }
+     }
+   }
+ },
+ {
+   "initiator": "3d",
+   "port_name": "A",
+   "port_type": "sas",
+   "wwnn": "5000cca02f0e6768",
+   "wwpn": "5000cca02f0e6769",
+   "node": {
+     "name": "vsim4",
+     "uuid": "4f7fa09a-5c56-11ec-b366-005056bbbb3f",
+     "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4f7fa09a-5c56-11ec-b366-005056bbbb3f"
+        }
+     }
+   }
+},
+{
+   "initiator": "3d",
+   "port_name": "A",
+   "port_type": "sas",
+   "wwnn": "5000cca02f0e6768",
+   "wwpn": "5000cca02f0e6769",
+   "node": {
+     "name": "vsim3",
+     "uuid": "3f7fa09a-5c56-11ec-b366-005056bbbb3f",
+     "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/3f7fa09a-5c56-11ec-b366-005056bbbb3f"
+        }
+     }
+   }
+},
+{
+   "initiator": "3a",
+   "port_name": "B",
+   "port_type": "sas",
+   "wwnn": "5000cca02f0e6768",
+   "wwpn": "5000cca02f0e676a",
+   "node": {
+     "name": "vsim4",
+     "uuid": "4f7fa09a-5c56-11ec-b366-005056bbbb3f",
+     "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4f7fa09a-5c56-11ec-b366-005056bbbb3f"
+        }
+     }
+   }
+}
+],
+"outage": {
+  "persistently_failed": true,
+  "reason": {
+    "message": "Failed disk. Reason: \"admin failed\".",
+    "code": "721081"
+  }
+},
+"bay": 3,
+"_links": {
+  "self": {
+    "href": "/api/storage/disks/1.24.3"
+  }
+},
+"error": [
+{
+  "reason": {
+    "message": "\"The node is configured with All-Flash Optimized personality and this disk is not an SSD. The disk needs to be removed from the system.\"",
+    "code": "721082"
+  },
+  "type": "notallflashdisk"
+}
+],
+"bytes_per_sector": 512,
+"sector_count": 1172123568,
+"right_size_sector_count": 5579776,
+"physical_size": 438804988000,
+"stats": {
+  "average_latency": 6,
+  "throughput": 1957888,
+  "iops_total": 12854,
+  "path_error_count": 0,
+  "power_on_hours": 11797
+ }
+}
+----
+
+'''
+
+=== 3) Retrieving a specific disk from the hypervisor
+
+==== The following example shows the response of the requested disk. If there is no disk with the requested name, an error is returned:
+
+'''
+
+----
+
+# The API:
+/api/storage/disks/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/disks/NET-3.2" -H "accept: application/hal+json"
+
+# The response:
+{
+"name": "NET-3.2",
+"uid": "32343637:65386464:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+"serial_number": "3234363765386464",
+"model": "PHA-DISK",
+"vendor": "NETAPP",
+"firmware_version": "0001",
+"type": "vmdisk",
+"class": "virtual",
+"container_type": "mediator",
+"pool": "pool0",
+"node": {
+    "uuid": "f4cb78ba-5841-11ec-80c4-916f62b4cd44",
+    "name": "example_node_name",
+    "_links": {
+      "self": {
+          "href": "/api/cluster/nodes/f4cb78ba-5841-11ec-80c4-916f62b4cd44"
+      }
+    }
+},
+"home_node": {
+    "uuid": "f4cb78ba-5841-11ec-80c4-916f62b4cd44",
+    "name": "example_node_name",
+    "_links": {
+      "self": {
+          "href": "/api/cluster/nodes/f4cb78ba-5841-11ec-80c4-916f62b4cd44"
+      }
+    }
+},
+"local": true,
+"paths": [
+    {
+      "initiator": "0f",
+      "port_name": "A",
+      "port_type": "sas",
+      "wwnn": "53059d50444f5476",
+      "wwpn": "53059d50444f5476",
+      "vmdisk_hypervisor_file_name": "LUN 4.0",
+      "node": {
+          "name": "example_node_name",
+          "uuid": "f4cb78ba-5841-11ec-80c4-916f62b4cd44",
+          "_links": {
+            "self": {
+                "href": "/api/cluster/nodes/f4cb78ba-5841-11ec-80c4-916f62b4cd44"
+            }
+          }
+      }
+    },
+    {
+      "initiator": "0f",
+      "port_name": "A",
+      "port_type": "sas",
+      "wwnn": "53059d50444f5476",
+      "wwpn": "53059d50444f5476",
+      "vmdisk_hypervisor_file_name": "LUN 2.0",
+      "node": {
+          "name": "example_node_name",
+          "uuid": "f4cb78ba-5841-11ec-80c4-916f62b4cd44",
+          "_links": {
+            "self": {
+                "href": "/api/cluster/nodes/f4cb78ba-5841-11ec-80c4-916f62b4cd44"
+            }
+          }
+      }
+    }
+],
+"outage": {
+    "persistently_failed": false,
+    "reason": {
+      "message": "Failed disk. Reason: \"\".",
+      "code": "721081"
+    }
+},
+"self_encrypting": false,
+"fips_certified": false,
+"bytes_per_sector": 512,
+"sector_count": 204808,
+"right_size_sector_count": 5579776,
+"physical_size": 204808,
+"stats": {
+    "average_latency": 2157188883,
+    "throughput": 4096,
+    "iops_total": 1,
+    "path_error_count": 0,
+    "power_on_hours": 0
+},
+"_links": {
+    "self": {
+      "href": "/api/storage/disks/NET-3.2"
+    }
+}
+}
+----
+
+'''
+
+== Modifying storage disk
+
+The storage disk PATCH API modifies disk ownership, unfails a disk, updates encrypting drive authentication keys (AKs), sanitizes encrypting drives, or sanitizes non-encrypting spare drives in the cluster.
+The storage disk API currently supports patching one attribute at a time.
+
+=== Updating the disk ownership for a specified disk. Disk ownership cannot be updated on the ASA r2 platform.
+
+=== 1. When the disk is not assigned
+
+When the disk is a spare (or unowned) disk and node name is specified, the PATCH operation assigns the disk to the specified node.
+Optionally, pool name can also be specified along with node name. Accepted pool names are: pool0, pool1.
+
+=== 2. When the disk is already assigned
+
+When the disk is already assigned (already has a owner), and a new node is specified, the PATCH operation changes the ownership to the new node.
+Optionally, pool name can also be specified along with node name. Accepted pool names are: pool0, pool1.
+
+=== Removing the disk ownership for a specified disk
+
+When the disk is already assigned, and node name is specified as null (no-quotes), the PATCH operation removes the owner.
+
+'''
+
+== Examples
+
+=== 1. Update the disk ownership for an unowned disk
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -H "accept: application/hal+json" -H "Content-Type: application/hal+json" -d '{"node": {"name": "node-name"}}'
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 2. Update the disk ownership for an already owned disk
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -H "accept: application/hal+json" -H "Content-Type: application/hal+json" -d '{"node": {"name": "node-name"}}'
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 3. Update the disk pool for a disk (can be either owned or unowned).
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -H "accept: application/hal+json" -H "Content-Type: application/hal+json" -d '{"node": {"name": "node-name"}, "pool": "pool0"}'
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 4. Rekey the data authentication key (AK) of all encrypting drives to an authentication key (AK) selected automatically by the system
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=*&encryption_operation=rekey_data_auto_id" -H "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response contains the number of disks attempted.
+{
+ "num_records": 32
+}
+----
+
+'''
+
+=== 5. Cryptographically sanitize a spare or broken disk
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>&encryption_operation=sanitize_disk" -H "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response contains the number of disks attempted.
+{
+ "num_records": 1
+}
+----
+
+'''
+
+=== 6. Unfailing a disk to a spare.
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -d '{"state": "spare"}' -H "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 7. Unfailing a disk and attempting to reassimilate filesystem labels.
+
+=== If unable or unnecessary to reassimilate filesystem labels, the disk will be set as spare.
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -d '{"state": "present"}' -H "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 8. Sanitize spare disks (non-cryptographically)
+
+'''
+
+----
+
+# The API:
+/api/storage/disks
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -d '{"sanitize_spare": "true"}' -H "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response:
+{
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/disks?name=<disk-name>"
+  }
+}
+}
+----
+
+'''
+
+

@@ -1,0 +1,264 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_volumes_volume.uuid_top-metrics_files_endpoint_overview.html'
+summary: 'View I/O activity for files'
+---
+
+= View I/O activity for files
+
+
+
+== Overview
+
+You can use this API to retrieve a list of files with the most I/O activity for a specified volume, within the past several seconds. Use the `top_metric` parameter to specify which type of I/O activity to filter for. This API is used to provide insight into I/O activity and supports ordering by I/O activity types, namely `iops` or `throughput` metrics. This API also supports only returning one I/O activity type per request.
+
+== Approximate accounting and error bars
+
+When too many files have recent activity, some files might be dropped from the list. In this situation, the spread of values in the `error` field increases, indicating that there are larger error bars on the value for `iops` or `throughput`. As the list becomes increasingly more approximate due to dropped entries, some of the files that would have otherwise been included might not be present in the final list returned by the API.
+
+== Failure to return list of files with most I/O activity
+
+The API can sometimes fail to return the list of files with the most I/O activity, due to the following reasons:
+
+&ndash; The volume does not have the activity tracking feature enabled.
+
+&ndash; The volume has not had any recent NFS/CIFS client traffic.
+
+&ndash; The NFS/CIFS client operations are being served by the client-side filesystem cache.
+
+&ndash; The NFS/CIFS client operations are being buffered by the client operating system.
+
+&ndash; On rare occasions, the incoming traffic pattern is not suitable to obtain the list of files with the most I/O activity.
+
+&ndash; NFSv4 client read operations using Multi-Processor I/O (MPIO) are not tracked.
+
+== Failure to return pathnames
+
+The API can sometimes fail to obtain the filesystem pathnames for certain files, either due to internal transient errors or if those files have been recently deleted.
+In such cases, instead of the pathname, the API will return "{+++<volume_instance_uuid>+++.+++<fileid>+++}" for that file.+++</fileid>++++++</volume_instance_uuid>+++
+
+== Retrieve a list of the files with the most I/O activity
+
+For a report on the files with the most I/O activity returned in descending order, specify the I/O activity type you want to filter for by passing the `iops` or `throughput` property into the top_metric parameter. If the I/O activity type is not specified, by default the API returns a list of the files with the greatest number of the average read operations per second. The current maximum number of files returned by the API for an I/O activity type is 25.
+
+&ndash; GET   /api/storage/volumes/{volume.uuid}/top-metrics/files
+
+== Examples
+
+=== Retrieving a list of the files with the greatest average number of write bytes received per second:
+
+----
+
+# The API:
+GET /api/storage/volumes/{volume.uuid}/top-metrics/files
+
+# The Call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/{volume.uuid}/top-metrics/files?top_metric=throughput.write"
+
+# The Response:
+{
+"records": [
+  {
+    "volume": {
+      "name": "fv"
+    },
+    "throughput": {
+      "write": 24,
+      "error": {
+        "lower_bound": 24,
+        "upper_bound": 29
+      }
+    },
+    "path": "/d5/f5",
+    "svm": {
+      "uuid": "0ba74c3e-d5ca-11eb-8fbb-005056ac0f77",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/0ba74c3e-d5ca-11eb-8fbb-005056ac0f77"
+        }
+      }
+    },
+    "_links": {
+      "metadata": {
+        "href": "/api/storage/volumes/4ec6d1ea-d5da-11eb-a25f-005056ac0f77/files/d5%2Ff5?return_metadata=true"
+      }
+    }
+  },
+  {
+    "volume": {
+      "name": "fv"
+    },
+    "throughput": {
+      "write": 12,
+      "error": {
+        "lower_bound": 12,
+        "upper_bound": 22
+      }
+    },
+    "path": "/d6/f6",
+    "svm": {
+      "uuid": "0ba74c3e-d5ca-11eb-8fbb-005056ac0f77",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/0ba74c3e-d5ca-11eb-8fbb-005056ac0f77"
+        }
+      }
+    },
+    "_links": {
+      "metadata": {
+        "href": "/api/storage/volumes/4ec6d1ea-d5da-11eb-a25f-005056ac0f77/files/d6%2Ff6?return_metadata=true"
+      }
+    }
+  },
+  {
+    "volume": {
+      "name": "fv"
+    },
+    "throughput": {
+      "write": 8,
+      "error": {
+        "lower_bound": 8,
+        "upper_bound": 10
+      }
+    },
+    "path": "/d3/f3",
+    "svm": {
+      "uuid": "0ba74c3e-d5ca-11eb-8fbb-005056ac0f77",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/0ba74c3e-d5ca-11eb-8fbb-005056ac0f77"
+        }
+      }
+    },
+    "_links": {
+      "metadata": {
+        "href": "/api/storage/volumes/4ec6d1ea-d5da-11eb-a25f-005056ac0f77/files/d3%2Ff3?return_metadata=true"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/4ec6d1ea-d5da-11eb-a25f-005056ac0f77/top-metrics/files?top_metric=throughput.write"
+  }
+}
+}
+----
+
+=== Retrieving a list of the files with the most traffic with failure in obtaining the pathnames for the files:
+
+----
+
+# The Call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/{volume.uuid}/top-metrics/files?top_metric=throughput.write"
+
+# The Response:
+{
+"records": [
+  {
+    "volume": {
+      "name": "fv"
+    },
+    "throughput": {
+      "write": 24,
+      "error": {
+        "lower_bound": 24,
+        "upper_bound": 29
+      }
+    },
+    "path": "{4ec6d1ea-d5da-11eb-a25f-005056ac0f77:1232}",
+    "svm": {
+      "uuid": "0ba74c3e-d5ca-11eb-8fbb-005056ac0f77",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/0ba74c3e-d5ca-11eb-8fbb-005056ac0f77"
+        }
+      }
+    }
+  },
+  {
+    "volume": {
+      "name": "fv"
+    },
+    "throughput": {
+      "write": 12,
+      "error": {
+        "lower_bound": 12,
+        "upper_bound": 22
+      }
+    },
+    "path": "{4ec6d1ea-d5da-11eb-a25f-005056ac0f77:6754}",
+    "svm": {
+      "uuid": "0ba74c3e-d5ca-11eb-8fbb-005056ac0f77",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/0ba74c3e-d5ca-11eb-8fbb-005056ac0f77"
+        }
+      }
+    }
+  },
+  {
+    "volume": {
+      "name": "fv"
+    },
+    "throughput": {
+      "write": 8,
+      "error": {
+        "lower_bound": 8,
+        "upper_bound": 10
+      }
+    },
+    "path": "{4ec6d1ea-d5da-11eb-a25f-005056ac0f77:8654}",
+    "svm": {
+      "uuid": "0ba74c3e-d5ca-11eb-8fbb-005056ac0f77",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/0ba74c3e-d5ca-11eb-8fbb-005056ac0f77"
+        }
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/4ec6d1ea-d5da-11eb-a25f-005056ac0f77/top-metrics/files?top_metric=throughput.write"
+  }
+}
+}
+----
+
+== Example showing the behavior of the API when there is no read/write traffic:
+
+----
+
+# The Call:
+curl -X GET "https://<mgmt-ip>/api/storage/volumes/{volume.uuid}/top-metrics/files?top_metric=throughput.write"
+
+# The Response:
+{
+"records": [
+],
+"num_records": 0,
+"notice": {
+  "message": "The activity tracking report for volume \"FV\" in SVM \"vs0\" returned zero records. Check whether the volume have read/write traffic. Refer to the REST API documentation for more information on why there might be no records.",
+  "code": "124518418"
+},
+"_links": {
+  "self": {
+    "href": "/api/storage/volumes/9af63729-8ac8-11ec-b1bc-005056a79da4/top-metrics/files?top_metric=throughput.write"
+  }
+}
+}
+----
+
+

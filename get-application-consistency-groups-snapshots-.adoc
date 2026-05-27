@@ -1,0 +1,970 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-application-consistency-groups-snapshots-.html'
+summary: 'Retrieve a consistency group snapshot'
+---
+
+= Retrieve a consistency group snapshot
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/application/consistency-groups/{consistency_group.uuid}/snapshots/{uuid}`#
+
+*Introduced In:* 9.10
+
+Retrieves details of a specific snapshot for a consistency group.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[DOC Requesting specific fields]  to learn more.
+
+* `is_partial`
+* `missing_volumes.uuid`
+* `missing_volumes.name`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|consistency_group.uuid
+|string
+|path
+|True
+a|The unique identifier of the consistency group to retrieve.
+
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the snapshot of the consistency group to retrieve.
+
+
+|write_fence
+|boolean
+|query
+|False
+a|Filter by write_fence
+
+* Introduced in: 9.14
+
+
+|snapmirror_label
+|string
+|query
+|False
+a|Filter by snapmirror_label
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|missing_volumes.name
+|string
+|query
+|False
+a|Filter by missing_volumes.name
+
+
+|missing_volumes.uuid
+|string
+|query
+|False
+a|Filter by missing_volumes.uuid
+
+
+|luns.uuid
+|string
+|query
+|False
+a|Filter by luns.uuid
+
+* Introduced in: 9.16
+
+
+|luns.name
+|string
+|query
+|False
+a|Filter by luns.name
+
+* Introduced in: 9.16
+
+
+|missing_luns.uuid
+|string
+|query
+|False
+a|Filter by missing_luns.uuid
+
+* Introduced in: 9.16
+
+
+|missing_luns.name
+|string
+|query
+|False
+a|Filter by missing_luns.name
+
+* Introduced in: 9.16
+
+
+|consistency_type
+|string
+|query
+|False
+a|Filter by consistency_type
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|missing_namespaces.uuid
+|string
+|query
+|False
+a|Filter by missing_namespaces.uuid
+
+* Introduced in: 9.16
+
+
+|missing_namespaces.name
+|string
+|query
+|False
+a|Filter by missing_namespaces.name
+
+* Introduced in: 9.16
+
+
+|snapshot_volumes.snapshot.name
+|string
+|query
+|False
+a|Filter by snapshot_volumes.snapshot.name
+
+* Introduced in: 9.12
+
+
+|snapshot_volumes.snapshot.uuid
+|string
+|query
+|False
+a|Filter by snapshot_volumes.snapshot.uuid
+
+* Introduced in: 9.12
+
+
+|snapshot_volumes.volume.name
+|string
+|query
+|False
+a|Filter by snapshot_volumes.volume.name
+
+* Introduced in: 9.12
+
+
+|snapshot_volumes.volume.uuid
+|string
+|query
+|False
+a|Filter by snapshot_volumes.volume.uuid
+
+* Introduced in: 9.12
+
+
+|restore_size
+|integer
+|query
+|False
+a|Filter by restore_size
+
+* Introduced in: 9.16
+
+
+|is_partial
+|boolean
+|query
+|False
+a|Filter by is_partial
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|namespaces.uuid
+|string
+|query
+|False
+a|Filter by namespaces.uuid
+
+* Introduced in: 9.16
+
+
+|namespaces.name
+|string
+|query
+|False
+a|Filter by namespaces.name
+
+* Introduced in: 9.16
+
+
+|consistency_group.name
+|string
+|query
+|False
+a|Filter by consistency_group.name
+
+
+|reclaimable_space
+|integer
+|query
+|False
+a|Filter by reclaimable_space
+
+* Introduced in: 9.16
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|comment
+|string
+a|Comment for the snapshot.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The consistency group of the snapshot.
+
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Time the snapshot copy was created
+
+
+|is_partial
+|boolean
+a|Indicates whether the snapshot taken is partial or not.
+
+
+|luns
+|array[link:#luns[luns]]
+a|The list of LUNs in this snapshot.
+
+
+|missing_luns
+|array[link:#lun_reference[lun_reference]]
+a|List of LUNs that are not in the snapshot.
+
+
+|missing_namespaces
+|array[link:#missing_namespaces[missing_namespaces]]
+a|List of NVMe namespaces that are not in the snapshot.
+
+
+|missing_volumes
+|array[link:#volume_reference[volume_reference]]
+a|List of volumes which are not in the snapshot.
+
+
+|name
+|string
+a|Name of the snapshot.
+
+
+|namespaces
+|array[link:#namespaces[namespaces]]
+a|The list of NVMe namespaces in this snapshot.
+
+
+|reclaimable_space
+|integer
+a|Space reclaimed when the snapshot is deleted, in bytes.
+
+
+|restore_size
+|integer
+a|Size of the consistency group if this snapshot is restored.
+
+
+|snapmirror_label
+|string
+a|Snapmirror Label for the snapshot.
+
+
+|snapshot_volumes
+|array[link:#consistency_group_volume_snapshot[consistency_group_volume_snapshot]]
+a|List of volume and snapshot identifiers for each volume in the snapshot.
+
+
+|svm
+|link:#svm_reference[svm_reference]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier of the snapshot. The UUID is generated
+by ONTAP when the snapshot is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|write_fence
+|boolean
+a|Specifies whether a write fence will be taken when creating the snapshot. The default is false if there is only one volume in the consistency group, otherwise the default is true.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "comment": "My snapshot comment",
+  "consistency_group": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "my_consistency_group",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "consistency_type": "crash",
+  "create_time": "2020-10-25 11:20:00 +0000",
+  "is_partial": "",
+  "luns": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "/vol/volume1/lun1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "missing_luns": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "/vol/volume1/lun1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "missing_namespaces": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "/vol/volume1/namespace1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "missing_volumes": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  ],
+  "name": "string",
+  "namespaces": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "/vol/volume1/namespace1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "reclaimable_space": 0,
+  "restore_size": 4096,
+  "snapmirror_label": "sm_label",
+  "snapshot_volumes": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "snapshot": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "this_snapshot",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "volume": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "volume1",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      }
+    }
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#consistency_group]
+[.api-collapsible-fifth-title]
+consistency_group
+
+The consistency group of the snapshot.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|The name of the consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#luns]
+[.api-collapsible-fifth-title]
+luns
+
+A reference to a LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_reference]
+[.api-collapsible-fifth-title]
+lun_reference
+
+A reference to a LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#missing_namespaces]
+[.api-collapsible-fifth-title]
+missing_namespaces
+
+A reference to a namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of an NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#volume_reference]
+[.api-collapsible-fifth-title]
+volume_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#namespaces]
+[.api-collapsible-fifth-title]
+namespaces
+
+A reference to a namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of an NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#snapshot_reference]
+[.api-collapsible-fifth-title]
+snapshot_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#consistency_group_volume_snapshot]
+[.api-collapsible-fifth-title]
+consistency_group_volume_snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|snapshot
+|link:#snapshot_reference[snapshot_reference]
+a|
+
+|volume
+|link:#volume_reference[volume_reference]
+a|
+
+|===
+
+
+[#svm_reference]
+[.api-collapsible-fifth-title]
+svm_reference
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

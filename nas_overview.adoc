@@ -1,0 +1,36 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'nas_overview.html'
+summary: 'ONTAP REST API NAS endpoints'
+---
+
+= ONTAP REST API NAS endpoints
+
+
+
+== Overview
+
+These APIs allow you to complete various tasks, including:
+
+* Creating an NFS server for an SVM
+* Managing an NFS configuration of an SVM
+* Viewing and updating the NFS configuration of an SVM
+* Configuring export policies and rules for an SVM
+* Managing export policies and rules for an SVM
+
+== APIs
+
+=== NFS
+
+The NFS APIs enable you to create and configure NFS settings for an SVM. You can delete or update NFS configurations, and you can also disable or enable different NFS features as needed.
+The export APIs allow you to create and manage export policies for an SVM that enable an administrator to restrict access to volumes for clients that match specific IP addresses and specific authentication types. Export APIs are also used to create export rules for an export policy. The APIs allow each rule to specify the number of mask bits in the client IP address that must be matched for that rule to apply to a particular client request. The APIs also allow each export rule to specify the authentication types that are required for both read-only and read-write operations.
+
+=== Kerberos
+
+Kerberos is a protocol designed to provide strong authentication for users and hosts within a client/server environment. The basis of the protocol is a shared, secret-key cryptology system. (Kerberos uses shared-key encryption to ensure the confidentiality of the data. It also uses hashing techniques to ensure the integrity of the data (so that no one can modify the data unless allowed to do so). With the NetApp multiprotocol storage platform, through which clients based on UNIX or Windows can access data using CIFS or NFS, it is crucial to provide the ability to use standard network services for authentication and for identity storage.
+
+To configure an ONTAP system to use Kerberos for NFS, Kerberos must be enabled on a data LIF in the SVM that owns the NFS server. A Kerberos realm needs to be created before enabling Kerberos on a data LIF. (The Kerberos realm is needed so that the cluster knows how to format Kerberos ticket requests.) The Kerberos APIs allow you to define, create, modify, and delete realms for the SVM. The APIs also allow you to enable/disable Kerberos on a data LIF and update the Kerberos interface configuration for a particular data LIF in the SVM.
+
+

@@ -1,0 +1,59 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_group_role-mappings_endpoint_overview.html'
+summary: 'Manage group-to-role mapping entries'
+---
+
+= Manage group-to-role mapping entries
+
+
+
+=== Overview
+
+This API is used to manage and map groups to ONTAP roles. The POST request creates a group to role mapping. Various responses are shown in the examples below.
+ +
+
+== Examples
+
+=== Creating a group to role mapping entry
+
+The following output shows how to create a group to role mapping entry.
+
+----
+
+# The API:
+/api/security/group/role-mappings
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/group/role-mappings" -d '{ "group_id": 1, "ontap_role": { "name": "admin" }, "comment": "Group1 admin role"}'
+----
+
+=== Retrieving all group to role mapping entries
+
+The following output shows all group to role mapping entries.
+
+----
+
+# The API:
+/api/security/group/role-mappings
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/group/role-mappings"
+
+# The response:
+{
+ "records": [
+ {
+   "group_id": 1,
+   "ontap_role": {
+     "name": "admin"
+   }
+ }
+ ],
+ "num_records": 1
+}
+----
+
+

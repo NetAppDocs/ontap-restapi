@@ -1,0 +1,100 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_ems_role-configs_access_control_role.name_endpoint_overview.html'
+summary: 'Manage EMS role-based configurations'
+---
+
+= Manage EMS role-based configurations
+
+
+
+== Overview
+
+Manages the EMS role-based configuration of a specific access control role.
+
+##
+See the documentation for <<docs-support-support_ems_role-configs,/support/ems/role-configs>> for details on the various properties.
+
+== Examples
+
+=== Retrieving the EMS role-based configuration of an access control role
+
+[,json]
+----
+
+# The API:
+GET /api/support/ems/role-configs/{access_control_role.name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/ems/role-configs/storage-admin" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+
+# JSON Body
+{
+"access_control_role": {
+  "name": "storage-admin",
+  "_links": {
+    "self": {
+      "href": "/api/security/roles/0b2580c8-de36-4213-bfca-88cdaaaf3ae6/storage-admin"
+    }
+  }
+},
+"event_filter": {
+  "name": "storage-admin-events",
+  "_links": {
+    "self": {
+      "href": "/api/support/ems/filters/storage-admin-events"
+    }
+  },
+  "limit_access_to_global_configs": true
+},
+"_links": {
+  "self": {
+    "href": "/api/support/ems/role-configs/storage-admin"
+  }
+}
+}
+----
+
+=== Updating the EMS role-based configuration of an access control role
+
+[,json]
+----
+
+# The API:
+PATCH /api/support/ems/event-configs/{access_control_role.name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/ems/role-configs/storage-admin" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "@role_configs_patch.txt"
+role_configs_patch.txt(body):
+{
+"event_filter": {
+  "name": "new-storage-admin-events"
+},
+"limit_access_to_global_configs": false
+}
+
+# The response:
+200 OK
+----
+
+=== Removing the EMS role-based configuration of an access control role
+
+[,json]
+----
+
+# The API:
+DELETE /api/support/ems/role-configs/{access_control_role.name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/support/ems/role-configs/storage-admin" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+----
+
+

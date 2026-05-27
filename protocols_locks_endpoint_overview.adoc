@@ -1,0 +1,256 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_locks_endpoint_overview.html'
+summary: 'View lock details'
+---
+
+= View lock details
+
+
+
+== Overview
+
+A lock is a synchronization mechanism for enforcing limits on concurrent access to files where many clients can be
+accessing the same file at the same time. Locks can be viewed or broken according to a wide range of query fields
+that are presented in the lock information definition.
+
+It is recommended that you provide as many fields as possible to optimize query processing.
+
+== Examples
+
+=== Retrieving locks with all fields for all SVMs
+
+'''
+
+----
+
+# The API:
+GET /protocols/locks
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/locks?return_records=true&return_timeout=15&fields=*" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "5b4b6847-9ae4-11eb-8597-0050568ec154",
+      "name": "vs1"
+    },
+    "volume": {
+      "uuid": "429dcc79-9af2-11eb-b313-0050568ec154",
+      "name": "test_vol1"
+    },
+    "interface": {
+      "name": "vs1.data",
+      "uuid": "6bf26e25-9ae4-11eb-8597-0050568ec154",
+      "ip": {
+        "address": "10.140.115.95"
+      }
+    },
+    "path": "/test_vol1/Demo406.TXT",
+    "uuid": "bf03d8b4-e145-498a-902d-b9fe5d546d18",
+    "constituent": false,
+    "protocol": "cifs",
+    "client_address": "10.74.7.22",
+    "owner_id": "feff-0206000000020000000204000000000000000000000000ffff0a4a07161053010001000000030000006c00000000000000",
+    "share_lock": {
+      "mode": "read_write_deny_write_delete",
+      "soft": false
+    },
+    "smb": {
+      "connect_state": "connected",
+      "open_group_id": "71756e2325a7eb11843f005056a4731c101068450bcdffff1c2c000000000000",
+      "open_type": "durable"
+    },
+    "state": "granted",
+    "type": "share_level",
+    "node": {
+      "name": "user-vsim3",
+      "uuid": "1f29b875-9ae3-11eb-8597-0050568ec154"
+    }
+  },
+  {
+    "svm": {
+      "uuid": "5b4b6847-9ae4-11eb-8597-0050568ec154",
+      "name": "vs1"
+    },
+    "volume": {
+      "uuid": "429dcc79-9af2-11eb-b313-0050568ec154",
+      "name": "test_vol1"
+    },
+    "interface": {
+      "name": "vs1.data",
+      "uuid": "6bf26e25-9ae4-11eb-8597-0050568ec154",
+      "ip": {
+        "address": "10.140.115.95"
+      }
+    },
+    "path": "/test_vol1/Demo406.TXT",
+    "uuid": "0c33d18d-dcbc-492a-81b3-4c5740c46172",
+    "constituent": false,
+    "protocol": "cifs",
+    "client_address": "10.74.7.22",
+    "oplock_level": "batch",
+    "owner_id": "feff-0206000000020000000204000000000000000000000000ffff0a4a07161053010001000000030000006c00000000000000",
+    "smb": {
+      "connect_state": "connected",
+      "open_group_id": "71756e2325a7eb11843f005056a4731c101068450bcdffff1c2c000000000000"
+    },
+    "state": "granted",
+    "type": "op_lock",
+    "node": {
+      "name": "user-vsim3",
+      "uuid": "1f29b875-9ae3-11eb-8597-0050568ec154"
+    }
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving locks of a specific volume
+
+'''
+
+----
+
+# The API:
+GET /protocols/locks
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/locks?volume.uuid=429dcc79-9af2-11eb-b313-0050568ec154&return_records=true&return_timeout=15&fields=*" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "5b4b6847-9ae4-11eb-8597-0050568ec154",
+      "name": "vs1"
+    },
+    "volume": {
+      "uuid": "429dcc79-9af2-11eb-b313-0050568ec154",
+      "name": "test_vol1"
+    },
+    "interface": {
+      "name": "vs1.data",
+      "uuid": "6bf26e25-9ae4-11eb-8597-0050568ec154"
+    },
+    "path": "/test_vol1/Demo408.TXT",
+    "uuid": "be1cdf00-37f1-4477-b6d0-bba8c4fa8c67"
+  },
+  {
+    "svm": {
+      "uuid": "5b4b6847-9ae4-11eb-8597-0050568ec154",
+      "name": "vs1"
+    },
+    "volume": {
+      "uuid": "429dcc79-9af2-11eb-b313-0050568ec154",
+      "name": "test_vol1"
+    },
+    "interface": {
+      "name": "vs1.data",
+      "uuid": "6bf26e25-9ae4-11eb-8597-0050568ec154"
+    },
+    "path": "/test_vol1/Demo408.TXT",
+    "uuid": "393cc06e-8b37-4f49-b09a-74d1eef79368"
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving the lock for a specific UUID
+
+'''
+
+----
+
+# The API:
+GET /protocols/locks/{uuid}
+
+# The call:
+curl  -X GET "https://<mgmt-ip>/api/protocols/locks/be1cdf00-37f1-4477-b6d0-bba8c4fa8c67" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "5b4b6847-9ae4-11eb-8597-0050568ec154",
+  "name": "vs1"
+},
+"volume": {
+  "uuid": "429dcc79-9af2-11eb-b313-0050568ec154",
+  "name": "test_vol1"
+},
+"interface": {
+  "name": "vs1.data",
+  "uuid": "6bf26e25-9ae4-11eb-8597-0050568ec154",
+  "ip": {
+    "address": "10.140.115.95"
+  }
+},
+"path": "/test_vol1/Demo406.TXT",
+"uuid": "be1cdf00-37f1-4477-b6d0-bba8c4fa8c67",
+"constituent": false,
+"protocol": "cifs",
+"client_address": "10.74.7.22",
+"owner_id": "feff-0206000000020000000204000000000000000000000000ffff0a4a07161053010001000000030000006c00000000000000",
+"share_lock": {
+  "mode": "read_write_deny_write_delete",
+  "soft": false
+},
+"smb": {
+  "connect_state": "connected",
+  "open_group_id": "71756e2325a7eb11843f005056a4731c101068450bcdffff1c2c000000000000",
+  "open_type": "durable"
+},
+"state": "granted",
+"type": "share_level",
+"node": {
+  "name": "user-vsim3",
+  "uuid": "1f29b875-9ae3-11eb-8597-0050568ec154"
+}
+}
+----
+
+'''
+
+=== Deleting the lock for a specific UUID
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/locks/{uuid}
+
+# The call:
+curl  -X DELETE "https://<mgmt-ip>/api/protocols/locks/be1cdf00-37f1-4477-b6d0-bba8c4fa8c67" -H "accept: application/json"
+----
+
+'''
+
+=== Deleting all locks for a specific protocol
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/locks/{uuid}
+
+# The call:
+curl  -X DELETE "https://<mgmt-ip>/api/protocols/locks?protocol=cifs" -H "accept: application/json"
+----
+
+'''
+
+

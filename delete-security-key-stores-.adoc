@@ -1,0 +1,179 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-key-stores-.html'
+summary: 'Delete an inactive keystore configuration'
+---
+
+= Delete an inactive keystore configuration
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/key-stores/{uuid}`#
+
+*Introduced In:* 9.14
+
+Deletes an inactive keystore configuration.
+
+== Related ONTAP commands
+
+* `security key-manager keystore delete`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262155
+| This operation requires an effective cluster version of 9.14.0 or later.
+
+| 65538905
+| The keystore configuration is currently enabled and cannot be deleted.
+
+| 65538907
+| The method is not yet supported for deleting the given UUID's type of configuration.
+
+| 65538908
+| The specified keystore configuration UUID either does not exist or corresponds to a keystore configuration that is not supported by this operation.
+
+| 65539521
+| An effective cluster version of ONTAP 9.16.1 or later is required to delete an inactive key manager on the admin SVM.
+
+| 65539522
+| This command does not support disabling key manager configurations with the specified keystore type on the admin SVM.
+
+| 65539593
+| Cannot delete an inactive key manager configuration while the keystore is in the switching state.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

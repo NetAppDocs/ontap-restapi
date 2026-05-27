@@ -1,0 +1,302 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-login-messages-.html'
+summary: 'Retrieve a login message configuration by UUID'
+---
+
+= Retrieve a login message configuration by UUID
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/login/messages/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves the login messages configuration by UUID.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Login messages configuration UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|banner
+|string
+a|The login banner text. This message is displayed during SSH and console device
+login just before the password prompt displays. When configured, a cluster-level
+login banner is used for every incoming connection. Each data SVM can override
+the cluster-level banner to instead display when you log into the SVM. To restore
+the default setting for a data SVM, set the banner to an empty string.
+New lines are supplied as either LF or CRLF but are always returned as LF.
+Optional in the PATCH body.
+
+
+|message
+|string
+a|The message of the day (MOTD). This message appears just before the clustershell
+prompt after a successful login. When configured, the cluster message
+displays first. If you log in as a data SVM administrator, the
+SVM message is then printed. The cluster-level MOTD can be disabled
+for a given data SVM using the "show_cluster_message" property.
+New lines are supplied as either LF or CRLF but are always returned as LF.
+Optional in the PATCH body.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|show_cluster_message
+|boolean
+a|Specifies whether to show a cluster-level message before the SVM message
+when logging in as an SVM administrator.
+This setting can only be modified by cluster administrators.
+Optional in the PATCH body.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier (ID) of the login messages configuration.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "banner": "string",
+  "message": "string",
+  "scope": "string",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

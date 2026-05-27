@@ -1,0 +1,905 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-nvme-subsystems-.html'
+summary: 'Retrieve an NVMe subsystem'
+---
+
+= Retrieve an NVMe subsystem
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nvme/subsystems/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieves an NVMe subsystem.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `subsystem_maps.+*+`
+
+== Related ONTAP commands
+
+* `vserver nvme subsystem host show`
+* `vserver nvme subsystem map show`
+* `vserver nvme subsystem show`
+
+== Learn more
+
+* link:protocols_nvme_subsystems_endpoint_overview.html[DOC /protocols/nvme/subsystems]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|The unique identifier of the NVMe subsystem.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|A configurable comment for the NVMe subsystem. Optional in POST and PATCH.
+
+
+|delete_on_unmap
+|boolean
+a|An option that causes the subsystem to be deleted when the last subsystem map associated with it is deleted. Optional in POST and PATCH. This property defaults to _false_ when the subsystem is created.
+
+
+|hosts
+|array[link:#hosts[hosts]]
+a|The NVMe hosts configured for access to the NVMe subsystem. Optional in POST.
+
+
+|io_queue
+|link:#io_queue[io_queue]
+a|The properties of the submission queue used to submit I/O commands for execution by the NVMe controller.
+
+
+|name
+|string
+a|The name of the NVMe subsystem. Once created, an NVMe subsystem cannot be renamed. Required in POST.
+
+
+|os_type
+|string
+a|The host operating system of the NVMe subsystem's hosts. Required in POST.
+
+
+|replication
+|link:#replication[replication]
+a|Properties related to subsystem replication.
+
+
+|serial_number
+|string
+a|The serial number of the NVMe subsystem.
+
+
+|subsystem_maps
+|array[link:#subsystem_maps[subsystem_maps]]
+a|The NVMe namespaces mapped to the NVMe subsystem.
+
+There is an added computational cost to retrieving property values for `subsystem_maps`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|target_nqn
+|string
+a|The NVMe qualified name (NQN) used to identify the NVMe storage target.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe subsystem.
+
+
+|vendor_uuids
+|array[string]
+a|Vendor-specific identifiers (UUIDs) optionally assigned to an NVMe subsystem when the subsystem is created. The identifiers are used to enable vendor-specific NVMe protocol features. The identifiers are provided by a host application vendor and shared with NetApp prior to a joint product release. Creating an NVMe subsystem with an unknown or non-specific identifier will have no effect on the NVMe subsystem. Refer to the ONTAP SAN Administration Guide for a list of the supported vendor-specific identifiers. After a subsystem is created, the vendor-specific identifiers cannot be changed or removed. Optional in POST.
+
+* Introduced in: 9.9
+* readCreate: 1
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "comment": "string",
+  "hosts": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "dh_hmac_chap": {
+        "group_size": "string",
+        "hash_function": "string",
+        "mode": "bidirectional"
+      },
+      "nqn": "nqn.1992-01.example.com:string",
+      "priority": "string",
+      "proximity": {
+        "peer_svms": [
+          {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "peer1",
+            "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+          }
+        ]
+      },
+      "tls": {
+        "key_type": "configured"
+      }
+    }
+  ],
+  "io_queue": {
+    "default": {
+      "count": 4,
+      "depth": 16
+    }
+  },
+  "name": "subsystem1",
+  "os_type": "string",
+  "replication": {
+    "error": {
+      "subsystem": {
+        "name": "subsystem1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "summary": {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": "4",
+        "message": "entry doesn't exist"
+      }
+    },
+    "peer_subsystem": {
+      "uuid": "1cd8a443-86d2-11e0-ae1c-123478563412"
+    },
+    "peer_svm": {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "peer1",
+      "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+    },
+    "state": "string"
+  },
+  "serial_number": "wCVsgFMiuMhVAAAAAAAB",
+  "subsystem_maps": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "anagrpid": "00103050h",
+      "namespace": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "/vol/vol1/namespace1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "nsid": "00000001h"
+    }
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "target_nqn": "nqn.1992-01.example.com:string",
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "vendor_uuids": [
+    "1447f0f4-42e5-0dfc-871a-dc9b3f92d8f8"
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 72090001
+| The NVMe subsystem does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#dh_hmac_chap]
+[.api-collapsible-fifth-title]
+dh_hmac_chap
+
+A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group_size
+|string
+a|The Diffie-Hellman group size for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `2048_bit`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|hash_function
+|string
+a|The hash function for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `sha_256`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|mode
+|string
+a|The expected NVMe in-band authentication mode for the host. This property is an indication of which secrets are configured for the host. When set to:
+
+* none: The host has neither the host nor controller secret configured, and no authentication is performed.
+* unidirectional: The host has a host secret configured. The controller will authenticate the host.
+* bidirectional: The host has both a host and controller secret configured. The controller will authenticate the host and the host will authenticate the controller.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the host is proximal to the SVM for which it is configured.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the host is proximal.
+
+
+|===
+
+
+[#tls]
+[.api-collapsible-fifth-title]
+tls
+
+A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_type
+|string
+a|The method by which the TLS pre-shared key (PSK) is configured for the host. Optional in POST.
+
+The values for property `key_type` and property `configured_psk` must logically agree.
+
+Possible values:
+
+* `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
+* `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+
+This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
+
+
+|===
+
+
+[#hosts]
+[.api-collapsible-fifth-title]
+hosts
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|dh_hmac_chap
+|link:#dh_hmac_chap[dh_hmac_chap]
+a|A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+|nqn
+|string
+a|The NVMe qualified name (NQN) used to identify the NVMe storage target.
+
+
+|priority
+|string
+a|The host priority setting allocates appropriate NVMe I/O queues (count and depth) for the host to submit I/O commands. Absence of this property in GET implies user configured values of I/O queue count and I/O queue depth are being used.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+|tls
+|link:#tls[tls]
+a|A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+|===
+
+
+[#default]
+[.api-collapsible-fifth-title]
+default
+
+IMPORTANT: Support for this field will be removed in a future release.
+The default I/O queue parameters inherited by NVMe hosts in the NVMe subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of host I/O queue pairs.
+
+
+|depth
+|integer
+a|The host I/O queue depth.
+
+
+|===
+
+
+[#io_queue]
+[.api-collapsible-fifth-title]
+io_queue
+
+The properties of the submission queue used to submit I/O commands for execution by the NVMe controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default
+|link:#default[default]
+a|IMPORTANT: Support for this field will be removed in a future release.
+The default I/O queue parameters inherited by NVMe hosts in the NVMe subsystem.
+
+
+|===
+
+
+[#subsystem]
+[.api-collapsible-fifth-title]
+subsystem
+
+An NVMe subsystem maintains configuration state and NVMe namespace access control for a set of NVMe-connected hosts.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|Indicates whether the reported subsystem is on the local SVM or the peer SVM. When deleting a replicated subsystem, the local copy is deleted first and then the peer copy is deleted. If the error is encountered between these two operations and only the peer subsystem remains, the peer subsystem is reported and the problem might need to be corrected on the peer cluster.
+
+
+|name
+|string
+a|The name of the NVMe subsystem.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe subsystem.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#summary]
+[.api-collapsible-fifth-title]
+summary
+
+A user friendly message describing the error.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+Information about asynchronous errors encountered while replicating this subsystem. Subsystems within a peering relationship are replicated in the same stream, so the error reported here might be related to this subsystem or a prior replicated subsystem that is now blocking the replication of this subsystem. Both the error information and the subsystem encountering the error are reported. If the error is configuration related, it can be corrected on the referenced subsystem. The replication is retried using exponential backoff up to a maximum of one retry every 5 minutes. Every operation on the same stream triggers an immediate retry and restarts the exponential backoff starting with a 1 second delay. If the error is system related, the retries should correct the error when the system enters a healthy state.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|subsystem
+|link:#subsystem[subsystem]
+a|An NVMe subsystem maintains configuration state and NVMe namespace access control for a set of NVMe-connected hosts.
+
+
+|summary
+|link:#summary[summary]
+a|A user friendly message describing the error.
+
+
+|===
+
+
+[#peer_subsystem]
+[.api-collapsible-fifth-title]
+peer_subsystem
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The unique identifier of the peer subsystem.
+
+
+|===
+
+
+[#peer_svm]
+[.api-collapsible-fifth-title]
+peer_svm
+
+The peered SVM to which the subsystem is replicated. Subsystem are are automatically replicated when mapped to a namespace in a SnapMirror active sync relationship. When a subsystem is mapped to a namespace in an active sync relationship, the subsystem is restricted to only be mapped to namespaces that are members of the same consistency group.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#replication]
+[.api-collapsible-fifth-title]
+replication
+
+Properties related to subsystem replication.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#error[error]
+a|Information about asynchronous errors encountered while replicating this subsystem. Subsystems within a peering relationship are replicated in the same stream, so the error reported here might be related to this subsystem or a prior replicated subsystem that is now blocking the replication of this subsystem. Both the error information and the subsystem encountering the error are reported. If the error is configuration related, it can be corrected on the referenced subsystem. The replication is retried using exponential backoff up to a maximum of one retry every 5 minutes. Every operation on the same stream triggers an immediate retry and restarts the exponential backoff starting with a 1 second delay. If the error is system related, the retries should correct the error when the system enters a healthy state.
+
+
+|peer_subsystem
+|link:#peer_subsystem[peer_subsystem]
+a|
+
+|peer_svm
+|link:#peer_svm[peer_svm]
+a|The peered SVM to which the subsystem is replicated. Subsystem are are automatically replicated when mapped to a namespace in a SnapMirror active sync relationship. When a subsystem is mapped to a namespace in an active sync relationship, the subsystem is restricted to only be mapped to namespaces that are members of the same consistency group.
+
+
+|state
+|string
+a|The state of the replication queue associated with this subsystem. If this subsystem is not in the replication queue, the state is reported as _ok_. If this subsystem is in the replication queue, but no errors have been encountered, the state is reported as _replicating_. If this subsystem is in the replication queue and the queue is blocked by an error, the state is reported as _error_. When in the _error_ state, additional context is provided by the `replication.error` property.
+
+
+|===
+
+
+[#namespace]
+[.api-collapsible-fifth-title]
+namespace
+
+An NVMe namespace mapped to the NVMe subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the NVMe namespace.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#subsystem_maps]
+[.api-collapsible-fifth-title]
+subsystem_maps
+
+An NVMe namespace mapped to the NVMe subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|anagrpid
+|string
+a|The Asymmetric Namespace Access Group ID (ANAGRPID) of the NVMe namespace.
+
+The format for an ANAGRPIP is 8 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|namespace
+|link:#namespace[namespace]
+a|An NVMe namespace mapped to the NVMe subsystem.
+
+
+|nsid
+|string
+a|The NVMe namespace identifier. This is an identifier used by an NVMe controller to provide access to the NVMe namespace.
+
+The format for an NVMe namespace identifier is 8 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

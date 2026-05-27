@@ -1,0 +1,456 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-file-clone-tokens.html'
+summary: 'Retrieve information for a token'
+---
+
+= Retrieve information for a token
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/file/clone/tokens`#
+
+*Introduced In:* 9.10
+
+Retrieves information for the specified token.
+
+== Related Ontap command
+
+* `volume file clone token show`
+
+== Learn More
+
+* [`DOC /storage/file/clone`]
+
+== Retrieving information on clone tokens
+
+----
+
+# The API:
+/api/storage/file/clone/tokens
+
+# The call:
+curl -X GET "https://<mgmt_ip>/api/storage/file/clone/tokens" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "97255711-a1ad-11eb-92b2-0050568eb2ca",
+      "name": "node1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/97255711-a1ad-11eb-92b2-0050568eb2ca"
+        }
+      }
+    },
+    "uuid": "905c42ce-a74b-11eb-bd86-0050568ec7ae",
+    "reserve_size": 10240,
+    "expiry_time": {
+      "limit": "PT1H10M",
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/file/clone/tokens/97255711-a1ad-11eb-92b2-0050568eb2ca/905c42ce-a74b-11eb-bd86-0050568ec7ae"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/storage/file/clone/tokens"
+  }
+}
+}
+----
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|reserve_size
+|integer
+|query
+|False
+a|Filter by reserve_size
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|expiry_time.left
+|string
+|query
+|False
+a|Filter by expiry_time.left
+
+
+|expiry_time.limit
+|string
+|query
+|False
+a|Filter by expiry_time.limit
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#token[token]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {}
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#expiry_time]
+[.api-collapsible-fifth-title]
+expiry_time
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|left
+|string
+a|Specifies the time remaining before the given token expires in ISO-8601 format.
+
+
+|limit
+|string
+a|Specifies when the given token expires in ISO-8601 format.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Node name
+
+
+|uuid
+|string
+a|Node UUID
+
+
+|===
+
+
+[#token]
+[.api-collapsible-fifth-title]
+token
+
+token
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|expiry_time
+|link:#expiry_time[expiry_time]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|reserve_size
+|integer
+a|Specifies the available reserve in the file clone split load for the given token. Also note that the minimum value for reserve size is 4KB and any value specified below 4KB will be rounded off to 4KB.
+
+
+|uuid
+|string
+a|Token UUID.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

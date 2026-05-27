@@ -1,0 +1,609 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-cifs-services-.html'
+summary: 'Delete a CIFS server and related configurations'
+---
+
+= Delete a CIFS server and related configurations
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/cifs/services/{svm.uuid}`#
+
+*Introduced In:* 9.6
+
+Deletes a CIFS server and related CIFS configurations.
+
+Important notes:
+
+* The default value for the "force" field is false.
+* If the "force" field is set along with user login credentials, the local CIFS configuration will be deleted irrespective of any communication errors.
+* If the "force" field alone is set without passing the user login credentials, the local CIFS configuration will be deleted by not making any request to Active Directory.
+
+== Related ONTAP commands
+
+* `vserver cifs server delete`
+* `vserver cifs remove-netbios-aliases`
+
+== Learn more
+
+* link:protocols_cifs_services_endpoint_overview.html[DOC /protocols/cifs/services]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|force
+|boolean
+|query
+|False
+a|When set, the local CIFS configuration is deleted irrespective of any communication errors. Default value for this field is false.
+
+* Introduced in: 9.11
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|link:#ad_domain_delete[ad_domain_delete]
+a|
+
+|auth_user_type
+|string
+a|Specifies the type of user who can access the SMB Volume. The default is domain_user. In the case of a hybrid-user, ONTAP won't contact on-premise ADDS.
+
+* enum: ["domain_user", "hybrid_user"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|authentication_method
+|string
+a|Specifies the authentication method.
+The available values are:
+
+*** client_secret
+
+*** certificate
+
+
+|client_certificate
+|string
+a|PKCS12 certificate used by the application to prove its identity to AKV.
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|client_secret
+|string
+a|Secret used by the application to prove its identity to AKV.
+
+
+|key_vault_uri
+|string
+a|URI of the deployed AKV that is used by ONTAP for storing keys.
+
+* example: https://kmip-akv-keyvault.vault.azure.net/
+* format: uri
+* Introduced in: 9.15
+* x-nullable: true
+
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|timeout
+|integer
+a|AKV connection timeout, in seconds. The allowed range is between 0 to 30 seconds.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the AKV host name. By default, verify_host is set to true.
+
+
+|workgroup
+|string
+a|The workgroup name.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "ad_domain": {
+    "fqdn": "example.com",
+    "organizational_unit": "string",
+    "password": "string",
+    "user": "string"
+  },
+  "auth_user_type": "string",
+  "authentication_method": "string",
+  "client_certificate": "PEM Cert",
+  "client_id": "e959d1b5-5a63-4284-9268-851e30e3eceb",
+  "client_secret": "<APPLICATION-CLIENT-SECRET-FOR-AKV>",
+  "key_vault_uri": "https://kmip-akv-keyvault.vault.azure.net/",
+  "oauth_host": "login.microsoftonline.com",
+  "proxy_host": "proxy.eng.com",
+  "proxy_password": "proxypassword",
+  "proxy_port": 1234,
+  "proxy_type": "string",
+  "proxy_username": "proxyuser",
+  "tenant_id": "c9f32fcb-4ab7-40fe-af1b-1850d46cfbbe",
+  "timeout": 25,
+  "workgroup": "workgrp1"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 655525
+| In order to delete an Active Directory machine account for the CIFS server, you must supply the name and password of a Windows account with sufficient privileges.
+
+| 3735751
+| Failed to authenticate and retrieve the access token from the Azure OAuth host.
+
+| 3735752
+| Failed to extract the private key from the Azure Key Vault certificate.
+
+| 3735753
+| Unsupported content_type in the Azure secrets response.
+
+| 3735754
+| Failed to parse the JSON response from Azure Key Vault.
+
+| 3735755
+| REST API call to Azure failed.
+
+| 3735756
+| Invalid client certificate.
+
+| 3735757
+| Failed to generate client assertion.
+
+| 3735762
+| The provided Azure Key Vault configuration is incorrect.
+
+| 3735763
+| The provided Azure Key Vault configuration is incomplete.
+
+| 3735764
+| Request to Azure failed. Reason - Azure error code and Azure error message.
+
+| 655563
+| NetBIOS name contains characters that are not allowed.
+
+| 655562
+| NetBIOS name is longer than 15 characters.
+
+| 655923
+| Retrieving credentials from AKV is not supported because the effective cluster version is not ONTAP 9.15.0 or later.
+
+| 656487
+| Missing fields when doing CIFS operation with hybrid auth user type.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#ad_domain_delete]
+[.api-collapsible-fifth-title]
+ad_domain_delete
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|fqdn
+|string
+a|The fully qualified domain name of the Windows Active Directory to which this CIFS server belongs. A CIFS server appears as a member of Windows server object in the Active Directory store. POST and PATCH only.
+
+
+|organizational_unit
+|string
+a|Specifies the organizational unit within the Active Directory domain to associate with the CIFS server. POST and PATCH only.
+
+
+|password
+|string
+a|The account password used to add this CIFS server to the Active Directory. This is not audited.
+
+
+|user
+|string
+a|The user account used to add this CIFS server to the Active Directory.
+
+
+|===
+
+
+[#cifs_service_delete]
+[.api-collapsible-fifth-title]
+cifs_service_delete
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|link:#ad_domain_delete[ad_domain_delete]
+a|
+
+|auth_user_type
+|string
+a|Specifies the type of user who can access the SMB Volume. The default is domain_user. In the case of a hybrid-user, ONTAP won't contact on-premise ADDS.
+
+* enum: ["domain_user", "hybrid_user"]
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|authentication_method
+|string
+a|Specifies the authentication method.
+The available values are:
+
+*** client_secret
+
+*** certificate
+
+
+|client_certificate
+|string
+a|PKCS12 certificate used by the application to prove its identity to AKV.
+
+
+|client_id
+|string
+a|Application client ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|client_secret
+|string
+a|Secret used by the application to prove its identity to AKV.
+
+
+|key_vault_uri
+|string
+a|URI of the deployed AKV that is used by ONTAP for storing keys.
+
+* example: https://kmip-akv-keyvault.vault.azure.net/
+* format: uri
+* Introduced in: 9.15
+* x-nullable: true
+
+
+|oauth_host
+|string
+a|Open authorization server host name.
+
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|tenant_id
+|string
+a|Directory (tenant) ID of the deployed Azure application with appropriate access to an AKV or EntraId.
+
+
+|timeout
+|integer
+a|AKV connection timeout, in seconds. The allowed range is between 0 to 30 seconds.
+
+
+|verify_host
+|boolean
+a|Verify the identity of the AKV host name. By default, verify_host is set to true.
+
+
+|workgroup
+|string
+a|The workgroup name.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

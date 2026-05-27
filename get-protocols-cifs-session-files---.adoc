@@ -1,0 +1,534 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-session-files---.html'
+summary: 'Retrieve a CIFS open file'
+---
+
+= Retrieve a CIFS open file
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/session/files/{node.uuid}/{svm.uuid}/{identifier}/{connection.identifier}/{session.identifier}`#
+
+*Introduced In:* 9.11
+
+Retrieves specific CIFS session Open Files information.
+
+== Learn more
+
+* link:protocols_cifs_session_files_endpoint_overview.html[DOC /protocols/cifs/session/files]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID.
+
+
+|identifier
+|integer
+|path
+|True
+a|File ID
+
+* format: int64
+
+
+|connection.identifier
+|integer
+|path
+|True
+a|Connection ID
+
+
+|session.identifier
+|integer
+|path
+|True
+a|Session ID
+
+* format: int64
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|connection
+|link:#connection[connection]
+a|
+
+|continuously_available
+|string
+a|The type of continuous availability protection provided to the file.
+Opened files are continuously available if there are opened through a SMB3 client through a share with "continuously_available" set to yes.
+These open files are capable of non-disruptively recovering from take over and giveback as well as general aggregate relocation.
+
+* no: the open file is not continuously available.
+* yes: the open file is continuously available.
+
+
+|identifier
+|integer
+a|The unique identifier for the opened file.
+
+
+|node
+|link:#node[node]
+a|
+
+|open_mode
+|string
+a|Open mode corresponding to the opened file
+
+* r: Opened for read
+* w: Opened for write
+* d: Opened for delete
+* rw: Opened for read and write
+
+
+|path
+|string
+a|Path from CIFS share.
+
+
+|range_locks_count
+|integer
+a|The number of range locks granted on the file.
+
+
+|session
+|link:#session[session]
+a|
+
+|share
+|link:#share[share]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|type
+|string
+a|The type of opened file.
+The file can be a regular file, directory, a symbolic link to an existing file/directory, or an alternate data stream.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "connection": {
+    "count": 3,
+    "identifier": 356756
+  },
+  "continuously_available": "no",
+  "identifier": 17,
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "open_mode": "r",
+  "path": "sub1\\sub2\\f4",
+  "range_locks_count": 4,
+  "session": {
+    "identifier": 8966666858094657537
+  },
+  "share": {
+    "mode": "r",
+    "name": "share1"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "type": "regular",
+  "volume": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#connection]
+[.api-collapsible-fifth-title]
+connection
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|The number of CIFS connections associated with the CIFS session.
+
+
+|identifier
+|integer
+a|The connection that is used to open the file.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#session]
+[.api-collapsible-fifth-title]
+session
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|identifier
+|integer
+a|Session under which file is opened.
+
+
+|===
+
+
+[#share]
+[.api-collapsible-fifth-title]
+share
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mode
+|string
+a|The share mode used to open the file.
+The share mode can be a combination of:
+
+* r: read mode
+* w: write mode
+* d: delete
+* rw: read and write modes
+* rwd: read, write, and delete modes
+
+
+|name
+|string
+a|CIFS share name where the file resides.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

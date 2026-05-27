@@ -1,0 +1,883 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-aws-kms.html'
+summary: 'Retrieve all AWS KMS instances configured for all clusters and SVMs'
+---
+
+= Retrieve all AWS KMS instances configured for all clusters and SVMs
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/aws-kms`#
+
+*Introduced In:* 9.12
+
+Retrieves all AWS KMS instances configured for all clusters and SVMs.
+
+== Related ONTAP commands
+
+* `security key-manager external aws show`
+* `security key-manager external aws check`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|state.message
+|string
+|query
+|False
+a|Filter by state.message
+
+
+|state.cluster_state
+|boolean
+|query
+|False
+a|Filter by state.cluster_state
+
+
+|state.code
+|string
+|query
+|False
+a|Filter by state.code
+
+
+|polling_period
+|integer
+|query
+|False
+a|Filter by polling_period
+
+
+|proxy_port
+|integer
+|query
+|False
+a|Filter by proxy_port
+
+
+|verify_ip
+|boolean
+|query
+|False
+a|Filter by verify_ip
+
+
+|host
+|string
+|query
+|False
+a|Filter by host
+
+
+|proxy_type
+|string
+|query
+|False
+a|Filter by proxy_type
+
+
+|port
+|integer
+|query
+|False
+a|Filter by port
+
+
+|timeout
+|integer
+|query
+|False
+a|Filter by timeout
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|service
+|string
+|query
+|False
+a|Filter by service
+
+
+|ekmip_reachability.message
+|string
+|query
+|False
+a|Filter by ekmip_reachability.message
+
+
+|ekmip_reachability.node.name
+|string
+|query
+|False
+a|Filter by ekmip_reachability.node.name
+
+
+|ekmip_reachability.node.uuid
+|string
+|query
+|False
+a|Filter by ekmip_reachability.node.uuid
+
+
+|ekmip_reachability.reachable
+|boolean
+|query
+|False
+a|Filter by ekmip_reachability.reachable
+
+
+|ekmip_reachability.code
+|string
+|query
+|False
+a|Filter by ekmip_reachability.code
+
+
+|region
+|string
+|query
+|False
+a|Filter by region
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|verify_host
+|boolean
+|query
+|False
+a|Filter by verify_host
+
+
+|encryption_context
+|string
+|query
+|False
+a|Filter by encryption_context
+
+
+|proxy_username
+|string
+|query
+|False
+a|Filter by proxy_username
+
+
+|amazon_reachability.message
+|string
+|query
+|False
+a|Filter by amazon_reachability.message
+
+
+|amazon_reachability.code
+|string
+|query
+|False
+a|Filter by amazon_reachability.code
+
+
+|amazon_reachability.reachable
+|boolean
+|query
+|False
+a|Filter by amazon_reachability.reachable
+
+
+|default_domain
+|string
+|query
+|False
+a|Filter by default_domain
+
+
+|access_key_id
+|string
+|query
+|False
+a|Filter by access_key_id
+
+
+|verify
+|boolean
+|query
+|False
+a|Filter by verify
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|proxy_host
+|string
+|query
+|False
+a|Filter by proxy_host
+
+
+|skip_verify
+|boolean
+|query
+|False
+a|Filter by skip_verify
+
+
+|key_id
+|string
+|query
+|False
+a|Filter by key_id
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#aws_kms[aws_kms]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "access_key_id": "<AWS-ACCESS-KEY-ID>",
+      "amazon_reachability": {
+        "code": "346758",
+        "message": "Amazon KMS is not reachable from all nodes - <reason>."
+      },
+      "default_domain": "domainName",
+      "ekmip_reachability": [
+        {
+          "code": "346758",
+          "message": "embedded KMIP server status unavailable on node.",
+          "node": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "node1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          }
+        }
+      ],
+      "encryption_context": "aws:fsx:fs-id=fs-0785c8beceb895999",
+      "host": "aws-host.host.com",
+      "key_id": "kmip-aws",
+      "polling_period": 55,
+      "port": 443,
+      "proxy_host": "proxy.eng.com",
+      "proxy_port": 1234,
+      "proxy_type": "http",
+      "proxy_username": "proxyuser",
+      "region": "us-east-1",
+      "scope": "string",
+      "service": "dynamodb.*.amazonaws.com",
+      "skip_verify": "",
+      "state": {
+        "code": "346758",
+        "message": "AWS KMS key protection is unavailable on the following nodes: node1, node2."
+      },
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "timeout": 20,
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+      "verify": "",
+      "verify_host": 1,
+      "verify_ip": ""
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65537551
+| Top-level internal key protection key (KEK) unavailable on one or more nodes.
+
+| 65537552
+| Embedded KMIP server status not available.
+
+| 65537915
+| The Amazon Web Service Key Management Service is unreachable from one or more nodes.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#amazon_reachability]
+[.api-collapsible-fifth-title]
+amazon_reachability
+
+Indicates whether or not the Amazon KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if Amazon KMS is reachable from all nodes in the cluster.
+
+
+|message
+|string
+a|Error message returned when 'reachable' is false.
+
+
+|reachable
+|boolean
+a|Set to true if the Amazon KMS is reachable from all nodes of the cluster.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ekmip_reachability]
+[.api-collapsible-fifth-title]
+ekmip_reachability
+
+Provides the connectivity status for the given SVM on the given node to all EKMIP servers configured on all nodes of the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if a given SVM is able to communicate to the EKMIP servers of all of the nodes in the cluster.
+
+
+|message
+|string
+a|Error message set when cluster-wide EKMIP server availability from the given SVM and node is false.
+
+
+|node
+|link:#node[node]
+a|
+
+|reachable
+|boolean
+a|Set to true if the given SVM on the given node is able to communicate to all EKMIP servers configured on all nodes in the cluster.
+
+
+|===
+
+
+[#state]
+[.api-collapsible-fifth-title]
+state
+
+Indicates whether or not the Amazon Web Services Key Management Service (AWS KMS) key protection is available cluster-wide.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_state
+|boolean
+a|Set to true when AWS KMS key protection is available on all nodes of the cluster.
+
+
+|code
+|string
+a|Code corresponding to the message. Returns a 0 if AWS KMS key protection is available on all nodes of the cluster.
+
+
+|message
+|string
+a|Error message set when cluster_state is false.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#aws_kms]
+[.api-collapsible-fifth-title]
+aws_kms
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_key_id
+|string
+a|AWS Access Key ID of the user that has appropriate access to AWS KMS.
+
+
+|amazon_reachability
+|link:#amazon_reachability[amazon_reachability]
+a|Indicates whether or not the Amazon KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|default_domain
+|string
+a|AWS KMS default domain.
+
+
+|ekmip_reachability
+|array[link:#ekmip_reachability[ekmip_reachability]]
+a|
+
+|encryption_context
+|string
+a|Additional layer of authentication and logging.
+
+
+|host
+|string
+a|AWS KMS host's hostname.
+
+
+|key_id
+|string
+a|AWS Key ID.
+
+
+|polling_period
+|integer
+a|Polling period in minutes.
+
+
+|port
+|integer
+a|AWS KMS port.
+
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|region
+|string
+a|AWS region of the AWS KMS.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|service
+|string
+a|AWS service type.
+
+
+|skip_verify
+|boolean
+a|Set to true to bypass verification of the user provided access_key_id
+and secret_access_key. An error will be returned if 'skip_verify' is
+provided but 'access_key_id' is not.
+
+
+|state
+|link:#state[state]
+a|Indicates whether or not the Amazon Web Services Key Management Service (AWS KMS) key protection is available cluster-wide.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|timeout
+|integer
+a|AWS Connection timeout, in seconds.
+
+
+|uuid
+|string
+a|A unique identifier for the AWS KMS.
+
+
+|verify
+|boolean
+a|Set to true to verify the AWS KMS host.
+
+
+|verify_host
+|boolean
+a|Set to true to verify the AWS KMS host's hostname.
+
+
+|verify_ip
+|boolean
+a|Set to true to verify the AWS KMS host's IP address.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,284 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-barbican-kms-rekey-internal.html'
+summary: 'Rekey the internal key in the key hierarchy for an SVM with a Barbican KMS configuration'
+---
+
+= Rekey the internal key in the key hierarchy for an SVM with a Barbican KMS configuration
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/barbican-kms/{uuid}/rekey-internal`#
+
+*Introduced In:* 9.17
+
+Rekeys the internal key in the key hierarchy for an SVM with a Barbican KMS configuration.
+
+== Related ONTAP commands
+
+* `security key-manager external barbican rekey-internal`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|UUID of the existing Barbican KMS configuration.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536205
+| Internal error. Failed to generate SVM key in the kernel.
+
+| 65536882
+| Internal error. UUID is missing.
+
+| 65536883
+| Internal error. Volume encryption key is missing.
+
+| 65536884
+| Internal error. Volume encryption key is invalid.
+
+| 65536889
+| Internal error. Volume has invalid encryption blob.
+
+| 65536973
+| Internal error. Volume DSID is missing.
+
+| 65537533
+| Internal error. Failed to unwrap SVM key encryption key.
+
+| 65537547
+| One or more volume encryption keys (VEKs) for this data SVM's encrypted volumes are stored in the key manager configured for the admin SVM. Use the REST API POST method "/api/security/key-managers/{source.svm.uuid}/migrate" to migrate these keys from the admin SVM's key manager to this data SVM's key manager before running the rekey operation.
+
+| 65537556
+| ONTAP is unable to encrypt or decrypt because the configured external key manager is in a blocked state. Possible reasons for a blocked state include the top-level external key protection key is not found, disabled or has insufficient privileges. Resolve the external key manager key issues at the key manager's portal before running the rekey operation.
+
+| 65537565
+| Internal error. Failed to update the VDEK blob.
+
+| 65537610
+| Rekey cannot be performed while the enabled keystore configuration is being switched. If a previous attempt to switch the keystore configuration failed, or was interrupted, the system will continue to prevent rekeying. Use the REST API PATCH method "/api/security/key-stores/\{uuid}" to re-run and complete the operation.
+
+| 65539200
+| The key custodian not provided with an external key value store.
+
+| 65539201
+| Failed to encrypt.
+
+| 65539202
+| Failed to decrypt.
+
+| 65539416
+| Internal error. Failed to parse the key value store response.
+
+| 65539436
+| Rekey cannot be performed while the enabled keystore configuration is being initialized. Wait until the keystore is in the active state, and rerun the rekey operation.
+
+| 65539437
+| Rekey cannot be performed while the enabled keystore configuration is being disabled.
+
+| 65539817
+| The Barbican Key Management Service is not configured.
+
+| 65539834
+| New Key ID not found.
+
+| 65539836
+| No Key Management Service configured.
+
+| 65539844
+| Failed to import the SVM-KEK.
+
+| 196608088
+| Internal error. Failed to get encryption operation status.
+
+| 196608352
+| Internal error. The encryption blob was not found in the RDB table.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

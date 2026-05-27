@@ -1,0 +1,210 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-cluster-network.html'
+summary: 'Update the cluster network security configuration'
+---
+
+= Update the cluster network security configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/cluster-network`#
+
+*Introduced In:* 9.18
+
+Updates the cluster network security configuration.
+
+== Optional properties
+
+* 'enabled' - Indicates whether cluster network security is enabled.
+* 'mode' - The cluster network security mode.
+
+== Related ONTAP commands
+
+* 'security cluster-network modify'
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether cluster network security is enabled.
+
+
+|mode
+|string
+a|The cluster network security mode.
+
+
+|status
+|string
+a|The status of the cluster network security configuration.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "mode": "string",
+  "status": "ENABLING | DISABLING | READY"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 70320128
+| Modifying the cluster network security configuration requires an effective cluster version of ONTAP 9.18.1 or later.
+
+| 70320131
+| Cluster network security does not support MetroCluster configurations.
+
+| 70320132
+| The cluster has an out of quorum node, wait until all nodes are in quorum before modifying the cluster network security configuration.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#security_cluster_network]
+[.api-collapsible-fifth-title]
+security_cluster_network
+
+Manages the cluster network security configuration.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether cluster network security is enabled.
+
+
+|mode
+|string
+a|The cluster network security mode.
+
+
+|status
+|string
+a|The status of the cluster network security configuration.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

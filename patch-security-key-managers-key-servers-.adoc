@@ -1,0 +1,392 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-key-managers-key-servers-.html'
+summary: 'Update a primary key server'
+---
+
+= Update a primary key server
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/key-managers/{uuid}/key-servers/{server}`#
+
+*Introduced In:* 9.6
+
+Updates a primary key server.
+
+== Related ONTAP commands
+
+* `security key-manager external modify-server`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|External key manager UUID
+
+
+|server
+|string
+|path
+|True
+a|Primary key server configured in the external key manager.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|create_remove_timeout
+|integer
+a|The key server timeout for create and remove operations.
+-1 indicates that the server will wait indefinitely for the event to occur. 0 indicates that the server will not wait and will immediately timeout if it does not receive a response.
+
+
+|password
+|string
+a|Password credentials for connecting with the key server. This is not audited.
+
+
+|secondary_key_servers
+|array[string]
+a|A list of the secondary key servers associated with the primary key server.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+-1 indicates that the server will wait indefinitely for the event to occur. 0 indicates that the server will not wait and will immediately timeout if it does not receive a response.
+
+
+|username
+|string
+a|KMIP username credentials for connecting with the key server.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "create_remove_timeout": 60,
+  "password": "password",
+  "secondary_key_servers": [
+    "secondary1.com",
+    "10.1.2.3"
+  ],
+  "timeout": 60,
+  "username": "username"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536600
+| Cannot modify a key server while a node is out quorum.
+
+| 65536824
+| Multitenant key management is not supported in MetroCluster configurations.
+
+| 65536828
+| External key management is not enabled for the SVM.
+
+| 65536843
+| The key management server is not configured for the SVM.
+
+| 65536845
+| Missing username.
+
+| 65536846
+| Missing password.
+
+| 65536880
+| One or more of the following values must be provided "timeout", "username", "password", "secondary_key_servers", "create_remove_timeout".
+
+| 65536921
+| Unable to execute the command on the KMIP server.
+
+| 65537400
+| Exceeded maximum number of secondary key servers.
+
+| 65538407
+| A secondary key server is a duplicate of the associated primary key server.
+
+| 65538408
+| The list of secondary key servers contains duplicates.
+
+| 65538413
+| A secondary key server address is not formatted correctly.
+
+| 65538502
+| A secondary key server is also a primary key server.
+
+| 65538503
+| Support for adding secondary key servers requires an ECV of ONTAP 9.11.1 or later.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#key_server_state]
+[.api-collapsible-fifth-title]
+key_server_state
+
+The connectivity state of the key server for a specific node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|
+
+|state
+|string
+a|Key server connectivity state
+
+
+|===
+
+
+[#connectivity]
+[.api-collapsible-fifth-title]
+connectivity
+
+This property contains the key server connectivity state of all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_availability
+|boolean
+a|Set to true when key server connectivity state is available on all nodes of the cluster.
+
+
+|node_states
+|array[link:#key_server_state[key_server_state]]
+a|An array of key server connectivity states for each node.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|password
+|string
+a|Password credentials for connecting with the key server. This is not audited.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+
+
+|username
+|string
+a|KMIP username credentials for connecting with the key server.
+
+
+|===
+
+
+[#key_server]
+[.api-collapsible-fifth-title]
+key_server
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|create_remove_timeout
+|integer
+a|The key server timeout for create and remove operations.
+-1 indicates that the server will wait indefinitely for the event to occur. 0 indicates that the server will not wait and will immediately timeout if it does not receive a response.
+
+
+|password
+|string
+a|Password credentials for connecting with the key server. This is not audited.
+
+
+|secondary_key_servers
+|array[string]
+a|A list of the secondary key servers associated with the primary key server.
+
+
+|timeout
+|integer
+a|I/O timeout in seconds for communicating with the key server.
+-1 indicates that the server will wait indefinitely for the event to occur. 0 indicates that the server will not wait and will immediately timeout if it does not receive a response.
+
+
+|username
+|string
+a|KMIP username credentials for connecting with the key server.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,234 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_s3_services_svm.uuid_policies_endpoint_overview.html'
+summary: 'Manage S3 service policies'
+---
+
+= Manage S3 service policies
+
+
+
+== Overview
+
+An S3 policy is an object that when associated with a resource, defines their permissions. Buckets and objects are defined as resources. Policies are used to manage access to these resources.
+
+== Examples
+
+=== Retrieving all fields for all S3 policies of an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/policies:
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/policies?fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"num_records": 2,
+"records": [
+  {
+    "comment": "S3 policy.",
+    "name": "Policy1",
+    "statements": [
+      {
+        "actions": [
+          "*"
+        ],
+        "effect": "allow",
+        "index": 0,
+        "resources": [
+          "bucket1",
+          "bucket1/*"
+        ],
+        "sid": "FullAccessToBucket1"
+      },
+      {
+        "actions": [
+          "DeleteObject"
+        ],
+        "effect": "deny",
+        "index": 1,
+        "resources": [
+          "*"
+        ],
+        "sid": "DenyDeleteObjectAccessToAllResources"
+      }
+    ],
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+  },
+  {
+    "comment": "S3 policy 2.",
+    "name": "Policy2",
+    "statements": [
+      {
+        "actions": [
+          "GetObject"
+        ],
+        "effect": "allow",
+        "index": 3,
+        "resources": [
+          "*"
+        ],
+        "sid": "AllowGetObjectAccessToAllResources"
+      },
+      {
+        "actions": [
+          "*"
+        ],
+        "effect": "deny",
+        "index": 3,
+        "resources": [
+          "*"
+        ],
+        "sid": "DenyAccessToAllResources"
+      }
+    ],
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    },
+  }
+]
+}
+----
+
+=== Retrieving the specified policy in the SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/policies/{name}:
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/policies/Policy1?fields=*" -H "accept: application/json"
+
+# The response:
+{
+"comment": "S3 policy.",
+"name": "Policy1",
+"statements": [
+  {
+    "actions": [
+      "GetObject",
+      "PutObject",
+      "DeleteObject",
+      "ListBucket",
+      "ListMyBuckets",
+      "ListBucketMultipartUploads",
+      "ListMultipartUploadParts",
+      "GetObjectTagging",
+      "PutObjectTagging",
+      "DeleteObjectTagging",
+      "GetBucketVersioning",
+      "PutBucketVersioning"
+    ],
+    "effect": "deny",
+    "index": 0,
+    "resources": [
+      "*"
+    ],
+    "sid": "DenyAccessToAllResources"
+  }
+],
+"svm": {
+  "name": "svm1",
+  "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+}
+}
+----
+
+=== Creating an S3 policy for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/policies?return_records=true" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"comment\": \"S3 policy.\", \"name\": \"Policy1\", \"statements\": [ { \"actions\": [ \"ListBucket\", \"ListMyBuckets\", \"CreateBucket\", \"DeleteBucket\" ], \"effect\": \"allow\", \"resources\": [ \"*\" ], \"sid\": \"AllowListAccessToAllResources\" } ]}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 16 Mar 2020 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 289
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "comment": "S3 policy.",
+    "name": "Policy1",
+    "statements": [
+      {
+        "actions": [
+          "ListBucket",
+          "ListMyBuckets"
+        ],
+        "effect": "allow",
+        "index": 5,
+        "resources": [
+          "*"
+        ],
+        "sid": "AllowListAccessToAllResources"
+      }
+    ],
+    "svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    }
+  }
+]
+}
+----
+
+=== Updating an S3 policy for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/policies/{name}:
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/policies/Policy1" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"comment\": \"S3 policy.\", \"statements\": [ { \"actions\": [ \"GetObject\", \"PutObject\", \"DeleteObject\", \"ListBucket\", \"ListMyBuckets\", \"CreateBucket\", \"DeleteBucket\"], \"effect\": \"allow\", \"resources\": [ \"bucket1\", \"bucket1/*\" ], \"sid\": \"FullAccessToAllResources\" } ]}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 16 Mar 2020 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+----
+
+=== Deleting an S3 policy for a specified SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/policies/{name}:
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/policies/Policy1" -H "accept: application/json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Mon, 16 Mar 2020 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+----
+
+

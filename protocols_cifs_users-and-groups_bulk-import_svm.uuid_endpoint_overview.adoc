@@ -1,0 +1,152 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_users-and-groups_bulk-import_svm.uuid_endpoint_overview.html'
+summary: 'Perform bulk import for CIFS user groups'
+---
+
+= Perform bulk import for CIFS user groups
+
+
+
+== Overview
+
+Bulk import of the CIFS local users, groups and group membership information can be
+done from the specified Uniform Resource Identifier (URI). This replaces the existing contents of the
+CIFS local users, groups and group memberships. This API is used to bulk import from the specified URI,
+get the status of the last import and to upload the import status to the specified URI.
+
+== Retrieving import status of the last bulk import
+
+The bulk-import GET endpoint retrieves the status of the last bulk-import operation of the specified SVM.
+
+== Examples
+
+=== Retrieving the status of a successful bulk import
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/bulk-import/6de1d39d-1473-11ec-b0cf-0050568e4acc" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "6de1d39d-1473-11ec-b0cf-0050568e4acc",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/6de1d39d-1473-11ec-b0cf-0050568e4acc"
+    }
+  }
+},
+"import_uri": {
+  "path": "http://<import_uri>/file.7z"
+},
+"state": "success",
+"detailed_status": {
+  "message": "Operation completed successfully.",
+  "code": "0"
+},
+"elements_ignored": 0,
+"elements_imported": 2,
+"_links": {
+  "self": {
+    "href": "/api/protocols/cifs/users-and-groups/import/6de1d39d-1473-11ec-b0cf-0050568e4acc"
+  }
+}
+}
+----
+
+=== Retrieving the status of a bulk import that failed
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/bulk-import/6de1d39d-1473-11ec-b0cf-0050568e4acc" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "6de1d39d-1473-11ec-b0cf-0050568e4acc",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/6de1d39d-1473-11ec-b0cf-0050568e4acc"
+    }
+  }
+},
+"import_uri": {
+  "path": "http://<import_uri>/file.7z"
+},
+"state": "success",
+"detailed_status": {
+  "message": "Failed parsing line 1 of the input file. Check syntax and contents.",
+  "code": "655698"
+},
+"elements_ignored": 0,
+"elements_imported": 0,
+"_links": {
+  "self": {
+    "href": "/api/protocols/cifs/users-and-groups/import/6de1d39d-1473-11ec-b0cf-0050568e4acc"
+  }
+}
+}
+----
+
+== Retrieving bulk import information for CIFS local users, groups, and group memberships
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/bulk-import/6de1d39d-1473-11ec-b0cf-0050568e4acc" -H "accept: application/json" -d '{"import_uri.username":"user1","import_uri.password":"aaaa","decryption_password":"cccc","import_uri.path":"http://example.com/file1.7z"}'
+
+# The response:
+{
+"job": {
+  "uuid": "e8293262-1af0-11ec-8243-0050568e4acc",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/e8293262-1af0-11ec-8243-0050568e4acc"
+    }
+  }
+}
+}
+----
+
+== Retrieving status upload information of the last import operation for the specified URI
+
+----
+
+# The API:
+/api/protocols/cifs/users-and-groups/bulk-import/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/users-and-groups/bulk-import/6de1d39d-1473-11ec-b0cf-0050568e4acc" -H "accept: application/json" -d '{"status_uri.username":"user1","status_uri.password":"aaaa","status_uri.path":"http://example.com/fileupload.7z"}'
+
+# The response:
+{
+"job": {
+  "uuid": "e8293262-1af0-11ec-8243-0050568e4acd",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/e8293262-1af0-11ec-8243-0050568e4acd"
+    }
+  }
+}
+}
+----
+
+'''
+
+

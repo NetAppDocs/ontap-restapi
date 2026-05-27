@@ -1,0 +1,384 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-s3-services-buckets-snapshots.html'
+summary: 'Create an S3 bucket snapshot'
+---
+
+= Create an S3 bucket snapshot
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots`#
+
+*Introduced In:* 9.16
+
+Creates an S3 bucket snapshot.
+
+== Required properties
+
+* `name` - Name of the S3 bucket snapshot to be created.
+
+== Related ONTAP commands
+
+* `vserver object-store-server bucket snapshot create`
+
+== Learn more
+
+* link:protocols_s3_services_svm.uuid_buckets_s3_bucket.uuid_snapshots_endpoint_overview.html[DOC /protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|s3_bucket.uuid
+|string
+|path
+|True
+a|Unique identifier of a bucket.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bucket_uuid
+|string
+a|The unique identifier of the bucket.
+
+
+|create_time
+|string
+a|Creation time of the snapshot. It is the storage unit access time when the snapshot was created.
+
+
+|name
+|string
+a|The name of the snapshot. Snapshot names must start with a lowercase letter, a number, or a hyphen, must end with a lowercase letter or a number, and cannot exceed 30 characters.
+
+
+|svm
+|link:#svm[svm]
+a|Specifies the name of the SVM where this bucket exists.
+
+
+|uuid
+|string
+a|The UUID of the snapshot in the bucket that uniquely identifies the snapshot in that bucket.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "bucket_uuid": "2aec8270-58e3-11ef-861e-005056ae1130",
+  "create_time": "2024-08-21 20:18:04 -0400",
+  "name": "snap1",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "522b29a1-3b26-11e9-bd58-0050568ea321"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error code | Message
+//end header
+//end row
+//start row
+|92405861 +
+//end row
+//start row
+|"The specified SVM UUID or bucket UUID does not exist.";
+//end row
+//start row
+|92406249 +
+//end row
+//start row
+|"Failed to create S3 bucket snapshot "{snapshot name}" for S3 bucket "{bucket name}" in SVM "{svm name}". Reason: {Reason for failure} ";
+//end row
+|===
+//end table
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Specifies the name of the SVM where this bucket exists.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#s3_bucket_snapshot]
+[.api-collapsible-fifth-title]
+s3_bucket_snapshot
+
+Information about an S3 bucket snapshot.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|bucket_uuid
+|string
+a|The unique identifier of the bucket.
+
+
+|create_time
+|string
+a|Creation time of the snapshot. It is the storage unit access time when the snapshot was created.
+
+
+|name
+|string
+a|The name of the snapshot. Snapshot names must start with a lowercase letter, a number, or a hyphen, must end with a lowercase letter or a number, and cannot exceed 30 characters.
+
+
+|svm
+|link:#svm[svm]
+a|Specifies the name of the SVM where this bucket exists.
+
+
+|uuid
+|string
+a|The UUID of the snapshot in the bucket that uniquely identifies the snapshot in that bucket.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,63 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_publickeys_endpoint_overview.html'
+summary: 'Manage authentication keys (for admins)'
+---
+
+= Manage authentication keys (for admins)
+
+
+
+== Overview
+
+This API configures the public keys for user accounts.
+
+For secure shell (SSH) access, public-private key pair based authentication is possible by associating the public key with a user account.
+Prerequisites:
+You must have generated the SSH key.
+You must be a cluster or SVM administrator to perform the user's public key.
+
+== Examples
+
+=== Creating a public key for cluster-scoped user accounts
+
+Specify the user account name, public key, index, comment, and optionally the certificate in the body of the POST request. The owner.uuid or owner.name are not required for a cluster-scoped user account.
+
+----
+
+# The API:
+POST "/api/security/authentication/publickey"
+
+# The call
+curl -k https://<mgmt-ip>/api/security/authentication/publickeys --request POST --data '{ "account": "pubuser2","comment": "Cserver-Creation","index": 0, "certificate": "<CERTIFICATE-CONTENT>", "public_key": "<SSH-PUBLIC-KEY>" }'
+----
+
+=== Creating a public key for SVM-scoped user accounts
+
+For a SVM-scoped account, specify either the SVM name as the owner.name or the SVM UUID as the owner.uuid along with other parameters for the user account. These parameters indicate the SVM that contains the user account for the public key being created and can be obtained from the response body of the GET request performed on the API"/api/svm/svms".
+
+----
+
+# The API:
+POST "/api/security/authentication/publickey"
+
+# The call
+curl -k https://<mgmt-ip>/api/security/authentication/publickeys --request POST --data '{ "account": "pubuser4","comment": "Vserver-Creation","index": 0, "certificate": "<CERTIFICATE-CONTENT>", "owner.uuid":"513a78c7-8c13-11e9-8f78-005056bbf6ac","owner.name":"vs0","public_key": "<SSH-PUBLIC-KEY>" }'
+----
+
+=== Retrieving the configured public key for user accounts
+
+Retrieves all public keys associated with the user accounts or a filtered list (for a specific user account name, a specific SVM and so on) of public keys.
+
+----
+
+# The API:
+GET "/api/security/authentication/publickeys"
+
+# The call to retrieve all the user accounts configured in the cluster:
+curl -k https://<mgmt-ip>/api/security/authentication/publickeys
+----
+
+

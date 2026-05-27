@@ -1,0 +1,987 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-name-services-ldap-schemas.html'
+summary: 'Retrieve all LDAP schemas'
+---
+
+= Retrieve all LDAP schemas
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/name-services/ldap-schemas`#
+
+*Introduced In:* 9.11
+
+Retrieves all the LDAP schemas.
+
+== Related ONTAP commands
+
+* `vserver services name-service ldap client schema show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|global_schema
+|boolean
+|query
+|False
+a|Filter by global_schema
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 32
+* minLength: 1
+
+
+|rfc2307bis.maximum_groups
+|integer
+|query
+|False
+a|Filter by rfc2307bis.maximum_groups
+
+* Max value: 1024
+* Min value: 1
+
+
+|rfc2307bis.enabled
+|boolean
+|query
+|False
+a|Filter by rfc2307bis.enabled
+
+
+|rfc2307bis.group_of_unique_names
+|string
+|query
+|False
+a|Filter by rfc2307bis.group_of_unique_names
+
+
+|rfc2307bis.unique_member
+|string
+|query
+|False
+a|Filter by rfc2307bis.unique_member
+
+
+|rfc2307.attribute.home_directory
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.home_directory
+
+
+|rfc2307.attribute.user_password
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.user_password
+
+
+|rfc2307.attribute.gid_number
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.gid_number
+
+
+|rfc2307.attribute.login_shell
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.login_shell
+
+
+|rfc2307.attribute.gecos
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.gecos
+
+
+|rfc2307.attribute.uid
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.uid
+
+
+|rfc2307.attribute.uid_number
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.uid_number
+
+
+|rfc2307.posix.account
+|string
+|query
+|False
+a|Filter by rfc2307.posix.account
+
+
+|rfc2307.posix.group
+|string
+|query
+|False
+a|Filter by rfc2307.posix.group
+
+
+|rfc2307.member.uid
+|string
+|query
+|False
+a|Filter by rfc2307.member.uid
+
+
+|rfc2307.member.nis_netgroup
+|string
+|query
+|False
+a|Filter by rfc2307.member.nis_netgroup
+
+
+|rfc2307.cn.group
+|string
+|query
+|False
+a|Filter by rfc2307.cn.group
+
+
+|rfc2307.cn.netgroup
+|string
+|query
+|False
+a|Filter by rfc2307.cn.netgroup
+
+
+|rfc2307.nis.object
+|string
+|query
+|False
+a|Filter by rfc2307.nis.object
+
+
+|rfc2307.nis.mapname
+|string
+|query
+|False
+a|Filter by rfc2307.nis.mapname
+
+
+|rfc2307.nis.netgroup_triple
+|string
+|query
+|False
+a|Filter by rfc2307.nis.netgroup_triple
+
+
+|rfc2307.nis.netgroup
+|string
+|query
+|False
+a|Filter by rfc2307.nis.netgroup
+
+
+|rfc2307.nis.mapentry
+|string
+|query
+|False
+a|Filter by rfc2307.nis.mapentry
+
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|name_mapping.account.unix
+|string
+|query
+|False
+a|Filter by name_mapping.account.unix
+
+
+|name_mapping.account.windows
+|string
+|query
+|False
+a|Filter by name_mapping.account.windows
+
+
+|name_mapping.windows_to_unix.attribute
+|string
+|query
+|False
+a|Filter by name_mapping.windows_to_unix.attribute
+
+
+|name_mapping.windows_to_unix.object_class
+|string
+|query
+|False
+a|Filter by name_mapping.windows_to_unix.object_class
+
+
+|name_mapping.windows_to_unix.no_domain_prefix
+|boolean
+|query
+|False
+a|Filter by name_mapping.windows_to_unix.no_domain_prefix
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of LDAP schema records.
+
+
+|records
+|array[link:#ldap_schema[ldap_schema]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "comment": "Schema based on Active Directory Services for UNIX (read-only).",
+      "global_schema": 1,
+      "name": "AD-SFU-v1",
+      "name_mapping": {
+        "account": {
+          "unix": "windowsAccount",
+          "windows": "windowsAccount"
+        },
+        "windows_to_unix": {
+          "attribute": "windowsAccount",
+          "no_domain_prefix": "",
+          "object_class": "User"
+        }
+      },
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "rfc2307": {
+        "attribute": {
+          "gecos": "name",
+          "gid_number": "msSFU30GidNumber",
+          "home_directory": "msSFU30HomeDirectory",
+          "login_shell": "msSFU30LoginShell",
+          "uid": "sAMAccountName",
+          "uid_number": "msSFU30UidNumber",
+          "user_password": "msSFU30Password"
+        },
+        "cn": {
+          "group": "cn",
+          "netgroup": "name"
+        },
+        "member": {
+          "nis_netgroup": "msSFU30MemberNisNetgroup",
+          "uid": "msSFU30MemberUid"
+        },
+        "nis": {
+          "mapentry": "msSFU30NisMapEntry",
+          "mapname": "msSFU30NisMapName",
+          "netgroup": "msSFU30NisNetGroup",
+          "netgroup_triple": "msSFU30MemberOfNisNetgroup",
+          "object": "msSFU30NisObject"
+        },
+        "posix": {
+          "account": "User",
+          "group": "Group"
+        }
+      },
+      "rfc2307bis": {
+        "enabled": "",
+        "group_of_unique_names": "groupOfUniqueNames",
+        "maximum_groups": 256,
+        "unique_member": "uniqueMember"
+      },
+      "scope": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ldap_schema_account]
+[.api-collapsible-fifth-title]
+ldap_schema_account
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|unix
+|string
+a|Attribute name used to retrieve UNIX account information.
+
+
+|windows
+|string
+a|Attribute name used to retrieve Windows account information for a UNIX user account.
+
+
+|===
+
+
+[#windows_to_unix]
+[.api-collapsible-fifth-title]
+windows_to_unix
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attribute
+|string
+a|Attribute name used to retrieve the UNIX account information for a Windows user account.
+
+
+|no_domain_prefix
+|boolean
+a|Indicates whether or not the name for Windows to UNIX name mapping should have a domain prefix.
+
+
+|object_class
+|string
+a|Name used to represent the windowsToUnix object class.
+
+
+|===
+
+
+[#ldap_schema_name_mapping]
+[.api-collapsible-fifth-title]
+ldap_schema_name_mapping
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#ldap_schema_account[ldap_schema_account]
+a|
+
+|windows_to_unix
+|link:#windows_to_unix[windows_to_unix]
+a|
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#attribute]
+[.api-collapsible-fifth-title]
+attribute
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|gecos
+|string
+a|RFC 2307 gecos attribute.
+
+
+|gid_number
+|string
+a|RFC 2307 gidNumber attribute.
+
+
+|home_directory
+|string
+a|RFC 2307 homeDirectory attribute.
+
+
+|login_shell
+|string
+a|RFC 2307 loginShell attribute.
+
+
+|uid
+|string
+a|RFC 1274 userid attribute used by RFC 2307 as UID.
+
+
+|uid_number
+|string
+a|RFC 2307 uidNumber attribute.
+
+
+|user_password
+|string
+a|RFC 2256 userPassword attribute used by RFC 2307.
+
+
+|===
+
+
+[#cn]
+[.api-collapsible-fifth-title]
+cn
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|group
+|string
+a|RFC 2256 cn attribute used by RFC 2307 when working with groups.
+
+
+|netgroup
+|string
+a|RFC 2256 cn attribute used by RFC 2307 when working with netgroups.
+
+
+|===
+
+
+[#member]
+[.api-collapsible-fifth-title]
+member
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|nis_netgroup
+|string
+a|RFC 2307 memberNisNetgroup attribute.
+
+
+|uid
+|string
+a|RFC 2307 memberUid attribute.
+
+
+|===
+
+
+[#nis]
+[.api-collapsible-fifth-title]
+nis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mapentry
+|string
+a|RFC 2307 nisMapEntry attribute.
+
+
+|mapname
+|string
+a|RFC 2307 nisMapName attribute.
+
+
+|netgroup
+|string
+a|RFC 2307 nisNetgroup object class.
+
+
+|netgroup_triple
+|string
+a|RFC 2307 nisNetgroupTriple attribute.
+
+
+|object
+|string
+a|RFC 2307 nisObject object class.
+
+
+|===
+
+
+[#posix]
+[.api-collapsible-fifth-title]
+posix
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|string
+a|RFC 2307 posixAccount object class.
+
+
+|group
+|string
+a|RFC 2307 posixGroup object class.
+
+
+|===
+
+
+[#rfc2307]
+[.api-collapsible-fifth-title]
+rfc2307
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attribute
+|link:#attribute[attribute]
+a|
+
+|cn
+|link:#cn[cn]
+a|
+
+|member
+|link:#member[member]
+a|
+
+|nis
+|link:#nis[nis]
+a|
+
+|posix
+|link:#posix[posix]
+a|
+
+|===
+
+
+[#rfc2307bis]
+[.api-collapsible-fifth-title]
+rfc2307bis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether RFC 2307bis is enabled for the client schema.
+
+
+|group_of_unique_names
+|string
+a|RFC 2307bis groupOfUniqueNames object class.
+
+
+|maximum_groups
+|integer
+a|Maximum number of groups supported when RFC 2307bis is enabled.
+
+
+|unique_member
+|string
+a|RFC 2307bis uniqueMember attribute.
+
+
+|===
+
+
+[#template]
+[.api-collapsible-fifth-title]
+template
+
+The existing schema template you want to copy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the schema.
+
+
+|===
+
+
+[#ldap_schema]
+[.api-collapsible-fifth-title]
+ldap_schema
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|comment
+|string
+a|Comment to associate with the schema.
+
+
+|global_schema
+|boolean
+a|A global schema that can be used by all the SVMs.
+
+
+|name
+|string
+a|The name of the schema being created, modified or deleted.
+
+
+|name_mapping
+|link:#ldap_schema_name_mapping[ldap_schema_name_mapping]
+a|
+
+|owner
+|link:#owner[owner]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|rfc2307
+|link:#rfc2307[rfc2307]
+a|
+
+|rfc2307bis
+|link:#rfc2307bis[rfc2307bis]
+a|
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

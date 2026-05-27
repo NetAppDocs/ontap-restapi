@@ -1,0 +1,705 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-ports.html'
+summary: 'Retrieve storage ports'
+---
+
+= Retrieve storage ports
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/ports`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of storage ports.
+
+== Related ONTAP commands
+
+* `storage port show`
+
+== Learn more
+
+* link:storage_ports_endpoint_overview.html[DOC /storage/ports]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|mode
+|string
+|query
+|False
+a|Filter by mode
+
+* Introduced in: 9.8
+
+
+|in_use
+|boolean
+|query
+|False
+a|Filter by in_use
+
+* Introduced in: 9.9
+
+
+|redundant
+|boolean
+|query
+|False
+a|Filter by redundant
+
+* Introduced in: 9.9
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|description
+|string
+|query
+|False
+a|Filter by description
+
+
+|mac_address
+|string
+|query
+|False
+a|Filter by mac_address
+
+
+|speed
+|number
+|query
+|False
+a|Filter by speed
+
+
+|wwpn
+|string
+|query
+|False
+a|Filter by wwpn
+
+* Introduced in: 9.9
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+* Introduced in: 9.9
+
+
+|node.name
+|string
+|query
+|False
+a|Filter by node.name
+
+
+|node.uuid
+|string
+|query
+|False
+a|Filter by node.uuid
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+* Introduced in: 9.9
+
+
+|cable.part_number
+|string
+|query
+|False
+a|Filter by cable.part_number
+
+
+|cable.transceiver
+|string
+|query
+|False
+a|Filter by cable.transceiver
+
+* Introduced in: 9.15
+
+
+|cable.length
+|string
+|query
+|False
+a|Filter by cable.length
+
+
+|cable.serial_number
+|string
+|query
+|False
+a|Filter by cable.serial_number
+
+
+|cable.identifier
+|string
+|query
+|False
+a|Filter by cable.identifier
+
+
+|cable.vendor
+|string
+|query
+|False
+a|Filter by cable.vendor
+
+* Introduced in: 9.15
+
+
+|part_number
+|string
+|query
+|False
+a|Filter by part_number
+
+
+|board_name
+|string
+|query
+|False
+a|Filter by board_name
+
+
+|serial_number
+|string
+|query
+|False
+a|Filter by serial_number
+
+
+|error.message
+|string
+|query
+|False
+a|Filter by error.message
+
+
+|error.corrective_action
+|string
+|query
+|False
+a|Filter by error.corrective_action
+
+
+|firmware_version
+|string
+|query
+|False
+a|Filter by firmware_version
+
+* Introduced in: 9.9
+
+
+|wwn
+|string
+|query
+|False
+a|Filter by wwn
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#storage_port[storage_port]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "board_name": "string",
+      "cable": {
+        "identifier": "500a0980000b6c3f-50000d1703544b80",
+        "length": "2m",
+        "part_number": "112-00431+A0",
+        "serial_number": 616930439,
+        "transceiver": "mini_sas_hd",
+        "vendor": "Molex Inc."
+      },
+      "description": "SAS Host Adapter 2a (PMC-Sierra PM8072 rev. C)",
+      "error": {
+        "corrective_action": "string",
+        "message": "string"
+      },
+      "firmware_version": "03.08.09.00",
+      "mac_address": "string",
+      "mode": "storage",
+      "name": "2a",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "part_number": "111-03801",
+      "serial_number": "7A2463CC45B",
+      "speed": 6,
+      "state": "online",
+      "type": "sas",
+      "wwn": "50000d1703544b80",
+      "wwpn": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cable]
+[.api-collapsible-fifth-title]
+cable
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|identifier
+|string
+a|
+
+|length
+|string
+a|
+
+|part_number
+|string
+a|
+
+|serial_number
+|string
+a|
+
+|transceiver
+|string
+a|
+
+|vendor
+|string
+a|
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|corrective_action
+|string
+a|Error corrective action
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_port]
+[.api-collapsible-fifth-title]
+storage_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|board_name
+|string
+a|
+
+|cable
+|link:#cable[cable]
+a|
+
+|description
+|string
+a|
+
+|enabled
+|boolean
+a|
+
+|error
+|link:#error[error]
+a|
+
+|firmware_version
+|string
+a|
+
+|force
+|boolean
+a|
+
+|in_use
+|boolean
+a|Specifies whether any devices are connected through this port
+
+
+|mac_address
+|string
+a|
+
+|mode
+|string
+a|Operational mode of a non-dedicated Ethernet port
+
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|part_number
+|string
+a|
+
+|redundant
+|boolean
+a|Specifies whether all devices connected through this port have a redundant path from another port
+
+
+|serial_number
+|string
+a|
+
+|speed
+|number
+a|Operational port speed in Gbps
+
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|wwn
+|string
+a|World Wide Name
+
+
+|wwpn
+|string
+a|World Wide Port Name
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

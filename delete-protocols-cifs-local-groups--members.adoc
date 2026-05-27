@@ -1,0 +1,362 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-cifs-local-groups--members.html'
+summary: 'Delete local users or Active Directory users and groups from a local group and SVM'
+---
+
+= Delete local users or Active Directory users and groups from a local group and SVM
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/cifs/local-groups/{svm.uuid}/{local_cifs_group.sid}/members`#
+
+*Introduced In:* 9.10
+
+Deletes the local users, Active Directory users and/or Active Directory groups from the specified local group and SVM.
+
+== Related ONTAP commands
+
+* `vserver cifs users-and-groups local-group remove-members`
+
+== Learn more
+
+* link:protocols_cifs_local-groups_svm.uuid_local_cifs_group.sid_members_endpoint_overview.html[DOC /protocols/cifs/local-groups/{svm.uuid}/{local_cifs_group.sid}/members]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|local_cifs_group.sid
+|string
+|path
+|True
+a|Local group SID
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_cifs_group
+|link:#local_cifs_group[local_cifs_group]
+a|
+
+|name
+|string
+a|Local user, Active Directory user, or Active Directory group which is a member of the specified local group.
+
+
+|records
+|array[link:#records[records]]
+a|An array of local users, Active Directory users, and Active Directory groups specified to add or delete multiple members to or from a local group in a single API call.
+Not allowed when the `name` property is used.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "local_cifs_group": {
+    "sid": "S-1-5-21-256008430-3394229847-3930036330-1001"
+  },
+  "name": "string",
+  "records": [
+    {
+      "name": "string"
+    }
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default, Error ontap error response codes | error code | description | | ---------- | ----------- | | 655673     | failed to resolve the member to be deleted from the specified group. | | 655719     | failed to delete a member from the specified group. the error code returned details the failure along with the reason for the failure. take corrective actions as per the specified reason. | | 655742     | records must not be specified when member name is specified. | | 655743     | svm uuid and cifs local group sid are invalid fields for the "records" parameter. |
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#local_cifs_group]
+[.api-collapsible-fifth-title]
+local_cifs_group
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|sid
+|string
+a|The security ID of the local group which uniquely identifies the group. The group SID is automatically generated in POST and it is retrieved using the GET method.
+
+
+|===
+
+
+[#records]
+[.api-collapsible-fifth-title]
+records
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Local user, Active Directory user, or Active Directory group which is a member of the specified local group.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#local_cifs_group_members]
+[.api-collapsible-fifth-title]
+local_cifs_group_members
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_cifs_group
+|link:#local_cifs_group[local_cifs_group]
+a|
+
+|name
+|string
+a|Local user, Active Directory user, or Active Directory group which is a member of the specified local group.
+
+
+|records
+|array[link:#records[records]]
+a|An array of local users, Active Directory users, and Active Directory groups specified to add or delete multiple members to or from a local group in a single API call.
+Not allowed when the `name` property is used.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

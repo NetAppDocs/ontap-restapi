@@ -1,0 +1,497 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-ethernet-broadcast-domains.html'
+summary: 'Retrieve broadcast domains for the entire cluster'
+---
+
+= Retrieve broadcast domains for the entire cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ethernet/broadcast-domains`#
+
+*Introduced In:* 9.6
+
+Retrieves a collection of broadcast domains for the entire cluster.
+
+== Related ONTAP commands
+
+* `network port broadcast-domain show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|ipspace.name
+|string
+|query
+|False
+a|Filter by ipspace.name
+
+
+|ipspace.uuid
+|string
+|query
+|False
+a|Filter by ipspace.uuid
+
+
+|ports.node.name
+|string
+|query
+|False
+a|Filter by ports.node.name
+
+
+|ports.uuid
+|string
+|query
+|False
+a|Filter by ports.uuid
+
+
+|ports.name
+|string
+|query
+|False
+a|Filter by ports.name
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|mtu
+|integer
+|query
+|False
+a|Filter by mtu
+
+* Min value: 68
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Min value: 0
+* Default value: 15
+* Max value: 120
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#broadcast_domain[broadcast_domain]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "ipspace": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "mtu": 1500,
+      "name": "bd1",
+      "ports": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "e1b",
+          "node": {
+            "name": "node1"
+          },
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Applies to both SVM and cluster-scoped objects. Either the UUID or name is supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+Port UUID along with readable names
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+Set of ports that will receive a broadcast Ethernet packet from any of them
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name is supplied on input.
+
+
+|mtu
+|integer
+a|Maximum transmission unit, largest packet size on this network
+
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|ports
+|array[link:#ports[ports]]
+a|Ports that belong to the broadcast domain
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,636 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-cifs-group-policies-objects-.html'
+summary: 'Retrieve an applied group policy object for an SVM'
+---
+
+= Retrieve an applied group policy object for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/group-policies/{svm.uuid}/objects/{index}`#
+
+*Introduced In:* 9.12
+
+Retrieves applied group policy object for specified SVM.
+
+== Related ONTAP commands
+
+* `vserver cifs group-policy show-applied`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|index
+|integer
+|path
+|True
+a|Restricted group index.
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|central_access_policy_settings
+|array[string]
+a|List of central access policies.
+
+
+|central_access_policy_staging_audit_type
+|string
+a|Types of events to be audited.
+
+
+|enabled
+|boolean
+a|Specifies whether group policies are enabled for the SVM.
+
+
+|extensions
+|array[string]
+a|List of extensions.
+
+
+|file_system_path
+|string
+a|File system path.
+
+
+|index
+|integer
+a|Group policy object index.
+
+
+|ldap_path
+|string
+a|LDAP path to the GPO.
+
+
+|link
+|string
+a|Link info.
+
+
+|name
+|string
+a|
+
+|registry_settings
+|link:#group_policy_object_registry_setting[group_policy_object_registry_setting]
+a|
+
+|security_settings
+|link:#group_policy_object_security_setting[group_policy_object_security_setting]
+a|
+
+|svm
+|link:#svm[svm]
+a|Will not be populated for objects that are yet to be applied.
+
+
+|uuid
+|string
+a|Policy UUID.
+
+
+|version
+|integer
+a|Group policy object version.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "central_access_policy_settings": [
+    "p1",
+    "p2"
+  ],
+  "central_access_policy_staging_audit_type": "none",
+  "extensions": [
+    "audit",
+    "security"
+  ],
+  "file_system_path": "\\test.com\\SysVol\\test.com\\policies\\{42474212-3f9d-4489-ae01-6fcf4f805d4c}",
+  "index": 1,
+  "ldap_path": "cn={42474212-3f9d-4489-ae01-6fcf4f805d4c},cn=policies,cn=system,DC=TEST,DC=COM",
+  "link": "domain",
+  "name": "test_policy",
+  "registry_settings": {
+    "branchcache": {
+      "hash_publication_mode": "disabled",
+      "supported_hash_version": "version1"
+    },
+    "refresh_time_interval": "P15M",
+    "refresh_time_random_offset": "P1D"
+  },
+  "security_settings": {
+    "event_audit_settings": {
+      "logon_type": "failure",
+      "object_access_type": "failure"
+    },
+    "event_log_settings": {
+      "max_size": 2048,
+      "retention_method": "do_not_overwrite"
+    },
+    "files_or_folders": [
+      "/vol1/home",
+      "/vol1/dir1"
+    ],
+    "kerberos": {
+      "max_clock_skew": "P15M",
+      "max_renew_age": "P2D",
+      "max_ticket_age": "P24H"
+    },
+    "privilege_rights": {
+      "change_notify_users": [
+        "usr1",
+        "usr2"
+      ],
+      "security_privilege_users": [
+        "usr1",
+        "usr2"
+      ],
+      "take_ownership_users": [
+        "usr1",
+        "usr2"
+      ]
+    },
+    "restrict_anonymous": {
+      "combined_restriction_for_anonymous_user": "no_access"
+    },
+    "restricted_groups": [
+      "test_grp1",
+      "test_grp2"
+    ]
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "42474212-3f9d-4489-ae01-6fcf4f805d4c",
+  "version": 7
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#group_policy_object_branchcache]
+[.api-collapsible-fifth-title]
+group_policy_object_branchcache
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|hash_publication_mode
+|string
+a|Hash publication mode.
+
+
+|supported_hash_version
+|string
+a|Hash version.
+
+
+|===
+
+
+[#group_policy_object_registry_setting]
+[.api-collapsible-fifth-title]
+group_policy_object_registry_setting
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|branchcache
+|link:#group_policy_object_branchcache[group_policy_object_branchcache]
+a|
+
+|refresh_time_interval
+|string
+a|Refresh time interval in ISO-8601 format.
+
+
+|refresh_time_random_offset
+|string
+a|Random offset in ISO-8601 format.
+
+
+|===
+
+
+[#group_policy_object_event_audit]
+[.api-collapsible-fifth-title]
+group_policy_object_event_audit
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|logon_type
+|string
+a|Type of logon event to be audited.
+
+
+|object_access_type
+|string
+a|Type of object access to be audited.
+
+
+|===
+
+
+[#group_policy_object_event_log]
+[.api-collapsible-fifth-title]
+group_policy_object_event_log
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_size
+|integer
+a|Maximum size of security log, in kilobytes.
+
+
+|retention_method
+|string
+a|Audit log retention method.
+
+
+|===
+
+
+[#group_policy_object_kerberos]
+[.api-collapsible-fifth-title]
+group_policy_object_kerberos
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_clock_skew
+|string
+a|Kerberos clock skew in ISO-8601 format.
+
+
+|max_renew_age
+|string
+a|Kerberos max renew age in ISO-8601 format.
+
+
+|max_ticket_age
+|string
+a|Kerberos max ticket age in ISO-8601 format.
+
+
+|===
+
+
+[#group_policy_object_privilege_right]
+[.api-collapsible-fifth-title]
+group_policy_object_privilege_right
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|change_notify_users
+|array[string]
+a|Users with traversing bypass privileges.
+
+
+|security_privilege_users
+|array[string]
+a|Users with security privileges.
+
+
+|take_ownership_users
+|array[string]
+a|Users who can take ownership of securable objects.
+
+
+|===
+
+
+[#group_policy_object_registry_value]
+[.api-collapsible-fifth-title]
+group_policy_object_registry_value
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|signing_required
+|boolean
+a|SMB signing required.
+
+
+|===
+
+
+[#group_policy_object_restrict_anonymous]
+[.api-collapsible-fifth-title]
+group_policy_object_restrict_anonymous
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|anonymous_access_to_shares_and_named_pipes_restricted
+|boolean
+a|Restrict anonymous access to shares and named pipes.
+
+
+|combined_restriction_for_anonymous_user
+|string
+a|Combined restriction for anonymous user.
+
+
+|no_enumeration_of_sam_accounts
+|boolean
+a|No enumeration of SAM accounts.
+
+
+|no_enumeration_of_sam_accounts_and_shares
+|boolean
+a|No enumeration of SAM accounts and shares.
+
+
+|===
+
+
+[#group_policy_object_security_setting]
+[.api-collapsible-fifth-title]
+group_policy_object_security_setting
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|event_audit_settings
+|link:#group_policy_object_event_audit[group_policy_object_event_audit]
+a|
+
+|event_log_settings
+|link:#group_policy_object_event_log[group_policy_object_event_log]
+a|
+
+|files_or_folders
+|array[string]
+a|Files/Directories for file security.
+
+
+|kerberos
+|link:#group_policy_object_kerberos[group_policy_object_kerberos]
+a|
+
+|privilege_rights
+|link:#group_policy_object_privilege_right[group_policy_object_privilege_right]
+a|
+
+|registry_values
+|link:#group_policy_object_registry_value[group_policy_object_registry_value]
+a|
+
+|restrict_anonymous
+|link:#group_policy_object_restrict_anonymous[group_policy_object_restrict_anonymous]
+a|
+
+|restricted_groups
+|array[string]
+a|List of restricted groups.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+Will not be populated for objects that are yet to be applied.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,860 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-snapmirror-relationships-transfers.html'
+summary: 'Retrieve ongoing SnapMirror transfers for a relationship'
+---
+
+= Retrieve ongoing SnapMirror transfers for a relationship
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/snapmirror/relationships/{relationship.uuid}/transfers`#
+
+*Introduced In:* 9.6
+
+Retrieves the list of ongoing SnapMirror transfers for the specified relationship.
+
+== Related ONTAP commands
+
+* `snapmirror show`
+
+== Example
+
+----
+GET "/api/snapmirror/relationships/293baa53-e63d-11e8-bff1-005056a793dd/transfers"
+----
+
+== Learn more
+
+* link:snapmirror_relationships_relationship.uuid_transfers_endpoint_overview.html[DOC /snapmirror/relationships/{relationship.uuid}/transfers]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|relationship.uuid
+|string
+|path
+|True
+a|SnapMirror relationship UUID
+
+
+|snapshot
+|string
+|query
+|False
+a|Filter by snapshot
+
+
+|error_info.message
+|string
+|query
+|False
+a|Filter by error_info.message
+
+* Introduced in: 9.10
+
+
+|error_info.code
+|integer
+|query
+|False
+a|Filter by error_info.code
+
+* Introduced in: 9.10
+
+
+|bytes_transferred
+|integer
+|query
+|False
+a|Filter by bytes_transferred
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|relationship.restore
+|boolean
+|query
+|False
+a|Filter by relationship.restore
+
+
+|relationship.destination.luns.uuid
+|string
+|query
+|False
+a|Filter by relationship.destination.luns.uuid
+
+* Introduced in: 9.16
+
+
+|relationship.destination.luns.name
+|string
+|query
+|False
+a|Filter by relationship.destination.luns.name
+
+* Introduced in: 9.16
+
+
+|relationship.destination.svm.name
+|string
+|query
+|False
+a|Filter by relationship.destination.svm.name
+
+
+|relationship.destination.svm.uuid
+|string
+|query
+|False
+a|Filter by relationship.destination.svm.uuid
+
+
+|relationship.destination.consistency_group_volumes.name
+|string
+|query
+|False
+a|Filter by relationship.destination.consistency_group_volumes.name
+
+* Introduced in: 9.8
+
+
+|relationship.destination.cluster.name
+|string
+|query
+|False
+a|Filter by relationship.destination.cluster.name
+
+* Introduced in: 9.7
+
+
+|relationship.destination.cluster.uuid
+|string
+|query
+|False
+a|Filter by relationship.destination.cluster.uuid
+
+* Introduced in: 9.7
+
+
+|relationship.destination.path
+|string
+|query
+|False
+a|Filter by relationship.destination.path
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|last_updated_time
+|string
+|query
+|False
+a|Filter by last_updated_time
+
+* Introduced in: 9.14
+
+
+|on_demand_attrs
+|string
+|query
+|False
+a|Filter by on_demand_attrs
+
+* Introduced in: 9.13
+
+
+|total_duration
+|string
+|query
+|False
+a|Filter by total_duration
+
+* Introduced in: 9.10
+
+
+|checkpoint_size
+|integer
+|query
+|False
+a|Filter by checkpoint_size
+
+
+|end_time
+|string
+|query
+|False
+a|Filter by end_time
+
+* Introduced in: 9.10
+
+
+|network_compression_ratio
+|string
+|query
+|False
+a|Filter by network_compression_ratio
+
+* Introduced in: 9.13
+
+
+|throttle
+|integer
+|query
+|False
+a|Filter by throttle
+
+* Introduced in: 9.9
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#snapmirror_transfer[snapmirror_transfer]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "bytes_transferred": 0,
+      "checkpoint_size": 0,
+      "end_time": "2020-12-02 18:36:19 -0800",
+      "error_info": {
+        "code": 6620046,
+        "message": "Transfer aborted"
+      },
+      "last_updated_time": "2023-09-15 16:58:39 -0700",
+      "network_compression_ratio": 61,
+      "on_demand_attrs": "read_write_with_user_data_pull",
+      "relationship": {
+        "destination": {
+          "cluster": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "cluster1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "consistency_group_volumes": [
+            {
+              "name": "volume1"
+            }
+          ],
+          "luns": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "/vol/volume1/lun1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "path": "svm1:volume1",
+          "svm": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "svm1",
+            "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+          }
+        },
+        "uuid": "d2d7ceea-ab52-11e8-855e-00505682a4c7"
+      },
+      "snapshot": "string",
+      "state": "string",
+      "storage_efficiency_enabled": true,
+      "throttle": 0,
+      "total_duration": "PT28M41S",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_info]
+[.api-collapsible-fifth-title]
+error_info
+
+Error information for the transfer.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#files]
+[.api-collapsible-fifth-title]
+files
+
+Specifies a file or LUN consisting of a source_path and an optional destination_path. If not specified, the destination_path is the same as the source_path. File restore is not supported if the source_path or destination_path contains commas in its directory or file name.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination_path
+|string
+a|
+
+|source_path
+|string
+a|
+
+|===
+
+
+[#options]
+[.api-collapsible-fifth-title]
+options
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#consistency_group_volumes]
+[.api-collapsible-fifth-title]
+consistency_group_volumes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume.
+
+
+|===
+
+
+[#luns]
+[.api-collapsible-fifth-title]
+luns
+
+Optional property for a SnapMirror endpoint. Specifies the list of source LUNs and optionally list of destination LUNs during SnapMirror Consistency Group LUN restore operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#snapmirror_endpoint]
+[.api-collapsible-fifth-title]
+snapmirror_endpoint
+
+Endpoint of a SnapMirror relationship. For a GET request, the property "cluster" is populated when the endpoint is on a remote cluster. A POST request to create the destination SVM endpoint or to establish an SVM DR relationship must have the property "cluster" populated with the remote cluster details. A POST request to create the destination FlexVol volume, FlexGroup volume, Consistency Group, ONTAP S3 bucket and NON-ONTAP object-store endpoints can optionally specify the "cluster" property when the source SVM and the destination SVM are peered. A POST request to establish a SnapMirror relationship between the source endpoint and destination endpoint and when the source SVM and the destination SVM are not peered, must specify the "cluster" property for the remote endpoint.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|consistency_group_volumes
+|array[link:#consistency_group_volumes[consistency_group_volumes]]
+a|This property specifies the list of FlexVol volumes or LUNs of a Consistency Group. Optional on the ASA r2 platform. Mandatory for all other platforms.
+
+
+|luns
+|link:#luns[luns]
+a|Optional property for a SnapMirror endpoint. Specifies the list of source LUNs and optionally list of destination LUNs during SnapMirror Consistency Group LUN restore operation.
+
+
+|path
+|string
+a|ONTAP FlexVol/FlexGroup - svm1:volume1
+ONTAP SVM               - svm1:
+ONTAP Consistency Group - svm1:/cg/cg_name
+ONTAP S3                - svm1:/bucket/bucket1
+NON-ONTAP               - objstore1:/objstore
+
+* example: svm1:volume1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#relationship]
+[.api-collapsible-fifth-title]
+relationship
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#snapmirror_endpoint[snapmirror_endpoint]
+a|Endpoint of a SnapMirror relationship. For a GET request, the property "cluster" is populated when the endpoint is on a remote cluster. A POST request to create the destination SVM endpoint or to establish an SVM DR relationship must have the property "cluster" populated with the remote cluster details. A POST request to create the destination FlexVol volume, FlexGroup volume, Consistency Group, ONTAP S3 bucket and NON-ONTAP object-store endpoints can optionally specify the "cluster" property when the source SVM and the destination SVM are peered. A POST request to establish a SnapMirror relationship between the source endpoint and destination endpoint and when the source SVM and the destination SVM are not peered, must specify the "cluster" property for the remote endpoint.
+
+* Introduced in: 9.6
+
+
+|restore
+|boolean
+a|Is the relationship for restore?
+
+
+|uuid
+|string
+a|Unique identifier of the SnapMirror relationship.
+
+
+|===
+
+
+[#snapmirror_transfer]
+[.api-collapsible-fifth-title]
+snapmirror_transfer
+
+SnapMirror transfer information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|bytes_transferred
+|integer
+a|Bytes transferred
+
+
+|checkpoint_size
+|integer
+a|Amount of data transferred in bytes as recorded in the restart checkpoint.
+
+
+|end_time
+|string
+a|End time of the transfer.
+
+
+|error_info
+|link:#error_info[error_info]
+a|Error information for the transfer.
+
+
+|last_updated_time
+|string
+a|Last updated time of the bytes transferred in an active transfer.
+
+
+|network_compression_ratio
+|string
+a|Specifies the compression ratio achieved for the data sent over the wire with network compression enabled. This property is only valid for active transfers.
+
+
+|on_demand_attrs
+|string
+a|Specifies whether or not an on-demand restore is being carried out. This is only supported for the transfer of restore relationships for entire volumes from the object store. A value for read_write_with_user_data_pull should be provided to start an on-demand restore. A file restore from the object store does not support this option.
+
+
+|relationship
+|link:#relationship[relationship]
+a|
+
+|snapshot
+|string
+a|Name of snapshot being transferred.
+
+
+|state
+|string
+a|Status of the transfer. Set PATCH state to "aborted" to abort the transfer. Set PATCH state to "hard_aborted" to abort the transfer and discard the restart checkpoint. To find "queued" transfers refer to relationships GET API.
+
+
+|throttle
+|integer
+a|Throttle, in KBs per second. This "throttle" overrides the "throttle" set on the SnapMirror relationship or SnapMirror relationship's policy. If neither of these are set, defaults to 0, which is interpreted as unlimited.
+
+
+|total_duration
+|string
+a|Elapsed transfer time.
+
+
+|uuid
+|string
+a|Unique identifier of the SnapMirror transfer.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

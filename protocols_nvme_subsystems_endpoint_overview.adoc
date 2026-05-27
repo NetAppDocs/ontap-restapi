@@ -1,0 +1,332 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_nvme_subsystems_endpoint_overview.html'
+summary: 'Manage NVMe subsystems'
+---
+
+= Manage NVMe subsystems
+
+
+
+== Overview
+
+An NVMe subsystem maintains configuration state and namespace access control for a set of NVMe-connected hosts.
+
+The NVMe subsystem REST API allows you to create, update, delete, and discover NVMe subsystems as well as add and remove NVMe hosts that can access the subsystem and associated namespaces.
+
+== Examples
+
+=== Creating an NVMe subsystem
+
+----
+
+# The API:
+POST /api/protocols/nvme/subsystems
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/nvme/subsystems' -H 'Accept: application/json' -d '{ "svm": { "name": "svm1" }, "name": "subsystem1", "os_type": "linux" }'
+----
+
+'''
+
+=== Creating an NVMe subsystem with multiple NVMe subsystem hosts
+
+----
+
+# The API:
+POST /api/protocols/nvme/subsystems
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/nvme/subsystems' -H 'Accept: application/json' -d '{ "svm": { "name": "svm1" }, "name": "subsystem2", "os_type": "vmware", "hosts": [ { "nqn": "nqn.1992-01.example.com:host1" }, { "nqn": "nqn.1992-01.example.com:host2" } ] }'
+----
+
+'''
+
+=== Retrieving all NVMe subsystems
+
+----
+
+# The API:
+GET /api/protocols/nvme/subsystems
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/nvme/subsystems' -H 'Accept: application/json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "a009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "svm1",
+    },
+    "uuid": "acde901a-a379-4a91-9ea6-1b728ed6696f",
+    "name": "subsystem1",
+  },
+  {
+    "svm": {
+      "uuid": "a009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "svm1",
+    },
+    "uuid": "bcde901a-a379-4a91-9ea6-1b728ed6696f",
+    "name": "subsystem2",
+  }
+],
+"num_records": 2,
+}
+----
+
+'''
+
+=== Retrieving all NVMe subsystems with OS type _linux_
+
+Note that the `os_type` query parameter is used to perform the query.
+
+----
+
+# The API:
+GET /api/protocols/nvme/subsystems
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/nvme/subsystems?os_type=linux' -H 'Accept: application/json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "a009a9e7-4081-b576-7575-ada21efcaf16",
+      "name": "svm1",
+    },
+    "uuid": "acde901a-a379-4a91-9ea6-1b728ed6696f",
+    "name": "subsystem1",
+    "os_type": "linux",
+  }
+],
+"num_records": 1,
+}
+----
+
+'''
+
+=== Retrieving a specific NVMe subsystem
+
+----
+
+# The API:
+GET /api/protocols/nvme/subsystems/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f' -H 'Accept: application/json'
+
+# The response:
+{
+"svm": {
+  "uuid": "a009a9e7-4081-b576-7575-ada21efcaf16",
+  "name": "svm1",
+},
+"uuid": "acde901a-a379-4a91-9ea6-1b728ed6696f",
+"name": "subsystem1",
+"os_type": "linux",
+"target_nqn": "nqn.1992-08.com.netapp:sn.d04594ef915b4c73b642169e72e4c0b1:subsystem.subsystem1",
+"serial_number": "wtJNKNKD-uPLAAAAAAAD",
+}
+----
+
+'''
+
+=== Retrieving the NVMe namespaces mapped to a specific NVMe subsystem
+
+Note that the `fields` query parameter is used to specify the desired properties.
+
+----
+
+# The API:
+GET /api/protocols/nvme/subsystems/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f?fields=subsystem_maps' -H 'Accept: application/json'
+
+# The response:
+{
+"svm": {
+  "uuid": "a009a9e7-4081-b576-7575-ada21efcaf16",
+  "name": "svm1",
+},
+"uuid": "acde901a-a379-4a91-9ea6-1b728ed6696f",
+"name": "subsystem1",
+"subsystem_maps": [
+  {
+    "anagrpid": "00000001h",
+    "namespace": {
+      "uuid": "eeaaca23-128d-4a7d-be4a-dc9106705799",
+      "name": "/vol/vol1/namespace1"
+    },
+    "nsid": "00000001h"
+  },
+  {
+    "anagrpid": "00000002h",
+    "namespace": {
+      "uuid": "feaaca23-83a0-4a7d-beda-dc9106705799",
+      "name": "/vol/vol1/namespace2"
+    },
+    "nsid": "00000002h"
+  }
+]
+}
+----
+
+'''
+
+=== Adding a comment about an NVMe subsystem
+
+----
+
+# The API:
+PATCH /api/protocols/nvme/subsystems/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f' -H 'Accept: application/json' -d '{ "comment": "A brief comment about the subsystem" }'
+----
+
+'''
+
+=== Deleting an NVMe subsystem
+
+----
+
+# The API:
+DELETE /api/protocols/nvme/subsystems/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f' -H 'Accept: application/json'
+----
+
+=== Deleting an NVMe subsystem with mapped NVMe namespaces
+
+Normally, deleting an NVMe subsystem that has mapped NVMe namespaces is not allowed. The deletion can be forced using the `allow_delete_while_mapped` query parameter.
+
+----
+
+# The API:
+DELETE /api/protocols/nvme/subsystems/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f?allow_delete_while_mapped=true' -H 'Accept: application/json'
+----
+
+=== Delete an NVMe subsystem with NVMe subsystem hosts
+
+Normally, deleting an NVMe subsystem with NVMe subsystem hosts is disallowed. The deletion can be forced using the `allow_delete_with_hosts` query parameter.
+
+----
+
+# The API:
+DELETE /api/protocols/nvme/subsystems/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f?allow_delete_with_hosts=true' -H 'Accept: application/json'
+----
+
+'''
+
+== An NVMe Subsystem Host
+
+An NVMe subsystem host is a network host provisioned to an NVMe subsystem to access namespaces mapped to that subsystem.
+
+== Examples
+
+=== Adding an NVMe subsystem host to an NVMe subsystem
+
+----
+
+# The API:
+POST /protocols/nvme/subsystems/{subsystem.uuid}/hosts
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f/hosts' -H 'Accept: application/json' -d '{ "nqn": "nqn.1992-01.com.example:subsys1.host1" }'
+----
+
+'''
+
+=== Adding multiple NVMe subsystem hosts to an NVMe subsystem
+
+----
+
+# The API:
+POST /protocols/nvme/subsystems/{subsystem.uuid}/hosts
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f/hosts' -H 'Accept: application/json' -d '{ "records": [ { "nqn": "nqn.1992-01.com.example:subsys1.host2" }, { "nqn": "nqn.1992-01.com.example:subsys1.host3" } ] }'
+----
+
+'''
+
+=== Retrieving all NVMe subsystem hosts for an NVMe subsystem
+
+----
+
+# The API:
+GET /protocols/nvme/subsystems/{subsystem.uuid}/hosts
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f/hosts' -H 'Accept: application/json'
+
+# The response:
+{
+"records": [
+  {
+    "nqn": "nqn.1992-01.com.example:subsys1.host1",
+  },
+  {
+    "nqn": "nqn.1992-01.com.example:subsys1.host2",
+  },
+  {
+    "nqn": "nqn.1992-01.com.example:subsys1.host3",
+  }
+],
+"num_records": 3,
+}
+----
+
+'''
+
+=== Retrieving a specific NVMe subsystem host for an NVMe subsystem
+
+----
+
+# The API:
+GET /protocols/nvme/subsystems/{subsystem.uuid}/hosts/{nqn}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f/hosts/nqn.1992-01.com.example:subsys1.host1' -H 'Accept: application/json'
+
+# The response:
+{
+"subsystem": {
+  "uuid": "acde901a-a379-4a91-9ea6-1b728ed6696f",
+},
+"nqn": "nqn.1992-01.com.example:subsys1.host1",
+"dh_hmac_chap": {
+  "node": "none"
+},
+"priority": "regular",
+}
+----
+
+'''
+
+=== Deleting an NVMe subsystem host from an NVMe subsystem
+
+----
+
+# The API:
+DELETE /protocols/nvme/subsystems/{subsystem.uuid}/hosts/{nqn}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/protocols/nvme/subsystems/acde901a-a379-4a91-9ea6-1b728ed6696f/hosts/nqn.1992-01.com.example:subsys1.host1' -H 'Accept: application/json'
+----
+
+

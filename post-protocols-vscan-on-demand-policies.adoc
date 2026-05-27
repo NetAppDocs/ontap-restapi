@@ -1,0 +1,516 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-vscan-on-demand-policies.html'
+summary: 'Create a Vscan On-Demand policy'
+---
+
+= Create a Vscan On-Demand policy
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}/on-demand-policies`#
+
+*Introduced In:* 9.6
+
+Creates a Vscan On-Demand policy. Created only on a data SVM.
+
+Important notes:
+
+*** Only one policy can be scheduled at a time on an SVM. Use schedule name or schedule uuid to schedule an On-Demand policy.
+
+*** Scanning must be enabled on the SVM before the policy is scheduled to run.
+
+*** The exclude_extensions setting overrides the include_extensions setting. Set scan_without_extension to true to scan files without extensions.
+
+== Required properties
+
+* `svm.uuid` - Existing SVM in which to create the Vscan On-Demand policy.
+* `name` - Name of the Vscan On-Demand policy. Maximum length is 256 characters.
+* `log_path` - Path from the Vserver root where the On-Demand policy report is created.
+* `scan_paths` - List of paths that need to be scanned.
+
+== Recommended optional properties
+
+* `schedule` - Scan schedule. It is recommended to set the schedule property, as it dictates when to scan for viruses.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `include_extensions` - _*_
+* `max_file_size` - _10737418240_
+* `scan_without_extension` - _true_
+
+== Related ONTAP commands
+
+* `vserver vscan on-demand-task create`
+* `vserver vscan on-demand-task schedule`
+
+== Learn more
+
+* link:protocols_vscan_svm.uuid_on-demand-policies_endpoint_overview.html[DOC /protocols/vscan/{svm.uuid}/on-demand-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|svm.uuid
+|string
+|path
+|True
+a|UUID of the SVM to which this object belongs.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|log_path
+|string
+a|The path from the Vserver root where the task report is created.
+
+
+|name
+|string
+a|On-Demand task name
+
+
+|scan_paths
+|array[string]
+a|List of paths that need to be scanned.
+
+
+|schedule
+|link:#schedule[schedule]
+a|Schedule of the task.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "log_path": "/vol0/report_dir",
+  "name": "task-1",
+  "scan_paths": [
+    "/vol1/",
+    "/vol2/cifs/"
+  ],
+  "schedule": {
+    "name": "weekly",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "scope": {
+    "exclude_extensions": [
+      "mp3",
+      "mp4"
+    ],
+    "exclude_paths": [
+      "/vol1/cold-files/",
+      "/vol1/cifs/names"
+    ],
+    "include_extensions": [
+      "vmdk",
+      "mp*"
+    ],
+    "max_file_size": 10737418240
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#vscan_on_demand[vscan_on_demand]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "log_path": "/vol0/report_dir",
+      "name": "task-1",
+      "scan_paths": [
+        "/vol1/",
+        "/vol2/cifs/"
+      ],
+      "schedule": {
+        "name": "weekly",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "scope": {
+        "exclude_extensions": [
+          "mp3",
+          "mp4"
+        ],
+        "exclude_paths": [
+          "/vol1/cold-files/",
+          "/vol1/cifs/names"
+        ],
+        "include_extensions": [
+          "vmdk",
+          "mp*"
+        ],
+        "max_file_size": 10737418240
+      },
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10027101
+| The file size must be in the range 1KB to 1TB
+
+| 10027107
+| The include extensions list cannot be empty. Specify at least one extension for inclusion.
+
+| 10027164
+| An On-Demand policy cannot be scheduled, as the Vscan is disabled. Enable the Vscan and retry the operation.
+
+| 10027167
+| The specified schedule does not exist. Create the schedule or create a policy without specifying the schedule.
+
+| 10027168
+| The specified scan path does not exist. The scan path must be specified from the root of the SVM, and must begin with UNIX path delimiters (use "`/`" not "`\`")
+
+| 10027169
+| The specified scan path is not supported for scanning.
+
+| 10027173
+| The new On-Demand policy cannot be created because the SVM has reached the maximum limit of 10 On-Demand policies. Delete an existing policy in order to create a new policy.
+
+| 10027174
+| The specified exclude path is invalid. The path must be specified from the root of the SVM, and must begin with UNIX path delimiters (use "/" not "\")
+
+| 10027175
+| An On-Demand policy cannot be scheduled as the Vserver is not in an operational state.
+
+| 10027176
+| The log-path specified does not exist. The log path must be specified from the root of the SVM, and must begin with UNIX path delimiters (use "`/`" not "`\`").
+
+| 10027177
+| The log path specified is not supported.
+|===
+
+| 10027178   | The specified task-name is invalid. Valid characters are 0-9, A-Z, a-z, "_", ".", and "-"
+| 10027253   | The number of paths specified exceeds the configured maximum number of paths. You cannot specify more than the maximum number of configured paths. |
+| 10027254   | The number of extensions specified exceeds the configured maximum number of extensions. You cannot specify more than the maximum number of configured extensions. |
+| 10027255   | Another policy is already scheduled. Only one policy per SVM is allowed to be scheduled at any one time. Create a policy without specifying a schedule. |
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#schedule]
+[.api-collapsible-fifth-title]
+schedule
+
+Schedule of the task.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Job schedule name
+
+
+|uuid
+|string
+a|Job schedule UUID
+
+
+|===
+
+
+[#scope]
+[.api-collapsible-fifth-title]
+scope
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|exclude_extensions
+|array[string]
+a|List of file extensions for which scanning is not performed.
+
+
+|exclude_paths
+|array[string]
+a|List of file paths for which scanning must not be performed.
+
+
+|include_extensions
+|array[string]
+a|List of file extensions to be scanned.
+
+
+|max_file_size
+|integer
+a|Maximum file size, in bytes, allowed for scanning.
+
+
+|scan_without_extension
+|boolean
+a|Specifies whether or not files without any extension can be scanned.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#vscan_on_demand]
+[.api-collapsible-fifth-title]
+vscan_on_demand
+
+Use On-Demand scanning to check files for viruses on a schedule. An On-Demand policy defines the scope of an On-Demand scan.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|log_path
+|string
+a|The path from the Vserver root where the task report is created.
+
+
+|name
+|string
+a|On-Demand task name
+
+
+|scan_paths
+|array[string]
+a|List of paths that need to be scanned.
+
+
+|schedule
+|link:#schedule[schedule]
+a|Schedule of the task.
+
+
+|scope
+|link:#scope[scope]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

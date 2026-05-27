@@ -1,0 +1,464 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-protocols-nfs-export-policies-rules-clients.html'
+summary: 'Create an export policy rule client'
+---
+
+= Create an export policy rule client
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/protocols/nfs/export-policies/{policy.id}/rules/{index}/clients`#
+
+*Introduced In:* 9.6
+
+Creates an export policy rule client
+
+== Required properties
+
+* `policy.id` - Existing export policy that contains export policy rules for the client being added.
+* `index`  - Existing export policy rule for which to create an export client.
+* `match`  - Base name for the export policy client.
+
+== Related ONTAP commands
+
+* `vserver export-policy rule add-clientmatches`
+
+== Learn more
+
+* link:protocols_nfs_export-policies_endpoint_overview.html[DOC /protocols/nfs/export-policies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|policy.id
+|integer
+|path
+|True
+a|Export Policy ID
+
+
+|index
+|integer
+|path
+|True
+a|Export Rule Index
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+    following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|policy
+|link:#policy[policy]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "index": 0,
+  "match": "0.0.0.0/0",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of export rule client records
+
+
+|records
+|array[link:#export_client[export_client]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "index": 0,
+      "match": "0.0.0.0/0",
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      }
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262196
+| Field 'svm.name' is not supported in the body of POST request
+
+| 1703954
+| Export policy does not exist
+
+| 1704036
+| Invalid clientmatch:  missing domain name
+
+| 1704037
+| Invalid clientmatch:  missing network name
+
+| 1704038
+| Invalid clientmatch:  missing netgroup name
+
+| 1704039
+| Invalid clientmatch
+
+| 1704040
+| Invalid clientmatch: address bytes masked out by netmask are non-zero
+
+| 1704041
+| Invalid clientmatch: address bytes masked to zero by netmask
+
+| 1704042
+| Invalid clientmatch: too many bits in netmask
+
+| 1704043
+| Invalid clientmatch: invalid netmask
+
+| 1704044
+| Invalid clientmatch: invalid characters in host name
+
+| 1704045
+| Invalid clientmatch: invalid characters in domain name
+
+| 1704050
+| Invalid clientmatch: the clientmatch list contains a duplicate string. Duplicate strings in a clientmatch list are not supported
+
+| 1704054
+| Invalid clientmatch: invalid characters in netgroup name. Valid characters for a netgroup name are 0-9, A-Z, a-z, ".", "_" and "-"
+
+| 1704064
+| Clientmatch host name too long
+
+| 1704065
+| Clientmatch domain name too long
+
+| 6691623
+| User is not authorized
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#policy]
+[.api-collapsible-fifth-title]
+policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|Export policy ID
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#export_client]
+[.api-collapsible-fifth-title]
+export_client
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+      following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|policy
+|link:#policy[policy]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#export_client]
+[.api-collapsible-fifth-title]
+export_client
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|index
+|integer
+a|Index of the rule within the export policy.
+
+
+|match
+|string
+a|Client Match Hostname, IP Address, Netgroup, or Domain.
+You can specify the match as a string value in any of the
+  following formats:
+
+* As a hostname; for instance, host1
+* As an IPv4 address; for instance, 10.1.12.24
+* As an IPv6 address; for instance, fd20:8b1e:b255:4071::100:1
+* As an IPv4 address with a subnet mask expressed as a number of bits; for instance, 10.1.12.0/24
+* As an IPv6 address with a subnet mask expressed as a number of bits; for instance, fd20:8b1e:b255:4071::/64
+* As an IPv4 address with a network mask; for instance, 10.1.16.0/255.255.255.0
+* As a netgroup, with the netgroup name preceded by the @ character; for instance, @eng
+* As a domain name preceded by the . character; for instance, .example.com
+
+
+|policy
+|link:#policy[policy]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

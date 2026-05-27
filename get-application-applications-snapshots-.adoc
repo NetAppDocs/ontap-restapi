@@ -1,0 +1,379 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-application-applications-snapshots-.html'
+summary: 'Retrieve an application snapshot'
+---
+
+= Retrieve an application snapshot
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/application/applications/{application.uuid}/snapshots/{uuid}`#
+
+*Introduced In:* 9.6
+
+Retrieve a snapshot of an application component.
+
+This endpoint is only supported for Maxdata template applications.
+
+Component snapshots are essentially more granular application snapshots. There is no difference beyond the scope of the operation.
+
+== Learn more
+
+* link:application_applications_application.uuid_snapshots_endpoint_overview.html[DOC /application/applications/{application.uuid}/snapshots]
+* link:get-application-applications-snapshots.html[GET /application/applications/\{uuid}/snapshots]
+* link:application_overview.html[DOC /application]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|application.uuid
+|string
+|path
+|True
+a|Application UUID
+
+
+|uuid
+|string
+|path
+|True
+a|Snapshot UUID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|application
+|link:#application[application]
+a|
+
+|comment
+|string
+a|Comment. Valid in POST.
+
+
+|components
+|array[link:#components[components]]
+a|
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Creation time
+
+
+|is_partial
+|boolean
+a|A partial snapshot means that not all volumes in an application component were included in the snapshot.
+
+
+|name
+|string
+a|The snapshot name. Valid in POST.
+
+
+|svm
+|link:#svm[svm]
+a|
+
+|uuid
+|string
+a|The snapshot UUID. Valid in URL.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "application": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "string",
+    "uuid": "string"
+  },
+  "comment": "string",
+  "components": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "string",
+      "uuid": "string"
+    }
+  ],
+  "consistency_type": "string",
+  "create_time": "string",
+  "name": "string",
+  "svm": {
+    "name": "string",
+    "uuid": "string"
+  },
+  "uuid": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#application]
+[.api-collapsible-fifth-title]
+application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Application name
+
+
+|uuid
+|string
+a|The application UUID. Valid in URL.
+
+
+|===
+
+
+[#components]
+[.api-collapsible-fifth-title]
+components
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Component name
+
+
+|uuid
+|string
+a|Component UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|SVM name
+
+
+|uuid
+|string
+a|SVM UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

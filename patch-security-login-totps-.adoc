@@ -1,0 +1,292 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-login-totps-.html'
+summary: 'Update a TOTP profile for a user account'
+---
+
+= Update a TOTP profile for a user account
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/login/totps/{owner.uuid}/{account.name}`#
+
+*Introduced In:* 9.13
+
+Updates a TOTP user account.
+
+== Related ONTAP commands
+
+* `security login totp modify`
+
+== Learn more
+
+* link:security_login_totps_owner.uuid_account.name_endpoint_overview.html[DOC /security/login/totps/{owner.uuid}/{account.name}]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Account owner UUID
+
+
+|account.name
+|string
+|path
+|True
+a|User account name
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Optional comment for the TOTP profile.
+
+
+|enabled
+|boolean
+a|Status of the TOTP profile.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|SHA fingerprint for the TOTP secret key.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "string",
+  "enabled": "",
+  "scope": "string",
+  "sha_fingerprint": "string"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 144834564
+| Only users with the admin role are allowed to modify the TOTP status.
+
+| 144834565
+| Invalid option for the field -enabled
+
+| 144834566
+| The user does not have a TOTP configuration available for modification.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#account_reference]
+[.api-collapsible-fifth-title]
+account_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|User account
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the TOTP profile.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#totp]
+[.api-collapsible-fifth-title]
+totp
+
+TOTP profile for the user account used to access SSH.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Optional comment for the TOTP profile.
+
+
+|enabled
+|boolean
+a|Status of the TOTP profile.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|SHA fingerprint for the TOTP secret key.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

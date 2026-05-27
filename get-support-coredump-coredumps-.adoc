@@ -1,0 +1,303 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-support-coredump-coredumps-.html'
+summary: 'Retrieve a core dump'
+---
+
+= Retrieve a core dump
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/support/coredump/coredumps/{node.uuid}/{name}`#
+
+*Introduced In:* 9.10
+
+Retrieves a specific core dump.
+
+== Related ONTAP commands
+
+* `system node coredump show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+
+|name
+|string
+|path
+|True
+a|Core name
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|is_partial
+|boolean
+a|Specifies whether or not the core is a partial core.  Applicable only to kernel core dump type.
+
+
+|is_saved
+|boolean
+a|Specifies whether or not the core file is saved.
+
+
+|md5_data_checksum
+|string
+a|MD5 checksum of the compressed data of core.  Applicable only to kernel core dump type.
+
+
+|name
+|string
+a|Core name
+
+
+|node
+|link:#node[node]
+a|
+
+|panic_time
+|string
+a|Time of panic that generated the core.
+
+
+|size
+|integer
+a|Size of core, in bytes.  Applicable only to kernel core dump type.
+
+
+|type
+|string
+a|Core type, kernel or application
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "md5_data_checksum": "5118488cc5065e33a16986001b1ffa48",
+  "name": "core.4136886413.2021-03-01.22_09_11.nz",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "panic_time": "2021-03-01 18:09:11 -0400",
+  "size": 1161629804,
+  "type": "kernel"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

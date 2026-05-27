@@ -1,0 +1,2007 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-namespaces.html'
+summary: 'Create an NVMe namespace'
+---
+
+= Create an NVMe namespace
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/namespaces`#
+
+*Introduced In:* 9.6
+
+Creates an NVMe namespace.
+
+== Required properties
+
+* `svm.uuid` or `svm.name` - Existing SVM in which to create the NVMe namespace.
+* `name`, `location.volume.name` or `location.volume.uuid` - Existing volume in which to create the NVMe namespace.
+* `name` or `location.namespace` - Base name for the NVMe namespace.
+* `os_type` - Operating system from which the NVMe namespace will be accessed. (Not used for clones, which are created based on the `os_type` of the source NVMe namespace.)
+* `space.size` - Size for the NVMe namespace. (Not used for clones, which are created based on the size of the source NVMe namespace.)
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `auto_delete` - _false_
+* `space.block_size` - _4096_ ( _512_ when 'os_type' is _vmware_ )
+
+== Related ONTAP commands
+
+* `volume file clone autodelete`
+* `volume file clone create`
+* `vserver nvme namespace convert-from-lun`
+* `vserver nvme namespace create`
+
+POST is asynchronous when creating a new namespace. It is synchronous when converting a LUN to a namespace via the `convert` property.
+
+== Learn more
+
+* link:storage_namespaces_endpoint_overview.html[DOC /storage/namespaces]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_delete
+|boolean
+a|This property marks the NVMe namespace for auto deletion when the volume containing the namespace runs out of space. This is most commonly set on namespace clones.
+
+When set to _true_, the NVMe namespace becomes eligible for automatic deletion when the volume runs out of space. Auto deletion only occurs when the volume containing the namespace is also configured for auto deletion and free space in the volume decreases below a particular threshold.
+
+This property is optional in POST and PATCH. The default value for a new NVMe namespace is _false_.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
+
+When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
+
+
+|comment
+|string
+a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The namespace's consistency group. This property is populated for namespaces that are members of a consistency group. If the namespace is a member of a child consistency group, the parent consistency group is reported.
+A namespace's consistency group is the consistency group of its containing volume.
+
+
+|convert
+|link:#convert[convert]
+a|This sub-object is used in POST to convert a valid in-place LUN to an NVMe namespace. Setting a property in this sub-object indicates that a conversion from the specified LUN to NVMe namespace is desired.
+
+
+|create_time
+|string
+a|The time the NVMe namespace was created.
+
+
+|enabled
+|boolean
+a|The enabled state of the NVMe namespace. Certain error conditions cause the namespace to become disabled. If the namespace is disabled, check the `status.state` property to determine what error disabled the namespace. An NVMe namespace is enabled automatically when it is created.
+
+
+|location
+|link:#location[location]
+a|The location of the NVMe namespace within the ONTAP cluster.
+NVMe namespaces do not support rename, or movement between volumes. Valid in POST.
+
+* Introduced in: 9.6
+* readCreate: 1
+
+
+|name
+|string
+a|The name of the NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+Renaming an NVMe namespace is not supported. Valid in POST.
+
+
+|os_type
+|string
+a|The operating system type of the NVMe namespace.
+
+Required in POST when creating an NVMe namespace that is not a clone of another. Disallowed in POST when creating a namespace clone.
+
+
+|provisioning_options
+|link:#provisioning_options[provisioning_options]
+a|Options that are applied to the operation.
+
+
+|space
+|link:#space[space]
+a|The storage space related properties of the NVMe namespace.
+
+
+|status
+|link:#status[status]
+a|Status information about the NVMe namespace.
+
+
+|subsystem_map
+|link:#subsystem_map[subsystem_map]
+a|The NVMe subsystem with which the NVMe namespace is associated. A namespace can be mapped to zero (0) or one (1) subsystems.
+
+There is an added computational cost to retrieving property values for `subsystem_map`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+These properties are supported for GET and POST. During POST, it requires the `provisioning_options.auto` property to be set to true.
+See the `provisioning_options.auto` property for full details.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "clone": {
+    "source": {
+      "name": "/vol/volume1/namespace1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  },
+  "comment": "string",
+  "consistency_group": {
+    "name": "cg1",
+    "uuid": "4abc2317-4332-9d37-93a0-20bd29c22df0"
+  },
+  "convert": {
+    "lun": {
+      "name": "/vol/volume1/lun1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  },
+  "create_time": "2018-06-04 19:00:00 +0000",
+  "location": {
+    "namespace": "namespace1",
+    "node": {
+      "name": "node1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "qtree": {
+      "id": 1,
+      "name": "qt1"
+    },
+    "volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  },
+  "name": "/vol/volume1/qtree1/namespace1",
+  "os_type": "string",
+  "provisioning_options": {
+    "exclude_aggregates": [
+      {
+        "name": "aggr1"
+      }
+    ],
+    "qos_policy": {
+      "name": "performance",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "snapshot_policy": {
+      "name": "default",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "storage_service": {
+      "name": "string"
+    },
+    "tiering": {
+      "control": "string",
+      "object_stores": [
+        {
+          "name": "string"
+        }
+      ],
+      "policy": "string"
+    }
+  },
+  "space": {
+    "block_size": 512,
+    "efficiency_ratio": 2.5,
+    "physical_used": 1073741824,
+    "physical_used_by_snapshots": 1073741824,
+    "size": 1073741824,
+    "used": 0
+  },
+  "status": {
+    "container_state": "string",
+    "state": "online"
+  },
+  "subsystem_map": {
+    "anagrpid": "00103050h",
+    "nsid": "00000001h",
+    "subsystem": {
+      "comment": "string",
+      "hosts": [
+        {
+          "dh_hmac_chap": {
+            "controller_secret_key": "DHHC-1:00:ia6zGodOr4SEG0Zzaw398rpY0wqipUWj4jWjUh4HWUz6aQ2n:",
+            "group_size": "string",
+            "hash_function": "string",
+            "host_secret_key": "DHHC-1:00:ia6zGodOr4SEG0Zzaw398rpY0wqipUWj4jWjUh4HWUz6aQ2n:",
+            "mode": "bidirectional"
+          },
+          "nqn": "nqn.1992-01.example.com:string",
+          "priority": "string",
+          "proximity": {
+            "peer_svms": [
+              {
+                "name": "peer1",
+                "uuid": "4204cf77-4c82-9bdb-5644-b5a841c097a9"
+              }
+            ]
+          },
+          "tls": {
+            "configured_psk": "NVMeTLSkey-1:01:VRLbtnN9AQb2WXW3c9+wEf/DRLz0QuLdbYvEhwtdWwNf9LrZ:",
+            "key_type": "configured"
+          }
+        }
+      ],
+      "name": "subsystem1",
+      "os_type": "string",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917927
+| The specified volume was not found.
+
+| 918235
+| A volume with the specified UUID was not found.
+
+| 918236
+| The specified `location.volume.uuid` and `location.volume.name` do not refer to the same volume.
+
+| 1254197
+| The LUN specified for conversion to a namespace is mapped.
+
+| 1260121
+| Cloning a namespace to a volume different than the source volume is not supported.
+
+| 1260136
+| The specified destination for a clone operation already exists as a LUN, namespace, or file.
+
+| 2621462
+| The supplied SVM does not exist.
+
+| 2621706
+| The specified `svm.uuid` and `svm.name` do not refer to the same SVM.
+
+| 2621707
+| No SVM was specified. Either `svm.name` or `svm.uuid` must be supplied.
+
+| 5242927
+| The specified qtree was not found.
+
+| 5242950
+| The specified `location.qtree.id` and `location.qtree.name` do not refer to the same qtree.
+
+| 5374127
+| The specified namespace name is invalid.
+
+| 5374140
+| LUN has a non-zero prefix and/or suffix size.
+
+| 5374141
+| LUN is part of a SnapMirror active sync relationship.
+
+| 5374156
+| A protocol endpoint LUN cannot be converted to an NVMe namespace.
+
+| 5374157
+| LUN in an SVM with MetroCluster configured cannot be converted to an NVMe namespace.
+
+| 5374158
+| LUN contains an operating system type that is not supported for NVMe namespace.
+
+| 5374352
+| An invalid name was provided for the NVMe namespace.
+
+| 5374858
+| The volume specified by `name` is not the same as that specified by `location.volume`.
+
+| 5374860
+| The qtree specified by `name` is not the same as that specified by `location.qtree`.
+
+| 5374861
+| The NVME namespace base name specified by `name` is not the same as that specified by `location.name`.
+
+| 5374862
+| No NVMe namespace path base name was provided for the namespace.
+
+| 5374876
+| The LUN specified for conversion to a namespace was not found.
+
+| 5376461
+| The specified namespace name is invalid.
+
+| 5376462
+| The specified namespace name is too long.
+
+| 5376463
+| The snapshot portion of the specified namespace name is too long.
+
+| 5440509
+| No suitable storage can be found for the specified requirements.
+
+| 13565952
+| The NVMe namespace clone request failed.
+
+| 72089636
+| Creating NVMe namespaces with `os_type` AIX is not supported until the effective cluster version is 9.13.1 or later.
+
+| 72089720
+| NVMe namespaces cannot be created in snapshots.
+
+| 72089721
+| The volume specified is in a load sharing mirror relationship. Namespaces are not supported in load sharing mirrors.
+
+| 72089722
+| A negative size was provided for the NVMe namespace.
+
+| 72089723
+| The specified size is too small for the NVMe namespace.
+
+| 72089724
+| The specified size is too large for the NVMe namespace.
+
+| 72089725
+| A LUN or NVMe namespace already exists at the specified path.
+
+| 72089727
+| NVMe namespaces cannot be created on an SVM root volume.
+
+| 72089728
+| NVMe namespaces cannot be created on a FlexGroup volume.
+
+| 72089732
+| An NVMe namespace name can only contain characters A-Z, a-z, 0-9, "-", ".", "_", "{" and "}".
+
+| 72090005
+| The specified `clone.source.uuid` and `clone.source.name` do not refer to the same NVMe namespace.
+
+| 72090006
+| The specified `clone.source` was not found.
+
+| 72090007
+| The specified `clone.source` was not found.
+
+| 72090009
+| An error occurred after successfully creating the NVMe namespace. Some properties were not set.
+
+| 72090012
+| The property cannot be specified when creating an NVMe namespace clone. The `target` property of the error object identifies the property.
+
+| 72090013
+| The property is required except when creating an NVMe namespace clone. The `target` property of the error object identifies the property.
+
+| 72090014
+| No volume was specified for the NVMe namespace.
+
+| 72090015
+| An error occurred after successfully creating the NVMe namespace preventing the retrieval of its properties.
+
+| 72090033
+| The `clone.source.uuid` property is not supported when specifying a source NVMe namespace from a snapshot.
+
+| 72090039
+| The property cannot be specified at the same time when creating an NVMe namespace as a clone. The `target` property of the error object identifies the other property given with clone.
+
+| 72090040
+| The property cannot be specified when converting a LUN into an NVMe namespace. The `target` property of the error object identifies the property.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#source]
+[.api-collapsible-fifth-title]
+source
+
+The source NVMe namespace for a namespace clone operation. This can be specified using property `clone.source.uuid` or `clone.source.name`. If both properties are supplied, they must refer to the same namespace.
+
+Valid in POST to create a new NVMe namespace as a clone of the source.
+
+Valid in PATCH to overwrite an existing NVMe namespace's data as a clone of another.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the clone source NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+Valid in POST and PATCH.
+
+
+|uuid
+|string
+a|The unique identifier of the clone source NVMe namespace.
+Valid in POST and PATCH.
+
+
+|===
+
+
+[#clone]
+[.api-collapsible-fifth-title]
+clone
+
+This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
+
+When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|source
+|link:#source[source]
+a|The source NVMe namespace for a namespace clone operation. This can be specified using property `clone.source.uuid` or `clone.source.name`. If both properties are supplied, they must refer to the same namespace.
+
+Valid in POST to create a new NVMe namespace as a clone of the source.
+
+Valid in PATCH to overwrite an existing NVMe namespace's data as a clone of another.
+
+
+|===
+
+
+[#consistency_group]
+[.api-collapsible-fifth-title]
+consistency_group
+
+The namespace's consistency group. This property is populated for namespaces that are members of a consistency group. If the namespace is a member of a child consistency group, the parent consistency group is reported.
+A namespace's consistency group is the consistency group of its containing volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group.
+
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The source LUN for convert operation. This can be specified using property `convert.lun.uuid` or `convert.lun.name`. If both properties are supplied, they must refer to the same LUN.
+
+Valid in POST. A convert request from LUN to NVMe namespace cannot be combined with setting any other namespace properties. All other properties of the converted NVMe namespace come from the source LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the source LUN. Valid in POST.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<lun>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the source LUN. Valid in POST.
+
+
+|===
+
+
+[#convert]
+[.api-collapsible-fifth-title]
+convert
+
+This sub-object is used in POST to convert a valid in-place LUN to an NVMe namespace. Setting a property in this sub-object indicates that a conversion from the specified LUN to NVMe namespace is desired.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|lun
+|link:#lun[lun]
+a|The source LUN for convert operation. This can be specified using property `convert.lun.uuid` or `convert.lun.name`. If both properties are supplied, they must refer to the same LUN.
+
+Valid in POST. A convert request from LUN to NVMe namespace cannot be combined with setting any other namespace properties. All other properties of the converted NVMe namespace come from the source LUN.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The cluster node that hosts the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#qtree]
+[.api-collapsible-fifth-title]
+qtree
+
+The qtree in which the NVMe namespace is optionally located. Valid in POST.
+
+If properties `name` and `location.qtree.name` and/or `location.qtree.uuid` are specified in the same request, they must refer to the same qtree.
+
+NVMe namespaces do not support rename.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|The identifier for the qtree, unique within the qtree's volume.
+
+
+|name
+|string
+a|The name of the qtree.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+The volume in which the NVMe namespace is located. Valid in POST.
+
+If properties `name` and `location.volume.name` and/or `location.volume.uuid` are specified in the same request, they must refer to the same volume.
+
+NVMe namespaces do not support movement between volumes.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#location]
+[.api-collapsible-fifth-title]
+location
+
+The location of the NVMe namespace within the ONTAP cluster.
+NVMe namespaces do not support rename, or movement between volumes. Valid in POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|namespace
+|string
+a|The base name component of the NVMe namespace. Valid in POST.
+
+If properties `name` and `location.namespace` are specified in the same request, they must refer to the base name.
+
+NVMe namespaces do not support rename.
+
+
+|node
+|link:#node[node]
+a|The cluster node that hosts the NVMe namespace.
+
+
+|qtree
+|link:#qtree[qtree]
+a|The qtree in which the NVMe namespace is optionally located. Valid in POST.
+
+If properties `name` and `location.qtree.name` and/or `location.qtree.uuid` are specified in the same request, they must refer to the same qtree.
+
+NVMe namespaces do not support rename.
+
+
+|volume
+|link:#volume[volume]
+a|The volume in which the NVMe namespace is located. Valid in POST.
+
+If properties `name` and `location.volume.name` and/or `location.volume.uuid` are specified in the same request, they must refer to the same volume.
+
+NVMe namespaces do not support movement between volumes.
+
+
+|===
+
+
+[#iops]
+[.api-collapsible-fifth-title]
+iops
+
+The rate of I/O operations observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency]
+[.api-collapsible-fifth-title]
+latency
+
+The round trip latency in microseconds observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput]
+[.api-collapsible-fifth-title]
+throughput
+
+The rate of throughput bytes per second observed at the storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#metric]
+[.api-collapsible-fifth-title]
+metric
+
+Performance numbers, such as IOPS latency and throughput
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|string
+a|The duration over which this sample is calculated. The time durations are represented in the ISO-8601 standard format. Samples can be calculated over the following durations:
+
+
+|iops
+|link:#iops[iops]
+a|The rate of I/O operations observed at the storage object.
+
+
+|latency
+|link:#latency[latency]
+a|The round trip latency in microseconds observed at the storage object.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_ delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput
+|link:#throughput[throughput]
+a|The rate of throughput bytes per second observed at the storage object.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#exclude_aggregates]
+[.api-collapsible-fifth-title]
+exclude_aggregates
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The aggregate name.
+
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+The QoS policy for the volume provisioned to host the namespace. This property is only supported when the request provisions a new volume. If no `qos_policy` is provided, a policy is be set based on the `storage_service.name`, which defaults to the most performant service available.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The QoS policy group name. This is mutually exclusive with UUID and other QoS attributes during POST and PATCH.
+
+
+|uuid
+|string
+a|The QoS policy group UUID. This is mutually exclusive with name and other QoS attributes during POST and PATCH.
+
+
+|===
+
+
+[#snapshot_policy_reference]
+[.api-collapsible-fifth-title]
+snapshot_policy_reference
+
+This is a reference to the snapshot policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#storage_service]
+[.api-collapsible-fifth-title]
+storage_service
+
+Determines the placement of the namespace based on the value specified. Valid in POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Storage service name. If not specified, the default value is the most performant for the platform.
+
+
+|===
+
+
+[#object_stores]
+[.api-collapsible-fifth-title]
+object_stores
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the object store to use. Used for placement.
+
+
+|===
+
+
+[#tiering]
+[.api-collapsible-fifth-title]
+tiering
+
+The tiering placement and policy definitions for the volume provisioned to host the namespace. This property is only supported when the request provisions a new volume.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|control
+|string
+a|Storage tiering placement rules for the object.
+
+
+|object_stores
+|array[link:#object_stores[object_stores]]
+a|Object stores to use. Used for placement.
+
+
+|policy
+|string
+a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
+
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+
+all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
+
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+
+none &dash; Volume blocks are not be tiered to the cloud store.
+
+snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+
+The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
+
+
+|===
+
+
+[#provisioning_options]
+[.api-collapsible-fifth-title]
+provisioning_options
+
+Options that are applied to the operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto
+|boolean
+a|If the volume specified in the request does not exist, automatically provision one of appropriate size. If the volume does exist, resize it to accommodate the new namespace.
+
+This property is only supported on Unified ONTAP.
+
+The following behavior is different from a traditional POST request:
+
+* The operation is asynchronous.
+* The `qos_policy` property is supported and is applied to the provisioned volume. A default QoS policy is applied to the volume if one is not provided.
+* The `provisioning_options.count` property is supported, provisioning _count_ namespaces on the volume using the specified properties.
+* The `subsystem_map` property is supported. If the specified subsystem does not exist, it is created. The namespace is mapped to this subsystem. If a subsystem is provisioned in this way, it is deleted after it is no longer mapped to any namespaces.
+* The `clone` and `convert` properties are not supported.
+* When performing `records` based operations, specifying this property in the query applies to the entire operation. Specifying it for an individual record within the request applies to only that record.
+* Many other `provisioning_options` properties are supported to control the placement of the namespace and the properties of the volume containing the namespace.
+* Default value: 1
+* x-ntap-createOnly: true
+* Introduced in: 9.16
+* x-nullable: true
+
+
+|count
+|integer
+a|The number of namespaces to provision with these properties. Only POST requests based on `space.size` are supported. When provided, the name is considered a prefix, and a suffix of the form __<N>_ is generated where N is the next available numeric index, starting with 1.
+
+
+|exclude_aggregates
+|array[link:#exclude_aggregates[exclude_aggregates]]
+a|A list of aggregates to exclude when determining the placement of the volume.
+
+
+|qos_policy
+|link:#qos_policy[qos_policy]
+a|The QoS policy for the volume provisioned to host the namespace. This property is only supported when the request provisions a new volume. If no `qos_policy` is provided, a policy is be set based on the `storage_service.name`, which defaults to the most performant service available.
+
+
+|snapshot_policy
+|link:#snapshot_policy_reference[snapshot_policy_reference]
+a|This is a reference to the snapshot policy.
+
+
+|storage_service
+|link:#storage_service[storage_service]
+a|Determines the placement of the namespace based on the value specified. Valid in POST.
+
+
+|tiering
+|link:#tiering[tiering]
+a|The tiering placement and policy definitions for the volume provisioned to host the namespace. This property is only supported when the request provisions a new volume.
+
+
+|use_mirrored_aggregates
+|boolean
+a|Specifies whether mirrored aggregates are selected when provisioning the volume to host the namespace. Only mirrored aggregates are used if this parameter is set to _true_ and only unmirrored aggregates are used if this parameter is set to _false_. The default value is _true_ for a MetroCluster configuration and is _false_ for a non-MetroCluster configuration.
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+Properties that request and report the space guarantee for the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|requested
+|boolean
+a|The requested space reservation policy for the NVMe namespace. If _true_, a space reservation is requested for the namespace; if _false_, the namespace is thin provisioned. Guaranteeing a space reservation request for a namespace requires that the volume in which the namespace resides also be space reserved and that the fractional reserve for the volume be 100%.
+
+The space reservation policy for an NVMe namespace is determined by ONTAP.
+
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|reserved
+|boolean
+a|Reports if the NVMe namespace is space guaranteed.
+
+This property is _true_ if a space guarantee is requested and the containing volume and aggregate support the request. This property is _false_ if a space guarantee is not requested or if a space guarantee is requested and either the containing volume and aggregate do not support the request.
+
+
+|===
+
+
+[#space]
+[.api-collapsible-fifth-title]
+space
+
+The storage space related properties of the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|block_size
+|integer
+a|The size of blocks in the namespace in bytes. The default for namespaces with an `os_type` of _vmware_ is _512_. All other namespaces default to _4096_.
+
+Valid in POST when creating an NVMe namespace that is not a clone of another. Disallowed in POST when creating a namespace clone.
+ Valid in POST.
+
+
+|efficiency_ratio
+|number
+a|The storage efficiency ratio of the namespace without snapshots. (Logical Used / Used)
+This property is not available on the namespace object in the REST API and is not reported for GET requests. See the containing volume object for this information.
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|Properties that request and report the space guarantee for the NVMe namespace.
+
+
+|physical_used
+|integer
+a|The number of bytes consumed on the disk by the namespace, excluding snapshots.
+This property is not available on the namespace object in the REST API and is not reported for GET requests. See the containing volume object for this information.
+
+
+|physical_used_by_snapshots
+|integer
+a|The number of bytes consumed on the disk by the namespace's snapshots.
+This property has been replaced by `space.snapshot.used`.
+This property is not available on the namespace object in the REST API and is not reported for GET requests. See the containing volume object for this information.
+
+
+|size
+|integer
+a|The total provisioned size of the NVMe namespace. Valid in POST and PATCH. The NVMe namespace size can be increased but not be made smaller using the REST interface.
+
+The maximum and minimum sizes listed here are the absolute maximum and absolute minimum sizes in bytes. The maximum size is variable with respect to large NVMe namespace support in ONTAP. If large namespaces are supported, the maximum size is 128 TB (140737488355328 bytes) and if not supported, the maximum size is just under 16 TB (17557557870592 bytes). The minimum size supported is always 4096 bytes.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* example: 1073741824
+* format: int64
+* Max value: 140737488355328
+* Min value: 4096
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|used
+|integer
+a|The amount of space consumed by the main data stream of the NVMe namespace.
+
+This value is the total space consumed in the volume by the NVMe namespace, including filesystem overhead, but excluding prefix and suffix streams. Due to internal filesystem overhead and the many ways NVMe filesystems and applications utilize blocks within a namespace, this value does not necessarily reflect actual consumption/availability from the perspective of the filesystem or application. Without specific knowledge of how the namespace blocks are utilized outside of ONTAP, this property should not be used and an indicator for an out-of-space condition.
+
+For more information, see _Size properties_ in the _docs_ section of the ONTAP REST API documentation.
+
+* format: int64
+* readOnly: 1
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#iops_raw]
+[.api-collapsible-fifth-title]
+iops_raw
+
+The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#latency_raw]
+[.api-collapsible-fifth-title]
+latency_raw
+
+The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|other
+|integer
+a|Performance metric for other I/O operations. Other I/O operations can be metadata operations, such as directory lookups and so on.
+
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#throughput_raw]
+[.api-collapsible-fifth-title]
+throughput_raw
+
+Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|read
+|integer
+a|Performance metric for read I/O operations.
+
+
+|total
+|integer
+a|Performance metric aggregated over all types of I/O operations.
+
+
+|write
+|integer
+a|Performance metric for write I/O operations.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw performance numbers, such as IOPS latency and throughput. These numbers are aggregated across all nodes in the cluster and increase with the uptime of the cluster.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|iops_raw
+|link:#iops_raw[iops_raw]
+a|The number of I/O operations observed at the storage object. This should be used along with delta time to calculate the rate of I/O operations per unit of time.
+
+
+|latency_raw
+|link:#latency_raw[latency_raw]
+a|The raw latency in microseconds observed at the storage object. This should be divided by the raw IOPS value to calculate the average latency per I/O operation.
+
+
+|status
+|string
+a|Any errors associated with the sample. For example, if the aggregation of data over multiple nodes fails then any of the partial errors might be returned, "ok" on success, or "error" on any internal uncategorized failure. Whenever a sample collection is missed but done at a later time, it is back filled to the previous 15 second timestamp and tagged with "backfilled_data". "Inconsistent_delta_time" is encountered when the time between two collections is not the same for all nodes. Therefore, the aggregated value might be over or under inflated. "Negative_delta" is returned when an expected monotonically increasing value has decreased in value. "Inconsistent_old_data" is returned when one or more nodes do not have the latest data.
+
+
+|throughput_raw
+|link:#throughput_raw[throughput_raw]
+a|Throughput bytes observed at the storage object. This should be used along with delta time to calculate the rate of throughput bytes per unit of time.
+
+
+|timestamp
+|string
+a|The timestamp of the performance data.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Status information about the NVMe namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|container_state
+|string
+a|The state of the volume and aggregate that contain the NVMe namespace. Namespaces are only available when their containers are available.
+
+
+|mapped
+|boolean
+a|Reports if the NVMe namespace is mapped to an NVMe subsystem.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|read_only
+|boolean
+a|Reports if the NVMe namespace allows only read access.
+
+
+|state
+|string
+a|The state of the NVMe namespace. Normal states for a namespace are _online_ and _offline_. Other states indicate errors.
+
+
+|===
+
+
+[#consistency_group_nvme_host_dh_hmac_chap]
+[.api-collapsible-fifth-title]
+consistency_group_nvme_host_dh_hmac_chap
+
+A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|controller_secret_key
+|string
+a|The controller secret for NVMe in-band authentication. The value of this property is used by the NVMe host to authenticate the NVMe controller while establishing a connection. If unset, the controller is not authenticated. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+This property is write-only. The `mode` property can be used to identify if a controller secret has been set for the host, but the controller secret value cannot be read. To change the value, the host must be deleted from the subsystem and re-added.
+
+
+|group_size
+|string
+a|The Diffie-Hellman group size for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `2048_bit`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|hash_function
+|string
+a|The hash function for NVMe in-band authentication. When property `host_secret_key` is provided, this property defaults to `sha_256`. When supplied, the property `host_secret_key` must also be supplied. Optional in POST.
+
+
+|host_secret_key
+|string
+a|The host secret for NVMe in-band authentication. The value of this property is used by the NVMe controller to authenticate the NVMe host while establishing a connection. If unset, no authentication is performed by the host or controller. This property must be supplied if any other NVMe in-band authentication properties are supplied. Optional in POST.
+
+This property is write-only. The `mode` property can be used to identify if a host secret has been set for the host, but the host secret value cannot be read. To change the value, the host must be deleted from the subsystem and re-added.
+
+
+|mode
+|string
+a|The expected NVMe in-band authentication mode for the host. This property is an indication of which secrets are configured for the host. When set to:
+
+* none: The host has neither the host nor controller secret configured, and no authentication is performed.
+* unidirectional: The host has a host secret configured. The controller will authenticate the host.
+* bidirectional: The host has both a host and controller secret configured. The controller will authenticate the host and the host will authenticate the controller.
+
+
+|===
+
+
+[#peer_svms]
+[.api-collapsible-fifth-title]
+peer_svms
+
+A reference to an SVM peer relationship.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The local name of the peer SVM. This name is unique among all local and peer SVMs.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM peer relationship. This is the UUID of the relationship, not the UUID of the peer SVM itself.
+
+
+|===
+
+
+[#proximity]
+[.api-collapsible-fifth-title]
+proximity
+
+Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local_svm
+|boolean
+a|A boolean that indicates if the host is proximal to the SVM for which it is configured.
+
+
+|peer_svms
+|array[link:#peer_svms[peer_svms]]
+a|An array of remote peer SVMs to which the host is proximal.
+
+
+|===
+
+
+[#tls]
+[.api-collapsible-fifth-title]
+tls
+
+A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configured_psk
+|string
+a|A user supplied pre-shared key (PSK) value in PSK Interchange Format. Optional in POST.
+
+The values for property `key_type` and property `configured_psk` must logically agree. This property is only allowed when `key_type` is `configured`. If `configured_psk` is supplied and `key_type` is unset, `key_type` defaults to `configured`.
+
+This property is write-only. The `key_type` property can be used to identify if a configured PSK has been set for the host, but the PSK value cannot be read. To change the value, the host must be deleted from the subsystem and re-added.
+
+
+|key_type
+|string
+a|The method by which the TLS pre-shared key (PSK) is configured for the host. Optional in POST.
+
+The values for property `key_type` and property `configured_psk` must logically agree.
+
+Possible values:
+
+* `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
+* `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+
+This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
+
+
+|===
+
+
+[#hosts]
+[.api-collapsible-fifth-title]
+hosts
+
+The NVMe host provisioned to access NVMe namespaces mapped to a subsystem.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dh_hmac_chap
+|link:#consistency_group_nvme_host_dh_hmac_chap[consistency_group_nvme_host_dh_hmac_chap]
+a|A container for the configuration of NVMe in-band authentication using the DH-HMAC-CHAP protocol for a host.
+
+
+|nqn
+|string
+a|The NVMe qualified name (NQN) used to identify the NVMe storage target.
+
+
+|priority
+|string
+a|The host priority setting allocates appropriate NVMe I/O queues (count and depth) for the host to submit I/O commands. Absence of this property in GET implies io_queue count and I/O queue depth are being used.
+
+
+|proximity
+|link:#proximity[proximity]
+a|Properties that define the SVMs to which the host is proximal. This information is used to properly report active optimized and active non-optimized network paths using an NVMe controller. If no configuration has been specified for the host, the sub-object is not present in GET requests.
+
+These properties apply to all instances of the host in the NVMe subsystem in the SVM and its peers.
+
+
+|tls
+|link:#tls[tls]
+a|A container for the configuration for NVMe/TCP-TLS transport session for the host.
+
+
+|===
+
+
+[#subsystem]
+[.api-collapsible-fifth-title]
+subsystem
+
+The NVMe subsystem to which the NVMe namespace is mapped.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|A configurable comment for the NVMe subsystem. Optional in POST.
+
+
+|hosts
+|array[link:#hosts[hosts]]
+a|The NVMe hosts configured for access to the NVMe subsystem.
+Optional in POST.
+
+
+|name
+|string
+a|The name of the NVMe subsystem. Once created, an NVMe subsystem cannot be renamed. Optional in POST.
+
+
+|os_type
+|string
+a|The host operating system of the NVMe subsystem's hosts. Optional in POST.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe subsystem.
+
+
+|===
+
+
+[#subsystem_map]
+[.api-collapsible-fifth-title]
+subsystem_map
+
+The NVMe subsystem with which the NVMe namespace is associated. A namespace can be mapped to zero (0) or one (1) subsystems.
+
+There is an added computational cost to retrieving property values for `subsystem_map`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+These properties are supported for GET and POST. During POST, it requires the `provisioning_options.auto` property to be set to true.
+See the `provisioning_options.auto` property for full details.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|anagrpid
+|string
+a|The Asymmetric Namespace Access Group ID (ANAGRPID) of the NVMe namespace.
+
+The format for an ANAGRPID is 8 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|nsid
+|string
+a|The NVMe namespace identifier. This is an identifier used by an NVMe controller to provide access to the NVMe namespace.
+
+The format for an NVMe namespace identifier is 8 hexadecimal digits (zero-filled) followed by a lower case "h".
+
+
+|subsystem
+|link:#subsystem[subsystem]
+a|The NVMe subsystem to which the NVMe namespace is mapped.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#nvme_namespace]
+[.api-collapsible-fifth-title]
+nvme_namespace
+
+An NVMe namespace is a collection of addressable logical blocks presented to hosts connected to the storage virtual machine using the NVMe over Fabrics protocol.
+
+An NVMe namespace must be mapped to an NVMe subsystem to grant access to the subsystem's hosts. Hosts can then access the NVMe namespace and perform I/O using the NVMe over Fabrics protocol.
+
+See the NVMe namespace object model to learn more about each of the properties supported by the NVMe namespace REST API.
+
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+An NVMe namespace is created to a specified size using thin or thick provisioning as determined by the volume on which it is created. An NVMe namespace can then be resized or cloned. An NVMe namespace cannot be renamed, or moved to a different volume. NVMe namespaces do not support the assignment of a QoS policy for performance management, but a QoS policy can be assigned to the volume containing the namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|auto_delete
+|boolean
+a|This property marks the NVMe namespace for auto deletion when the volume containing the namespace runs out of space. This is most commonly set on namespace clones.
+
+When set to _true_, the NVMe namespace becomes eligible for automatic deletion when the volume runs out of space. Auto deletion only occurs when the volume containing the namespace is also configured for auto deletion and free space in the volume decreases below a particular threshold.
+
+This property is optional in POST and PATCH. The default value for a new NVMe namespace is _false_.
+
+There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
+
+When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
+
+
+|comment
+|string
+a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The namespace's consistency group. This property is populated for namespaces that are members of a consistency group. If the namespace is a member of a child consistency group, the parent consistency group is reported.
+A namespace's consistency group is the consistency group of its containing volume.
+
+
+|convert
+|link:#convert[convert]
+a|This sub-object is used in POST to convert a valid in-place LUN to an NVMe namespace. Setting a property in this sub-object indicates that a conversion from the specified LUN to NVMe namespace is desired.
+
+
+|create_time
+|string
+a|The time the NVMe namespace was created.
+
+
+|enabled
+|boolean
+a|The enabled state of the NVMe namespace. Certain error conditions cause the namespace to become disabled. If the namespace is disabled, check the `status.state` property to determine what error disabled the namespace. An NVMe namespace is enabled automatically when it is created.
+
+
+|location
+|link:#location[location]
+a|The location of the NVMe namespace within the ONTAP cluster.
+NVMe namespaces do not support rename, or movement between volumes. Valid in POST.
+
+* Introduced in: 9.6
+* readCreate: 1
+
+
+|name
+|string
+a|The name of the NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+Renaming an NVMe namespace is not supported. Valid in POST.
+
+
+|os_type
+|string
+a|The operating system type of the NVMe namespace.
+
+Required in POST when creating an NVMe namespace that is not a clone of another. Disallowed in POST when creating a namespace clone.
+
+
+|provisioning_options
+|link:#provisioning_options[provisioning_options]
+a|Options that are applied to the operation.
+
+
+|space
+|link:#space[space]
+a|The storage space related properties of the NVMe namespace.
+
+
+|status
+|link:#status[status]
+a|Status information about the NVMe namespace.
+
+
+|subsystem_map
+|link:#subsystem_map[subsystem_map]
+a|The NVMe subsystem with which the NVMe namespace is associated. A namespace can be mapped to zero (0) or one (1) subsystems.
+
+There is an added computational cost to retrieving property values for `subsystem_map`. They are not populated for a GET request unless explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+These properties are supported for GET and POST. During POST, it requires the `provisioning_options.auto` property to be set to true.
+See the `provisioning_options.auto` property for full details.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,256 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_ethernet_switches_endpoint_overview.html'
+summary: 'Manage Ethernet switches'
+---
+
+= Manage Ethernet switches
+
+
+
+== Overview
+
+This endpoint manages Ethernet switches used by ONTAP for monitoring and configuration. You can retrieve, configure, add, or delete Ethernet switches, as well as change SNMP credentials and monitor their status.
+
+== Examples
+
+=== Retrieving a list of Ethernet switches
+
+The following example shows the response with a list of monitored Ethernet switches.  Note that if the _fields=*_ parameter is not specified, the fields snmp.version, snmp.user, version, monitoring.enabled, and monitoring.reason are not returned.
+
+[,json]
+----
+
+# The API:
+/network/ethernet/switches
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ethernet/switches?fields=*" -H  "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "name": "RTP-CS01-510R11(FOC22092K12)",
+    "address": "172.26.207.77",
+    "discovered": true,
+    "model": "NX3232C",
+    "monitoring": {
+      "enabled": true,
+      "monitored": true,
+      "reason": "None"
+    },
+    "network": "cluster",
+    "serial_number": "Unknown",
+    "snmp": {
+      "version": "snmpv2c",
+      "user": "cshm1!"
+    },
+    "version": "Cisco Nexus Operating System (NX-OS) Software, Version 9.2(3)",
+    "role": "cluster",
+    "rcf_version": "RCF NX3232C v1.13 1-CLUSTER",
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/switches/RTP-CS01-510R11%28FOC22092K12%29"
+      }
+    }
+  },
+  {
+    "name": "RTP-CS01-510R12(FOC22373C3P)",
+    "address": "172.26.207.82",
+    "discovered": true,
+    "model": "NX3232C",
+    "monitoring": {
+      "enabled": true,
+      "monitored": true,
+      "reason": "None"
+    },
+    "network": "cluster",
+    "serial_number": "FOC22373C3P",
+    "snmp": {
+      "version": "snmpv2c",
+      "user": "cshm1!"
+    },
+    "version": "Cisco Nexus Operating System (NX-OS) Software, Version 9.2(3)",
+    "role": "cluster",
+    "rcf_version": "RCF NX3232C v1.13 1-CLUSTER",
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/switches/RTP-CS01-510R12%28FOC22373C3P%29"
+      }
+    }
+  },
+  {
+    "name": "RTP-SS01-510R10(FOC22170DFR)",
+    "address": "172.26.207.65",
+    "discovered": true,
+    "model": "NX3232C",
+    "monitoring": {
+      "enabled": true,
+      "monitored": true,
+      "reason": "None"
+    },
+    "network": "storage",
+    "serial_number": "FOC22170DFR",
+    "snmp": {
+      "version": "snmpv2c",
+      "user": "cshm1!"
+    },
+    "version": "Cisco Nexus Operating System (NX-OS) Software, Version 9.3(3)",
+    "role": "storage",
+    "rcf_version": "RCF NX3232C v1.13 1-STORAGE",
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/switches/RTP-SS01-510R10%28FOC22170DFR%29"
+      }
+    }
+  },
+  {
+    "name": "RTP-SS02-510R10(FOC22131U6T)",
+    "address": "172.26.207.66",
+    "discovered": true,
+    "model": "NX3232C",
+    "monitoring": {
+      "enabled": true,
+      "monitored": true,
+      "reason": "None"
+    },
+    "network": "storage",
+    "serial_number": "FOC22131U6T",
+    "snmp": {
+      "version": "snmpv2c",
+      "user": "cshm1!"
+    },
+    "version": "Cisco Nexus Operating System (NX-OS) Software, Version 9.3(3)",
+    "role": "storage",
+    "rcf_version": "RCF NX3232C v1.13 1-STORAGE",
+    "_links": {
+      "self": {
+        "href": "/api/network/ethernet/switches/RTP-SS02-510R10%28FOC22131U6T%29"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/network/ethernet/switches?fields=*"
+  }
+}
+}
+----
+
+=== Retrieving an Ethernet switch
+
+The following example shows the response of the requested Ethernet switch. If there is no Ethernet switch with the requested name, an error is returned.
+
+[,json]
+----
+
+# The API:
+/network/ethernet/switches/{name}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ethernet/switches/RTP-SS02-510R10(FOC22131U6T)?fields=*" -H  "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response:
+{
+"name": "RTP-SS02-510R10(FOC22131U6T)",
+"address": "172.26.207.66",
+"discovered": true,
+"model": "NX3232C",
+"monitoring": {
+  "enabled": true,
+  "monitored": true,
+  "reason": "None"
+},
+"network": "storage",
+"serial_number": "FOC22131U6T",
+"snmp": {
+  "version": "snmpv2c",
+  "user": "cshm1!"
+},
+"version": "Cisco Nexus Operating System (NX-OS) Software, Version 9.3(3)",
+"role": "storage",
+"rcf_version": "RCF NX3232C v1.13 1-STORAGE",
+"_links": {
+  "self": {
+    "href": "/api/network/ethernet/switches/RTP-SS02-510R10(FOC22131U6T)"
+  }
+}
+}
+----
+
+=== Configuring monitoring settings for an Ethernet switch
+
+The following example configures SNMP credential and version settings for an Ethernet switch. If the provided information is not valid, an error is returned.
+
+[,json]
+----
+
+# The API:
+/network/ethernet/switches/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ethernet/switches/sconqa-corduroyl-03" -H "accept: application/hal+json" -H "Content-Type: application/hal+json" -d '{"snmp": {"version": "snmpv2c", "user": "cshm1!"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "f84fbb3c-589c-11ec-b181-d039ea48a7dc",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/f84fbb3c-589c-11ec-b181-d039ea48a7dc"
+    }
+  }
+}
+}
+----
+
+=== Adding an Ethernet switch
+
+The following example adds an Ethernet switch for monitoring. If the provided information is not valid, an error is returned.
+
+[,json]
+----
+
+# The API:
+/network/ethernet/switches
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ethernet/switches" -H "accept: application/hal+json" -H "Content-Type: application/hal+json" -d '{"name": "RTP-SS02-510R10(FOC22131U6T)", "address": "172.26.207.66", "model": "NX3232C", "monitoring": {"enabled": "true"}, "network": "storage", "snmp": {"version": "snmpv2c", "user": "cshm1!"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "f84fbb3c-589c-11ec-b181-d039ea48a7dc",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/f84fbb3c-589c-11ec-b181-d039ea48a7dc"
+    }
+  }
+}
+}
+----
+
+=== Deleting an Ethernet switch
+
+The following example deletes an Ethernet switch. If there is no Ethernet switch with the requested name, an error is returned.
+
+[,json]
+----
+
+# The API:
+/network/ethernet/switches/{name}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/network/ethernet/switches/sconqa-corduroyl-03" -H "accept: application/hal+json" -H "Content-Type: application/hal+json"
+
+# The response:
+{
+}
+----
+
+

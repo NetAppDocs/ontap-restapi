@@ -1,0 +1,449 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-key-managers-keys-key-ids-.html'
+summary: 'Retrieve key management key information for specified keys'
+---
+
+= Retrieve key management key information for specified keys
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/key-managers/{security_key_manager.uuid}/keys/{node.uuid}/key-ids/{key_id}`#
+
+*Introduced In:* 9.11
+
+Retrieves the key management keys information for the specified key_id.
+
+== Related ONTAP commands
+
+* `security key-manager key query -key-id <key_id>`
+* `security key-manager key query -key-id <key_id> -node <node>`
+* `security key-manager key query -key-id <key_id> -node <node> -key-manager <key_manager>`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|security_key_manager.uuid
+|string
+|path
+|True
+a|Key manager UUID.
+
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID.
+
+
+|key_id
+|string
+|path
+|True
+a|Key identifier.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|crn
+|string
+a|Cloud resource name.
+
+
+|encryption_algorithm
+|string
+a|Encryption algorithm for the key
+
+
+|key_id
+|string
+a|Key identifier.
+
+
+|key_manager
+|string
+a|Key manager key server managing the key. Indicates the external key server when external key manager is configured.
+
+
+|key_server
+|string
+a|External key server for key management.
+
+
+|key_store
+|string
+a|Security key manager configured for the given key manager UUID. Key manager keystore value can be onboard or external.
+
+
+|key_store_type
+|string
+a|Security key manager keystore type. Keystore type can be onboard, external, or supported cloud key manager.
+
+
+|key_tag
+|string
+a|Additional information associated with the key.
+
+
+|key_type
+|string
+a|Encryption Key type.
+
+
+|key_user
+|string
+a|SVM associated with the key.
+
+
+|node
+|link:#node[node]
+a|
+
+|policy
+|string
+a|Key store policy.
+
+
+|restored
+|boolean
+a|Indicates whether the key is present locally on the node.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|security_key_manager
+|link:#security_key_manager[security_key_manager]
+a|Security key manager object reference.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "crn": "CRN=v1:bluemix:public:containers-kubernetes",
+  "encryption_algorithm": "XTS-AES-256",
+  "key_id": "000000000000000002000000000001008963c9213194c59555c1bec8db3603c800000000",
+  "key_manager": "keyserver1.local:5696",
+  "key_server": "keyserver1.com:5698",
+  "key_store": "string",
+  "key_store_type": "string",
+  "key_tag": "key#",
+  "key_type": "string",
+  "key_user": "vs1",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "policy": "IBM_Key_Lore",
+  "restored": 1,
+  "scope": "string",
+  "security_key_manager": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563434"
+  },
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#security_key_manager]
+[.api-collapsible-fifth-title]
+security_key_manager
+
+Security key manager object reference.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uuid
+|string
+a|Key manager UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

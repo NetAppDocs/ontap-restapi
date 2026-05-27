@@ -1,0 +1,585 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-accounts.html'
+summary: 'Retrieve user accounts in the cluster'
+---
+
+= Retrieve user accounts in the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/accounts`#
+
+*Introduced In:* 9.6
+
+Retrieves a list of user accounts in the cluster.
+
+== Related ONTAP commands
+
+* `security login show`
+
+== Learn more
+
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|password_hash_algorithm
+|string
+|query
+|False
+a|Filter by password_hash_algorithm
+
+* Introduced in: 9.11
+
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+* Introduced in: 9.7
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+* Introduced in: 9.7
+
+
+|locked
+|boolean
+|query
+|False
+a|Filter by locked
+
+* Introduced in: 9.7
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* Introduced in: 9.7
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+* Introduced in: 9.7
+
+
+|applications.is_ns_switch_group
+|boolean
+|query
+|False
+a|Filter by applications.is_ns_switch_group
+
+* Introduced in: 9.15
+
+
+|applications.second_authentication_method
+|string
+|query
+|False
+a|Filter by applications.second_authentication_method
+
+* Introduced in: 9.7
+
+
+|applications.application
+|string
+|query
+|False
+a|Filter by applications.application
+
+* Introduced in: 9.7
+
+
+|applications.authentication_methods
+|string
+|query
+|False
+a|Filter by applications.authentication_methods
+
+* Introduced in: 9.7
+
+
+|applications.is_ldap_fastbind
+|boolean
+|query
+|False
+a|Filter by applications.is_ldap_fastbind
+
+* Introduced in: 9.14
+
+
+|role.name
+|string
+|query
+|False
+a|Filter by role.name
+
+* Introduced in: 9.7
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* Introduced in: 9.7
+* maxLength: 64
+* minLength: 3
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#account[account]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "applications": [
+        {
+          "application": "string",
+          "authentication_methods": [
+            "string"
+          ],
+          "second_authentication_method": "string"
+        }
+      ],
+      "comment": "string",
+      "name": "joe.smith",
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "password_hash_algorithm": "sha512",
+      "role": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "admin"
+      },
+      "scope": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#account_application]
+[.api-collapsible-fifth-title]
+account_application
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|application
+|string
+a|Applications
+
+
+|authentication_methods
+|array[string]
+a|
+
+|is_ldap_fastbind
+|boolean
+a|Optional property that specifies the mode of authentication as LDAP Fastbind.
+
+
+|is_ns_switch_group
+|boolean
+a|Optional property that specifies whether the user is an LDAP or NIS group.
+
+
+|second_authentication_method
+|string
+a|An optional additional authentication method for multi-factor authentication (MFA). This property is only supported for SSH (_ssh_) and Service Processor (_service_processor_) applications. It is ignored for all other applications. Time-based One-Time Passwords (TOTPs) are only supported with the authentication method password or public key. For the Service Processor (_service_processor_) application, _none_ and _publickey_ are the only supported enum values.
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the user account.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#role]
+[.api-collapsible-fifth-title]
+role
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#account]
+[.api-collapsible-fifth-title]
+account
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|applications
+|array[link:#account_application[account_application]]
+a|
+
+|comment
+|string
+a|Optional comment for the user account.
+
+
+|locked
+|boolean
+a|Locked status of the account.
+
+
+|name
+|string
+a|User or group account name
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the user account.
+
+
+|password_hash_algorithm
+|string
+a|Password hash algorithm used to generate a hash of the user's password for password matching.To modify "password_hash_algorithm", use REST API "/api/security/authentication/password".
+
+
+|role
+|link:#role[role]
+a|
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

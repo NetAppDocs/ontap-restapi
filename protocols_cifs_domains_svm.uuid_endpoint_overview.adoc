@@ -1,0 +1,288 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_domains_svm.uuid_endpoint_overview.html'
+summary: 'Manage CIFS domain-related information'
+---
+
+= Manage CIFS domain-related information
+
+
+
+== Overview
+
+Displays CIFS domain-related information of the specified SVM.
+
+== Examples
+
+=== Retrieving all the fields of CIFS domain configurations of a specific SVM
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/domains/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/domains/6dd78167-c907-11eb-b2bf-0050568e7324" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "6dd78167-c907-11eb-b2bf-0050568e7324",
+  "name": "vs2"
+},
+"name_mapping": {
+  "trusted_domains": [
+    "SERVER03.COM",
+    "SERVER04.COM"
+  ]
+},
+"server_discovery_mode": "all",
+"trust_relationships": [
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "home_domain": "SERVER02.COM",
+    "trusted_domains": [
+      "SERVER02.COM"
+    ]
+  }
+],
+"discovered_servers": [
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "domain": "server02.com",
+    "server_type": "kerberos",
+    "server_name": "scspb0659002001",
+    "server_ip": "192.168.20.1",
+    "preference": "preferred",
+    "state": "undetermined"
+  },
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "domain": "server02.com",
+    "server_type": "ms_ldap",
+    "server_name": "scspb0659002001",
+    "server_ip": "192.168.20.1",
+    "preference": "preferred",
+    "state": "undetermined"
+  },
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "domain": "server02.com",
+    "server_type": "ms_dc",
+    "server_name": "scspb0659002001",
+    "server_ip": "192.168.20.1",
+    "preference": "preferred",
+    "state": "undetermined"
+  }
+],
+"preferred_dcs": [
+  {
+    "fqdn": "server02.com",
+    "server_ip": "192.168.20.1"
+  }
+],
+"password_schedule": {
+  "schedule_enabled": false,
+  "schedule_weekly_interval": 4,
+  "schedule_randomized_minute": 120,
+  "schedule_description": "Tue@1:00"
+}
+}
+----
+
+'''
+
+=== Applying rediscover_trusts query parameter and retrieving all the fields of CIFS domain configurations
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/domains/{svm.uuid}?rediscover_trusts=true
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/domains/6dd78167-c907-11eb-b2bf-0050568e7324?rediscover_trusts=true" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "6dd78167-c907-11eb-b2bf-0050568e7324",
+  "name": "vs2"
+},
+"name_mapping": {
+  "trusted_domains": [
+    "SERVER03.COM",
+    "SERVER04.COM"
+  ]
+},
+"server_discovery_mode": "all",
+"trust_relationships": [
+  {
+    "node": {
+      "name": "vsNode1",
+      "uuid": "a64c0906-c7dd-11eb-af15-0050568e403e"
+    },
+    "home_domain": "SERVER02.COM",
+    "trusted_domains": [
+      "SERVER02.COM"
+    ]
+  },
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "home_domain": "SERVER02.COM",
+    "trusted_domains": [
+      "SERVER02.COM"
+    ]
+  }
+],
+"discovered_servers": [
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "domain": "server02.com",
+    "server_type": "kerberos",
+    "server_name": "scspb0659002001",
+    "server_ip": "192.168.20.1",
+    "preference": "preferred",
+    "state": "undetermined"
+  },
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "domain": "server02.com",
+    "server_type": "ms_ldap",
+    "server_name": "scspb0659002001",
+    "server_ip": "192.168.20.1",
+    "preference": "preferred",
+    "state": "undetermined"
+  },
+  {
+    "node": {
+      "name": "vsNode2",
+      "uuid": "4d9400f0-c84b-11eb-90ab-0050568e7324"
+    },
+    "domain": "server02.com",
+    "server_type": "ms_dc",
+    "server_name": "scspb0659002001",
+    "server_ip": "192.168.20.1",
+    "preference": "preferred",
+    "state": "undetermined"
+  }
+],
+"preferred_dcs": [
+  {
+    "fqdn": "server02.com",
+    "server_ip": "192.168.20.1"
+  }
+],
+"password_schedule": {
+  "schedule_enabled": false,
+  "schedule_weekly_interval": 4,
+  "schedule_randomized_minute": 120,
+  "schedule_description": "Tue@1:00"
+}
+}
+----
+
+'''
+
+=== Modifying the Password Schedule of CIFS domain configurations of a specific SVM
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/domains/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/domains/a83f816a-c873-11ed-a3b2-0050568e278e" -H "accept: application/json" -d "{ \"password_schedule\": { \"schedule_enabled\": \"true\" }}"
+----
+
+'''
+
+=== Modifying the discovery-mode of CIFS domain configurations of a specific SVM
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/domains/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/domains/a83f816a-c873-11ed-a3b2-0050568e278e" -H "accept: application/json" -d "{ \"server_discovery_mode\": \"site\" }"
+----
+
+'''
+
+=== Reset the CIFS domain password for a specific SVM
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/domains/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/domains/a12f816a-c873-11ed-a3b2-0050568e278e?cifs_password_operation=reset" -H "accept: application/json" -d "{ \"ad_domain\":{ \"user\": \"administrator\" , \"password\": \"admin_password\" }}"
+----
+
+'''
+
+=== Reset the CIFS domain password for a specific SVM with hybrid auth user type
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/domains/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/domains/a12f816a-c873-11ed-a3b2-0050568e278e?cifs_password_operation=reset" -H "accept: application/json" -d "{ \"tenant_id\": \"ffffffff-ffff-ffff-ffff-ffffffffffff\" , \"client_id\": \"ffffffff-zzzz-zzzz-zzzz-ffffffffffff\" , \"client_certificate\": \"certificate added to the azure application\" }"
+----
+
+'''
+
+=== Change the CIFS domain password for a specific SVM
+
+'''
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/domains/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/domains/a12f816a-c873-11ed-a3b2-0050568e278e?cifs_password_operation=reset" -H "accept: application/json" -d "{ }"
+----
+
+'''
+
+

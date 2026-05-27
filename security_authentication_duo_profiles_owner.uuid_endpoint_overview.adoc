@@ -1,0 +1,77 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_duo_profiles_owner.uuid_endpoint_overview.html'
+summary: 'Manage Duo profiles for an SVM or cluster'
+---
+
+= Manage Duo profiles for an SVM or cluster
+
+
+
+== Overview
+
+This API configures the Duo profile for an SVM.
+Specify the owner UUID. The owner UUID corresponds to the UUID of the SVM containing the Duo profile and can be obtained from the response body of the GET request performed on the API "`/api/svm/svms".
+
+== Examples
+
+=== Retrieving the specific configured Duo profile of the cluster or SVM
+
+----
+
+# The API:
+GET "/api/security/authentication/duo/profiles/{owner.uuid}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/profiles/f810005a-d908-11ed-a6e6-0050568e8ef2
+
+# the response:
+{
+"owner": {
+"uuid": "f810005a-d908-11ed-a6e6-0050568e8ef2",
+"name": "cluster-1"
+},
+"integration_key": "<INTEGRATION-KEY>",
+"fingerprint": "<FINGERPRINT>",
+"api_host": "api-******.duosecurity.com",
+"status": "Ok",
+"is_enabled": true,
+"auto_push": true,
+"push_info": true,
+"fail_mode": "safe",
+"max_prompts": 1,
+"comment": "Duo profile for Cserver",
+}
+----
+
+=== Modifying the Duo profile
+
+----
+
+# The API:
+PATCH "/api/security/authentication/duo/profiles/{owner.uuid}"
+
+# The call:
+curl -k "https://<mgmt-ip>/api/security/authentication/duo/profiles/f810005a-d908-11ed-a6e6-0050568e8ef2" --request PATCH --data "{  \"comment\": \"Testing\",  \"auto_push\": false}"
+
+# the response:
+{}
+----
+
+=== Deleting the Duo profile
+
+----
+
+# The API:
+DELETE "/api/security/authentication/duo/profiles/{owner.uuid}"
+
+# The call:
+curl -k https://<mgmt-ip>/api/security/authentication/duo/profiles/f810005a-d908-11ed-a6e6-0050568e8ef2 --request DELETE
+
+# the response:
+{}
+----
+
+

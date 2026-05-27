@@ -1,0 +1,272 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_aws-kms_endpoint_overview.html'
+summary: 'Manage AWS KMS'
+---
+
+= Manage AWS KMS
+
+
+
+== Overview
+
+Amazon Web Services Key Management Services (AWS KMS) is a cloud key
+management service (KMS) that provides a secure store for secrets. This
+feature allows ONTAP to securely store its encryption keys using AWS KMS.
+In order to use AWS KMS with ONTAP, you must first create a
+Customer Master Key (CMK) in AWS KMS and provide an Access Key ID and
+Secret Access Key for a user that has appropriate access to the newly
+created CMK in the AWS KMS."
+
+== Examples
+
+=== Enabling AWS KMS for an SVM
+
+The following example shows how to enable AWS KMS at the SVM-scope. Note the _return_records=true_ query parameter is used to obtain the newly created key manager configuration.
+
+----
+
+# The API:
+POST /api/security/aws-kms
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/aws-kms?return_records=true' -H 'accept: application/hal+json' -d '{"svm":{"uuid":"f36ff553-e713-11ea-bd56-005056bb4222" }, "region": "us-east-1", "key_id": "kmip-aws", "access_key_id": "<AWS-ACCESS-KEY-ID>", "secret_access_key": "<AWS-SECRET-ACCESS-KEY>"}'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+    {
+    "uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+    "svm": {
+        "uuid": "f36ff553-e713-11ea-bd56-005056bb4222",
+        "name": "vs0"
+    },
+    "region": "us-east-1",
+    "key_id": "kmip-aws",
+    "access_key_id": "<AWS-ACCESS-KEY-ID>",
+    "_links": {
+        "self": {
+        "href": "/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+            }
+        }
+    }
+]
+}
+----
+
+'''
+
+=== Retrieving all AWS KMS configurations
+
+The following example shows how to retrieve all AWS KMS configurations.
+
+----
+
+# The API:
+GET /api/security/aws-kms
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/aws-kms?fields=*'
+
+# The response:
+{
+"records": [
+    {
+    "uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+    "scope": "svm",
+    "svm": {
+        "uuid": "f36ff553-e713-11ea-bd56-005056bb4222",
+        "name": "vs0"
+    },
+    "region": "us-east-1",
+    "key_id": "kmip-aws",
+    "access_key_id": "<AWS-ACCESS-KEY-ID>",
+    "service": "KMS",
+    "default_domain": "amazonaws.com",
+    "polling_period": 60,
+    "timeout": 10,
+    "_links": {
+        "self": {
+        "href": "/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+            }
+        }
+    }
+],
+"num_records": 1,
+"_links": {
+    "self": {
+    "href": "/api/security/aws-kms?fields=*"
+    }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific AWS KMS configuration
+
+The following example shows how to retrieve information for a specific AWS KMS configuration.
+
+----
+
+# The API:
+GET /api/security/aws-kms/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222?fields=*'
+
+# The response:
+{
+"uuid": "f72098a2-e908-11ea-bd56-005056bb4222",
+"scope": "svm",
+"svm": {
+    "uuid": "f36ff553-e713-11ea-bd56-005056bb4222",
+    "name": "vs0"
+},
+"region": "us-east-1",
+"key_id": "kmip-aws",
+"access_key_id": "<AWS-ACCESS-KEY-ID>",
+"service": "KMS",
+"default_domain": "amazonaws.com",
+"polling_period": 60,
+"timeout": 10,
+"_links": {
+    "self": {
+    "href": "/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222"
+    }
+}
+}
+----
+
+'''
+
+=== Retrieving the advanced properties of an AWS configured for a specific SVM
+
+These values are not retrieved by default with the 'fields=*' option.
+The following example retrieves the advanced properties of a configured AWS for a specific SVM; there is an added computational cost in retrieving their values. The properties are not populated for either a collection GET or an instance GET unless they are explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+----
+
+# The API:
+GET /api/security/aws-kms
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/aws-kms/7052c6c0-a503-11ec-a68f-005056ac75a0/?fields=state,amazon_reachability,ekmip_reachability'
+
+# The response:
+{
+"uuid": "d70efc34-aa13-11ec-a059-005056ac7c32",
+"state": {
+  "cluster_state": true,
+  "message": "",
+  "code": "0"
+},
+"amazon_reachability": {
+  "reachable": true,
+  "message": "",
+  "code": "0"
+},
+"ekmip_reachability": [
+  {
+    "reachable": true,
+    "message": "",
+    "code": "0",
+    "node": {
+      "uuid": "817f544f-a98d-11ec-ae20-005056ac7c32",
+      "name": "node1",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/817f544f-a98d-11ec-ae20-005056ac7c32"
+        }
+      }
+    }
+  },
+  {
+    "reachable": true,
+    "message": "",
+    "code": "0",
+    "node": {
+      "uuid": "84b3f5f3-a98d-11ec-9ff4-005056acfbfe",
+      "name": "node2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/84b3f5f3-a98d-11ec-9ff4-005056acfbfe"
+        }
+      }
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/security/aws-kms/d70efc34-aa13-11ec-a059-005056ac7c32"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the "access_key_id" of a specific AWS KMS configuration
+
+The following example shows how to update the "access_key_id" for a specific AWS KMS configuration.
+
+----
+
+# The API:
+PATCH /api/security/aws-kms/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222/' -d '{"access_key_id": "<AWS-ACCESS-KEY-ID>", "secret_access_key": "<AWS-SECRET-ACCESS-KEY>"}'
+----
+
+'''
+
+=== Updating a specific AWS KMS configuration to allow it to use a proxy.
+
+The following example shows how to update a specific AWS KMS configuration to allow the AWS KMS instance to use a proxy.
+
+----
+
+# The API:
+PATCH /api/security/aws-kms/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222/' -d '{"default_domain": "216.9", "host": "172.20.216.9", "port": 8000, "service": "10", "verify_host": false, "verify_ip": false}'
+----
+
+'''
+
+=== Deleting a specific AWS KMS configuration
+
+The following example shows how to delete a specific AWS KMS configuration.
+
+----
+
+# The API:
+DELETE /api/security/aws-kms/{uuid}
+
+# The call;
+curl -X DELETE 'https://<mgmt-ip>/api/security/aws-kms/f72098a2-e908-11ea-bd56-005056bb4222'
+----
+
+'''
+
+=== Restoring keys from a KMIP server
+
+The following example shows how to restore keys for a AWS KMS configuration.
+
+----
+
+# The API:
+POST /api/security/aws-kms/{uuid}/restore
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/aws-kms/33820b57-ec90-11ea-875e-005056bbf3f0/restore'
+----
+
+'''
+
+

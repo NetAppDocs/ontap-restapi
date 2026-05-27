@@ -1,0 +1,454 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-name-services-dns-.html'
+summary: 'Retrieve the DNS domain and server configuration for an SVM'
+---
+
+= Retrieve the DNS domain and server configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/name-services/dns/{uuid}`#
+
+*Introduced In:* 9.13
+
+Retrieves DNS domain and server configuration of an SVM. By default, both DNS domains and servers are displayed.
+
+== Advanced properties
+
+* 'tld_query_enabled'
+* 'source_address_match'
+* 'packet_query_match'
+* 'status' property retrieves the status of each name server of the DNS configuration for an SVM.
+* 'service_ips' property is displayed only when both service.name and SVM are set.
+
+== Related ONTAP commands
+
+* `vserver services name-service dns show`
+* `vserver services name-service dns check`
+* `vserver services name-service dns dynamic-update show`
+* `vserver services access-check dns srv-lookup`
+
+== Learn more
+
+* link:name-services_dns_endpoint_overview.html[DOC /name-services/dns]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|UUID of the DNS object.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|attempts
+|integer
+a|Number of attempts allowed when querying the DNS name servers.
+
+
+|domains
+|array[string]
+a|A list of DNS domains.
+Domain names have the following requirements:
+
+* The name must contain only the following characters: A through Z,
+a through z, 0 through 9, ".", "-" or "_".
+* The first character of each label, delimited by ".", must be one
+of the following characters: A through Z or a through z or 0
+through 9.
+* The last character of each label, delimited by ".", must be one of
+the following characters: A through Z, a through z, or 0 through 9.
+* The top level domain must contain only the following characters: A
+through Z, a through z.
+* The system reserves the following names:"all", "local", and "localhost".
+
+
+|dynamic_dns
+|link:#dynamic_dns[dynamic_dns]
+a|
+
+|packet_query_match
+|boolean
+a|Indicates whether or not the query section of the reply packet is equal to that of the query packet.
+
+
+|scope
+|string
+a|Set to "svm" for DNS owned by an SVM, otherwise set to "cluster".
+
+
+|servers
+|array[string]
+a|The list of IP addresses of the DNS servers. Addresses can be either
+IPv4 or IPv6 addresses.
+
+
+|service_ips
+|array[string]
+a|List of IP addresses for a DNS service. Addresses can be IPv4, IPv6 or both.
+
+
+|source_address_match
+|boolean
+a|Indicates whether or not the DNS responses are from a different IP address to the IP address the request was sent to.
+
+
+|status
+|array[link:#status[status]]
+a|Status of all the DNS name servers configured for the specified SVM.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|timeout
+|integer
+a|Timeout values for queries to the name servers, in seconds.
+
+
+|tld_query_enabled
+|boolean
+a|Enable or disable top-level domain (TLD) queries.
+
+
+|uuid
+|string
+a|UUID of the DNS object.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "attempts": 1,
+  "domains": [
+    "example.com",
+    "example2.example3.com"
+  ],
+  "dynamic_dns": {
+    "fqdn": "example.com",
+    "time_to_live": "P2D"
+  },
+  "scope": "string",
+  "servers": [
+    "10.224.65.20",
+    "2001:db08:a0b:12f0::1"
+  ],
+  "service_ips": [
+    "10.224.65.20",
+    "2001:db08:a0b:12f0::1"
+  ],
+  "skip_config_validation": true,
+  "status": [
+    {
+      "code": 6684732,
+      "message": "string",
+      "name_server": "10.10.10.10",
+      "state": "up"
+    }
+  ],
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "timeout": 2,
+  "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#dynamic_dns]
+[.api-collapsible-fifth-title]
+dynamic_dns
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Enable or disable Dynamic DNS (DDNS) updates for the specified SVM.
+
+
+|fqdn
+|string
+a|Fully Qualified Domain Name (FQDN) to be used for dynamic DNS updates.
+
+
+|skip_fqdn_validation
+|boolean
+a|Enable or disable FQDN validation.
+
+
+|time_to_live
+|string
+a|Time to live value for the dynamic DNS updates, in an ISO-8601 duration formatted string.
+Maximum Time To Live is 720 hours(P30D in ISO-8601 format) and the default is 24 hours(P1D in ISO-8601 format).
+
+
+|use_secure
+|boolean
+a|Enable or disable secure dynamic DNS updates for the specified SVM.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+Status of each of the DNS name server configured for the specified SVM.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the status message. Code is 0 when the state is 'up'.
+
+
+|message
+|string
+a|Detailed description of the validation state if the state is 'down' or
+the response time of the DNS server if the state is 'up'.
+
+
+|name_server
+|string
+a|The IP address of the DNS server. The address can be either an IPv4 or an IPv6 address.
+
+
+|state
+|string
+a|The validation status of the DNS server.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

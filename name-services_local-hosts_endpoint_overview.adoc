@@ -1,0 +1,207 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_local-hosts_endpoint_overview.html'
+summary: 'Manage local mapping for hostnames'
+---
+
+= Manage local mapping for hostnames
+
+
+
+== Overview
+
+Displays and manages local mapping for hostnames.
+
+== Retrieving all hosts table entries
+
+The local-hosts GET endpoint to retrieve all hosts table entries.
+
+== Examples
+
+=== Retrieving all the fields of all hosts table entries.
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/local-hosts
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/local-hosts?return_records=true&return_timeout=15&fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+ "records": [
+{
+  "owner": {
+  "uuid": "6cdf045c-87ae-11eb-a56a-0050568e0287",
+  "name": "svm1",
+  "_links": {
+     "self": {
+     "href": "/api/svm/svms/6cdf045c-87ae-11eb-a56a-0050568e0287"
+     }
+   }
+  },
+  "address": "1.1.1.1",
+  "hostname": "host.sales.foo.com",
+  "aliases": [
+          "host1.sales.foo.com",
+          "host2.sakes.foo.com"
+  ],
+  "_links": {
+   "self": {
+   "href": "/api/name-services/local-hosts/6cdf045c-87ae-11eb-a56a-0050568e0287/1.1.1.1"
+  }
+  }
+  },
+{
+  "owner": {
+  "uuid": "9d080552-7bff-11eb-a56a-0050568e0287",
+  "name": "svm2",
+  "_links": {
+   "self": {
+   "href": "/api/svm/svms/9d080552-7bff-11eb-a56a-0050568e0287"
+   }
+  }
+  },
+  "address": "2.2.2.2",
+  "hostname": "samplehost2",
+  "_links": {
+  "self": {
+  "href": "/api/name-services/local-hosts/9d080552-7bff-11eb-a56a-0050568e0287/2.2.2.2"
+  }
+  }
+  }
+  ],
+  "num_records": 2,
+  "_links": {
+  "self": {
+  "href": "/api/name-services/local-hosts?return_records=true&return_timeout=15&fields=*"
+  }
+  }
+}
+----
+
+'''
+
+=== Retrieving the hosts table entry of a given svm and address(ipv4/ipv6).
+
+'''
+
+----
+
+# The API:
+GET /api/name-services/local-hosts/{owner.uuid}/{address}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/local-hosts/9d080552-7bff-11eb-a56a-0050568e0287/3.3.3.3" -H "accept: application/hal+json"
+
+# The response:
+{
+ "owner": {
+ "uuid": "9d080552-7bff-11eb-a56a-0050568e0287",
+ "name": "svm1",
+ "_links": {
+"self": {
+  "href": "/api/svm/svms/9d080552-7bff-11eb-a56a-0050568e0287"
+ }
+}
+ },
+ "address": "3.3.3.3",
+ "hostname": "samplehost3",
+ "aliases": [
+ "host1.sales.foo.com",
+ "host2.sakes.foo.com"
+],
+ "_links": {
+ "self": {
+ "href": "/api/name-services/local-hosts/9d080552-7bff-11eb-a56a-0050568e0287/3.3.3.3"
+ }
+ }
+}
+----
+
+'''
+
+== Creating a hosts table entry
+
+The local-hosts POST endpoint creates a new hosts table entry.
+
+== Examples
+
+=== Creating a hosts table entry with all fields.
+
+'''
+
+----
+
+# The API:
+POST /api/name-services/local-hosts
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/local-hosts?return_records=false" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"address\": \"3.3.3.3\", \"aliases\": [ \"host1.sales.foo.com\", \"host2.sakes.foo.com\" ], \"hostname\":\"samplehost3\", \"owner\": { \"name\": \"svm2\", \"uuid\": \"9d080552-7bff-11eb-a56a-0050568e0287\" }}"
+----
+
+'''
+
+=== Creating a hosts table entry with only required fields.
+
+'''
+
+----
+
+# The API:
+POST /api/name-services/local-hosts
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/name-services/local-hosts?return_records=false" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"address\": \"123.123.123.12\", \"hostname\": \"host.sales.foo.com\", \"owner\": { \"name\": \"svm2\", \"uuid\": \"9d080552-7bff-11eb-a56a-0050568e0287\" }}"
+----
+
+'''
+
+== Updating a hosts table entry
+
+'''
+
+The local-hosts PATCH endpoint updates an existing hosts table entry.
+
+== Example
+
+=== Updating aliases and hostname of a given svm and address(ipv4/ipv6).
+
+----
+
+# The API:
+PATCH /api/name-services/local-hosts/{owner.uuid}/{address}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/local-hosts/9d080552-7bff-11eb-a56a-0050568e0287/123.123.123.123" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"aliases\": [ \"host1.sales.foo.com\", \"host2.sakes.foo.com\" ], \"hostname\": \"host.sales.foo.com\"}"
+----
+
+'''
+
+== Deleting a hosts table entry
+
+'''
+
+The local-hosts DELETE endpoint deletes an existing hosts table entry.
+
+== Example
+
+=== Deleting the hosts table entry of a given svm and address(ipv4/ipv6).
+
+----
+
+# The API:
+DELETE /api/name-services/local-hosts/{owner.uuid}/{address}
+
+#The call:
+curl -X DELETE "https://<mgmt-ip>/api/name-services/local-hosts/9d080552-7bff-11eb-a56a-0050568e0287/1.1.1.1" -H "accept: application/json"
+----
+
+'''
+
+

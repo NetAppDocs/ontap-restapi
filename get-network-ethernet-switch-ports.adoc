@@ -1,0 +1,1147 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-ethernet-switch-ports.html'
+summary: 'Retrieve Ethernet switch ports'
+---
+
+= Retrieve Ethernet switch ports
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ethernet/switch/ports`#
+
+*Introduced In:* 9.8
+
+Retrieves the ethernet switch ports.
+
+== Related ONTAP commands
+
+* `system switch ethernet interface show`
+
+== Learn more
+
+* link:network_ethernet_switch_ports_endpoint_overview.html[DOC /network/ethernet/switch/ports]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|switch.name
+|string
+|query
+|False
+a|Filter by switch.name
+
+
+|identity.breakout.physical_port
+|string
+|query
+|False
+a|Filter by identity.breakout.physical_port
+
+* Introduced in: 9.17
+
+
+|identity.breakout.number
+|integer
+|query
+|False
+a|Filter by identity.breakout.number
+
+* Introduced in: 9.17
+
+
+|identity.number
+|integer
+|query
+|False
+a|Filter by identity.number
+
+
+|identity.index
+|integer
+|query
+|False
+a|Filter by identity.index
+
+
+|identity.name
+|string
+|query
+|False
+a|Filter by identity.name
+
+
+|vpc_peer_link
+|boolean
+|query
+|False
+a|Filter by vpc_peer_link
+
+* Introduced in: 9.15
+
+
+|mtu
+|integer
+|query
+|False
+a|Filter by mtu
+
+
+|configured
+|string
+|query
+|False
+a|Filter by configured
+
+
+|isl
+|boolean
+|query
+|False
+a|Filter by isl
+
+
+|duplex_type
+|string
+|query
+|False
+a|Filter by duplex_type
+
+
+|roles.type
+|string
+|query
+|False
+a|Filter by roles.type
+
+* Introduced in: 9.17
+
+
+|roles.dr_group
+|string
+|query
+|False
+a|Filter by roles.dr_group
+
+* Introduced in: 9.17
+
+
+|roles.zone
+|integer
+|query
+|False
+a|Filter by roles.zone
+
+* Introduced in: 9.17
+* Min value: 1
+
+
+|mac_address
+|string
+|query
+|False
+a|Filter by mac_address
+
+
+|speed
+|integer
+|query
+|False
+a|Filter by speed
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|remote_port.functional_roles
+|string
+|query
+|False
+a|Filter by remote_port.functional_roles
+
+* Introduced in: 9.17
+
+
+|remote_port.device.node.name
+|string
+|query
+|False
+a|Filter by remote_port.device.node.name
+
+
+|remote_port.device.node.uuid
+|string
+|query
+|False
+a|Filter by remote_port.device.node.uuid
+
+
+|remote_port.device.discovered_name
+|string
+|query
+|False
+a|Filter by remote_port.device.discovered_name
+
+* Introduced in: 9.17
+
+
+|remote_port.device.dcn.serial_number
+|string
+|query
+|False
+a|Filter by remote_port.device.dcn.serial_number
+
+* Introduced in: 9.18
+
+
+|remote_port.device.dcn.name
+|string
+|query
+|False
+a|Filter by remote_port.device.dcn.name
+
+* Introduced in: 9.18
+
+
+|remote_port.device.dcn.uuid
+|string
+|query
+|False
+a|Filter by remote_port.device.dcn.uuid
+
+* Introduced in: 9.18
+
+
+|remote_port.device.shelf.name
+|string
+|query
+|False
+a|Filter by remote_port.device.shelf.name
+
+* Introduced in: 9.12
+
+
+|remote_port.device.shelf.uid
+|string
+|query
+|False
+a|Filter by remote_port.device.shelf.uid
+
+
+|remote_port.device.shelf.module
+|string
+|query
+|False
+a|Filter by remote_port.device.shelf.module
+
+* Introduced in: 9.12
+
+
+|remote_port.mtu
+|integer
+|query
+|False
+a|Filter by remote_port.mtu
+
+
+|remote_port.name
+|string
+|query
+|False
+a|Filter by remote_port.name
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.17
+
+
+|statistics.transmit_raw.discards
+|integer
+|query
+|False
+a|Filter by statistics.transmit_raw.discards
+
+
+|statistics.transmit_raw.errors
+|integer
+|query
+|False
+a|Filter by statistics.transmit_raw.errors
+
+
+|statistics.transmit_raw.packets
+|integer
+|query
+|False
+a|Filter by statistics.transmit_raw.packets
+
+
+|statistics.receive_raw.discards
+|integer
+|query
+|False
+a|Filter by statistics.receive_raw.discards
+
+
+|statistics.receive_raw.errors
+|integer
+|query
+|False
+a|Filter by statistics.receive_raw.errors
+
+
+|statistics.receive_raw.packets
+|integer
+|query
+|False
+a|Filter by statistics.receive_raw.packets
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|vlan_id
+|integer
+|query
+|False
+a|Filter by vlan_id
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Min value: 0
+* Default value: 15
+* Max value: 120
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#collection_links[collection_links]
+a|
+
+|num_records
+|integer
+a|Number of Records
+
+
+|records
+|array[link:#switch_port[switch_port]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "configured": "string",
+      "duplex_type": "string",
+      "identity": {
+        "breakout": {
+          "number": 1,
+          "physical_port": "Ethernet1/9"
+        },
+        "index": 0,
+        "name": "string",
+        "number": 0
+      },
+      "mac_address": "string",
+      "mtu": 0,
+      "remote_port": {
+        "device": {
+          "dcn": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "node1",
+            "serial_number": "4048820-60-9",
+            "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+          },
+          "discovered_name": "stiA400-311",
+          "node": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "node1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "shelf": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "module": "string",
+            "name": "1.1",
+            "uid": "12439000444923584512"
+          }
+        },
+        "functional_roles": [
+          "string"
+        ],
+        "mtu": 0,
+        "name": "string"
+      },
+      "roles": [
+        {
+          "dr_group": "string",
+          "type": "string"
+        }
+      ],
+      "speed": 0,
+      "state": "string",
+      "statistics": {
+        "receive_raw": {
+          "discards": 100,
+          "errors": 200,
+          "packets": 500
+        },
+        "timestamp": "2024-11-18 15:52:17 +0000",
+        "transmit_raw": {
+          "discards": 100,
+          "errors": 200,
+          "packets": 500
+        }
+      },
+      "switch": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "RTP-SS01-510R03(FOC223443KQ)"
+      },
+      "type": "string",
+      "vlan_id": [
+        "integer"
+      ]
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#breakout]
+[.api-collapsible-fifth-title]
+breakout
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|number
+|integer
+a|Breakout port sub-interface number.
+
+
+|physical_port
+|string
+a|Breakout physical port name.
+
+
+|===
+
+
+[#identity]
+[.api-collapsible-fifth-title]
+identity
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|breakout
+|link:#breakout[breakout]
+a|
+
+|index
+|integer
+a|Interface Index.
+
+
+|name
+|string
+a|Interface Name.
+
+
+|number
+|integer
+a|Interface Number.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#dcn]
+[.api-collapsible-fifth-title]
+dcn
+
+Compute node connected to this port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Compute node name.
+
+
+|serial_number
+|string
+a|Compute node serial number.
+
+
+|uuid
+|string
+a|Compute node UUID.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#shelf]
+[.api-collapsible-fifth-title]
+shelf
+
+Shelf connected to this port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|module
+|string
+a|Shelf module connected to this port.
+
+
+|name
+|string
+a|
+
+|uid
+|string
+a|
+
+|===
+
+
+[#device]
+[.api-collapsible-fifth-title]
+device
+
+Device connected to port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dcn
+|link:#dcn[dcn]
+a|Compute node connected to this port.
+
+
+|discovered_name
+|string
+a|Raw name of the discovered device.
+
+
+|node
+|link:#node[node]
+a|
+
+|shelf
+|link:#shelf[shelf]
+a|Shelf connected to this port.
+
+
+|===
+
+
+[#remote_port]
+[.api-collapsible-fifth-title]
+remote_port
+
+Remote port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|device
+|link:#device[device]
+a|Device connected to port.
+
+
+|functional_roles
+|array[string]
+a|
+
+|mtu
+|integer
+a|MTU in octets.
+
+
+|name
+|string
+a|Remote port name.
+
+
+|===
+
+
+[#roles]
+[.api-collapsible-fifth-title]
+roles
+
+Allowed use for this port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|dr_group
+|string
+a|DR group.
+
+
+|type
+|string
+a|Allowed use type.
+
+
+|zone
+|integer
+a|Zone ID to differentiate between roles with the same type.
+
+
+|===
+
+
+[#receive_raw]
+[.api-collapsible-fifth-title]
+receive_raw
+
+Packet receive counters for the Ethernet port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|discards
+|integer
+a|Total number of discarded packets.
+
+
+|errors
+|integer
+a|Number of packet errors.
+
+
+|packets
+|integer
+a|Total packet count.
+
+
+|===
+
+
+[#transmit_raw]
+[.api-collapsible-fifth-title]
+transmit_raw
+
+Packet transmit counters for the Ethernet port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|discards
+|integer
+a|Total number of discarded packets.
+
+
+|errors
+|integer
+a|Number of packet errors.
+
+
+|packets
+|integer
+a|Total packet count.
+
+
+|===
+
+
+[#statistics]
+[.api-collapsible-fifth-title]
+statistics
+
+These are raw counters for the device associated with the Ethernet port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|receive_raw
+|link:#receive_raw[receive_raw]
+a|Packet receive counters for the Ethernet port.
+
+
+|timestamp
+|string
+a|The time the statistics were gathered.
+
+
+|transmit_raw
+|link:#transmit_raw[transmit_raw]
+a|Packet transmit counters for the Ethernet port.
+
+
+|===
+
+
+[#switch]
+[.api-collapsible-fifth-title]
+switch
+
+The name of the specified cluster or storage switch.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|name
+|string
+a|
+
+|===
+
+
+[#switch_port]
+[.api-collapsible-fifth-title]
+switch_port
+
+Ethernet Switch Port REST API
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|configured
+|string
+a|Administrative Status.
+
+
+|duplex_type
+|string
+a|Duplex Settings.
+
+
+|identity
+|link:#identity[identity]
+a|
+
+|isl
+|boolean
+a|Is configured as an ISL link.
+
+
+|mac_address
+|string
+a|MAC Address.
+
+
+|mtu
+|integer
+a|MTU.
+
+
+|remote_port
+|link:#remote_port[remote_port]
+a|Remote port.
+
+
+|roles
+|array[link:#roles[roles]]
+a|
+
+|speed
+|integer
+a|Interface Speed(Mbps).
+
+
+|state
+|string
+a|Operational Status.
+
+
+|statistics
+|link:#statistics[statistics]
+a|These are raw counters for the device associated with the Ethernet port.
+
+
+|switch
+|link:#switch[switch]
+a|The name of the specified cluster or storage switch.
+
+
+|type
+|string
+a|Interface Type.
+
+
+|vlan_id
+|array[integer]
+a|
+
+|vpc_peer_link
+|boolean
+a|Is configured as a Virtual Port Channel (vPC) peer-link.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

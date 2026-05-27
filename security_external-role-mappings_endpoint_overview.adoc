@@ -1,0 +1,56 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_external-role-mappings_endpoint_overview.html'
+summary: 'Manage external-role-mapping entries'
+---
+
+= Manage external-role-mapping entries
+
+
+
+=== Overview
+
+This API is used to map external identity provider roles to ONTAP roles. The POST request creates an external role to ONTAP role mapping. Various responses are shown in the examples below.
+
+=== Examples
+
+=== Creating an external role to ONTAP role mapping entry
+
+The following output shows how to create an external role to ONTAP role mapping entry.
+
+----
+
+# The API
+/api/security/external-role-mappings
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/external-role-mappings" -d '{ "external_role": "Administrator", "ontap_role": { "name": "admin" }, "provider": "adfs", "comment": "Admin role" }'
+----
+
+=== Retrieving all external role to ONTAP role mapping entries
+
+The following output shows all external role to ONTAP role mapping entries.
+
+----
+
+# The API
+/api/security/external-role-mappings
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/external-role-mappings"
+
+# The response:
+{
+ "records": [
+ {
+   "external_role": "Administrator",
+   "provider": "adfs"
+ }
+ ],
+ "num_records": 1
+}
+----
+
+

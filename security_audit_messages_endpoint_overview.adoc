@@ -1,0 +1,73 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_audit_messages_endpoint_overview.html'
+summary: 'View administrative audit logs'
+---
+
+= View administrative audit logs
+
+
+
+== Overview
+
+These APIs return audit log records. The GET requests retrieves all audit log records. An audit log record contains information such as timestamp, node name, index and so on.
+ +
+
+'''
+
+== Example
+
+=== Retrieving audit log records
+
+The following example shows the audit log records.
+Note: The index field is used to order the audit log messages before they are displayed. If multiple entries for the same node and timestamp occur simultaneously, the index assigns an order to ensure logical consistency.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/audit/messages
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/audit/messages"
+
+# The response:
+{
+"records": [
+  {
+    "timestamp": "2019-03-08T11:03:32-05:00",
+    "node": {
+      "name": "node1",
+      "uuid": "bc9af9da-41bb-11e9-a3db-005056bb27cf",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/bc9af9da-41bb-11e9-a3db-005056bb27cf"
+        }
+      }
+    },
+    "index": 4294967299,
+    "application": "http",
+    "location": "172.21.16.89",
+    "user": "admin",
+    "input": "GET /api/security/audit/destinations/",
+    "state": "pending",
+    "scope": "cluster",
+    "role": "admin"
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/audit/messages"
+  }
+}
+}
+----
+
+'''
+
+

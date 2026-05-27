@@ -1,0 +1,187 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-protocols-nfs-kerberos-realms-.html'
+summary: 'Delete a Kerberos realm'
+---
+
+= Delete a Kerberos realm
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/protocols/nfs/kerberos/realms/{svm.uuid}/{name}`#
+
+*Introduced In:* 9.6
+
+Deletes a Kerberos realm.
+
+* `vserver nfs kerberos realm delete`
+
+== Learn more
+
+* link:protocols_nfs_kerberos_realms_endpoint_overview.html[DOC /protocols/nfs/kerberos/realms]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|SVM UUID
+
+
+|name
+|string
+|path
+|True
+a|Kerberos realm
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error codes | Description
+
+| 1966125
+| Failed to remove hosts entry.
+
+| 1966126
+| Failed to lookup hosts entry.
+
+| 2949141
+| Failed to lookup Kerberos realm.
+
+| 2949142
+| Failed to remove Kerberos realm.
+
+| 3276942
+| Service principal name is invalid. It must of the format:"nfs/+++<LIF-FQDN>+++@REALM\\\"+++</LIF-FQDN>+++
+
+| 3276976
+| "realm" is a required input
+
+| 3276998
+| Only the data Vservers can own NFS Kerberos realms.
+|===
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

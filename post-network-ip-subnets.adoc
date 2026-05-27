@@ -1,0 +1,596 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-network-ip-subnets.html'
+summary: 'Create a new named subnet'
+---
+
+= Create a new named subnet
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/network/ip/subnets`#
+
+*Introduced In:* 9.11
+
+Creates a new named subnet.
+
+== Required properties
+
+* `name` - Name of the subnet to create.
+* `broadcast_domain` - Broadcast domain containing the subnet.
+* `ipspace` - IPspace containing the subnet. Required only if `broadcast_domain.uuid` is not provided.
+* `subnet.address` - IP address for the subnet.
+* `subnet.netmask` - IP netmask of the subnet.
+
+== Recommended property values
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `gateway` - no gateway
+* `ip_ranges` - empty
+* `fail_if_lifs_conflict` - _true_
+
+== Related ONTAP commands
+
+* `network subnet create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available_count
+|integer
+a|
+
+|available_ip_ranges
+|array[link:#ip_address_range[ip_address_range]]
+a|
+
+|broadcast_domain
+|link:#broadcast_domain[broadcast_domain]
+a|The broadcast domain that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+|fail_if_lifs_conflict
+|boolean
+a|This action will fail if any existing interface is using an IP address in the ranges provided. Set this to false to associate any manually addressed interfaces with the subnet and allow the action to succeed.
+
+
+|gateway
+|string
+a|The IP address of the gateway for this subnet.
+
+
+|ip_ranges
+|array[link:#ip_address_range[ip_address_range]]
+a|
+
+|ipspace
+|link:#ipspace[ipspace]
+a|The IPspace that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+|name
+|string
+a|Subnet name
+
+
+|subnet
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|total_count
+|integer
+a|
+
+|used_count
+|integer
+a|
+
+|uuid
+|string
+a|The UUID that uniquely identifies the subnet.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "available_count": 0,
+  "available_ip_ranges": [
+    {
+      "end": "10.10.10.7",
+      "start": "10.10.10.7"
+    }
+  ],
+  "broadcast_domain": {
+    "name": "bd1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "gateway": "10.1.1.1",
+  "ip_ranges": [
+    {
+      "end": "10.10.10.7",
+      "start": "10.10.10.7"
+    }
+  ],
+  "ipspace": {
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "subnet1",
+  "subnet": {
+    "address": "10.10.10.7",
+    "netmask": "24"
+  },
+  "total_count": 0,
+  "used_count": 0,
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#ip_subnet[ip_subnet]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "available_count": 0,
+      "available_ip_ranges": [
+        {
+          "end": "10.10.10.7",
+          "start": "10.10.10.7"
+        }
+      ],
+      "broadcast_domain": {
+        "name": "bd1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "gateway": "10.1.1.1",
+      "ip_ranges": [
+        {
+          "end": "10.10.10.7",
+          "start": "10.10.10.7"
+        }
+      ],
+      "ipspace": {
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "subnet1",
+      "subnet": {
+        "address": "10.10.10.7",
+        "netmask": "24"
+      },
+      "total_count": 0,
+      "used_count": 0,
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1377658
+| Invalid gateway for subnet in IPspace.
+
+| 1377659
+| Subnet would overlap with existing subnet named in IPspace.
+
+| 1377660
+| A subnet with the name already exists in the IPspace.
+
+| 1377661
+| Subnet in IPspace cannot use subnet address because that address is already used by another subnet in the same IPspace.
+
+| 1377662
+| The IP range address is not within the subnet in IPspace.
+
+| 1377663
+| The specified IP address range of subnet in IPspace contains an address already in use by a LIF.
+
+| 1377664
+| The specified IP address range of subnet in IPspace contains an address already in use by the Service Processor.
+
+| 1377673
+| The addresses provided must have the same address family.
+
+| 1377675
+| The netmask of the interface did not match the netmask of the subnet.
+
+| 1377681
+| Cannot update LIF associations for LIF. The broadcast domain of the LIF does not match the broadcast domain of the subnet.
+
+| 1377682
+| IPv6 is not enabled in the cluster.
+
+| 1966269
+| IPv4 Addresses must have a prefix length between 1 and 32.
+
+| 1967082
+| The specified ipspace.name does not match the IPspace name of specified ipspace.uuid
+
+| 53282568
+| The subnet.address must be specified together with subnet.netmask.
+
+| 53282569
+| The specified subnet.netmask is not valid.
+
+| 53282570
+| Each pair of ranges must have ip_ranges.start less than or equal to ip_ranges.end.
+
+| 53282571
+| The ip_ranges.start and ip_ranges.end fields must have the same number of items.
+
+| 53282573
+| Broadcast domain is a required parameter. The broadcast_domain.name and/or the broadcast_domain.uuid must be specified.
+
+| 53282574
+| The specified broadcast_domain and ipspace parameters do not match.
+
+| 53282575
+| Operation might have left configuration in an inconsistent state. Unable to set UUID for created entry.
+
+| 53282576
+| The specified ipspace.uuid is invalid.
+
+| 53282577
+| The specified broadcast_domain.uuid is invalid.
+
+| 53282578
+| The specified broadcast_domain.name does not match the IPspace name of specified broadcast_domain.uuid
+
+| 53282579
+| Missing the ipspace.name or ipspace.uuid parameter.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ip_address_range]
+[.api-collapsible-fifth-title]
+ip_address_range
+
+IP address range
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|end
+|string
+a|IPv4 or IPv6 address
+
+
+|start
+|string
+a|IPv4 or IPv6 address
+
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+The broadcast domain that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+The IPspace that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#ip_info]
+[.api-collapsible-fifth-title]
+ip_info
+
+IP information
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#ip_subnet]
+[.api-collapsible-fifth-title]
+ip_subnet
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|available_count
+|integer
+a|
+
+|available_ip_ranges
+|array[link:#ip_address_range[ip_address_range]]
+a|
+
+|broadcast_domain
+|link:#broadcast_domain[broadcast_domain]
+a|The broadcast domain that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+|fail_if_lifs_conflict
+|boolean
+a|This action will fail if any existing interface is using an IP address in the ranges provided. Set this to false to associate any manually addressed interfaces with the subnet and allow the action to succeed.
+
+
+|gateway
+|string
+a|The IP address of the gateway for this subnet.
+
+
+|ip_ranges
+|array[link:#ip_address_range[ip_address_range]]
+a|
+
+|ipspace
+|link:#ipspace[ipspace]
+a|The IPspace that the subnet is associated with. Either the UUID or name must be supplied on POST.
+
+
+|name
+|string
+a|Subnet name
+
+
+|subnet
+|link:#ip_info[ip_info]
+a|IP information
+
+
+|total_count
+|integer
+a|
+
+|used_count
+|integer
+a|
+
+|uuid
+|string
+a|The UUID that uniquely identifies the subnet.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

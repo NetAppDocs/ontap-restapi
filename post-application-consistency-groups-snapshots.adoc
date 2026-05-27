@@ -1,0 +1,783 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-application-consistency-groups-snapshots.html'
+summary: 'Create a consistency group snapshot'
+---
+
+= Create a consistency group snapshot
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/application/consistency-groups/{consistency_group.uuid}/snapshots`#
+
+*Introduced In:* 9.10
+
+Creates a snapshot of an existing consistency group.
+
+== Required properties
+
+* `consistency_group.uuid` - Existing consistency group UUID in which to create the snapshot.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|consistency_group.uuid
+|string
+|path
+|True
+a|The unique identifier of the consistency group to retrieve.
+
+
+|action
+|string
+|query
+|False
+a|Initiates the snapshot create operation. The start of the snapshot operation can optionally use a timeout value specified by "action_timeout". The snapshot is committed by calling PATCH on the snapshot href link with action specified as "commit".
+
+* Introduced in: 9.11
+* enum: ["start"]
+
+
+|action_timeout
+|integer
+|query
+|False
+a|Duration to complete the 2-phase snapshot operation. This also specifies the maximum duration that the write-fence remains in effect on the volumes associated with this consistency group. Default is 7 seconds with a valid range of 5 to 120 seconds.
+
+* Introduced in: 9.11
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Comment for the snapshot.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The consistency group of the snapshot.
+
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Time the snapshot copy was created
+
+
+|is_partial
+|boolean
+a|Indicates whether the snapshot taken is partial or not.
+
+
+|luns
+|array[link:#luns[luns]]
+a|The list of LUNs in this snapshot.
+
+
+|missing_luns
+|array[link:#lun_reference[lun_reference]]
+a|List of LUNs that are not in the snapshot.
+
+
+|missing_namespaces
+|array[link:#missing_namespaces[missing_namespaces]]
+a|List of NVMe namespaces that are not in the snapshot.
+
+
+|missing_volumes
+|array[link:#volume_reference[volume_reference]]
+a|List of volumes which are not in the snapshot.
+
+
+|name
+|string
+a|Name of the snapshot.
+
+
+|namespaces
+|array[link:#namespaces[namespaces]]
+a|The list of NVMe namespaces in this snapshot.
+
+
+|reclaimable_space
+|integer
+a|Space reclaimed when the snapshot is deleted, in bytes.
+
+
+|restore_size
+|integer
+a|Size of the consistency group if this snapshot is restored.
+
+
+|snapmirror_label
+|string
+a|Snapmirror Label for the snapshot.
+
+
+|snapshot_volumes
+|array[link:#consistency_group_volume_snapshot[consistency_group_volume_snapshot]]
+a|List of volume and snapshot identifiers for each volume in the snapshot.
+
+
+|svm
+|link:#svm_reference[svm_reference]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier of the snapshot. The UUID is generated
+by ONTAP when the snapshot is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|write_fence
+|boolean
+a|Specifies whether a write fence will be taken when creating the snapshot. The default is false if there is only one volume in the consistency group, otherwise the default is true.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "comment": "My snapshot comment",
+  "consistency_group": {
+    "name": "my_consistency_group",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "consistency_type": "crash",
+  "create_time": "2020-10-25 11:20:00 +0000",
+  "is_partial": "",
+  "luns": [
+    {
+      "name": "/vol/volume1/lun1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "missing_luns": [
+    {
+      "name": "/vol/volume1/lun1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "missing_namespaces": [
+    {
+      "name": "/vol/volume1/namespace1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "missing_volumes": [
+    {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    }
+  ],
+  "name": "string",
+  "namespaces": [
+    {
+      "name": "/vol/volume1/namespace1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "reclaimable_space": 0,
+  "restore_size": 4096,
+  "snapmirror_label": "sm_label",
+  "snapshot_volumes": [
+    {
+      "snapshot": {
+        "name": "this_snapshot",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "volume": {
+        "name": "volume1",
+        "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+      }
+    }
+  ],
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 53411918
+| Snapshot operation not permitted.
+
+| 53411921
+| Failed to create snapshot for consistency group.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#consistency_group]
+[.api-collapsible-fifth-title]
+consistency_group
+
+The consistency group of the snapshot.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the consistency group.
+
+
+|uuid
+|string
+a|The unique identifier of the consistency group.
+
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#luns]
+[.api-collapsible-fifth-title]
+luns
+
+A reference to a LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#lun_reference]
+[.api-collapsible-fifth-title]
+lun_reference
+
+A reference to a LUN.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of a LUN.
+A LUN is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+LUN names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN.
+
+
+|===
+
+
+[#missing_namespaces]
+[.api-collapsible-fifth-title]
+missing_namespaces
+
+A reference to a namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of an NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#volume_reference]
+[.api-collapsible-fifth-title]
+volume_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#namespaces]
+[.api-collapsible-fifth-title]
+namespaces
+
+A reference to a namespace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of an NVMe namespace.
+An NVMe namespace is located within a volume. Optionally, it can be located within a qtree in a volume.
+
+NVMe namespace names are paths of the form "/vol/<volume>[/<qtree>]/<namespace>" where the qtree name is optional.
+
+
+|uuid
+|string
+a|The unique identifier of the NVMe namespace.
+
+
+|===
+
+
+[#snapshot_reference]
+[.api-collapsible-fifth-title]
+snapshot_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#consistency_group_volume_snapshot]
+[.api-collapsible-fifth-title]
+consistency_group_volume_snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|snapshot
+|link:#snapshot_reference[snapshot_reference]
+a|
+
+|volume
+|link:#volume_reference[volume_reference]
+a|
+
+|===
+
+
+[#svm_reference]
+[.api-collapsible-fifth-title]
+svm_reference
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#consistency_group_snapshot]
+[.api-collapsible-fifth-title]
+consistency_group_snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|comment
+|string
+a|Comment for the snapshot.
+
+
+|consistency_group
+|link:#consistency_group[consistency_group]
+a|The consistency group of the snapshot.
+
+
+|consistency_type
+|string
+a|Consistency type. This is for categorization purposes only. A snapshot should not be set to 'application consistent' unless the host application is quiesced for the snapshot. Valid in POST.
+
+
+|create_time
+|string
+a|Time the snapshot copy was created
+
+
+|is_partial
+|boolean
+a|Indicates whether the snapshot taken is partial or not.
+
+
+|luns
+|array[link:#luns[luns]]
+a|The list of LUNs in this snapshot.
+
+
+|missing_luns
+|array[link:#lun_reference[lun_reference]]
+a|List of LUNs that are not in the snapshot.
+
+
+|missing_namespaces
+|array[link:#missing_namespaces[missing_namespaces]]
+a|List of NVMe namespaces that are not in the snapshot.
+
+
+|missing_volumes
+|array[link:#volume_reference[volume_reference]]
+a|List of volumes which are not in the snapshot.
+
+
+|name
+|string
+a|Name of the snapshot.
+
+
+|namespaces
+|array[link:#namespaces[namespaces]]
+a|The list of NVMe namespaces in this snapshot.
+
+
+|reclaimable_space
+|integer
+a|Space reclaimed when the snapshot is deleted, in bytes.
+
+
+|restore_size
+|integer
+a|Size of the consistency group if this snapshot is restored.
+
+
+|snapmirror_label
+|string
+a|Snapmirror Label for the snapshot.
+
+
+|snapshot_volumes
+|array[link:#consistency_group_volume_snapshot[consistency_group_volume_snapshot]]
+a|List of volume and snapshot identifiers for each volume in the snapshot.
+
+
+|svm
+|link:#svm_reference[svm_reference]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The unique identifier of the snapshot. The UUID is generated
+by ONTAP when the snapshot is created.
+
+* example: 1cd8a442-86d1-11e0-ae1c-123478563412
+* readOnly: 1
+* Introduced in: 9.10
+* x-nullable: true
+
+
+|write_fence
+|boolean
+a|Specifies whether a write fence will be taken when creating the snapshot. The default is false if there is only one volume in the consistency group, otherwise the default is true.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

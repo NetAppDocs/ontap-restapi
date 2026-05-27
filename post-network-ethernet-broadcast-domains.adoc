@@ -1,0 +1,377 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-network-ethernet-broadcast-domains.html'
+summary: 'Create a new broadcast domain'
+---
+
+= Create a new broadcast domain
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/network/ethernet/broadcast-domains`#
+
+*Introduced In:* 9.6
+
+Creates a new broadcast domain.
+
+== Required properties
+
+* `name` - Name of the broadcast-domain to create.
+* `mtu` - Maximum transmission unit (MTU) of the broadcast domain.
+
+== Recommended optional properties
+
+* `ipspace.name` or `ipspace.uuid` - IPspace the broadcast domain belongs to.
+
+== Default property values
+
+If not specified in POST, the following default property values are assigned:
+
+* `ipspace` - _Default_
+
+== Related ONTAP commands
+
+* `network port broadcast-domain create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name is supplied on input.
+
+
+|mtu
+|integer
+a|Maximum transmission unit, largest packet size on this network
+
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|ports
+|array[link:#ports[ports]]
+a|Ports that belong to the broadcast domain
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "ipspace": {
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "mtu": 1500,
+  "name": "bd1",
+  "ports": [
+    {
+      "name": "e1b",
+      "node": {
+        "name": "node1"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1377267
+| The specified IPspace does not exist.
+
+| 1377596
+| The Cluster IPspace cannot contain more than one broadcast domain. Modifying the system IPspace Cluster is not supported.
+
+| 1966460
+| The provided MTU was either too large or too small.
+
+| 1967082
+| The specified ipspace.name does not match the IPspace name of ipspace.uuid.
+
+| 1967102
+| A POST operation might have left the configuration in an inconsistent state. Check the configuration.
+
+| 1967104
+| Invalid IPspace UUID.
+
+| 53281982
+| The specified broadcast domain name is reserved by the system.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Applies to both SVM and cluster-scoped objects. Either the UUID or name is supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+Port UUID along with readable names
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#broadcast_domain]
+[.api-collapsible-fifth-title]
+broadcast_domain
+
+Set of ports that will receive a broadcast Ethernet packet from any of them
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ipspace
+|link:#ipspace[ipspace]
+a|Applies to both SVM and cluster-scoped objects. Either the UUID or name is supplied on input.
+
+
+|mtu
+|integer
+a|Maximum transmission unit, largest packet size on this network
+
+
+|name
+|string
+a|Name of the broadcast domain, scoped to its IPspace
+
+
+|ports
+|array[link:#ports[ports]]
+a|Ports that belong to the broadcast domain
+
+
+|uuid
+|string
+a|Broadcast domain UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

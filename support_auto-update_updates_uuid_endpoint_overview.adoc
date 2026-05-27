@@ -1,0 +1,96 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_auto-update_updates_uuid_endpoint_overview.html'
+summary: 'Manage automatic updates'
+---
+
+= Manage automatic updates
+
+
+
+== Overview
+
+Use this API to retrieve the status for a specific automatic package update.
+
+This API supports GET and PATCH calls. PATCH can be used to perform an action on an automatic update.
+
+'''
+
+== Examples
+
+=== Retrieving the status of an update
+
+The following example shows how to retrieve the status of an automatic update:
+
+[,json]
+----
+
+# The API:
+GET /support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d"
+
+# The response:
+{
+"uuid" : "440ae2e4-fd8f-4225-9bee-94e2da3f8d9d",
+"package_id" : "572361f3-e769-439d-9c04-2ba48a08ff47",
+"content_type" : "disk_fw",
+"content_category" : "Firmware",
+"description" : "disk_fw version 3.0",
+"state" : "downloading",
+"creation_time" : "2020-12-01T09:12:03Z",
+"expiry_time" : "2021-06-01T09:12:03Z",
+"last_state_change_time" : "2020-12-01T09:12:23Z",
+"start_time" : "2020-12-01T09:12:23Z",
+"percent_complete": 25,
+"remaining_time": "PT1M30S",
+"status": {
+    "message": "Get-url request to AutoSupport OnDemand Server failed. Error: Couldn't connect to server.",
+    "code": "8650878"
+},
+"_links": {
+  "self": {
+    "href": "/support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the state of an automatic update
+
+The following example shows how to trigger an automatic update that is waiting for user confirmation:
+
+[,json]
+----
+
+# The API:
+PATCH /support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d?action=schedule_now" -H "accept: application/hal+json"
+
+# The response:
+200 OK
+----
+
+The following example shows how to dismiss an automatic update that is waiting for user confirmation:
+
+[,json]
+----
+
+# The API:
+PATCH /support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/auto-update/updates/440ae2e4-fd8f-4225-9bee-94e2da3f8d9d?action=dismiss" -H "accept: application/hal+json"
+
+# Response
+200 OK
+----
+
+

@@ -1,0 +1,532 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-aggregates-cloud-stores.html'
+summary: 'Retrieve a collection of cloud stores used by an aggregate'
+---
+
+= Retrieve a collection of cloud stores used by an aggregate
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/aggregates/{aggregate.uuid}/cloud-stores`#
+
+*Introduced In:* 9.6
+
+Retrieves the collection of cloud stores used by an aggregate.
+
+== Related ONTAP commands
+
+* `storage aggregate object-store show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|aggregate.uuid
+|string
+|path
+|True
+a|Aggregate UUID
+
+
+|used
+|integer
+|query
+|False
+a|Filter by used
+
+
+|availability_at_partner
+|string
+|query
+|False
+a|Filter by availability_at_partner
+
+* Introduced in: 9.15
+
+
+|unavailable_reason.message
+|string
+|query
+|False
+a|Filter by unavailable_reason.message
+
+* Introduced in: 9.7
+
+
+|availability
+|string
+|query
+|False
+a|Filter by availability
+
+
+|target.uuid
+|string
+|query
+|False
+a|Filter by target.uuid
+
+
+|target.name
+|string
+|query
+|False
+a|Filter by target.name
+
+
+|primary
+|boolean
+|query
+|False
+a|Filter by primary
+
+
+|resync-progress
+|integer
+|query
+|False
+a|Filter by resync-progress
+
+* Introduced in: 9.14
+
+
+|mirror_degraded
+|boolean
+|query
+|False
+a|Filter by mirror_degraded
+
+
+|aggregate.name
+|string
+|query
+|False
+a|Filter by aggregate.name
+
+* Introduced in: 9.9
+
+
+|unreclaimed_space_threshold
+|integer
+|query
+|False
+a|Filter by unreclaimed_space_threshold
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cloud_store[cloud_store]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "aggregate": {
+        "name": "aggr1"
+      },
+      "availability": "string",
+      "availability_at_partner": "string",
+      "resync-progress": 0,
+      "target": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "target1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "unavailable_reason": {
+        "message": "string"
+      },
+      "unreclaimed_space_threshold": 20,
+      "used": 0
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#aggregate]
+[.api-collapsible-fifth-title]
+aggregate
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|===
+
+
+[#target]
+[.api-collapsible-fifth-title]
+target
+
+Cloud target
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#unavailable_reason]
+[.api-collapsible-fifth-title]
+unavailable_reason
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|message
+|string
+a|Indicates why the object store is unavailable.
+
+
+|===
+
+
+[#cloud_store]
+[.api-collapsible-fifth-title]
+cloud_store
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|aggregate
+|link:#aggregate[aggregate]
+a|Aggregate
+
+
+|availability
+|string
+a|Availability of the object store.
+
+
+|availability_at_partner
+|string
+a|Availability of the object store at the HA partner.
+
+
+|mirror_degraded
+|boolean
+a|This field identifies if the mirror cloud store is in sync with the primary cloud store of a FabricPool.
+
+
+|primary
+|boolean
+a|This field indicates whether the cloud store is the primary cloud store of a mirrored FabricPool.
+
+
+|resync-progress
+|integer
+a|Resync progress of the mirror object store in percentage.
+
+
+|target
+|link:#target[target]
+a|Cloud target
+
+
+|unavailable_reason
+|link:#unavailable_reason[unavailable_reason]
+a|
+
+|unreclaimed_space_threshold
+|integer
+a|Usage threshold for reclaiming unused space in the cloud store. Valid values are 0 to 99. The default value depends on the provider type. This can be specified in PATCH but not POST.
+
+
+|used
+|integer
+a|The amount of object space used. Calculated every 5 minutes and cached.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,78 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_endpoint_overview.html'
+summary: 'Manage the multi-admin-verify global setting'
+---
+
+= Manage the multi-admin-verify global setting
+
+
+
+== Overview
+
+These APIs provide information on the multi-admin verification global setting.
+The GET API retrieves the object store that contains the global setting values of the multi-admin-verify feature.
+The PATCH request is used to modify the multi-admin-verify global setting. All fields are optional for the PATCH request.
+Note it is recommended that multi-admin-verify is enabled equally on peered ONTAP clusters.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving the multi-admin-verify global setting
+
+Retrieves the current multi-admin-verify global setting. If the global setting is not set, default values are returned.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify"
+
+# The response:
+{
+"approval_groups": [
+],
+"required_approvers": 1,
+"enabled": false,
+"execution_expiry": "PT1H",
+"approval_expiry": "PT1H",
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the multi-admin-verify global setting
+
+The following example updates the multi-admin-verify global settings.
+Note that the approval_groups needs to be available in /security/multi-admin-verify/approval-groups before it is set in the global setting.
+Note that the total number of approvers in an approval group must be a positive integer more than the number of required approvers. For example, if there are a total of 10 approvers in a group, the required approvers can be set between 1 and 9.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify
+
+# The call:
+curl -X PATCH "https://<cluster-ip>/api/security/multi-admin-verify" -d '{"required_approvers": "1", "enabled": "true", "execution_expiry": "2h", "approval_expiry": "3h"}'
+----
+
+'''
+
+

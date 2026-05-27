@@ -1,0 +1,575 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-file-copy.html'
+summary: 'Start a file copy operation'
+---
+
+= Start a file copy operation
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/file/copy`#
+
+*Introduced In:* 9.8
+
+Starts a file copy operation. Only supported on flexible volumes.
+
+== Required properties
+
+* `files_to_copy` - List of files with the destination they are to be copied to.
+
+== Default property values
+
+* `cutover_time` - _10_
+* `hold_quiescence` - _false_
+* `max_throughput` - _0_
+* `reference_cutover_time` - _10_
+
+== Related ONTAP commands
+
+* `volume file copy start`
+
+== Examples
+
+== Copying two files
+
+The POST request is used to copy file(s).
+
+----
+
+# The API:
+/api/storage/file/copy
+
+# The call:
+curl -X POST  "https://<mgmt-ip>/api/storage/file/copy" -H "accept: application/hal+json" -d '{"files_to_copy":[{"source":{"volume":{"name":"vol_a"},"svm":{"name":"vs0"},"path":"d1/src_f1"},"destination":{"volume":{"name":"vol_a"},"svm":{"name":"vs0"},"path":"d1/dst_f1"}}, {"source":{"volume":{"name":"vol_a"},"svm":{"name":"vs0"},"path":"d1/src_f2"},"destination":{"volume":{"name":"vol_a"},"svm":{"name":"vs0"},"path":"d1/dst_f2"}}]}'
+
+# The response:
+{
+"job": {
+  "uuid": "b89bc5dd-94a3-11e8-a7a3-0050568edf84",
+  "_links": {
+     "self": {
+       "href": "/api/cluster/jobs/b89bc5dd-94a3-11e8-a7a3-0050568edf84"
+     }
+   }
+ }
+}
+----
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_time
+|integer
+a|The maximum amount of time (in seconds) that the source can be quiesced before a destination file must be made available for read-write traffic.
+
+
+|files_to_copy
+|array[link:#files_to_copy[files_to_copy]]
+a|A list of source files along with the destinations they are copied to. If the terminal path component of the destination is a directory, then the source file's basename is replicated in that directory.
+
+
+|hold_quiescence
+|boolean
+a|Specifies whether the source file should be held quiescent for the duration of the copy operation.
+
+
+|max_throughput
+|integer
+a|Maximum amount of data, in bytes that can be transferred per second in support of this operation. A non-zero value less than 1MB/s is set to 1MB/s. A non-zero value greater than 1MB/s is truncated to the nearest integral megabyte value. If unspecified, the default value is "0" which means no range is set for the data transfer.
+
+
+|reference_cutover_time
+|integer
+a|The maximum amount of time (in seconds) that the source reference file can be quiesced before the corresponding destination file must be made available for read-write traffic.
+
+
+|reference_path
+|string
+a|The source reference file. If a reference file is specified, data for other files being copied will be transferred as a difference from the reference file. This can save bandwidth and destination storage if the specified source files share blocks. If provided, this input must match one of the source file paths. This input need not be provided if only one source file is specified.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "cutover_time": 10,
+  "files_to_copy": [
+    {
+      "destination": {
+        "path": "string",
+        "svm": {
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        },
+        "volume": {
+          "name": "volume1",
+          "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+        }
+      },
+      "source": {
+        "path": "string",
+        "svm": {
+          "name": "svm1",
+          "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+        },
+        "volume": {
+          "name": "volume1",
+          "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+        }
+      }
+    }
+  ],
+  "reference_cutover_time": 10,
+  "reference_path": "svm1:volume1/file1"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 917506
+| Volume `volume.name` not found.
+
+| 918236
+| The specified `volume.uuid` and `volume.name` refer to different volumes.
+
+| 2621464
+| Failed to lookup identifier for SVM `svm.name`.
+
+| 2621706
+| The specified `svm.uuid` and `svm.name` refer to different SVMs.
+
+| 7012352
+| File locations are inconsistent. All files must be on the same volume.
+
+| 7012353
+| Exceeded the file operations supported number of files.
+
+| 7012354
+| Unable to pair the number of source files to destination files.
+
+| 7012357
+| Cannot start a file operation until all cluster nodes support the file operations capability.
+
+| 7012358
+| The specified source path is invalid.
+
+| 7012359
+| The specified destination path is invalid.
+
+| 7012362
+| The SVMs are not yet in a peered state yet.
+
+| 7012363
+| Cannot copy files. All file operations must be managed by the destination SVM's administrator.
+
+| 7012365
+| Copying a file between clusters is not supported.
+
+| 7012366
+| Cannot start the operation with an invalid "max-throughput" value.
+
+| 7012367
+| A reference path may only be specified if multiple source paths are specified.
+
+| 7012368
+| The reference path must have a matching source path.
+
+| 7012371
+| The reference cutover time exceeds the maximum allowable time.
+
+| 7012374
+| Source volume and destination volume have different home clusters.
+
+| 7012376
+| Operation not allowed on a volume that is part of a SnapMirror Synchronous relationship.
+
+| 7012377
+| Cannot start a file copy operation on the volume because an active volume conversion is in progress.
+
+| 7012378
+| The source volume UUID or name must be provided.
+
+| 7012380
+| The source SVM UUID or name must be provided.
+
+| 7013360
+| The peering relationship between the two SVMs does not include application "file-copy".
+
+| 7013361
+| The SVMs are not in an intracluster peering relationship.
+
+| 7018866
+| Cannot start the file operation. The volume is read-only.
+
+| 7018877
+| Maximum combined total (50) of file and LUN copy and move operations reached. When one or more of the operations has completed, try the command again.
+
+| 13107223
+| Operation not supported for FlexGroup volumes or FlexGroup constituents.
+
+| 196608143
+| Cannot start operation. The volume is undergoing a secure purge operation.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#file_reference]
+[.api-collapsible-fifth-title]
+file_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|path
+|string
+a|Path of the file or directory.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#files_to_copy]
+[.api-collapsible-fifth-title]
+files_to_copy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|destination
+|link:#file_reference[file_reference]
+a|
+
+|source
+|link:#file_reference[file_reference]
+a|
+
+|===
+
+
+[#file_copy]
+[.api-collapsible-fifth-title]
+file_copy
+
+File copy
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cutover_time
+|integer
+a|The maximum amount of time (in seconds) that the source can be quiesced before a destination file must be made available for read-write traffic.
+
+
+|files_to_copy
+|array[link:#files_to_copy[files_to_copy]]
+a|A list of source files along with the destinations they are copied to. If the terminal path component of the destination is a directory, then the source file's basename is replicated in that directory.
+
+
+|hold_quiescence
+|boolean
+a|Specifies whether the source file should be held quiescent for the duration of the copy operation.
+
+
+|max_throughput
+|integer
+a|Maximum amount of data, in bytes that can be transferred per second in support of this operation. A non-zero value less than 1MB/s is set to 1MB/s. A non-zero value greater than 1MB/s is truncated to the nearest integral megabyte value. If unspecified, the default value is "0" which means no range is set for the data transfer.
+
+
+|reference_cutover_time
+|integer
+a|The maximum amount of time (in seconds) that the source reference file can be quiesced before the corresponding destination file must be made available for read-write traffic.
+
+
+|reference_path
+|string
+a|The source reference file. If a reference file is specified, data for other files being copied will be transferred as a difference from the reference file. This can save bandwidth and destination storage if the specified source files share blocks. If provided, this input must match one of the source file paths. This input need not be provided if only one source file is specified.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

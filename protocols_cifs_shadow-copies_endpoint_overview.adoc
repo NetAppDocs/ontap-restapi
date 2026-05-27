@@ -1,0 +1,272 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_shadow-copies_endpoint_overview.html'
+summary: 'View and update shadow copy information'
+---
+
+= View and update shadow copy information
+
+
+
+Microsoft Remote Volume Shadow Copy Services (VSS) is an extension of the existing Microsoft VSS infrastructure. Previously, VSS could be used for backup services only for data stored on the local disk. This limited the use of VSS to applications that stored data either on a local disk or on SAN-based storage. With Remote VSS, Microsoft has extended the VSS infrastructure to support the shadow copying of SMB shares. Server applications, such as, Hyper-V are now storing VHD files on SMB file shares. With these new extensions, it is possible to take application consistent shadow copies for virtual machines that store data and configuration files on shares.
+
+=== Retrieving Shadow copy sets for all SVMs
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/shadowcopy-sets
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/shadowcopy-sets?fields=*&return_records=true&return_timeout=15" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>"
+
+# The Response:
+{
+"records": [
+  {
+    "uuid": "27ed1b79-97f6-11ec-8ad1-0050568e57be",
+    "svm": {
+      "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+      "name": "vs1"
+    },
+    "keep_snapshots": true
+  },
+  {
+    "uuid": "388be551-97f6-11ec-8ad1-0050568e57be",
+    "svm": {
+      "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+      "name": "vs1"
+    },
+    "keep_snapshots": false
+  },
+  {
+    "uuid": "525104ef-9f96-11ec-82fd-0050568e57be",
+    "svm": {
+      "uuid": "fdb5bd8b-9498-11ec-9f9d-0050568e57be",
+      "name": "vs2"
+    },
+    "keep_snapshots": false
+  },
+  {
+    "uuid": "66f8f723-9f96-11ec-82fd-0050568e57be",
+    "svm": {
+      "uuid": "fdb5bd8b-9498-11ec-9f9d-0050568e57be",
+      "name": "vs2"
+    },
+    "keep_snapshots": true
+  }
+],
+"num_records": 4
+}
+----
+
+'''
+
+=== Retrieving information for a specific shadow copy set
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/shadowcopy-sets/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/shadowcopy-sets/525104ef-9f96-11ec-82fd-0050568e57be?fields=*" -H  "accept: application/json"
+
+# The Response:
+{
+"uuid": "525104ef-9f96-11ec-82fd-0050568e57be",
+"svm": {
+  "uuid": "fdb5bd8b-9498-11ec-9f9d-0050568e57be",
+  "name": "vs2"
+},
+"keep_snapshots": false
+}
+----
+
+'''
+
+=== Updating the keep-snapshot property of a specific shadow copy set
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/shadowcopy-sets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/shadowcopy-sets/525104ef-9f96-11ec-82fd-0050568e57be" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{  \"keep_snapshots\": true}"
+----
+
+'''
+
+=== Retrieving shadow copy information for all SVMs
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/shadow-copies
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/shadow-copies?fields=*&return_records=true&return_timeout=15" -H  "accept: application/json"
+
+# The Response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+      "name": "vs1"
+    },
+    "shadowcopy_set": {
+      "uuid": "9169cd4a-a421-11ec-b82e-0050568e57be"
+    },
+    "uuid": "919fbc80-a421-11ec-b82e-0050568e57be",
+    "share": {
+      "name": "sh1"
+    },
+    "client_uuid": "918536b7-a421-11ec-b82e-0050568e57be",
+    "volume": {
+      "uuid": "e117c8f6-9498-11ec-9f9d-0050568e57be",
+      "name": "vol1"
+    }
+  },
+  {
+    "svm": {
+      "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+      "name": "vs1"
+    },
+    "shadowcopy_set": {
+      "uuid": "9169cd4a-a421-11ec-b82e-0050568e57be"
+    },
+    "uuid": "91ac5a5f-a421-11ec-b82e-0050568e57be",
+    "share": {
+      "name": "sh2"
+    },
+    "client_uuid": "91a9252b-a421-11ec-b82e-0050568e57be",
+    "volume": {
+      "uuid": "e117c8f6-9498-11ec-9f9d-0050568e57be",
+      "name": "vol1"
+    }
+  },
+  {
+    "svm": {
+      "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+      "name": "vs1"
+    },
+    "shadowcopy_set": {
+      "uuid": "9169cd4a-a421-11ec-b82e-0050568e57be"
+    },
+    "uuid": "91b14098-a421-11ec-b82e-0050568e57be",
+    "share": {
+      "name": "sh3"
+    },
+    "client_uuid": "91adfc85-a421-11ec-b82e-0050568e57be",
+    "volume": {
+      "uuid": "e117c8f6-9498-11ec-9f9d-0050568e57be",
+      "name": "vol1"
+    }
+  },
+  {
+    "svm": {
+      "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+      "name": "vs1"
+    },
+    "shadowcopy_set": {
+      "uuid": "9169cd4a-a421-11ec-b82e-0050568e57be"
+    },
+    "uuid": "91b63309-a421-11ec-b82e-0050568e57be",
+    "share": {
+      "name": "sh4"
+    },
+    "client_uuid": "91b2f817-a421-11ec-b82e-0050568e57be",
+    "volume": {
+      "uuid": "e117c8f6-9498-11ec-9f9d-0050568e57be",
+      "name": "vol1"
+    }
+  }
+],
+"num_records": 4
+}
+----
+
+'''
+
+=== Retrieving information for a specific shadow copy
+
+'''
+
+----
+
+# The API:
+GET /api/protocols/cifs/shadow-copies/{client_uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/shadow-copies/91adfc85-a421-11ec-b82e-0050568e57be?fields=*" -H  "accept: application/json"
+
+# The Response:
+{
+"svm": {
+  "uuid": "dfb8e00d-9498-11ec-9f9d-0050568e57be",
+  "name": "vs1"
+},
+"shadowcopy_set": {
+  "uuid": "9169cd4a-a421-11ec-b82e-0050568e57be"
+},
+"uuid": "91b14098-a421-11ec-b82e-0050568e57be",
+"share": {
+  "name": "sh3"
+},
+"client_uuid": "91adfc85-a421-11ec-b82e-0050568e57be",
+"volume": {
+  "uuid": "e117c8f6-9498-11ec-9f9d-0050568e57be",
+  "name": "vol1"
+}
+}
+----
+
+'''
+
+=== Updating the list of files to be shadowcopied in a particular share
+
+Use this endpoint to update the list of files to be shadow copied in a particular share. Set "restore" field as false to perform this operation.
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/cifs/shadow-copies/{client_uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/shadow-copies/91adfc85-a421-11ec-b82e-0050568e57be?restore=false" -H  "accept: application/json" -d "{  \"files\": [    \"/vhd1\",    \"/vhd2\"  ]}"
+----
+
+'''
+
+=== Requesting the storage system to restore a directory
+
+You set restore field to true to perform this operation. Only users with the security login role "vsadmin" can perform the operation.
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/cifs/shadow-copies?restore=true
+
+# The call:
+PATCH "api/protocols/cifs/shadow-copies?restore=true" -d "{  \"destination_dir\": \"/dir2\",  \"source_dir\": \"/src_dir\",  \"volume\": {    \"name\": \"test_vol\"  },  \"with_content\": false}"
+----
+
+'''
+
+

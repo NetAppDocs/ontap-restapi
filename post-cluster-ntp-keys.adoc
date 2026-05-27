@@ -1,0 +1,258 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-ntp-keys.html'
+summary: 'Create an NTP symmetric authentication key entry'
+---
+
+= Create an NTP symmetric authentication key entry
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/ntp/keys`#
+
+*Introduced In:* 9.7
+
+Creates an NTP symmetric authentication key entry including the type of key
+using an unused identifier or index number (ID).
+
+== Required properties
+
+* `id` - Shared symmetric key number (ID).
+* `digest_type` - Shared private key cryptographic hash type.
+* `value` - Value of shared private key.
+
+== Related ONTAP commands
+
+* `cluster time-service ntp key create`
+
+== Learn more
+
+* link:cluster_ntp_keys_endpoint_overview.html[DOC /cluster/ntp/keys]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|digest_type
+|string
+a|The type of cryptographic hash used to create and verify the NTP's message authentication code appended to each NTP packet header.
+
+
+|id
+|integer
+a|NTP symmetric authentication key identifier or index number (ID). This ID is included
+in the NTP cryptographic hash encoded header.
+
+
+|value
+|string
+a|A hexadecimal digit string that represents the cryptographic key that is shared with the remote NTP server.
+The current expected length is 40 characters.
+
+Use the cryptographic key and key ID to create a unique hash value used to authenticate the rest of the NTP data.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "digest_type": "sha1",
+  "id": 10,
+  "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2097187
+| Invalid value for an NTP symmetric authentication key. A SHA1 key must be exactly 40 hexadecimal digits.
+
+| 2097189
+| Too many NTP keys have been configured.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ntp_key]
+[.api-collapsible-fifth-title]
+ntp_key
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|digest_type
+|string
+a|The type of cryptographic hash used to create and verify the NTP's message authentication code appended to each NTP packet header.
+
+
+|id
+|integer
+a|NTP symmetric authentication key identifier or index number (ID). This ID is included
+in the NTP cryptographic hash encoded header.
+
+
+|value
+|string
+a|A hexadecimal digit string that represents the cryptographic key that is shared with the remote NTP server.
+The current expected length is 40 characters.
+
+Use the cryptographic key and key ID to create a unique hash value used to authenticate the rest of the NTP data.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

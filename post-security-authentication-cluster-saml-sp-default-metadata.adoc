@@ -1,0 +1,338 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-authentication-cluster-saml-sp-default-metadata.html'
+summary: 'Create the SAML default metadata configuration
+'
+---
+
+= Create the SAML default metadata configuration
+
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/authentication/cluster/saml-sp/default-metadata`#
+
+*Introduced In:* 9.17
+
+Creates the SAML default metadata configuration. Note that `common_name` is mutually exclusive with `serial_number` and `ca` in POST requests.
+
+== Optional properties
+
+* `certificate`
+* `host`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#certificate[certificate]
+a|
+
+|host
+|string
+a|The SAML service provider host.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "certificate": {
+    "ca": "string",
+    "common_name": "cluster1",
+    "serial_number": "1506B24A94F566BA"
+  },
+  "host": "string",
+  "scope": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 12320794
+| Invalid host parameter for default metadata generation. The host parameter must be the cluster management interface's IP address. If the cluster management interface is not available, the node management interface's IP address must be used.
+
+| 12320805
+| The certificate information provided does not match any installed certificates.
+
+| 12320806
+| The certificate information entered does not match any installed certificates.
+
+| 12320820
+| No certificate is installed with the specified `certificate.ca` and `certificate.serial`.
+
+| 12320821
+| No certificate is installed with the specified `certificate.common_name`.
+
+| 12320825
+| SAML configuration already exists. Cannot create the metadata when SAML configuration is already present.
+
+| 12320831
+| Default metadata configuration already exists.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ca
+|string
+a|Server certificate issuing certificate authority (CA).  This cannot be used with the server certificate common name.
+
+
+|common_name
+|string
+a|Server certificate common name.  This cannot be used with the certificate authority (CA) or serial_number.
+
+
+|serial_number
+|string
+a|Server certificate serial number.  This cannot be used with the server certificate common name.
+
+
+|===
+
+
+[#security_saml_def_metadata]
+[.api-collapsible-fifth-title]
+security_saml_def_metadata
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|certificate
+|link:#certificate[certificate]
+a|
+
+|host
+|string
+a|The SAML service provider host.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

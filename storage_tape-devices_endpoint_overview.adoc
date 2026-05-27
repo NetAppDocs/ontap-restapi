@@ -1,0 +1,441 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_tape-devices_endpoint_overview.html'
+summary: 'Manage storage tape devices'
+---
+
+= Manage storage tape devices
+
+
+
+== Retrieving storage tape information
+
+The storage tape GET API retrieves all of the tapes in the cluster.
+
+'''
+
+== Examples
+
+=== 1) Retrieving a list of tapes from the cluster
+
+The following example returns the list of tapes in the cluster:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/tape-devices" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "2d.0",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/2d.0"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "2d.0L1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/2d.0L1"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "qeg-tape-brocade2-8g:0.126",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/qeg-tape-brocade2-8g%3A0.126"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "stsw-broc6510-01:11.126",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/stsw-broc6510-01%3A11.126"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "stsw-broc6510-01:15.126",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/stsw-broc6510-01%3A15.126"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "stsw-broc6510-01:15.126L1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/stsw-broc6510-01%3A15.126L1"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "stsw-broc6510-01:22.126",
+    "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/stsw-broc6510-01%3A22.126"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "4083be52-5315-11eb-a839-00a0985ebbe7",
+      "name": "st-8020-1-01",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/4083be52-5315-11eb-a839-00a0985ebbe7"
+        }
+      }
+    },
+    "device_id": "stsw-broc6510-01:23.126",
+   "_links": {
+      "self": {
+        "href": "/api/storage/tape-devices/4083be52-5315-11eb-a839-00a0985ebbe7/stsw-broc6510-01%3A23.126"
+      }
+    }
+  },
+],
+"num_records": 7,
+"_links": {
+  "self": {
+    "href": "/api/storage/tape-devices"
+  }
+}
+}
+----
+
+'''
+
+=== 2) Retrieving a specific tape device from the cluster
+
+The following example returns the requested tape device. If there is no tape with the requested UID, an error is returned.
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json"
+
+# The response:
+{
+"node": {
+  "uuid": "5f5275eb-5315-11eb-8ac4-00a0985e0dcf",
+  "name": "st-8020-1-02",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/nodes/5f5275eb-5315-11eb-8ac4-00a0985e0dcf"
+    }
+  }
+},
+"device_id": "2d.0",
+"type": "tape",
+"description": "IBM LTO-6 ULT3580",
+"alias": {
+  "name": "st7",
+  "mapping": "SN[1068000245]"
+},
+"aliases": [
+  {
+    "name": "st7",
+    "mapping": "SN[1068000245]"
+  }
+],
+"wwnn": "5001697722ee0010",
+"wwpn": "5001697722ee0011",
+"serial_number": "1068000245",
+"interface": "sas",
+"device_state": "offline",
+"formats": [
+  "LTO-4/5 Native Density",
+  "LTO-4/5 Compressed",
+  "LTO-6 2.5TB",
+  "LTO-6 6.25TB Compressed"
+],
+"storage_port": {
+  "name": "2d"
+},
+"file_number": -1,
+"block_number": -1,
+"residual_count": 0,
+"density": "low",
+"device_names": [
+  {
+    "rewind_device": "rst0l",
+    "no_rewind_device": "nrst0l",
+    "unload_reload_device": "urst0l"
+  },
+  {
+    "rewind_device": "rst0m",
+    "no_rewind_device": "nrst0m",
+    "unload_reload_device": "urst0m"
+  },
+  {
+    "rewind_device": "rst0h",
+    "no_rewind_device": "nrst0h",
+    "unload_reload_device": "urst0h"
+  },
+  {
+    "rewind_device": "rst0a",
+    "no_rewind_device": "nrst0a",
+    "unload_reload_device": "urst0a"
+  }
+],
+"reservation_type": "off",
+"_links": {
+  "self": {
+    "href": "/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0"
+  }
+}
+}
+----
+
+'''
+
+== Updating a tape device
+
+The tape PATCH API allows the tape device to be set online or offline, positioned, and given an alias.
+
+'''
+
+== Examples
+
+=== 1) Taking a tape device offline
+
+The following example takes a tape device offline:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"online": "false"}'
+
+# The response:
+{
+"job": {
+  "uuid": "9e544626-306e-11ec-8c2e-00a098b81daa",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9e544626-306e-11ec-8c2e-00a098b81daa"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== 2) Bringing a tape device online
+
+The following example brings a tape device online:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"online": "true"}'
+
+# The response:
+{
+"job": {
+  "uuid": "9e544626-306e-11ec-8c2e-00a098b81daa",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9e544626-306e-11ec-8c2e-00a098b81daa"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== 3) Giving a tape device an alias
+
+The following example assigns an alias to a tape device:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"aliases": [{"name": "st0"}]}'
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 4) Removing a tape device's aliases
+
+The following example clears any aliases previously assigned to a tape device:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"aliases": []}'
+
+# The response:
+{
+}
+----
+
+'''
+
+=== 5) Rewinding a tape device
+
+The following example rewinds a tape device:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"position": {"operation": "rewind"}}'
+
+# The response:
+{
+"job": {
+  "uuid": "9e544626-306e-11ec-8c2e-00a098b81daa",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9e544626-306e-11ec-8c2e-00a098b81daa"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== 6) Forwarding the tape five files
+
+The following example moves the tape forward five file records:
+
+'''
+
+----
+
+# The API:
+/api/storage/tape-devices/{node.uuid}/{device_id}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/storage/tape-devices/5f5275eb-5315-11eb-8ac4-00a0985e0dcf/2d.0" -H "accept: application/hal+json" -H "Content-Type: application/hal_json" -d '{"position": {"operation": "fsf", "count": 5}}'
+
+# The response:
+{
+"job": {
+  "uuid": "954c20d5-306e-11ec-8c2e-00a098b81daa",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/954c20d5-306e-11ec-8c2e-00a098b81daa"
+    }
+  }
+}
+}
+----
+
+'''
+
+

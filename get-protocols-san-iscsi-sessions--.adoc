@@ -1,0 +1,589 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-protocols-san-iscsi-sessions--.html'
+summary: 'Retrieve an iSCSI session'
+---
+
+= Retrieve an iSCSI session
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/iscsi/sessions/{svm.uuid}/{tpgroup}/{tsih}`#
+
+*Introduced In:* 9.6
+
+Retrieves an iSCSI session.
+
+== Related ONTAP commands
+
+* `vserver iscsi connection show`
+* `vserver iscsi session parameter show`
+* `vserver iscsi session show`
+
+== Learn more
+
+* link:protocols_san_iscsi_sessions_endpoint_overview.html[DOC /protocols/san/iscsi/sessions]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|svm.uuid
+|string
+|path
+|True
+a|The unique identifier of the SVM of the iSCSI session.
+
+
+|tpgroup
+|string
+|path
+|True
+a|The target portal group of the iSCSI session.
+
+
+|tsih
+|integer
+|path
+|True
+a|The target session identifying handle.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|connections
+|array[link:#iscsi_connection[iscsi_connection]]
+a|The iSCSI connections that make up the iSCSI session.
+
+
+|igroups
+|array[link:#igroups[igroups]]
+a|The initiator groups in which the initiator is a member.
+
+
+|initiator
+|link:#initiator[initiator]
+a|The initiator that created the session.
+
+
+|isid
+|string
+a|The initiator portion of the session identifier specified by the initiator during login.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|target_portal_group
+|string
+a|The target portal group to which the session belongs.
+
+
+|target_portal_group_tag
+|integer
+a|The target portal group tag of the session.
+
+
+|tsih
+|integer
+a|The target session identifier handle (TSIH) of the session.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "connections": [
+    {
+      "_links": {
+        "next": {
+          "href": "/api/resourcelink"
+        },
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "authentication_type": "string",
+      "cid": 0,
+      "initiator_address": {
+        "address": "10.10.10.7",
+        "port": 55432
+      },
+      "interface": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "ip": {
+          "address": "10.10.10.7",
+          "port": 3260
+        },
+        "name": "lif1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "igroups": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "igroup1",
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "initiator": {
+    "alias": "initiator_alias1",
+    "comment": "This is an iSCSI initiator for host 5",
+    "name": "iqn.1992-01.example.com:string"
+  },
+  "isid": "61:62:63:64:65:00",
+  "svm": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "target_portal_group": "tpgroup1",
+  "target_portal_group_tag": 0,
+  "tsih": 0
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 2621462
+| An SVM with the specified UUID does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#initiator_address]
+[.api-collapsible-fifth-title]
+initiator_address
+
+The TCP socket information for the initiator end of the connection. This is useful for network packet debugging.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|The TCP IPv4 or IPv6 address of the initiator end of the iSCSI connection.
+
+
+|port
+|integer
+a|The TCP port number of the initiator end of the iSCSI connection.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+The IP information. ONTAP only supports port 3260.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|port
+|integer
+a|The TCP port number of the iSCSI access endpoint.
+
+
+|===
+
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+The network interface information for the target end of the connection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|ip
+|link:#ip[ip]
+a|The IP information. ONTAP only supports port 3260.
+
+* readOnly: 1
+* Introduced in: 9.6
+
+
+|name
+|string
+a|The name of the interface.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#iscsi_connection]
+[.api-collapsible-fifth-title]
+iscsi_connection
+
+An active iSCSI connection.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|authentication_type
+|string
+a|The iSCSI authentication type used to establish the connection.
+
+
+|cid
+|integer
+a|The identifier of the connection within the session.
+
+
+|initiator_address
+|link:#initiator_address[initiator_address]
+a|The TCP socket information for the initiator end of the connection. This is useful for network packet debugging.
+
+
+|interface
+|link:#interface[interface]
+a|The network interface information for the target end of the connection.
+
+
+|===
+
+
+[#igroups]
+[.api-collapsible-fifth-title]
+igroups
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the initiator group.
+
+
+|uuid
+|string
+a|The unique identifier of the initiator group.
+
+
+|===
+
+
+[#initiator]
+[.api-collapsible-fifth-title]
+initiator
+
+The initiator that created the session.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|string
+a|The initiator alias.
+
+
+|comment
+|string
+a|A comment available for use by the administrator. This is modifiable from the initiator REST endpoint directly. See link:patch-protocols-san-igroups-initiators-.html[PATCH /protocols/san/igroups/{igroup.uuid}/initiators/\{name}] .
+
+
+|name
+|string
+a|The world wide unique name of the initiator.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

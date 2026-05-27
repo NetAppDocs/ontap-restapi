@@ -1,0 +1,790 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_fc_interfaces_endpoint_overview.html'
+summary: 'Manage FC network interfaces'
+---
+
+= Manage FC network interfaces
+
+
+
+== Overview
+
+Fibre Channel (FC) interfaces are the logical endpoints for FC network connections to an SVM. An FC interface provides FC access to storage within the interface SVM using either Fibre Channel Protocol (FCP) or NVMe over FC (NVMe/FC).
+
+The FC interface REST API allows you to create, delete, update, and discover FC interfaces, and obtain status information for FC interfaces.
+
+An FC interface is created on an FC port which is located on a cluster node. The FC port must be specified to identify the location of the interface for a POST or PATCH request that relocates an interface. You can identify the port by supplying either the node and port names or the port UUID.
+
+== Performance monitoring
+
+Performance of an FC interface can be monitored by observing the `metric.+*+` and `statistics.+*+` properties. These properties show the performance of an FC interface in terms of IOPS, latency, and throughput. The `metric.+*+` properties denote an average, whereas `statistics.+*+` properties denote a real-time monotonically increasing value aggregated across all nodes.
+
+== Interface placement recommendations
+
+The FC interface REST API can also recommend the placement (cluster nodes and FC ports) for FC interfaces for a new or existing SVM as well as evaluate caller-proposed locations for FC interfaces. This functionality is available to cluster administrators only and is accessed using `GET /network/fc/interfaces` with the `recommend` family of query parameters.
+
+The query parameter `recommend.data_protocol` is required when getting recommendations or evaluating caller-proposed locations for FC interfaces. It identifies the type of FC interfaces to recommend. Other `recommend` query parameters are optional and are used to modify the recommendation algorithm.
+
+If an SVM is supplied using the query parameter `recommend.svm.name` and/or `recommend.svm.uuid`, existing FC interfaces are considered as part of the overall solution and only additionally recommended interfaces are returned. If no SVM is supplied, recommendations are returned for a new SVM.
+
+FC fabrics connected to the cluster are discovered by the API. By default, FC interfaces are placed and evaluated for each fabric. The query parameter `recommend.fabrics.name` can be used to identify specific FC fabrics to use.
+
+Cluster nodes supporting FC fabric connections for the specific data protocol are discovered by the API. By default, FC interfaces are placed all supported cluster nodes. Either query parameter `recommend.nodes.name` or `recommend.nodes.uuid` can be used to identify specific cluster nodes to use.
+
+FC interfaces for the FC-NVMe data protocol are limited to two (2) interfaces per cluster node with a maximum of four (4) nodes, within a single SVM.
+
+Placement recommendations are best effort and limited by the information available. In situations where an optimum configuration cannot be produced, the API returns the recommendations it can along with messages describing how the caller might improve the configuration. These messages are produced by evaluating the calculated FC interface layout against best practices.
+
+The same best practice evaluation can be applied to a caller-proposed configuration by using the query parameter `recommend.proposed.locations.port.uuid` to specify the locations for proposed FC interfaces. When this query parameter is supplied, the best practice evaluation is performed using the proposed interface locations and messages are produced describing how the caller might improve the configuration.
+
+== Examples
+
+=== Creating an FC interface using the port node and name to identify the location
+
+This example uses the `return_records` query parameter to retrieve the newly created FC interface in the POST response.
+
+----
+
+# The API:
+POST /api/network/fc/interfaces
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/network/fc/interfaces?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm1" }, "name": "lif1", "location": { "home_port": { "name": "0a", "home_node": { "name": "node1" } } }, "data_protocol": "fcp" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "cf300f5c-db83-11e8-bd46-005056bba0e0",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/cf300f5c-db83-11e8-bd46-005056bba0e0"
+        }
+      }
+    },
+    "uuid": "f6045b92-dec7-11e8-a733-005056bba0e0",
+    "name": "lif1",
+    "location": {
+      "home_node": {
+        "uuid": "bafe9b9f-db81-11e8-bd46-005056bba0e0",
+        "name": "node1",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/bafe9b9f-db81-11e8-bd46-005056bba0e0"
+          }
+        }
+      },
+      "home_port": {
+        "uuid": "300c1ae3-db82-11e8-bd46-005056bba0e0",
+        "name": "0a",
+        "node": {
+          "name": "node1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/300c1ae3-db82-11e8-bd46-005056bba0e0"
+          }
+        }
+      },
+      "node": {
+        "uuid": "bafe9b9f-db81-11e8-bd46-005056bba0e0",
+        "name": "node1",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/bafe9b9f-db81-11e8-bd46-005056bba0e0"
+          }
+        }
+      },
+      "port": {
+        "uuid": "300c1ae3-db82-11e8-bd46-005056bba0e0",
+        "name": "0a",
+        "node": {
+          "name": "node1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/300c1ae3-db82-11e8-bd46-005056bba0e0"
+          }
+        }
+      }
+    },
+    "enabled": true,
+    "state": "down",
+    "data_protocol": "fcp",
+    "wwpn": "20:04:00:50:56:bb:a0:e0",
+    "wwnn": "20:00:00:50:56:bb:a0:e0",
+    "port_address": "9da2cb1",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/interfaces/f6045b92-dec7-11e8-a733-005056bba0e0"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an FC interface using the port UUID to identify the location
+
+This example uses the `return_records` query parameter to retrieve the newly created FC interface in the POST response.
+
+----
+
+# The API:
+POST /api/network/fc/interfaces
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/network/fc/interfaces?return_records=true' -H 'Accept: application/hal+json' -d '{ "svm": { "name": "svm3" }, "name": "lif2", "location": { "home_port": { "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6" } }, "data_protocol": "fc_nvme" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "a5060466-dbab-11e8-bd46-005056bba0e0",
+      "name": "svm3",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/a5060466-dbab-11e8-bd46-005056bba0e0"
+        }
+      }
+    },
+    "uuid": "cdeb5591-dec9-11e8-a733-005056bba0e0",
+    "name": "lif2",
+    "location": {
+      "home_node": {
+        "uuid": "e85aa147-db83-11e8-9a48-005056bb1ec6",
+        "name": "node3",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/e85aa147-db83-11e8-9a48-005056bb1ec6"
+          }
+        }
+      },
+      "home_port": {
+        "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6",
+        "name": "1b",
+        "node": {
+          "name": "node3"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/24bb636a-db83-11e8-9a49-005056bb1ec6"
+          }
+        }
+      },
+      "node": {
+        "uuid": "e85aa147-db83-11e8-9a48-005056bb1ec6",
+        "name": "node3",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/e85aa147-db83-11e8-9a48-005056bb1ec6"
+          }
+        }
+      },
+      "port": {
+        "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6",
+        "name": "1b",
+        "node": {
+          "name": "node3"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/24bb636a-db83-11e8-9a49-005056bb1ec6"
+          }
+        }
+      }
+    },
+    "enabled": true,
+    "state": "down",
+    "data_protocol": "fc_nvme",
+    "wwpn": "20:05:00:50:56:bb:a0:e0",
+    "wwnn": "20:02:00:50:56:bb:a0:e0",
+    "port_address": "612e202b",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/interfaces/cdeb5591-dec9-11e8-a733-005056bba0e0"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving all properties for all FC interfaces
+
+This example uses the `fields` query parameter to retrieve all properties.
+
+----
+
+# The API:
+GET /api/network/fc/interfaces
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/network/fc/interfaces?fields=*' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "a5060466-dbab-11e8-bd46-005056bba0e0",
+      "name": "svm3",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/a5060466-dbab-11e8-bd46-005056bba0e0"
+        }
+      }
+    },
+    "uuid": "cdeb5591-dec9-11e8-a733-005056bba0e0",
+    "name": "lif2",
+    "location": {
+      "home_node": {
+        "uuid": "e85aa147-db83-11e8-9a48-005056bb1ec6",
+        "name": "node3",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/e85aa147-db83-11e8-9a48-005056bb1ec6"
+          }
+        }
+      },
+      "home_port": {
+        "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6",
+        "name": "1b",
+        "node": {
+          "name": "node3"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/24bb636a-db83-11e8-9a49-005056bb1ec6"
+          }
+        }
+      },
+      "node": {
+        "uuid": "e85aa147-db83-11e8-9a48-005056bb1ec6",
+        "name": "node3",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/e85aa147-db83-11e8-9a48-005056bb1ec6"
+          }
+        }
+      },
+      "port": {
+        "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6",
+        "name": "1b",
+        "node": {
+          "name": "node3"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/24bb636a-db83-11e8-9a49-005056bb1ec6"
+          }
+        }
+      }
+    },
+    "enabled": true,
+    "state": "down",
+    "data_protocol": "fc_nvme",
+    "wwpn": "20:05:00:50:56:bb:a0:e0",
+    "wwnn": "20:02:00:50:56:bb:a0:e0",
+    "port_address": "612e202b",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/interfaces/cdeb5591-dec9-11e8-a733-005056bba0e0"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "cf300f5c-db83-11e8-bd46-005056bba0e0",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/cf300f5c-db83-11e8-bd46-005056bba0e0"
+        }
+      }
+    },
+    "uuid": "f6045b92-dec7-11e8-a733-005056bba0e0",
+    "name": "lif1",
+    "location": {
+      "home_node": {
+        "uuid": "bafe9b9f-db81-11e8-bd46-005056bba0e0",
+        "name": "node1",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/bafe9b9f-db81-11e8-bd46-005056bba0e0"
+          }
+        }
+      },
+      "home_port": {
+        "uuid": "300c1ae3-db82-11e8-bd46-005056bba0e0",
+        "name": "0a",
+        "node": {
+          "name": "node1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/300c1ae3-db82-11e8-bd46-005056bba0e0"
+          }
+        }
+      },
+      "node": {
+        "uuid": "bafe9b9f-db81-11e8-bd46-005056bba0e0",
+        "name": "node1",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/bafe9b9f-db81-11e8-bd46-005056bba0e0"
+          }
+        }
+      },
+      "port": {
+        "uuid": "300c1ae3-db82-11e8-bd46-005056bba0e0",
+        "name": "0a",
+        "node": {
+          "name": "node1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/300c1ae3-db82-11e8-bd46-005056bba0e0"
+          }
+        }
+      }
+    },
+    "enabled": true,
+    "state": "down",
+    "data_protocol": "fcp",
+    "wwpn": "20:04:00:50:56:bb:a0:e0",
+    "wwnn": "20:00:00:50:56:bb:a0:e0",
+    "port_address": "9da2cb1",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/interfaces/f6045b92-dec7-11e8-a733-005056bba0e0"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/network/fc/interfaces?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a list of selected FC interfaces
+
+This example uses property query parameters to retrieve FC interfaces configured for the FC Protocol that are set to _up_.
+
+----
+
+# The API:
+GET /api/network/fc/interfaces
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/network/fc/interfaces?data_protocol=fcp&state=up' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "cf300f5c-db83-11e8-bd46-005056bba0e0",
+      "name": "svm1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/cf300f5c-db83-11e8-bd46-005056bba0e0"
+        }
+      }
+    },
+    "uuid": "f6045b92-dec7-11e8-a733-005056bba0e0",
+    "name": "lif1",
+    "state": "up",
+    "data_protocol": "fcp",
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/interfaces/f6045b92-dec7-11e8-a733-005056bba0e0"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/network/fc/interfaces?data_protocol=fcp&state=up"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific FC interface
+
+----
+
+# The API:
+GET /api/network/fc/interfaces/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/network/fc/interfaces/cdeb5591-dec9-11e8-a733-005056bba0e0' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"svm": {
+  "uuid": "a5060466-dbab-11e8-bd46-005056bba0e0",
+  "name": "svm3",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/a5060466-dbab-11e8-bd46-005056bba0e0"
+    }
+  }
+},
+"uuid": "cdeb5591-dec9-11e8-a733-005056bba0e0",
+"name": "lif2",
+"location": {
+  "home_node": {
+    "uuid": "e85aa147-db83-11e8-9a48-005056bb1ec6",
+    "name": "node3",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/e85aa147-db83-11e8-9a48-005056bb1ec6"
+      }
+    }
+  },
+  "home_port": {
+    "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6",
+    "name": "1b",
+    "node": {
+      "name": "node3"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/24bb636a-db83-11e8-9a49-005056bb1ec6"
+      }
+    }
+  },
+  "node": {
+    "uuid": "e85aa147-db83-11e8-9a48-005056bb1ec6",
+    "name": "node3",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/nodes/e85aa147-db83-11e8-9a48-005056bb1ec6"
+      }
+    }
+  },
+  "port": {
+    "uuid": "24bb636a-db83-11e8-9a49-005056bb1ec6",
+    "name": "1b",
+    "node": {
+      "name": "node3"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/network/fc/ports/24bb636a-db83-11e8-9a49-005056bb1ec6"
+      }
+    }
+  }
+},
+"enabled": true,
+"state": "down",
+"data_protocol": "fc_nvme",
+"wwpn": "20:05:00:50:56:bb:a0:e0",
+"wwnn": "20:02:00:50:56:bb:a0:e0",
+"port_address": "612e202b",
+"metric": {
+  "timestamp": "2019-04-09T05:50:15Z",
+  "duration": "PT15S",
+  "status": "ok",
+  "latency": {
+    "other": 0,
+    "total": 0,
+    "read": 0,
+    "write": 0
+  },
+  "iops": {
+    "read": 0,
+    "write": 0,
+    "other": 0,
+    "total": 0
+  },
+  "throughput": {
+    "read": 0,
+    "write": 0,
+    "total": 0
+  }
+},
+"statistics": {
+  "timestamp": "2019-04-09T05:50:42Z",
+  "status": "ok",
+  "latency_raw": {
+    "other": 38298,
+    "total": 38298,
+    "read": 0,
+    "write": 0
+  },
+  "iops_raw": {
+    "read": 0,
+    "write": 0,
+    "other": 3,
+    "total": 3
+  },
+  "throughput_raw": {
+    "read": 0,
+    "write": 0,
+    "total": 0
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/network/fc/interfaces/cdeb5591-dec9-11e8-a733-005056bba0e0"
+  }
+}
+}
+----
+
+'''
+
+== Disabling an FC interface
+
+When updating certain properties of an FC interface, the interface must first be disabled using the following:
+
+----
+
+# The API:
+PATCH /api/network/fc/interfaces/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/network/fc/interfaces/f6045b92-dec7-11e8-a733-005056bba0e0' -H 'Accept: application/hal+json' -d '{ "enabled": false }'
+----
+
+'''
+
+=== Moving an FC interface to a new node and port
+
+To move an FC interface to another node or port, the destination FC port must be specified in a PATCH request. Either the port UUID or node and port names can be used to identify the port.
+
+Note that only FC interfaces configured for the FC Protocol can be moved. FC interfaces configured for NVMe/FC cannot be moved. The interface must also be set to the disabled state before being moved.
+
+----
+
+# The API:
+PATCH /api/network/fc/interfaces/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/network/fc/interfaces/f6045b92-dec7-11e8-a733-005056bba0e0' -H 'Accept: application/hal+json' -d '{ "location": { "home_port": { "uuid": "a1dc7aa5-db83-11e8-9ef7-005056bbbbcc" } } }'
+----
+
+'''
+
+=== Deleting an FC interface
+
+----
+
+# The API:
+DELETE /api/network/fc/interfaces/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/network/fc/interfaces/f6045b92-dec7-11e8-a733-005056bba0e0' -H 'Accept: application/hal+json'
+----
+
+'''
+
+=== Recommending interface locations for a new SVM
+
+This example gets recommendations for FCP network interfaces for a new SVM.
+
+----
+
+# The API
+GET /api/network/fc/interfaces
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/network/fc/interfaces?recommend.data_protocol=fcp&fields=*' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "location": {
+      "home_port": {
+        "uuid": "300c1ae3-db82-11e8-bd46-005056bba0e0",
+        "name": "0a",
+        "node": {
+          "name": "node1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/300c1ae3-db82-11e8-bd46-005056bba0e0"
+          }
+        }
+      }
+    },
+    "data_protocol": "fcp",
+    "comment": "fabric: 55:0e:b1:a0:20:40:80:00"
+  },
+  {
+    "location": {
+      "home_port": {
+        "uuid": "ad7d3915-db82-11e8-b36d-005056bb982e",
+        "name": "0a",
+        "node": {
+          "name": "node2"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/ad7d3915-db82-11e8-b36d-005056bb982e"
+          }
+        }
+      }
+    },
+    "data_protocol": "fcp",
+    "comment": "fabric: 55:0e:b1:a0:20:40:80:00"
+  },
+  {
+    "location": {
+      "home_port": {
+        "uuid": "300c1dfd-db82-11e8-bd46-005056bba0e0",
+        "name": "0b",
+        "node": {
+          "name": "node1"
+        },
+        "_links": {
+          "self": {
+            "href": "/api/network/fc/ports/300c1dfd-db82-11e8-bd46-005056bba0e0"
+          }
+        }
+      }
+    },
+    "data_protocol": "fcp",
+    "comment": "fabric: 55:0e:b1:a0:20:40:80:01"
+  }
+],
+"num_records": 3,
+"recommend": {
+  "messages": [
+    {
+      "message": "The following network ports are disabled (cluster node:port): node2:0b",
+      "code": "5375959",
+      "arguments": [
+        {
+          "message": "node2:0b"
+        }
+      ],
+      "severity": "informational"
+    }
+  ]
+},
+"_links": {
+  "self": {
+    "href": "/api/network/fc/interfaces?recommend.data_protocol=fcp&fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Proposing interface locations for a new SVM
+
+This example requests that caller-proposed locations for FC-NVMe interfaces on two nodes be evaluated.
+
+----
+
+# The API
+GET /api/network/fc/interfaces
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/network/fc/interfaces?&recommend.data_protocol=fc_nvme&recommend.proposed.locations.port.uuid=300c2786-db82-11e8-bd46-005056bba0e0,ad7d47d6-db82-11e8-b36d-005056bb982e&fields=*' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+],
+"num_records": 0,
+"recommend": {
+  "messages": [
+    {
+      "message": "Cluster node \"node1\" does not have the requested number (1) of network interfaces for the following Fibre Channel fabrics: 55:0e:b1:a0:20:40:80:07.",
+      "code": "5375969",
+      "arguments": [
+        {
+          "message": "node1"
+        },
+        {
+          "message": "1"
+        },
+        {
+          "message": "55:0e:b1:a0:20:40:80:07"
+        }
+      ],
+      "severity": "warning"
+    },
+    {
+      "message": "Cluster node \"node2\" does not have the requested number (1) of network interfaces for the following Fibre Channel fabrics: 55:0e:b1:a0:20:40:80:07.",
+      "code": "5375969",
+      "arguments": [
+        {
+          "message": "node2"
+        },
+        {
+          "message": "1"
+        },
+        {
+          "message": "55:0e:b1:a0:20:40:80:07"
+        }
+      ],
+      "severity": "warning"
+    },
+    {
+      "message": "The SVM cannot be reached from all of the Fibre Channel (FC) fabrics to which the cluster is connected. Cluster FC fabrics: 55:0e:b1:a0:20:40:80:06, 55:0e:b1:a0:20:40:80:07. SVM FC fabrics: 55:0e:b1:a0:20:40:80:06.",
+      "code": "5375970",
+      "arguments": [
+        {
+          "message": "55:0e:b1:a0:20:40:80:06, 55:0e:b1:a0:20:40:80:07"
+        },
+        {
+          "message": "55:0e:b1:a0:20:40:80:06"
+        }
+      ],
+      "severity": "warning"
+    },
+    {
+      "message": "The SVM is configured for 1 Fibre Channel (FC) fabrics. The preferred configuration is 2 FC fabrics.",
+      "code": "5375973",
+      "arguments": [
+        {
+          "message": "1"
+        },
+        {
+          "message": "2"
+        }
+      ],
+      "severity": "warning"
+    }
+  ]
+},
+"_links": {
+  "self": {
+    "href": "/api/network/fc/interfaces?recommend.data_protocol=fc_nvme&recommend.nodes.name=node1,node2&recommend.proposed.locations.port.uuid=300c2786-db82-11e8-bd46-005056bba0e0,ad7d47d6-db82-11e8-b36d-005056bb982e&fields=*"
+  }
+}
+}
+----
+
+'''
+
+

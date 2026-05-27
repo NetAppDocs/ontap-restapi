@@ -1,0 +1,438 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-cifs-shadow-copies-.html'
+summary: 'Update a shadow copy'
+---
+
+= Update a shadow copy
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/cifs/shadow-copies/{client_uuid}`#
+
+*Introduced In:* 9.11
+
+Specify list Files to be added as a part of Shadowcopy creation
+
+== Learn more
+
+* link:protocols_cifs_shadow-copies_endpoint_overview.html[DOC /protocols/cifs/shadow-copies]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|client_uuid
+|string
+|path
+|True
+a|client shadowcopy ID
+
+
+|restore
+|boolean
+|query
+|False
+a|Indicates whether to restore a directory
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_uuid
+|string
+a|The universally-unique identifier of the client's shadow copy.
+
+
+|destination_dir
+|string
+a|The path of the destination directory. The path is in UTF8 and uses forward
+slash as a directory separator. The path is relative to the root of the volume.
+
+
+|files
+|array[string]
+a|The list of files to shadow copy in the share. The path is in UTF8 and uses forward
+slash as a directory separator. The path is relative to the root of the share.
+
+
+|shadowcopy_set
+|link:#shadowcopy_set[shadowcopy_set]
+a|
+
+|share
+|link:#share[share]
+a|
+
+|source_dir
+|string
+a|The path of the source directory. The path is in UTF8 and uses forward slash
+as a directory separator. The path is relative to the root of the volume.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The universally-unique identifier of the storage's shadow copy.
+
+
+|volume
+|link:#volume[volume]
+a|The name of the volume where the source and destination directories reside.
+
+
+|with_content
+|boolean
+a|Specifies what needs to be restored. False specifies the directory only.
+True indicates the directory and its content.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "client_uuid": "abc13450-1f19-40ba-9b82-ebf277517e7e",
+  "destination_dir": "/dir2",
+  "files": [
+    "/vhd1",
+    "/vhd2"
+  ],
+  "shadowcopy_set": {
+    "uuid": "5f4e19f3-5e2d-11ec-8766-005056a7c134"
+  },
+  "share": {
+    "name": "sh1"
+  },
+  "source_dir": "/dir1",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "fef32805-1f19-40ba-9b82-ebf277517e7e",
+  "volume": {
+    "name": "volume1",
+    "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|storage_shadowcopy_set_uuid
+|string
+a|The universally-unique identifier of the storage's shadow copy set.
+
+
+|storage_shadowcopy_uuid
+|string
+a|The universally-unique identifier of the storage's shadow copy.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "storage_shadowcopy_set_uuid": "f8328660-00e6-11e6-80d9-005056bd65a9",
+  "storage_shadowcopy_uuid": "fef32805-1f19-40ba-9b82-ebf277517e7e"
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262196
+| The 'svm' field is not supported in the body of a PATCH request.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#shadowcopy_set]
+[.api-collapsible-fifth-title]
+shadowcopy_set
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#share]
+[.api-collapsible-fifth-title]
+share
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Share name
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+The name of the volume where the source and destination directories reside.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#shadowcopy]
+[.api-collapsible-fifth-title]
+shadowcopy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_uuid
+|string
+a|The universally-unique identifier of the client's shadow copy.
+
+
+|destination_dir
+|string
+a|The path of the destination directory. The path is in UTF8 and uses forward
+slash as a directory separator. The path is relative to the root of the volume.
+
+
+|files
+|array[string]
+a|The list of files to shadow copy in the share. The path is in UTF8 and uses forward
+slash as a directory separator. The path is relative to the root of the share.
+
+
+|shadowcopy_set
+|link:#shadowcopy_set[shadowcopy_set]
+a|
+
+|share
+|link:#share[share]
+a|
+
+|source_dir
+|string
+a|The path of the source directory. The path is in UTF8 and uses forward slash
+as a directory separator. The path is relative to the root of the volume.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|The universally-unique identifier of the storage's shadow copy.
+
+
+|volume
+|link:#volume[volume]
+a|The name of the volume where the source and destination directories reside.
+
+
+|with_content
+|boolean
+a|Specifies what needs to be restored. False specifies the directory only.
+True indicates the directory and its content.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

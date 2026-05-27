@@ -1,0 +1,180 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_vscan_server-status_endpoint_overview.html'
+summary: 'Manage Vscan configuration'
+---
+
+= Manage Vscan configuration
+
+
+
+== Overview
+
+This API is used to display connection status information for the external virus-scanning servers or "Vscan servers".
+
+== Examples
+
+=== Retrieving all fields for the Vscan server status
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/server-status/
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/server-status?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "66f8564d-aefc-11eb-bd8c-0050568e8ed1",
+      "name": "vs1"
+    },
+    "node": {
+      "uuid": "ce2463d9-aef6-11eb-bd8c-0050568e8ed1",
+      "name": "user-vsim1"
+    },
+    "ip": "10.140.132.141",
+    "type": "primary",
+    "state": "connected",
+    "update_time": "2021-05-07T21:35:02+05:30",
+    "vendor": "mighty master anti-evil scanner",
+    "version": "5.643",
+    "extended_stats": [
+      "ts=10:15:28 PM May 07,2021",
+      "scans=sent:0,compok:0,comperr:0,compnotfnd:0,ms/comp:0",
+      "avshim-version=1.0.5.0",
+      "mempage/s=0, procs=52, threads=2063, %cpu=0.22, procqlen=0, diskio/s=0, smbbytes/s=52, ",
+      "ifmac=FA:16:3E:F0:70:88, tcpstat=retrans:7538,connfail:2137,connreset:52018,inerr:0",
+      "cfg=Host Name:SCSPB2271817001",
+      "OS Name:Microsoft Windows Server 2012 R2 Standard",
+      "OS Version:6.3.9600 N/A Build 9600",
+      "System Boot Time:5/6/2021, 9:01:42 PM",
+      "System Manufacturer:RDO",
+      "System Model:OpenStack Compute",
+      "System Type:x64-based PC",
+      "Processor(s):2 Processor(s) Installed.",
+      "[01]:Intel64 Family 6 Model 94 Stepping 3 GenuineIntel ~2400 Mhz"
+    ],
+    "interface": {
+      "name": "vs1.data",
+      "uuid": "6911e7c6-aefc-11eb-bd8c-0050568e8ed1",
+      "ip": {
+        "address": "10.140.69.165"
+      }
+    }
+  },
+  {
+    "svm": {
+      "uuid": "a776e8f2-aef9-11eb-8530-0050568e8ed1",
+      "name": "vs2"
+    },
+    "node": {
+      "uuid": "ce2463d9-aef6-11eb-bd8c-0050568e8ed1",
+      "name": "user-vsim1"
+    },
+    "ip": "10.140.128.163",
+    "type": "primary",
+    "state": "connected",
+    "update_time": "2021-05-07T21:35:43+05:30",
+    "vendor": "mighty master anti-evil scanner",
+    "version": "5.643",
+    "extended_stats": [
+      "ts=10:15:26 PM May 07,2021",
+      "scans=sent:0,compok:0,comperr:0,compnotfnd:0,ms/comp:0",
+      "avshim-version=1.0.5.0",
+      "mempage/s=0, procs=46, threads=1947, %cpu=0.07, procqlen=0, diskio/s=1, smbbytes/s=181, ",
+      "ifmac=FA:16:3E:06:9F:D6, tcpstat=retrans:123453,connfail:6864,connreset:13188,inerr:0",
+      "cfg=Host Name:SCSPB2271815001",
+      "OS Name:Microsoft Windows Server 2012 R2 Standard",
+      "OS Version:6.3.9600 N/A Build 9600",
+      "System Boot Time:4/20/2021, 5:23:29 PM",
+      "System Manufacturer:RDO",
+      "System Model:OpenStack Compute",
+      "System Type:x64-based PC",
+      "Processor(s):2 Processor(s) Installed.",
+      "[01]:Intel64 Family 6 Model 94 Stepping 3 GenuineIntel ~2400 Mhz"
+    ],
+    "interface": {
+      "name": "vs2.data",
+      "uuid": "c070b4c2-aef9-11eb-8530-0050568e8ed1",
+      "ip": {
+        "address": "10.140.70.154"
+      }
+    }
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving the server status information for the server with IP address 10.141.46.173
+
+'''
+
+----
+
+# The API:
+/api/protocols/vscan/server-status
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/vscan/server-status?ip=10.140.132.141&fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "66f8564d-aefc-11eb-bd8c-0050568e8ed1",
+      "name": "vs1"
+    },
+    "node": {
+      "uuid": "ce2463d9-aef6-11eb-bd8c-0050568e8ed1",
+      "name": "user-vsim1"
+    },
+    "ip": "10.140.132.141",
+    "type": "primary",
+    "state": "connected",
+    "update_time": "2021-05-07T23:08:21+05:30",
+    "vendor": "mighty master anti-evil scanner",
+    "version": "5.643",
+    "extended_stats": [
+      "ts=12:07:30 AM May 08,2021",
+      "scans=sent:0,compok:0,comperr:0,compnotfnd:0,ms/comp:0",
+      "avshim-version=1.0.5.0",
+      "mempage/s=0, procs=52, threads=2108, %cpu=0.07, procqlen=0, diskio/s=0, smbbytes/s=230, ",
+      "ifmac=FA:16:3E:F0:70:88, tcpstat=retrans:8249,connfail:2174,connreset:52243,inerr:0",
+      "cfg=Host Name:SCSPB2271817001",
+      "OS Name:Microsoft Windows Server 2012 R2 Standard",
+      "OS Version:6.3.9600 N/A Build 9600",
+      "System Boot Time:5/6/2021, 9:01:42 PM",
+      "System Manufacturer:RDO",
+      "System Model:OpenStack Compute",
+      "System Type:x64-based PC",
+      "Processor(s):2 Processor(s) Installed.",
+      "[01]:Intel64 Family 6 Model 94 Stepping 3 GenuineIntel ~2400 Mhz"
+    ],
+    "interface": {
+      "name": "vs1.data",
+      "uuid": "6911e7c6-aefc-11eb-bd8c-0050568e8ed1",
+      "ip": {
+        "address": "10.140.69.165"
+      }
+    }
+  }
+],
+"num_records": 1
+}
+----
+
+'''
+
+

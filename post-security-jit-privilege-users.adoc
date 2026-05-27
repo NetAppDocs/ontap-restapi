@@ -1,0 +1,431 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-jit-privilege-users.html'
+summary: 'Create JIT privilege user configurations for an SVM'
+---
+
+= Create JIT privilege user configurations for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/jit-privilege-users`#
+
+*Introduced In:* 9.17
+
+Creates the JIT privilege user configurations for an SVM.
+
+== Required properties
+
+* `owner.uuid` - Account owner UUID.
+* `account.name` - User name.
+* `application` - Application
+
+== Related ONTAP commands
+
+* `security jit-privilege user create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|The name of the user.
+
+
+|application
+|string
+a|The name of the application.
+
+
+|comment
+|string
+a|The description of the elevation rule.
+
+
+|end_time
+|string
+a|The end date and time of the JIT privilege session in UTC.
+
+
+|jit_state
+|string
+a|The current status of the rule: preactive, idle, or active.
+
+
+|jit_validity
+|string
+a|The JIT validity period on this SVM for this user.
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the JIT settings for a user.
+
+
+|role
+|link:#role[role]
+a|The role the user will be elevated to.
+
+
+|session_validity
+|string
+a|The session validity period on this SVM for this user.
+
+
+|start_time
+|string
+a|The start date and time of the JIT privilege session in UTC.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "account": {
+    "name": "joe.smith"
+  },
+  "application": "string",
+  "comment": "Comment text",
+  "end_time": "2024-11-08 11:15:31 +0000",
+  "jit_state": "active",
+  "jit_validity": "P90D",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "role": {
+    "name": "admin"
+  },
+  "session_validity": "PT1H",
+  "start_time": "2024-11-08 10:15:31 +0000"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#security_jit_privilege_user[security_jit_privilege_user]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "account": {
+        "name": "joe.smith"
+      },
+      "application": "string",
+      "comment": "Comment text",
+      "end_time": "2024-11-08 11:15:31 +0000",
+      "jit_state": "active",
+      "jit_validity": "P90D",
+      "owner": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "role": {
+        "name": "admin"
+      },
+      "session_validity": "PT1H",
+      "start_time": "2024-11-08 10:15:31 +0000"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#account_reference]
+[.api-collapsible-fifth-title]
+account_reference
+
+The name of the user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|User account
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the JIT settings for a user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#role]
+[.api-collapsible-fifth-title]
+role
+
+The role the user will be elevated to.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Role name
+
+
+|===
+
+
+[#security_jit_privilege_user]
+[.api-collapsible-fifth-title]
+security_jit_privilege_user
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|account
+|link:#account_reference[account_reference]
+a|The name of the user.
+
+
+|application
+|string
+a|The name of the application.
+
+
+|comment
+|string
+a|The description of the elevation rule.
+
+
+|end_time
+|string
+a|The end date and time of the JIT privilege session in UTC.
+
+
+|jit_state
+|string
+a|The current status of the rule: preactive, idle, or active.
+
+
+|jit_validity
+|string
+a|The JIT validity period on this SVM for this user.
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the JIT settings for a user.
+
+
+|role
+|link:#role[role]
+a|The role the user will be elevated to.
+
+
+|session_validity
+|string
+a|The session validity period on this SVM for this user.
+
+
+|start_time
+|string
+a|The start date and time of the JIT privilege session in UTC.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

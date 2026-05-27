@@ -1,0 +1,386 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_metrocluster_dr-groups_endpoint_overview.html'
+summary: 'Manage MetroCluster DR groups'
+---
+
+= Manage MetroCluster DR groups
+
+
+
+== Overview
+
+You can use this API to create, perform operations, and retrieve relevant information pertaining to MetroCluster DR groups. The GET operation retrieves all the DR groups in the MetroCluster over IP configuration or a DR group information specified by the DR group id. The POST request can be used to create a new DR group in the MetroCluster over IP configuration. The DELETE operation removes a DR group information specified by the DR group id from the existing MetroCluster over IP configuration.
+
+== Creating a new DR group
+
+A new DR group in MetroCluster over IP configuration is created by issuing a POST to /cluster/metrocluster/dr-groups. Parameters are provided in the body of the POST request.
+This operation requires a valid MetroCluster over IP configuration. The new nodes added belong to either the local or partner cluster.
+
+=== Fields used for setting up a new DR group
+
+The fields used for MetroCluster APIs are either required or optional and are described as follows:
+
+=== Required configuration fields
+
+These fields are always required for any POST /cluster/dr-groups request.
+
+* `partner_cluster.name` - Specifies the partner cluster name to which cluster peering has been established.
+* `dr_pairs` - Specifies local and DR partner node pairs.  Each pair uniquely identifies a DR group.
+
+=== Optional configuration fields
+
+This field is used to set up additional MetroCluster DR configuration.
+
+* `mccip_ports` - Specifies relevant layer 3 network configuration information for each port. These include port name, node name, IP address, gateway, and netmask. If mccip_ports is not provided, then the API automatically generates IP addresses for the ports and creates an layer 2 network configuration.
+
+=== Polling the create job
+
+After a successful POST /cluster/metrocluster/dr-groups is issued, an HTTP status code of 202 (Accepted) is returned along with a job UUID and a link in the body of the response. The create job continues asynchronously and can be monitored by using the job UUID and the /cluster/jobs API. The "message" field in the response of the GET /cluster/jobs/\{uuid} request shows the current step in the job, and the "state" field shows the overall state of the job.
+
+== Deleting a DR group using ID
+
+A DR group in MetroCluster over IP configuration can be deleted by issuing a DELETE to /cluster/metrocluster/dr-groups/\{id}. No parameters are required for the DELETE request.
+The following preparation steps must be completed on the local and partner clusters before removing a DR group.
+
+* Move all the data volumes to another DR group.
+* Move all the MDV_CRS metadata volumes to another DR group.
+* Delete all the MDV_aud metadata volumes that may exist in the DR group to be removed.
+* Delete all the data aggregates in the DR group to be removed. Root aggregates are not deleted.
+* Migrate all the data LIFs to home nodes in another DR group.
+* Migrate the cluster management LIF to a home node in another DR group. Node management and inter-cluster LIFs are not migrated.
+* Transfer epsilon to a node in another DR group.
+The operation is refused if the preparation steps are not completed on the local and partner clusters.
+
+=== Polling the delete job
+
+After a successful DELETE /cluster/metrocluster/dr-groups is issued, an HTTP status code of 202 (Accepted) is returned along with a job UUID and a link in the body of the response. The delete job continues asynchronously and can be monitored by using the job UUID and the /cluster/jobs API. The "message" field in the response of the GET /cluster/jobs/\{uuid} request shows the current step in the job, and the "state" field shows the overall state of the job.
+
+'''
+
+== Examples
+
+=== Creating a DR group for MetroCluster over IP configuration
+
+This example shows the POST body when creating a DR group for MetroCluster.
+
+----
+
+# API
+/api/cluster/metrocluster/dr-groups
+----
+
+=== POST body included from file
+
+----
+dr_group_post_body.txt:
+{
+"partner_cluster" : {
+  "name": "mcc_siteB"
+},
+"dr_pairs" : [
+  {
+    "node" : {
+      "name" : "node-e"
+    },
+    "partner" : {
+      "name" : "node-g"
+    }
+  }
+]
+}
+curl -X POST https://<mgmt-ip>/api/cluster/metrocluster/dr-groups -H "Content-Type: application+hal/json" -d "@dr_group_post_body.txt"
+----
+
+=== Inline POST body
+
+----
+curl -X POST https://<mgmt-ip>/api/cluster/metrocluster/dr-groups -H "Content-Type: application+hal/json" -d '{"partner_cluster" : {"name": "mcc_siteB" }, "dr_pairs" : [{"node" : {"name" : "node-e" }, "partner" : {"name" : "node-g" }}]}'
+----
+
+=== POST Response
+
+----
+HTTP/1.1 202 Accepted
+Date: Fri, 18 Sep 2020 20:38:05 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/cluster/metrocluster/dr-groups
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "5b89472e-f9e8-11ea-9c31-005056bb42f7",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/5b89472e-f9e8-11ea-9c31-005056bb42f7"
+    }
+  }
+}
+}
+----
+
+=== Monitoring the job progress
+
+Use the link provided in the response to the POST request to fetch information for the DR group job.
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/jobs/5b89472e-f9e8-11ea-9c31-005056bb42f7
+----
+
+==== Job status response
+
+The following is an example of the job status response returned by the running DR group job:
+
+----
+HTTP/1.1 200 OK
+Date: Fri, 18 Sep 2020 20:40:20 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 373
+Content-Type: application/hal+json
+{
+"uuid": "5b89472e-f9e8-11ea-9c31-005056bb42f7",
+"description": "POST /api/cluster/metrocluster/dr-groups/",
+"state": "running",
+"message": "Mirroring aggregates",
+"code": 2432845,
+"start_time": "2020-09-18T15:38:08-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/5b89472e-f9e8-11ea-9c31-005056bb42f7"
+  }
+}
+}
+----
+
+==== Final status of a successful DR Group create workflow
+
+When the create job completes, the 'end_time' field is populated, and the 'state' and 'message' fields report final status.
+
+----
+HTTP/1.1 200 OK
+Date: Fri, 18 Sep 2020 20:43:54 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 373
+Content-Type: application/hal+json
+{
+"uuid": "5b89472e-f9e8-11ea-9c31-005056bb42f7",
+"description": "POST /api/cluster/metrocluster/dr-groups/",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2020-09-18T15:51:35-04:00",
+"end_time": "2020-09-18T16:10:17-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/5b89472e-f9e8-11ea-9c31-005056bb42f7"
+  }
+}
+}
+----
+
+=== Retrieving the MetroCluster DR Groups configured in the MetroCluster over IP configuration
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/metrocluster/dr-groups
+----
+
+==== Response
+
+----
+HTTP/1.1 200 OK
+Date: Fri, 18 Sep 2020 20:47:05 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 849
+Content-Type: application/hal+json
+{
+"records": [
+  {
+    "id": 1,
+    "_links": {
+      "self": {
+        "href": "/api/cluster/metrocluster/dr-groups/1"
+      }
+    }
+  },
+  {
+    "id": 2,
+    "_links": {
+      "self": {
+        "href": "/api/cluster/metrocluster/dr-groups/2"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/metrocluster/dr-groups"
+  }
+}
+}
+----
+
+=== Retrieving a Specific MetroCluster DR Group
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/metrocluster/dr-groups/2
+----
+
+==== Response
+
+----
+HTTP/1.1 200 OK
+Date: Fri, 18 Sep 2020 20:49:05 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 1049
+Content-Type: application/hal+json
+{
+"id": 2,
+"partner_cluster": {
+  "name": "mcc_siteB",
+  "uuid": "ea4d7114-f97f-11ea-a4bf-005056bb070a"
+},
+"dr_pairs": [
+  {
+    "node": {
+      "name": "node-e",
+      "uuid": "28f71e17-f988-11ea-b1dd-005056bb47e8"
+    },
+    "partner": {
+      "name": "node-g",
+      "uuid": "1af02867-f989-11ea-b86c-005056bbe97f"
+    }
+  },
+  {
+    "node": {
+      "name": "node-f",
+      "uuid": "b34ae3b8-f988-11ea-866b-005056bb0934"
+    },
+    "partner": {
+      "name": "node-h",
+      "uuid": "a21a2b16-f989-11ea-98d0-005056bb321d"
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/cluster/metrocluster/dr-groups/2"
+  }
+}
+}
+----
+
+=== Deleting a MetroCluster DR Group
+
+==== Request
+
+----
+curl -X DELETE https://<mgmt-ip>/api/cluster/metrocluster/dr-groups/{id}
+----
+
+==== Response
+
+----
+HTTP/1.1 200 OK
+Date: Tue, 22 Sep 2020 03:29:01 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "c24d1083-fc83-11ea-acaf-005056bb47c1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c24d1083-fc83-11ea-acaf-005056bb47c1"
+    }
+  }
+}
+}
+----
+
+=== Monitoring the job progress
+
+Use the link provided in the response to the DELETE request to fetch information for the delete job.
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/jobs/c24d1083-fc83-11ea-acaf-005056bb47c1
+----
+
+==== Job status response
+
+The following is an example of the job status response returned by the MetroCluster DR Group delete job.
+
+----
+HTTP/1.1 200 OK
+Date: Tue, 22 Sep 2020 03:30:01 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 374
+Content-Type: application/hal+json
+{
+"uuid": "c24d1083-fc83-11ea-acaf-005056bb47c1",
+"description": "DELETE /api/cluster/metrocluster/dr-groups/2",
+"state": "running",
+"message": "Unconfiguring Metrocluster DR Group",
+"code": 2432859,
+"start_time": "2020-09-21T23:29:01-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/c24d1083-fc83-11ea-acaf-005056bb47c1"
+  }
+}
+}
+----
+
+==== Final Status of a successful MetroCluster DR Group delete workflow
+
+When the delete job completes, the 'end_time' field is populated, and the 'state' and 'message' fields report the final status.
+
+----
+HTTP/1.1 200 OK
+Date: Tue, 22 Sep 2020 03:38:08 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 374
+Content-Type: application/hal+json
+{
+"uuid": "c24d1083-fc83-11ea-acaf-005056bb47c1",
+"description": "DELETE /api/cluster/metrocluster/dr-groups/2",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2020-09-21T23:29:01-04:00",
+"end_time": "2020-09-21T23:36:36-04:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/c24d1083-fc83-11ea-acaf-005056bb47c1"
+  }
+}
+}
+----
+
+

@@ -1,0 +1,466 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-chassis-.html'
+summary: 'Retrieve a chassis'
+---
+
+= Retrieve a chassis
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/chassis/{id}`#
+
+*Introduced In:* 9.6
+
+Retrieves a specific chassis.
+
+== Related ONTAP commands
+
+* `system chassis show`
+* `system chassis fru show`
+
+== Learn more
+
+* link:cluster_chassis_endpoint_overview.html[DOC /cluster/chassis]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|id
+|string
+|path
+|True
+a|Chassis ID
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|frus
+|array[link:#frus[frus]]
+a|List of FRUs in the chassis.
+
+
+|id
+|string
+a|
+
+|nodes
+|array[link:#nodes[nodes]]
+a|List of nodes in the chassis.
+
+
+|shelves
+|array[link:#shelf_reference[shelf_reference]]
+a|List of shelves in chassis.
+
+
+|state
+|string
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "frus": [
+    {
+      "id": "string",
+      "state": "string",
+      "type": "string"
+    }
+  ],
+  "id": "021352005981",
+  "nodes": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "node1",
+      "pcis": {
+        "cards": [
+          {
+            "device": "Intel Lewisburg series chipset SATA Controller",
+            "info": "Additional Info: 0 (0xaaf00000)   SHM2S86Q120GLM22NP FW1146 114473MB 512B/sect (SPG190108GW)",
+            "slot": "0"
+          }
+        ]
+      },
+      "position": "top",
+      "usbs": {
+        "ports": [
+          {}
+        ]
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "shelves": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "uid": "7777841915827391056"
+    }
+  ],
+  "state": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#frus]
+[.api-collapsible-fifth-title]
+frus
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|
+
+|state
+|string
+a|
+
+|type
+|string
+a|
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cards]
+[.api-collapsible-fifth-title]
+cards
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|device
+|string
+a|The description of the PCI card.
+
+
+|info
+|string
+a|The info string from the device driver of the PCI card.
+
+
+|slot
+|string
+a|The slot where the PCI card is placed. This can sometimes take the form of "6-1" to indicate slot and subslot.
+
+
+|===
+
+
+[#pcis]
+[.api-collapsible-fifth-title]
+pcis
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cards
+|array[link:#cards[cards]]
+a|
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|connected
+|boolean
+a|Indicates whether or not the USB port has a device connected to it.
+
+
+|===
+
+
+[#usbs]
+[.api-collapsible-fifth-title]
+usbs
+
+The status of the USB ports on the controller.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not the USB ports are enabled.
+
+
+|ports
+|array[link:#ports[ports]]
+a|
+
+|supported
+|boolean
+a|Indicates whether or not USB ports are supported on the current platform.
+
+
+|===
+
+
+[#nodes]
+[.api-collapsible-fifth-title]
+nodes
+
+List of nodes in chassis.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|pcis
+|link:#pcis[pcis]
+a|
+
+|position
+|string
+a|The position of the node in the chassis, when viewed from the rear of the system.
+
+
+|usbs
+|link:#usbs[usbs]
+a|The status of the USB ports on the controller.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#shelf_reference]
+[.api-collapsible-fifth-title]
+shelf_reference
+
+Shelf
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|uid
+|string
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

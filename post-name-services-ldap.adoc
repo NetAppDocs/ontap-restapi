@@ -1,0 +1,990 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-name-services-ldap.html'
+summary: 'Create the LDAP configuration for an SVM'
+---
+
+= Create the LDAP configuration for an SVM
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/name-services/ldap`#
+
+*Introduced In:* 9.6
+
+Creates an LDAP configuration for an SVM.
+
+== Important notes
+
+* Each SVM can have one LDAP configuration.
+* The LDAP servers and Active Directory domain are mutually exclusive fields. These fields cannot be empty. At any point in time, either the LDAP servers or Active Directory domain must be populated.
+* LDAP configuration with Active Directory domain cannot be created on an admin SVM.
+* IPv6 must be enabled if IPv6 family addresses are specified.
+
+=== The following parameters are optional:
+
+* preferred AD servers
+* schema
+* port
+* ldaps_enabled
+* min_bind_level
+* bind_password
+* base_scope
+* use_start_tls
+* session_security
+* referral_enabled
+* bind_as_cifs_server
+* query_timeout
+* user_dn
+* user_scope
+* group_dn
+* group_scope
+* netgroup_dn
+* netgroup_scope
+* netgroup_byhost_dn
+* netgroup_byhost_scope
+* is_netgroup_byhost_enabled
+* group_membership_filter
+* skip_config_validation
+* try_channel_binding
+* restrict_discovery_to_site
+
+Configuring more than one LDAP server is recommended to avoid a single point of failure.
+Both FQDNs and IP addresses are supported for the "servers" field.
+The Active Directory domain or LDAP servers are validated as part of this operation.
+
+LDAP validation fails in the following scenarios:
+
+. The server does not have LDAP installed.
+. The server or Active Directory domain is invalid.
+. The server or Active Directory domain is unreachable.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|string
+a|This parameter specifies the name of the Active Directory domain
+used to discover LDAP servers for use by this client.
+This is mutually exclusive with `servers` during POST and PATCH.
+
+
+|base_dn
+|string
+a|Specifies the default base DN for all searches.
+
+
+|base_scope
+|string
+a|Specifies the default search scope for LDAP queries:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|bind_as_cifs_server
+|boolean
+a|Specifies whether or not CIFS server's credentials are used to bind to the LDAP server.
+
+
+|bind_dn
+|string
+a|Specifies the user that binds to the LDAP servers.
+
+
+|bind_password
+|string
+a|Specifies the bind password for the LDAP servers.
+
+
+|group_dn
+|string
+a|Specifies the group Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for group lookups.
+
+
+|group_membership_filter
+|string
+a|Specifies the custom filter used for group membership lookups from an LDAP server.
+
+
+|group_scope
+|string
+a|Specifies the default search scope for LDAP for group lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|is_netgroup_byhost_enabled
+|boolean
+a|Specifies whether or not netgroup by host querying is enabled.
+
+
+|is_owner
+|boolean
+a|Specifies whether or not the SVM owns the LDAP client configuration.
+
+
+|ldaps_enabled
+|boolean
+a|Specifies whether or not LDAPS is enabled.
+
+
+|min_bind_level
+|string
+a|The minimum bind authentication level. Possible values are:
+
+* anonymous - anonymous bind
+* simple - simple bind
+* sasl - Simple Authentication and Security Layer (SASL) bind
+
+
+|netgroup_byhost_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup by host lookups.
+
+
+|netgroup_byhost_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup by host lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|netgroup_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup lookups.
+
+
+|netgroup_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|port
+|integer
+a|The port used to connect to the LDAP Servers.
+
+
+|preferred_ad_servers
+|array[string]
+a|
+
+|query_timeout
+|integer
+a|Specifies the maximum time to wait for a query response from the LDAP server, in seconds.
+
+
+|referral_enabled
+|boolean
+a|Specifies whether or not LDAP referral is enabled.
+
+
+|restrict_discovery_to_site
+|boolean
+a|Specifies whether or not LDAP server discovery is restricted to site-scope.
+
+
+|schema
+|string
+a|The name of the schema template used by the SVM.
+
+* AD-IDMU - Active Directory Identity Management for UNIX
+* AD-SFU - Active Directory Services for UNIX
+* MS-AD-BIS - Active Directory Identity Management for UNIX
+* RFC-2307 - Schema based on RFC 2307
+* Custom schema
+
+
+|servers
+|array[string]
+a|
+
+|session_security
+|string
+a|Specifies the level of security to be used for LDAP communications:
+
+* none - no signing or sealing
+* sign - sign LDAP traffic
+* seal - seal and sign LDAP traffic
+
+
+|skip_config_validation
+|boolean
+a|Indicates whether or not the validation for the specified LDAP configuration is disabled.
+
+
+|status
+|link:#status[status]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|try_channel_binding
+|boolean
+a|Specifies whether or not channel binding is attempted in the case of TLS/LDAPS.
+
+
+|use_start_tls
+|boolean
+a|Specifies whether or not to use Start TLS over LDAP connections.
+
+
+|user_dn
+|string
+a|Specifies the user Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for user lookups.
+
+
+|user_scope
+|string
+a|Specifies the default search scope for LDAP for user lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "ad_domain": "example.com",
+  "base_dn": "dc=domainB,dc=example,dc=com",
+  "base_scope": "string",
+  "bind_dn": "cn=Administrators,cn=users,dc=domainB,dc=example,dc=com",
+  "bind_password": "abc",
+  "group_dn": "cn=abc,users,dc=com",
+  "group_membership_filter": "",
+  "group_scope": "string",
+  "min_bind_level": "string",
+  "netgroup_byhost_dn": "cn=abc,users,dc=com",
+  "netgroup_byhost_scope": "string",
+  "netgroup_dn": "cn=abc,users,dc=com",
+  "netgroup_scope": "string",
+  "port": 389,
+  "preferred_ad_servers": [
+    "11.11.11.11"
+  ],
+  "schema": "ad_idmu",
+  "servers": [
+    [
+      "10.10.10.10",
+      "domainB.example.com"
+    ]
+  ],
+  "session_security": "string",
+  "status": {
+    "code": 65537300,
+    "dn_message": [
+      "string"
+    ],
+    "ipv4": {
+      "code": 65537300,
+      "dn_messages": [
+        "string"
+      ],
+      "message": "string",
+      "state": "string"
+    },
+    "ipv4_state": "string",
+    "ipv6": {
+      "code": 65537300,
+      "dn_messages": [
+        "string"
+      ],
+      "message": "string",
+      "state": "string"
+    },
+    "ipv6_state": "string",
+    "message": "string",
+    "state": "string"
+  },
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "user_dn": "cn=abc,users,dc=com",
+  "user_scope": "string"
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of LDAP records.
+
+
+|records
+|array[link:#ldap_service[ldap_service]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {
+      "ad_domain": "example.com",
+      "base_dn": "dc=domainB,dc=example,dc=com",
+      "base_scope": "string",
+      "bind_dn": "cn=Administrators,cn=users,dc=domainB,dc=example,dc=com",
+      "bind_password": "abc",
+      "group_dn": "cn=abc,users,dc=com",
+      "group_membership_filter": "",
+      "group_scope": "string",
+      "min_bind_level": "string",
+      "netgroup_byhost_dn": "cn=abc,users,dc=com",
+      "netgroup_byhost_scope": "string",
+      "netgroup_dn": "cn=abc,users,dc=com",
+      "netgroup_scope": "string",
+      "port": 389,
+      "preferred_ad_servers": [
+        "11.11.11.11"
+      ],
+      "schema": "ad_idmu",
+      "servers": [
+        [
+          "10.10.10.10",
+          "domainB.example.com"
+        ]
+      ],
+      "session_security": "string",
+      "status": {
+        "code": 65537300,
+        "dn_message": [
+          "string"
+        ],
+        "ipv4": {
+          "code": 65537300,
+          "dn_messages": [
+            "string"
+          ],
+          "message": "string",
+          "state": "string"
+        },
+        "ipv4_state": "string",
+        "ipv6": {
+          "code": 65537300,
+          "dn_messages": [
+            "string"
+          ],
+          "message": "string",
+          "state": "string"
+        },
+        "ipv6_state": "string",
+        "message": "string",
+        "state": "string"
+      },
+      "svm": {
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "user_dn": "cn=abc,users,dc=com",
+      "user_scope": "string"
+    }
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 262186
+| LDAP Servers cannot be used with Active Directory domain and/or preferred Active Directory servers
+
+| 2621488
+| Invalid SVM context
+
+| 2621706
+| The specified SVM UUID is incorrect for the specified SVM name
+
+| 4915203
+| The specified LDAP schema does not exist
+
+| 262222
+| The specified LDAP servers or preferred Active Directory servers contain duplicate server entries
+
+| 4915229
+| DNS resolution failed due to an internal error. Contact technical support if this issue persists
+
+| 4915231
+| DNS resolution failed for one or more of the specified LDAP servers. Verify that a valid DNS server is configured
+
+| 23724132
+| DNS resolution failed for all the specified LDAP servers. Verify that a valid DNS server is configured
+
+| 4915234
+| The specified LDAP server or preferred Active Directory server is not supported because it is one of the following: multicast, loopback, 0.0.0.0, or broadcast
+
+| 4915248
+| LDAP servers cannot be empty or "-". Specified Active Directory domain is invalid because it is empty or "-" or it contains either the special characters or "-" at the start or end of the domain)
+
+| 4915251
+| STARTTLS and LDAPS cannot be used together
+
+| 4915257
+| The LDAP configuration is invalid. Verify that bind-dn and bind password are correct
+
+| 4915258
+| The LDAP configuration is invalid. Verify that the Active Directory domain or servers are reachable and that the network configuration is correct
+
+| 4915259
+| LDAP configurations with Active Directory domains are not supported on admin SVM.
+
+| 4915265
+| The specified bind password or bind DN is invalid
+
+| 4915264
+| Certificate verification failed. Verify that a valid certificate is installed
+
+| 13434916
+| The SVM is in the process of being created. Wait a few minutes, and then try the command again.
+
+| 23724130
+| Cannot use an IPv6 name server address because there are no IPv6 LIFs
+
+| 4915252
+| LDAP Referral is not supported with STARTTLS, with session security levels sign, seal or with LDAPS.
+
+| 4915266
+| LDAP site discovery restriction cannot be applied to a mixed version cluster.
+
+| 656484
+| The default site needs to be specified to enable site restriction.
+
+| 4915206
+| CIFS server is not configured for the vserver. LDAP client configuration requires CIFS server for binding.
+
+| 4915261
+| Cannot use port "389" when "ldaps_enabled" is "true".
+
+| 4915255
+| Base DN specified in the LDAP client configuration is not available.
+
+| 4915268
+| The bind_as_cifs_server field cannot be set to true when the CIFS server is in workgroup mode.
+
+| 4915269
+| The bind_as_cifs_server field cannot be set to true when the CIFS server is in realm mode.
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipv4]
+[.api-collapsible-fifth-title]
+ipv4
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the error message. If there is no error, it is 0 to indicate success.
+
+
+|dn_messages
+|array[string]
+a|
+
+|message
+|string
+a|Provides additional details on the error.
+
+
+|state
+|string
+a|Status of the LDAP service.
+
+
+|===
+
+
+[#ipv6]
+[.api-collapsible-fifth-title]
+ipv6
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code corresponding to the error message. If there is no error, it is 0 to indicate success.
+
+
+|dn_messages
+|array[string]
+a|
+
+|message
+|string
+a|Provides additional details on the error.
+
+
+|state
+|string
+a|Status of the LDAP service.
+
+
+|===
+
+
+[#status]
+[.api-collapsible-fifth-title]
+status
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|This field is no longer supported. Use ipv4.code or ipv6.code instead.
+
+
+|dn_message
+|array[string]
+a|
+
+|ipv4
+|link:#ipv4[ipv4]
+a|
+
+|ipv4_state
+|string
+a|This field is no longer supported. Use ipv4.state instead.
+
+
+|ipv6
+|link:#ipv6[ipv6]
+a|
+
+|ipv6_state
+|string
+a|This field is no longer supported. Use ipv6.state instead.
+
+
+|message
+|string
+a|This field is no longer supported. Use ipv4.message or ipv6.message instead.
+
+
+|state
+|string
+a|The status of the LDAP service for the SVM. The LDAP service is up if either `ipv4_state` or `ipv6_state` is up.
+The LDAP service is down if both `ipv4_state` and `ipv6_state` are down.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#ldap_service]
+[.api-collapsible-fifth-title]
+ldap_service
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ad_domain
+|string
+a|This parameter specifies the name of the Active Directory domain
+used to discover LDAP servers for use by this client.
+This is mutually exclusive with `servers` during POST and PATCH.
+
+
+|base_dn
+|string
+a|Specifies the default base DN for all searches.
+
+
+|base_scope
+|string
+a|Specifies the default search scope for LDAP queries:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|bind_as_cifs_server
+|boolean
+a|Specifies whether or not CIFS server's credentials are used to bind to the LDAP server.
+
+
+|bind_dn
+|string
+a|Specifies the user that binds to the LDAP servers.
+
+
+|bind_password
+|string
+a|Specifies the bind password for the LDAP servers.
+
+
+|group_dn
+|string
+a|Specifies the group Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for group lookups.
+
+
+|group_membership_filter
+|string
+a|Specifies the custom filter used for group membership lookups from an LDAP server.
+
+
+|group_scope
+|string
+a|Specifies the default search scope for LDAP for group lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|is_netgroup_byhost_enabled
+|boolean
+a|Specifies whether or not netgroup by host querying is enabled.
+
+
+|is_owner
+|boolean
+a|Specifies whether or not the SVM owns the LDAP client configuration.
+
+
+|ldaps_enabled
+|boolean
+a|Specifies whether or not LDAPS is enabled.
+
+
+|min_bind_level
+|string
+a|The minimum bind authentication level. Possible values are:
+
+* anonymous - anonymous bind
+* simple - simple bind
+* sasl - Simple Authentication and Security Layer (SASL) bind
+
+
+|netgroup_byhost_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup by host lookups.
+
+
+|netgroup_byhost_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup by host lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|netgroup_dn
+|string
+a|Specifies the netgroup Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for netgroup lookups.
+
+
+|netgroup_scope
+|string
+a|Specifies the default search scope for LDAP for netgroup lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|port
+|integer
+a|The port used to connect to the LDAP Servers.
+
+
+|preferred_ad_servers
+|array[string]
+a|
+
+|query_timeout
+|integer
+a|Specifies the maximum time to wait for a query response from the LDAP server, in seconds.
+
+
+|referral_enabled
+|boolean
+a|Specifies whether or not LDAP referral is enabled.
+
+
+|restrict_discovery_to_site
+|boolean
+a|Specifies whether or not LDAP server discovery is restricted to site-scope.
+
+
+|schema
+|string
+a|The name of the schema template used by the SVM.
+
+* AD-IDMU - Active Directory Identity Management for UNIX
+* AD-SFU - Active Directory Services for UNIX
+* MS-AD-BIS - Active Directory Identity Management for UNIX
+* RFC-2307 - Schema based on RFC 2307
+* Custom schema
+
+
+|servers
+|array[string]
+a|
+
+|session_security
+|string
+a|Specifies the level of security to be used for LDAP communications:
+
+* none - no signing or sealing
+* sign - sign LDAP traffic
+* seal - seal and sign LDAP traffic
+
+
+|skip_config_validation
+|boolean
+a|Indicates whether or not the validation for the specified LDAP configuration is disabled.
+
+
+|status
+|link:#status[status]
+a|
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|try_channel_binding
+|boolean
+a|Specifies whether or not channel binding is attempted in the case of TLS/LDAPS.
+
+
+|use_start_tls
+|boolean
+a|Specifies whether or not to use Start TLS over LDAP connections.
+
+
+|user_dn
+|string
+a|Specifies the user Distinguished Name (DN) that is used as the starting point in the LDAP directory tree for user lookups.
+
+
+|user_scope
+|string
+a|Specifies the default search scope for LDAP for user lookups:
+
+* base - search the named entry only
+* onelevel - search all entries immediately below the DN
+* subtree - search the named DN entry and the entire subtree below the DN
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

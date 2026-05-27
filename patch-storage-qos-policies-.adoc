@@ -1,0 +1,522 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-qos-policies-.html'
+summary: 'Update a QoS policy'
+---
+
+= Update a QoS policy
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/qos/policies/{uuid}`#
+
+*Introduced In:* 9.6
+
+Update a specific QoS policy.
+
+== Related ONTAP commands
+
+* `qos policy-group modify`
+* `qos adaptive-policy-group modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|* Introduced in: 9.8
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|adaptive
+|link:#adaptive[adaptive]
+a|Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+|fixed
+|link:#fixed[fixed]
+a|QoS policy-groups define a fixed service level objective (SLO) for a storage object.
+
+
+|name
+|string
+a|Name of the QoS policy.
+
+
+|object_count
+|integer
+a|Number of objects attached to this policy.
+
+
+|pgid
+|integer
+a|Policy group ID of the QoS policy.
+
+
+|policy_class
+|string
+a|Class of the QoS policy.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "adaptive": {
+    "block_size": "string",
+    "expected_iops_allocation": "string",
+    "peak_iops_allocation": "string"
+  },
+  "fixed": {
+    "capacity_shared": true,
+    "max_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ],
+    "min_throughput": [
+      "900KB/s",
+      "500MB/s",
+      "120GB/s",
+      "5000IOPS",
+      "5000IOPS,500KB/s",
+      "2500IOPS,100MB/s",
+      "1000IOPS,25MB/s"
+    ]
+  },
+  "name": "extreme",
+  "object_count": 0,
+  "pgid": 0,
+  "policy_class": "string",
+  "scope": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 8454147
+| The maximum limit for QoS policies has been reached.
+
+| 8454154
+| The name specified for creating conflicts with an existing QoS policy name.
+
+| 8454194
+| The minimum throughput value for the policy group must be less than or equal to the maximum throughput value.
+
+| 8454260
+| Invalid value for maximum and minimum fields. Valid values for max_throughput_iops and max_throughput_mbps combination is for the ratio of max_throughput_mbps and max_throughput_iops to be within 1 to 4096.
+
+| 8454273
+| Invalid value for an adaptive field. Value should be non-zero.
+
+| 8454277
+| The name specified for creating an adaptive QoS policy conflicts with an existing fixed QoS policy name.
+
+| 8454278
+| The name specified for creating a fixed QoS policy conflicts with an existing adaptive QoS policy name.
+
+| 8454286
+| Modifications on these cluster scoped preset policies is prohibited.
+
+| 8454327
+| The existing fixed QoS policy cannot be modified to an adaptive QoS policy.
+
+| 8454328
+| The existing adaptive QoS policy cannot be modified to a fixed QoS policy.
+
+| 8454379
+| The name specified for creating a fixed QoS policy already exists.
+
+| 8454380
+| The name specified for creating an adaptive QoS policy already exists.
+
+| 8454389
+| One specified field cannot be used in combination with at least one other specified field.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#adaptive]
+[.api-collapsible-fifth-title]
+adaptive
+
+Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|absolute_min_iops
+|integer
+a|Specifies the absolute minimum IOPS that is used as an override when the expected_iops is less than this value. These floors are not guaranteed on non-AFF platforms or when FabricPool tiering policies are set.
+
+
+|block_size
+|string
+a|Specifies the block size
+
+
+|expected_iops
+|integer
+a|Expected IOPS. Specifies the minimum expected IOPS per TB allocated based on the storage object allocated size. These floors are not guaranteed on non-AFF platforms or when FabricPool tiering policies are set.
+
+
+|expected_iops_allocation
+|string
+a|Specifies the size to be used to calculate expected IOPS per TB. The size options are either the storage object allocated space or the storage object used space.
+
+
+|peak_iops
+|integer
+a|Peak IOPS. Specifies the maximum possible IOPS per TB allocated based on the storage object allocated size or the storage object used size.
+
+
+|peak_iops_allocation
+|string
+a|Specifies the size to be used to calculate peak IOPS per TB. The size options are either the storage object allocated space or the storage object used space.
+
+
+|===
+
+
+[#fixed]
+[.api-collapsible-fifth-title]
+fixed
+
+QoS policy-groups define a fixed service level objective (SLO) for a storage object.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|max_throughput
+|string
+a|Maximum throughput defined by this policy. It is specified in terms of Kbps, Mbps or Gbps along with or without IOPS. 0 means no maximum throughput is enforced.
+
+
+|max_throughput_iops
+|integer
+a|Maximum throughput defined by this policy. It is specified in terms of IOPS. 0 means no maximum throughput is enforced.
+
+
+|max_throughput_mbps
+|integer
+a|Maximum throughput defined by this policy. It is specified in terms of Mbps. 0 means no maximum throughput is enforced.
+
+
+|min_throughput
+|string
+a|Minimum throughput defined by this policy. It is specified in terms of Kbps, Mbps or Gbps along with or without IOPS. 0 means no minimum throughput is enforced.
+
+
+|min_throughput_iops
+|integer
+a|Minimum throughput defined by this policy. It is specified in terms of IOPS. 0 means no minimum throughput is enforced. These floors are not guaranteed on non-AFF platforms or when FabricPool tiering policies are set.
+
+
+|min_throughput_mbps
+|integer
+a|Minimum throughput defined by this policy. It is specified in terms of Mbps. 0 means no minimum throughput is enforced.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#qos_policy]
+[.api-collapsible-fifth-title]
+qos_policy
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|adaptive
+|link:#adaptive[adaptive]
+a|Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+|fixed
+|link:#fixed[fixed]
+a|QoS policy-groups define a fixed service level objective (SLO) for a storage object.
+
+
+|name
+|string
+a|Name of the QoS policy.
+
+
+|object_count
+|integer
+a|Number of objects attached to this policy.
+
+
+|pgid
+|integer
+a|Policy group ID of the QoS policy.
+
+
+|policy_class
+|string
+a|Class of the QoS policy.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

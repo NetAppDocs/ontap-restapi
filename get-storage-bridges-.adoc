@@ -1,0 +1,995 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-bridges-.html'
+summary: 'Retrieve a specific bridge'
+---
+
+= Retrieve a specific bridge
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/bridges/{wwn}`#
+
+*Introduced In:* 9.9
+
+Retrieves a specific bridge
+
+== Related ONTAP commands
+
+* `storage bridge show`
+
+== Learn more
+
+* link:storage_bridges_endpoint_overview.html[DOC /storage/bridges]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|wwn
+|string
+|path
+|True
+a|
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|chassis_throughput_state
+|string
+a|Chassis throughput status
+
+
+|dram_single_bit_error_count
+|integer
+a|
+
+|errors
+|array[link:#errors[errors]]
+a|
+
+|fc_ports
+|array[link:#fc_ports[fc_ports]]
+a|
+
+|firmware_version
+|string
+a|Bridge firmware version
+
+
+|ip_address
+|string
+a|IP Address
+
+
+|last_reboot
+|link:#last_reboot[last_reboot]
+a|
+
+|managed_by
+|string
+a|
+
+|model
+|string
+a|Bridge model
+
+
+|monitoring_enabled
+|boolean
+a|Indicates whether monitoring is enabled for the bridge.
+
+
+|name
+|string
+a|Bridge name
+
+
+|paths
+|array[link:#paths[paths]]
+a|
+
+|power_supply_units
+|array[link:#power_supply_units[power_supply_units]]
+a|
+
+|sas_ports
+|array[link:#sas_ports[sas_ports]]
+a|
+
+|security_enabled
+|boolean
+a|Indicates whether security is enabled for the bridge.
+
+
+|serial_number
+|string
+a|Bridge serial number
+
+
+|state
+|string
+a|Bridge state
+
+
+|symbolic_name
+|string
+a|Bridge symbolic name
+
+
+|temperature_sensor
+|link:#temperature_sensor[temperature_sensor]
+a|
+
+|vendor
+|string
+a|Bridge vendor
+
+
+|wwn
+|string
+a|Bridge world wide name
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "chassis_throughput_state": "ok",
+  "errors": [
+    {
+      "component": {
+        "name": "string",
+        "unique_id": "string"
+      },
+      "reason": {
+        "arguments": [
+          {
+            "code": "string",
+            "message": "string"
+          }
+        ],
+        "code": "4",
+        "message": "entry doesn't exist"
+      },
+      "severity": "string",
+      "type": "string"
+    }
+  ],
+  "fc_ports": [
+    {
+      "configured_data_rate": 0,
+      "connection_mode": "string",
+      "data_rate_capability": 2,
+      "negotiated_data_rate": 0,
+      "peer_wwn": "200650eb1a238892",
+      "sfp": {
+        "data_rate_capability": 2,
+        "part_number": "string",
+        "serial_number": "string",
+        "vendor": "string"
+      },
+      "state": "string",
+      "wwn": "2100001086a54100"
+    }
+  ],
+  "firmware_version": "4.10 007A",
+  "ip_address": "string",
+  "last_reboot": {
+    "reason": {
+      "arguments": [
+        {
+          "code": "string",
+          "message": "string"
+        }
+      ],
+      "code": "4",
+      "message": "entry doesn't exist"
+    },
+    "time": "2020-12-09 00:47:58 -0500"
+  },
+  "managed_by": "string",
+  "model": "FibreBridge6500N",
+  "name": "ATTO_FibreBridge6500N_1",
+  "paths": [
+    {
+      "name": "2c",
+      "node": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "source_port": {
+        "id": "100050eb1a238892",
+        "name": "rtp-fc03-41kk11:1"
+      },
+      "target_port": {
+        "id": "100050eb1a238892",
+        "name": "rtp-fc03-41kk11:6",
+        "wwn": "2100001086a54100"
+      }
+    }
+  ],
+  "power_supply_units": [
+    {
+      "name": "string",
+      "state": "string"
+    }
+  ],
+  "sas_ports": [
+    {
+      "cable": {
+        "part_number": "string",
+        "serial_number": "string",
+        "technology": "string",
+        "vendor": "string"
+      },
+      "data_rate_capability": 0,
+      "negotiated_data_rate": 0,
+      "phy_1": {
+        "state": "string"
+      },
+      "phy_2": {
+        "state": "string"
+      },
+      "phy_3": {
+        "state": "string"
+      },
+      "phy_4": {
+        "state": "string"
+      },
+      "state": "string",
+      "wwn": "2100001086a54100"
+    }
+  ],
+  "serial_number": "FB7600N100004",
+  "state": "string",
+  "symbolic_name": "rtp-fcsas03-41kk11",
+  "temperature_sensor": {
+    "name": "Chassis temperature sensor",
+    "state": "string"
+  },
+  "vendor": "atto",
+  "wwn": 2000001086600476
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#component]
+[.api-collapsible-fifth-title]
+component
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|integer
+a|Bridge error component ID
+
+
+|name
+|string
+a|Bridge error component name
+
+
+|unique_id
+|string
+a|Bridge error component unique ID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#errors]
+[.api-collapsible-fifth-title]
+errors
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|component
+|link:#component[component]
+a|
+
+|reason
+|link:#error[error]
+a|
+
+|severity
+|string
+a|Bridge error severity
+
+
+|type
+|string
+a|Bridge error type
+
+
+|===
+
+
+[#sfp]
+[.api-collapsible-fifth-title]
+sfp
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|data_rate_capability
+|number
+a|Bridge FC port SFP data rate capability, in Gbps
+
+
+|part_number
+|string
+a|
+
+|serial_number
+|string
+a|Bridge FC port SFP serial number
+
+
+|vendor
+|string
+a|Bridge FC port SFP vendor
+
+
+|===
+
+
+[#fc_ports]
+[.api-collapsible-fifth-title]
+fc_ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|configured_data_rate
+|number
+a|Bridge FC port configured data rate, in Gbps
+
+
+|connection_mode
+|string
+a|Bridge FC port configured connection mode
+
+
+|data_rate_capability
+|number
+a|Bridge FC port data rate capability, in Gbps
+
+
+|enabled
+|boolean
+a|Indicates whether the bridge FC port is enabled.
+
+
+|id
+|integer
+a|Bridge FC port index
+
+
+|negotiated_data_rate
+|number
+a|Bridge FC port negotiated data rate, in Gbps
+
+
+|peer_wwn
+|string
+a|Bridge FC port peer port world wide name
+
+
+|sfp
+|link:#sfp[sfp]
+a|
+
+|state
+|string
+a|Bridge FC port state
+
+
+|wwn
+|string
+a|Bridge FC port world wide name
+
+
+|===
+
+
+[#error]
+[.api-collapsible-fifth-title]
+error
+
+The error message and code explaining why the bridge rebooted.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|===
+
+
+[#last_reboot]
+[.api-collapsible-fifth-title]
+last_reboot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reason
+|link:#error[error]
+a|The error message and code explaining why the bridge rebooted.
+
+
+|time
+|string
+a|
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#source_port]
+[.api-collapsible-fifth-title]
+source_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Initiator side switch port id
+
+
+|name
+|string
+a|Initiator side switch port name
+
+
+|===
+
+
+[#target_port]
+[.api-collapsible-fifth-title]
+target_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|id
+|string
+a|Target side switch port id
+
+
+|name
+|string
+a|Target side switch port name
+
+
+|wwn
+|string
+a|Target side switch port world wide name
+
+
+|===
+
+
+[#paths]
+[.api-collapsible-fifth-title]
+paths
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|source_port
+|link:#source_port[source_port]
+a|
+
+|target_port
+|link:#target_port[target_port]
+a|
+
+|===
+
+
+[#power_supply_units]
+[.api-collapsible-fifth-title]
+power_supply_units
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Power supply unit name
+
+
+|state
+|string
+a|Power supply unit state
+
+
+|===
+
+
+[#cable]
+[.api-collapsible-fifth-title]
+cable
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|part_number
+|string
+a|Bridge cable part number
+
+
+|serial_number
+|string
+a|Bridge cable serial number
+
+
+|technology
+|string
+a|Bridge cable type
+
+
+|vendor
+|string
+a|Bridge cable vendor
+
+
+|===
+
+
+[#phy_1]
+[.api-collapsible-fifth-title]
+phy_1
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|state
+|string
+a|Bridge SAS port PHY1 state
+
+
+|===
+
+
+[#phy_2]
+[.api-collapsible-fifth-title]
+phy_2
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|state
+|string
+a|Bridge SAS port PHY2 state
+
+
+|===
+
+
+[#phy_3]
+[.api-collapsible-fifth-title]
+phy_3
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|state
+|string
+a|Bridge SAS port PHY3 state
+
+
+|===
+
+
+[#phy_4]
+[.api-collapsible-fifth-title]
+phy_4
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|state
+|string
+a|Bridge SAS port PHY4 state
+
+
+|===
+
+
+[#sas_ports]
+[.api-collapsible-fifth-title]
+sas_ports
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cable
+|link:#cable[cable]
+a|
+
+|data_rate_capability
+|number
+a|Bridge SAS port data rate capability, in Gbps
+
+
+|enabled
+|boolean
+a|Indicates whether a bridge SAS port is enabled.
+
+
+|id
+|integer
+a|Bridge SAS port index
+
+
+|negotiated_data_rate
+|number
+a|Bridge SAS port negotiated data rate, in Gbps
+
+
+|phy_1
+|link:#phy_1[phy_1]
+a|
+
+|phy_2
+|link:#phy_2[phy_2]
+a|
+
+|phy_3
+|link:#phy_3[phy_3]
+a|
+
+|phy_4
+|link:#phy_4[phy_4]
+a|
+
+|state
+|string
+a|Bridge SAS port state
+
+
+|wwn
+|string
+a|Bridge SAS port world wide name
+
+
+|===
+
+
+[#temperature_sensor]
+[.api-collapsible-fifth-title]
+temperature_sensor
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|maximum
+|integer
+a|Maximum safe operating temperature, in degrees Celsius.
+
+
+|minimum
+|integer
+a|Minimum safe operating temperature, in degrees Celsius.
+
+
+|name
+|string
+a|Temperature sensor name
+
+
+|reading
+|integer
+a|Chassis temperature sensor reading, in degrees Celsius.
+
+
+|state
+|string
+a|
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

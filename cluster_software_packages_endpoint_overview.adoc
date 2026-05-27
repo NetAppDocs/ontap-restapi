@@ -1,0 +1,146 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_software_packages_endpoint_overview.html'
+summary: 'Manage cluster software packages'
+---
+
+= Manage cluster software packages
+
+
+
+== Overview
+
+You can use this API to retrieve the software packages for a cluster.
+
+== Examples
+
+=== Retrieving cluster software packages information
+
+The following example shows how to retrieve the ONTAP software packages in a cluster.
+
+----
+
+# The API:
+/api/cluster/software/packages
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/software/packages?return_records=true&return_timeout=15" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "version": "9.7.0",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/software/packages/9.7.0"
+      }
+    }
+  },
+  {
+    "version": "9.5.0",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/software/packages/9.5.0"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/cluster/software/packages"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieves the software package information for a particular version
+
+The following example shows how to retrieve the details of a given cluster software package.
+
+----
+
+# The API:
+/api/cluster/software/packages/{version}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/software/packages/9.7.0" -H "accept: application/hal+json"
+
+# The response:
+{
+"version": "9.7.0",
+"create_time": "2018-05-21T10:06:59+05:30",
+"_links": {
+  "self": {
+    "href": "/api/cluster/software/packages/9.7.0"
+  }
+}
+}
+----
+
+'''
+
+=== Deleting a cluster software package
+
+The following example shows how to delete a package from the cluster. You need to provide the package version that you want to delete. The software package delete creates a job to perform the delete operation.
+
+----
+
+# The API:
+/api/cluster/software/packages/{version}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/cluster/software/packages/9.6.0" -H "accept: application/hal+json"
+
+# The response:
+{
+"job": {
+  "uuid": "f587d316-5feb-11e8-b0e0-005056956dfc",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/f587d316-5feb-11e8-b0e0-005056956dfc"
+    }
+  }
+}
+}
+----
+
+'''
+
+The call to delete the package returns the job UUID, including a HAL link to retrieve details about the job. The job object includes a `state` field and a message to indicate the progress of the job. When the job is complete and the application is fully created, the message indicates success and the job `state` field is set to `success`.
+
+----
+
+# The API:
+/api/cluster/jobs/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/jobs/f587d316-5feb-11e8-b0e0-005056956dfc" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "f587d316-5feb-11e8-b0e0-005056956dfc",
+"description": "DELETE /api/cluster/software/packages/9.6.0",
+"state": "success",
+"message": "success",
+"code": 0,
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/f587d316-5feb-11e8-b0e0-005056956dfc"
+  }
+}
+}
+----
+
+'''
+
+=== Learn more
+
+* link:cluster_software_packages_endpoint_overview.html[DOC /cluster/software/packages]
+
+

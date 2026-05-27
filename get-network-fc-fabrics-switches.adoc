@@ -1,0 +1,646 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-fc-fabrics-switches.html'
+summary: 'Retrieve FC fabric switches'
+---
+
+= Retrieve FC fabric switches
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/fc/fabrics/{fabric.name}/switches`#
+
+*Introduced In:* 9.11
+
+Retrieves the Fibre Channel switches of a Fibre Channel fabric.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `ports`
+
+== Related ONTAP commands
+
+* `network fcp topology show`
+
+== Learn more
+
+* link:network_fc_fabrics_endpoint_overview.html[DOC /network/fc/fabrics]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|fabric.name
+|string
+|path
+|True
+a|The WWN of the primary switch of the Fibre Channel fabric.
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|release
+|string
+|query
+|False
+a|Filter by release
+
+
+|vendor
+|string
+|query
+|False
+a|Filter by vendor
+
+
+|wwn
+|string
+|query
+|False
+a|Filter by wwn
+
+
+|cache.age
+|string
+|query
+|False
+a|Filter by cache.age
+
+
+|cache.update_time
+|string
+|query
+|False
+a|Filter by cache.update_time
+
+
+|cache.is_current
+|boolean
+|query
+|False
+a|Filter by cache.is_current
+
+
+|domain_id
+|integer
+|query
+|False
+a|Filter by domain_id
+
+* Max value: 239
+* Min value: 1
+
+
+|ports.state
+|string
+|query
+|False
+a|Filter by ports.state
+
+
+|ports.slot
+|string
+|query
+|False
+a|Filter by ports.slot
+
+
+|ports.type
+|string
+|query
+|False
+a|Filter by ports.type
+
+
+|ports.attached_device.wwpn
+|string
+|query
+|False
+a|Filter by ports.attached_device.wwpn
+
+
+|ports.attached_device.port_id
+|string
+|query
+|False
+a|Filter by ports.attached_device.port_id
+
+
+|ports.wwpn
+|string
+|query
+|False
+a|Filter by ports.wwpn
+
+
+|cache.maximum_age
+|string
+|query
+|False
+a|The maximum age of data in the Fibre Channel fabric cache before it should be refreshed from the fabric. The default is 15 minutes.
+
+* Default value: 1
+* format: iso8601
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#fc_switch[fc_switch]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "cache": {
+        "age": "PT3M30S",
+        "update_time": "string"
+      },
+      "domain_id": 1,
+      "fabric": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "10:00:d1:d2:d3:d4:d5:d6"
+      },
+      "name": "switch1",
+      "ports": [
+        {
+          "attached_device": {
+            "port_id": 70400,
+            "wwpn": "50:0a:21:22:23:24:25:26"
+          },
+          "slot": 1,
+          "state": "online",
+          "type": "string",
+          "wwpn": "50:0a:31:32:33:34:35:36"
+        }
+      ],
+      "release": "1.0.",
+      "vendor": "vendor1",
+      "wwn": "10:00:e1:e2:e3:e4:e5:e6"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5373982
+| An invalid WWN was specified. The length is incorrect.
+
+| 5373983
+| An invalid WWN was specified. The format is incorrect.
+
+| 5375053
+| The Fibre Channel fabric specified by name in the request URI was not found in the FC fabric cache.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cache]
+[.api-collapsible-fifth-title]
+cache
+
+Properties of Fibre Chanel fabric cache.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|age
+|string
+a|The age of the Fibre Channel fabric data cache retrieved. If the FC fabric data cache has not been fully updated for a newly discovered fabric, or a fabric that has been re-discovered after being purged, a value for this property will not be retrieved. The value is in ISO 8601 duration format.
+
+
+|is_current
+|boolean
+a|A boolean that indicates if the retrieved data is current relative to the `cache.maximum_age` value of the request. A value of `true` indicates that the data is no older than the requested maximum age. A value of `false` indicates that the data is older than the requested maximum age; if more current data is required, the caller should wait for some time for the cache update to complete and query the data again.
+
+
+|update_time
+|string
+a|The date and time at which the Fibre Channel fabric data cache retrieved was last updated. If the FC fabric data cache has not been fully updated for a newly discovered fabric, or a fabric that has been re-discovered after being purged, a value for this property will not be retrieved.
+
+
+|===
+
+
+[#fabric]
+[.api-collapsible-fifth-title]
+fabric
+
+A reference to a Fibre Channel fabric.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The world wide name (WWN) of the primary switch of the Fibre Channel (FC) fabric. This is used as a unique identifier for the FC fabric.
+
+
+|===
+
+
+[#attached_device]
+[.api-collapsible-fifth-title]
+attached_device
+
+The Fibre Channel (FC) device attached to the FC switch port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|port_id
+|string
+a|The Fibre Channel port identifier of the attach device.
+
+
+|wwpn
+|string
+a|The world-wide port name (WWPN) of the attached device.
+
+
+|===
+
+
+[#ports]
+[.api-collapsible-fifth-title]
+ports
+
+A Fibre Channel switch port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attached_device
+|link:#attached_device[attached_device]
+a|The Fibre Channel (FC) device attached to the FC switch port.
+
+
+|slot
+|string
+a|The slot of the Fibre Channel switch port.
+
+
+|state
+|string
+a|The state of the Fibre Channel switch port.
+
+
+|type
+|string
+a|The type of the Fibre Channel switch port.
+
+
+|wwpn
+|string
+a|The world wide port name (WWPN) of the Fibre Channel switch port.
+
+
+|===
+
+
+[#fc_switch]
+[.api-collapsible-fifth-title]
+fc_switch
+
+A Fibre Channel switch.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|cache
+|link:#cache[cache]
+a|Properties of Fibre Chanel fabric cache.
+
+
+|domain_id
+|integer
+a|The domain identifier (ID) of the Fibre Channel (FC) switch. The domain ID is a unique identifier for the FC switch in the FC fabric.
+
+
+|fabric
+|link:#fabric[fabric]
+a|A reference to a Fibre Channel fabric.
+
+
+|name
+|string
+a|The logical name of the Fibre Channel switch.
+
+
+|ports
+|array[link:#ports[ports]]
+a|An array of the Fibre Channel (FC) switch's ports and their attached FC devices.
+
+
+|release
+|string
+a|The firmware release of the Fibre Channel switch.
+
+
+|vendor
+|string
+a|The vendor of the Fibre Channel switch.
+
+
+|wwn
+|string
+a|The world-wide name (WWN) for the Fibre Channel switch.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

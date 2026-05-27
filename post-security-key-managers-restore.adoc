@@ -1,0 +1,327 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-key-managers-restore.html'
+summary: 'Retrieve and restore unrestored keys'
+---
+
+= Retrieve and restore unrestored keys
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/key-managers/{security_key_manager.uuid}/restore`#
+
+*Introduced In:* 9.13
+
+Retrieves and restores any current unrestored keys (associated with the storage controller) from the specified key management server.
+
+== Required properties
+
+* `security_key_manager.uuid` - UUID of the key management server.
+The UUID of the external key manager can be retrieved using [`GET /api/security/key-managers`].
+
+== Related ONTAP commands
+
+* `security key-manager external restore`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|security_key_manager.uuid
+|string
+|path
+|True
+a|Key manager UUID.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_id
+|string
+a|Key identifier.
+
+
+|key_server
+|string
+a|External key server for key management.
+
+
+|key_tag
+|string
+a|Additional information associated with the key.
+
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "key_id": "000000000000000002000000000001003aa8ce6a4fea3e466620134bea9510a10000000000000000",
+  "key_server": "keyserver1.com:5698",
+  "key_tag": "Authentication-Key-01",
+  "node": {
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  }
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65536083
+| Internal error. Failed to restore the authentication key.
+
+| 65536843
+| The key management server is not configured for the SVM.
+
+| 65536855
+| Internal error. Failed to restore the volume encryption key.
+
+| 65538500
+| This command only restores keys from primary key servers.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#security_key_manager_restore_keys]
+[.api-collapsible-fifth-title]
+security_key_manager_restore_keys
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|key_id
+|string
+a|Key identifier.
+
+
+|key_server
+|string
+a|External key server for key management.
+
+
+|key_tag
+|string
+a|Additional information associated with the key.
+
+
+|node
+|link:#node[node]
+a|
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

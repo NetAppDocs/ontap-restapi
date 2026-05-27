@@ -1,0 +1,914 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cloud-targets.html'
+summary: 'Create a cloud target'
+---
+
+= Create a cloud target
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cloud/targets`#
+
+*Introduced In:* 9.6
+
+Creates a cloud target.
+
+== Required properties
+
+* `name` - Name for the cloud target.
+* `owner` - Owner of the target:  _fabricpool_, _snapmirror_.
+* `provider_type` - Type of cloud provider: _AWS_S3_, _Azure_Cloud_, _SGWS_, _IBM_COS_, _AliCloud_, _GoogleCloud_, _ONTAP_S3_.
+* `server` - Fully qualified domain name of the object store server. Required when `provider_type` is one of the following: _SGWS_, _IBM_COS_, _AliCloud_.
+* `container` - Data bucket/container name.
+* `access_key` - Access key ID if `provider_type` is not _Azure_Cloud_ and `authentication_type` is _key_.
+* `secret_password` - Secret access key if `provider_type` is not _Azure_Cloud_ and `authentication_type` is _key_.
+* `azure_account` - Azure account if `provider_type` is _Azure_Cloud_.
+* `azure_private_key` - Azure access key if `provider_type` is _Azure_Cloud_.
+* `cap_url` - Full URL of the request to a CAP server for retrieving temporary credentials if `authentication_type` is _cap_.
+* `snapmirror_use` - Use of the cloud target if `owner` is _snapmirror_: data, metadata.
+* `azure_msi_token` - Azure Managed Service Identity (MSI) token if `owner` is _fabricpool_ or _snapmirror_, `provider_type` is _Azure_Cloud_,  `authentication_type` if specified must be  _azure_msi_ and platform is Azure Netapp Files.
+
+== Recommended optional properties
+
+* `authentication_type` - Authentication used to access the target: _key_, _cap_, _ec2_iam_, _gcp_sa_, _azure_msi_.
+* `ssl_enabled` - SSL/HTTPS enabled or disabled.
+* `port` - Port number of the object store that ONTAP uses when establishing a connection.
+* `ipspace` - IPspace to use in order to reach the cloud target.
+* `use_http_proxy` - Use the HTTP proxy when connecting to the object store server.
+* `azure_sas_token` - Shared access signature to grant limited access to Azure storage account resources.
+* `svm.name` or `svm.uuid` - Name or UUID of SVM if `owner` is _snapmirror_.
+* `read_latency_warning_threshold` - Latency threshold to determine when to issue a warning alert EMS for a GET request.
+
+== Default property values
+
+* `authentication_type`
+* _ec2_iam_ - if running in Cloud Volumes ONTAP in AWS
+* _gcp_sa_ - if running in Cloud Volumes ONTAP in GCP
+* _azure_msi_ - if running in Cloud Volumes ONTAP in Azure or if running on Azure NetApp Files platform with a Managed Service Identity (MSI) token.
+* _key_  - in all other cases.
+* `server`
+* _s3.amazonaws.com_ - if `provider_type` is _AWS_S3_
+* _blob.core.windows.net_ - if `provider_type` is _Azure_Cloud_
+* _storage.googleapis.com_ - if `provider_type` is _GoogleCloud_
+* `ssl_enabled` - _true_
+* `port`
+* _443_ if `ssl_enabled` is _true_
+* _80_ if `ssl_enabled` is _false_ and `provider_type` is not _SGWS_
+* _8084_ if `ssl_enabled` is _false_ and `provider_type` is _SGWS_
+* `ipspace` - _Default_
+* `certificate_validation_enabled` - _true_
+* `ignore_warnings` - _false_
+* `check_only` - _false_
+* `use_http_proxy` - _false_
+* `server_side_encryption`
+* _none_ - if `provider_type` is _ONTAP_S3_
+* _sse_s3_ - if `provider_type` is not _ONTAP_S3_
+* `url_style`
+* _path_style_ - if `provider_type` is neither _AWS_S3_ nor _AliCloud_
+* _virtual_hosted_style_ - if `provider_type` is either _AWS_S3 or _AliCloud__
+
+== Related ONTAP commands
+
+* `storage aggregate object-store config create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|ignore_warnings
+|boolean
+|query
+|False
+a|Specifies whether or not warning codes should be ignored.
+
+
+|check_only
+|boolean
+|query
+|False
+a|Do not create the target configuration, only check that the POST request succeeds.
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Access key ID for AWS_S3 and other S3 compatible provider types.
+
+
+|authentication_type
+|string
+a|Authentication used to access the target. SnapMirror does not yet support CAP. Required in POST.
+
+
+|azure_account
+|string
+a|Azure account
+
+
+|azure_msi_token
+|string
+a|Managed Service Identity (MSI) token required to authenticate to the Azure object store. This form of authentication is only supported on Azure NetApp Files.
+
+
+|azure_private_key
+|string
+a|Azure access key
+
+
+|azure_sas_token
+|string
+a|Shared access signature token to access Azure containers and blobs.
+
+
+|cap_url
+|string
+a|This parameter is available only when auth-type is CAP. It specifies a full URL of the request to a CAP server for retrieving temporary credentials (access-key, secret-password, and session token) for accessing the object store.
+
+
+|certificate_validation_enabled
+|boolean
+a|Is SSL/TLS certificate validation enabled? The default value is true. This can only be modified for SGWS, IBM_COS, and ONTAP_S3 provider types.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|container
+|string
+a|Data bucket/container name. For FabricLink, a wildcard character "*" can also be specified to indicate that all the buckets in an SVM can use the same target information. However, for containers other than ONTAP, an exact name should be specified.
+
+* example: bucket1
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|IPspace to use in order to reach the cloud target.
+
+
+|name
+|string
+a|Cloud target name
+
+
+|owner
+|string
+a|Owner of the target. Allowed values are  FabricPool,  SnapMirror or S3_SnapMirror. A target can be used by only one feature.
+
+
+|port
+|integer
+a|Port number of the object store that ONTAP uses when establishing a connection. Required in POST.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|provider_type
+|string
+a|Type of cloud provider. Allowed values depend on owner type.  For FabricPool, AliCloud, AWS_S3, Azure_Cloud, GoogleCloud, IBM_COS, SGWS, and ONTAP_S3 are allowed.  For SnapMirror, the valid values are AWS_S3 or SGWS. For FabricLink, AWS_S3, SGWS, S3_Compatible, S3EMU, LOOPBACK and ONTAP_S3 are allowed.
+
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|read_latency_warning_threshold
+|integer
+a|The warning threshold for read latency that is used to determine when an alert ems for a read operation from an object store should be issued.
+
+
+|scope
+|string
+a|If the cloud target is owned by a data SVM, then the scope is set to svm. Otherwise it will be set to cluster.
+
+
+|secret_password
+|string
+a|Secret access key for AWS_S3 and other S3 compatible provider types.
+
+
+|server
+|string
+a|Fully qualified domain name of the object store server. Required on POST.  For Amazon S3, server name must be an AWS regional endpoint in the format s3.amazonaws.com or s3-+++<region>+++.amazonaws.com, for example, s3-us-west-2.amazonaws.com. The region of the server and the bucket must match. For Azure, if the server is a "blob.core.windows.net" or a "blob.core.usgovcloudapi.net", then a value of azure-account followed by a period is added in front of the server.+++</region>+++
+
+
+|server_side_encryption
+|string
+a|Encryption of data at rest by the object store server for AWS_S3 and other S3 compatible provider types. In most cases it is best not to change default value of "sse_s3" for object store servers which support SSE-S3 encryption. The encryption is in addition to any encryption done by ONTAP at a volume or at an aggregate level. Note that changing this option does not change encryption of data which already exist in the object store.
+
+* enum: ["none", "sse_s3", "sse_kms", "dsse_kms"]
+* Introduced in: 9.7
+* x-nullable: true
+
+
+|snapmirror_use
+|string
+a|Use of the cloud target by SnapMirror.
+
+
+|ssl_enabled
+|boolean
+a|SSL/HTTPS enabled or not
+
+
+|svm
+|link:#svm[svm]
+a|This field is only applicable when used for SnapMirror and FabricLink. For POST and PATCH, SVM information is required for SnapMirror and FabricLink targets when the scope is svm and is not allowed for FabricPool targets. For GET, this field is not set if the scope of the cloud target is "cluster".
+
+
+|url_style
+|string
+a|URL style used to access S3 bucket.
+
+
+|use_http_proxy
+|boolean
+a|Use HTTP proxy when connecting to the object store.
+
+
+|used
+|integer
+a|The amount of cloud space used by all the aggregates attached to the target, in bytes. This field is only populated for FabricPool targets. The value is recalculated once every 5 minutes.
+
+
+|uuid
+|string
+a|Cloud target UUID
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "access_key": "string",
+  "authentication_type": "string",
+  "azure_account": "string",
+  "azure_msi_token": "string",
+  "azure_private_key": "string",
+  "azure_sas_token": "string",
+  "cap_url": "https://123.45.67.89:1234/CAP/api/v1/credentials?agency=myagency&mission=mymission&role=myrole",
+  "cluster": {
+    "name": "string",
+    "uuid": "string"
+  },
+  "container": "bucket1",
+  "ipspace": {
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "name": "string",
+  "owner": "string",
+  "provider_type": "string",
+  "scope": "string",
+  "secret_password": "string",
+  "server": "string",
+  "server_side_encryption": "string",
+  "snapmirror_use": "string",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "url_style": "string",
+  "used": 0,
+  "uuid": "string"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 786436
+| VLDB is not running.
+
+| 786908
+| Capability check failed.
+
+| 787015
+| "encryption-key-id" is not expected when encrypt is false.
+
+| 787016
+| An object store configuration with the same combination of server and container name already exists.
+
+| 787020
+| Failed to check whether the FabricPool capability exists.
+
+| 787021
+| The FabricPool capability is not enabled.
+
+| 787030
+| Object store configuration creation is not supported in this cluster.
+
+| 787036
+| Server name is invalid. A valid server name must be a fully qualified domain name.
+
+| 787037
+| Cannot verify availability of the object store.
+
+| 787038
+| Object store provider type requires a FabricPool license.
+
+| 787039
+| Failed to retrieve FabricPool capacity license information.
+
+| 787044
+| Cannot create object store configuration as the number of object stores in the cluster has reached maximum allowed limit.
+
+| 787054
+| An object store configuration with the same combination of server, azure account and container name already exists.
+
+| 787064
+| Object store server provider type does not match object store provider type. Use the provider type that matches the server.
+
+| 787065
+| Certificate validation must be enabled for the object store provider.
+
+| 787066
+| Certificate validation cannot be specified when the "-is-ssl-enabled" parameter is false.
+
+| 787068
+| Disabling certificate validation requires an effective cluster version of ONTAP 9.4.0 or later.
+
+| 787071
+| Object store configuration creation requires an effective cluster version of ONTAP 9.4.0 or later.
+
+| 787082
+| Creating an object store configuration requires an effective cluster version of ONTAP 9.5.0 or later.
+
+| 787089
+| The object store provider supports the virtual hosted-style, and the specified "-server" contains the container name.  The container specified in the "-server" parameter must be the same as the name of the container specified in the "-container" parameter.
+
+| 787133
+| Could not retrieve temporary credentials from the CAP server.
+
+| 787134
+| Could not retrieve temporary credentials from the CAP server due to an unexpected response.
+
+| 787136
+| Specifying "CAP" as the "-auth-type" requires an effective cluster version of ONTAP 9.5.0 or later.
+
+| 787148
+| The clock on node is behind by more than the maximum of 5 minutes.
+
+| 787149
+| The clock on node is ahead by more than the maximum of 5 minutes.
+
+| 787158
+| An object store configuration with the same combination of server and container name already exists.
+
+| 787159
+| An object store configuration with the same name already exists.
+
+| 787179
+| One or more clusters in this MetroCluster configuration do not have an effective cluster version of ONTAP 9.7.0 or later.
+
+| 787184
+| Using HTTP proxies with FabricPool requires an effective cluster version of ONTAP 9.7.0 or later.
+
+| 787185
+| There is no HTTP proxy for IPspace. Refer to the "vserver http-proxy" man page for details.
+
+| 787188
+| Object store configuration belongs to another cluster and cannot be modified from the local cluster, unless the cluster is in switchover mode.
+
+| 787189
+| Object store configuration name must not have the "-mc" suffix when the configuration is created for a local cluster. To create an object store configuration which belongs to another cluster, the cluster must be in switchover mode and "-cluster" must be specified.
+
+| 787209
+| Object store is not accessible from the partner cluster in a MetroCluster configuration.
+
+| 787216
+| Cannot perform object store configuration operations on a cluster that is waiting for switchback.
+
+| 787222
+| Object store connectivity check failed on partner cluster in MetroCluster configuration. Wait a few minutes, and try the operation again.
+
+| 787223
+| Specifying "GCP_SA" as the "-auth-type" requires an effective cluster version of ONTAP 9.7.0 or later.
+
+| 787227
+| Specifying "Azure_MSI" as the "-auth-type" requires an effective cluster version of ONTAP 9.7 or later.
+
+| 787228
+| SSL is required for this configuration.
+
+| 787229
+| Cannot perform operation as URL style is not supported with object store provider type.
+
+| 787233
+| The hash key for enabling this FabricPool feature is not present on the cluster.
+
+| 787234
+| The hash key provided for the node to enable this FabricPool feature is not valid.
+
+| 787254
+| The parameter is not supported on this system.
+
+| 787257
+| The parameter "-encryption-context" is only applicable for AWS object store provider.
+
+| 787262
+| The "create-container" option is applicable only for an SGWS or ONTAP_S3 object store provider.
+
+| 787301
+| ONTAP S3 Bucket is of type NAS and is not supported as a target for FabricPool.
+
+| 787302
+| Cannot use HTTP port with "-is-ssl-enabled" set to true.
+
+| 787303
+| Cannot use HTTPS port with "-is-ssl-enabled" set to false.
+
+| 787325
+| FabricPool is not supported on this platform.
+
+| 787350
+| Creating an object store configuration with a Managed Service Identity (MSI) token is only supported on Azure NetApp files.
+
+| 787351
+| Internal Error. Invalid authentication type.
+
+| 787352
+| Creating an object store configuration with a Managed Service Identity (MSI) token requires an effective cluster version of ONTAP 9.16.1 or later.
+
+| 787353
+| Creating an object store configuration with a Managed Service Identity (MSI) token is not supported for this owner.
+
+| 787354
+| The specified properties are mutually exclusive.
+
+| 787355
+| _azure_msi_ `authentication-type` is only supported with _Azure_Cloud_ `provider-type`.
+
+| 45940761
+| Hostname cannot be resolved. Check the spelling of the hostname and check the system DNS availability using the "vserver services name-service dns check" command.
+
+| 45940778
+| Bucket already exists.
+
+| 139591795
+| Object store configuration for S3 SnapMirror representing ONTAP S3 object store provider only supports \"*\" as the container name.
+
+| 139591796
+| Object store configuration name for S3 SnapMirror representing ONTAP S3 object store provider must be of the format \"vserver:+++<destination_vserver_uuid>+++:+++<source_vserver_uuid>+++\\\".+++</source_vserver_uuid>++++++</destination_vserver_uuid>+++
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the cluster that owns the cloud target. For POST, this accepts the name of the peer cluster only if the cluster is in switchover state.
+
+
+|uuid
+|string
+a|The UUID of the cluster that owns the cloud target. For POST, this accepts the UUID of the peer cluster only if the cluster is in switchover state.
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+IPspace to use in order to reach the cloud target.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+This field is only applicable when used for SnapMirror and FabricLink. For POST and PATCH, SVM information is required for SnapMirror and FabricLink targets when the scope is svm and is not allowed for FabricPool targets. For GET, this field is not set if the scope of the cloud target is "cluster".
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cloud_target]
+[.api-collapsible-fifth-title]
+cloud_target
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Access key ID for AWS_S3 and other S3 compatible provider types.
+
+
+|authentication_type
+|string
+a|Authentication used to access the target. SnapMirror does not yet support CAP. Required in POST.
+
+
+|azure_account
+|string
+a|Azure account
+
+
+|azure_msi_token
+|string
+a|Managed Service Identity (MSI) token required to authenticate to the Azure object store. This form of authentication is only supported on Azure NetApp Files.
+
+
+|azure_private_key
+|string
+a|Azure access key
+
+
+|azure_sas_token
+|string
+a|Shared access signature token to access Azure containers and blobs.
+
+
+|cap_url
+|string
+a|This parameter is available only when auth-type is CAP. It specifies a full URL of the request to a CAP server for retrieving temporary credentials (access-key, secret-password, and session token) for accessing the object store.
+
+
+|certificate_validation_enabled
+|boolean
+a|Is SSL/TLS certificate validation enabled? The default value is true. This can only be modified for SGWS, IBM_COS, and ONTAP_S3 provider types.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|container
+|string
+a|Data bucket/container name. For FabricLink, a wildcard character "*" can also be specified to indicate that all the buckets in an SVM can use the same target information. However, for containers other than ONTAP, an exact name should be specified.
+
+* example: bucket1
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|IPspace to use in order to reach the cloud target.
+
+
+|name
+|string
+a|Cloud target name
+
+
+|owner
+|string
+a|Owner of the target. Allowed values are  FabricPool,  SnapMirror or S3_SnapMirror. A target can be used by only one feature.
+
+
+|port
+|integer
+a|Port number of the object store that ONTAP uses when establishing a connection. Required in POST.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|provider_type
+|string
+a|Type of cloud provider. Allowed values depend on owner type.  For FabricPool, AliCloud, AWS_S3, Azure_Cloud, GoogleCloud, IBM_COS, SGWS, and ONTAP_S3 are allowed.  For SnapMirror, the valid values are AWS_S3 or SGWS. For FabricLink, AWS_S3, SGWS, S3_Compatible, S3EMU, LOOPBACK and ONTAP_S3 are allowed.
+
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|read_latency_warning_threshold
+|integer
+a|The warning threshold for read latency that is used to determine when an alert ems for a read operation from an object store should be issued.
+
+
+|scope
+|string
+a|If the cloud target is owned by a data SVM, then the scope is set to svm. Otherwise it will be set to cluster.
+
+
+|secret_password
+|string
+a|Secret access key for AWS_S3 and other S3 compatible provider types.
+
+
+|server
+|string
+a|Fully qualified domain name of the object store server. Required on POST.  For Amazon S3, server name must be an AWS regional endpoint in the format s3.amazonaws.com or s3-+++<region>+++.amazonaws.com, for example, s3-us-west-2.amazonaws.com. The region of the server and the bucket must match. For Azure, if the server is a "blob.core.windows.net" or a "blob.core.usgovcloudapi.net", then a value of azure-account followed by a period is added in front of the server.+++</region>+++
+
+
+|server_side_encryption
+|string
+a|Encryption of data at rest by the object store server for AWS_S3 and other S3 compatible provider types. In most cases it is best not to change default value of "sse_s3" for object store servers which support SSE-S3 encryption. The encryption is in addition to any encryption done by ONTAP at a volume or at an aggregate level. Note that changing this option does not change encryption of data which already exist in the object store.
+
+* enum: ["none", "sse_s3", "sse_kms", "dsse_kms"]
+* Introduced in: 9.7
+* x-nullable: true
+
+
+|snapmirror_use
+|string
+a|Use of the cloud target by SnapMirror.
+
+
+|ssl_enabled
+|boolean
+a|SSL/HTTPS enabled or not
+
+
+|svm
+|link:#svm[svm]
+a|This field is only applicable when used for SnapMirror and FabricLink. For POST and PATCH, SVM information is required for SnapMirror and FabricLink targets when the scope is svm and is not allowed for FabricPool targets. For GET, this field is not set if the scope of the cloud target is "cluster".
+
+
+|url_style
+|string
+a|URL style used to access S3 bucket.
+
+
+|use_http_proxy
+|boolean
+a|Use HTTP proxy when connecting to the object store.
+
+
+|used
+|integer
+a|The amount of cloud space used by all the aggregates attached to the target, in bytes. This field is only populated for FabricPool targets. The value is recalculated once every 5 minutes.
+
+
+|uuid
+|string
+a|Cloud target UUID
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

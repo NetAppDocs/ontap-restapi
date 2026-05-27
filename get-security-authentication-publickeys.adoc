@@ -1,0 +1,552 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-authentication-publickeys.html'
+summary: 'Retrieve public keys configured for user accounts'
+---
+
+= Retrieve public keys configured for user accounts
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/authentication/publickeys`#
+
+*Introduced In:* 9.7
+
+Retrieves the public keys configured for user accounts.
+
+== Related ONTAP commands
+
+* `security login publickey show`
+
+== Learn more
+
+* link:security_authentication_publickeys_endpoint_overview.html[DOC /security/authentication/publickeys]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|account.name
+|string
+|query
+|False
+a|Filter by account.name
+
+
+|certificate_expired
+|string
+|query
+|False
+a|Filter by certificate_expired
+
+* Introduced in: 9.13
+
+
+|public_key
+|string
+|query
+|False
+a|Filter by public_key
+
+
+|obfuscated_fingerprint
+|string
+|query
+|False
+a|Filter by obfuscated_fingerprint
+
+
+|certificate_details
+|string
+|query
+|False
+a|Filter by certificate_details
+
+* Introduced in: 9.13
+
+
+|certificate_revoked
+|string
+|query
+|False
+a|Filter by certificate_revoked
+
+* Introduced in: 9.13
+
+
+|certificate
+|string
+|query
+|False
+a|Filter by certificate
+
+* Introduced in: 9.13
+
+
+|owner.name
+|string
+|query
+|False
+a|Filter by owner.name
+
+
+|owner.uuid
+|string
+|query
+|False
+a|Filter by owner.uuid
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+
+|sha_fingerprint
+|string
+|query
+|False
+a|Filter by sha_fingerprint
+
+
+|index
+|integer
+|query
+|False
+a|Filter by index
+
+* Max value: 99
+* Min value: 0
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Max value: 120
+* Min value: 0
+* Default value: 15
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#publickey[publickey]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "account": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "joe.smith"
+      },
+      "certificate": "string",
+      "certificate_details": "string",
+      "certificate_expired": "string",
+      "certificate_revoked": "string",
+      "comment": "string",
+      "obfuscated_fingerprint": "string",
+      "owner": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "public_key": "string",
+      "scope": "string",
+      "sha_fingerprint": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#account_reference]
+[.api-collapsible-fifth-title]
+account_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|User account
+
+
+|===
+
+
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the public key.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#publickey]
+[.api-collapsible-fifth-title]
+publickey
+
+The public key for the user account (to access SSH).
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|account
+|link:#account_reference[account_reference]
+a|
+
+|certificate
+|string
+a|Optional certificate for the public key.
+
+
+|certificate_details
+|string
+a|The details present in the certificate (READONLY).
+
+
+|certificate_expired
+|string
+a|The expiration details of the certificate (READONLY).
+
+
+|certificate_revoked
+|string
+a|The revocation details of the certificate (READONLY).
+
+
+|comment
+|string
+a|Optional comment for the public key.
+
+
+|index
+|integer
+a|Index number for the public key (where there are multiple keys for the same account).
+
+
+|obfuscated_fingerprint
+|string
+a|The obfuscated fingerprint for the public key (READONLY).
+
+
+|owner
+|link:#owner[owner]
+a|Owner name and UUID that uniquely identifies the public key.
+
+
+|public_key
+|string
+a|The public key
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|sha_fingerprint
+|string
+a|The SHA fingerprint for the public key (READONLY).
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

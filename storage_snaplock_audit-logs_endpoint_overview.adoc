@@ -1,0 +1,75 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_snaplock_audit-logs_endpoint_overview.html'
+summary: 'Manage SnapLock audit logs'
+---
+
+= Manage SnapLock audit logs
+
+
+
+The SnapLock log volume can be a SnapLock Compliance volume or SnapLock Enterprise volume. The SnapLock log infrastructure creates directories and files in this volume to store the SnapLock log records. The directory named "snaplock_log" is created under the root. There are three subdirectories created under the "snaplock_log" directory. They are "privileged_delete_logs", "system_logs" and "legal_hold_logs". The log files are created and populated under these subdirectories when respective SnapLock operations are initiated. The maximum log size specifies the maximum size of a log file that stores SnapLock log records. When the file reaches this size, the log infrastructure archives it and creates a new log file. An active log file has the suffix "-present" in the name. When a file is archived, it is renamed such that the suffix is replaced with the date of archival. The default retention period is the length of time the log file is retained, if the SnapLock log records that are stored in the file do not carry any retention period.
+
+=== Examples
+
+. Verifies that the audit log is configured for the specified SVM:
+
+----
+ GET "/api/storage/snaplock/audit-logs/?svm.name=VS0"
+----
+
+. Verifies that the specified volume is an audit log volume:
+
+----
+ GET "/api/storage/snaplock/audit-logs/?log_volume.volume.name=VS0_ALOG"
+----
+
+=== Examples
+
+. Creates a SnapLock log configuration by providing SVM name:
+
+----
+ POST "/api/storage/snaplock/audit-logs" '{"svm": {"name":"VS3"}, "log_volume": { "volume": { "name":"VS3_ALOG"}, "max_log_size":"20971520", "retention_period":"P30Y" }}'
+----
+
+. Creates a SnapLock log configuration by providing SVM UUID:
+
+----
+ POST "/api/storage/snaplock/audit-logs" '{"svm": {"uuid":"bc744cc7-296d-11e9-a26f-0050568e5b05"}, "log_volume": { "volume": { "name":"VS3_ALOG"}, "max_log_size":"20971520", "retention_period":"P30Y" }}'
+----
+
+. Creates a SnapLock log configuration without specifying a retention period:
+
+----
+ POST "/api/storage/snaplock/audit-logs" '{"svm": {"name":"VS3"}, "log_volume": {"volume": {"name":"VS3_ALOG"}}}'
+----
+
+=== Examples
+
+. Updates the audit log volume:
+
+----
+ PATCH "/api/storage/snaplock/audit-logs/bc744cc7-296d-11e9-a26f-0050568e5b05" '{"log_volume":{"volume":{"name":"VS4_ALOG_NEW"}}}'
+----
+
+. Updates the maximum size of the log file and the retention period:
+
+----
+ PATCH "/api/storage/snaplock/audit-logs/420cac7a-296a-11e9-a26f-0050568e5b05" '{"log_volume":{"max_log_size":"20971520", "retention_period":"P1Y"}}'
+----
+
+. Archives all of the audit log files:
+
+----
+ PATCH "/api/storage/snaplock/audit-logs/c7e4fa7d-2968-11e9-a26f-0050568e5b05" '{"log_archive":{"archive":"true"}}'
+----
+
+. Archives the specified audit log file:
+
+----
+ PATCH "/api/storage/snaplock/audit-logs/c7e4fa7d-2968-11e9-a26f-0050568e5b05" '{"log_archive":{"archive":"true","base_name":"privileged_delete"}}'
+----
+
+

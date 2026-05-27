@@ -1,0 +1,149 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_home-directory_search-paths_endpoint_overview.html'
+summary: 'Manage home directory search paths'
+---
+
+= Manage home directory search paths
+
+
+
+== Overview
+
+ONTAP home directory functionality can be used to create home directories for SMB users on the CIFS server and automatically offer each user a dynamic share to their home directory without creating an individual SMB share for each user.
+
+The home directory search path is a set of absolute paths from the root of an SVM that directs ONTAP to search for home directories. If there are multiple search paths, ONTAP tries them in the order specified until it finds a valid path. To use the CIFS home directories feature, at least one home directory search path must be added for an SVM.
+
+== Examples
+
+=== Creating a home directory search path
+
+To create a home directory search path, use the following API. Note the _return_records=true_ query parameter used to obtain the newly created entry in the response.
+
+----
+
+# The API:
+POST /api/protocols/cifs/home-directory/search-paths
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/cifs/home-directory/search-paths?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"path\": \"/\", \"svm\": { \"name\": \"vs1\", \"uuid\": \"a41fd873-ecf8-11e8-899d-0050568e9333\" }}"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "svm": {
+      "uuid": "a41fd873-ecf8-11e8-899d-0050568e9333",
+      "name": "vs1"
+    },
+  "path": "/"
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving the CIFS home directory search paths configuration for all SVMs in the cluster
+
+----
+
+# The API:
+GET /protocols/cifs/home-directory/search-paths
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/home-directory/search-paths?fields=*&return_records=true&return_timeout=15" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "2d96f9aa-f4ce-11e8-b075-0050568e278e",
+      "name": "vs1"
+    },
+    "index": 1,
+    "path": "/"
+  },
+  {
+    "svm": {
+      "uuid": "2d96f9aa-f4ce-11e8-b075-0050568e278e",
+      "name": "vs1"
+    },
+      "index": 2,
+      "path": "/a"
+  },
+  {
+    "svm": {
+      "uuid": "4f23449b-f4ce-11e8-b075-0050568e278e",
+      "name": "vs2"
+    },
+    "index": 1,
+    "path": "/"
+  },
+  {
+    "svm": {
+      "uuid": "4f23449b-f4ce-11e8-b075-0050568e278e",
+      "name": "vs2"
+    },
+    "index": 2,
+    "path": "/1"
+  }
+],
+"num_records": 4
+}
+----
+
+=== Retrieving a specific home directory searchpath configuration for an SVM
+
+The configuration returned is identified by the UUID of its SVM and the index (position) in the list of search paths that is searched to  find a home directory of a user.
+
+----
+
+# The API:
+GET /api/protocols/home-directory/search-paths/{svm.uuid}/{index}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/cifs/home-directory/search-paths/2d96f9aa-f4ce-11e8-b075-0050568e278e/2" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "2d96f9aa-f4ce-11e8-b075-0050568e278e",
+  "name": "vs1"
+},
+"index": 2,
+"path": "/a"
+}
+----
+
+=== Reordering a specific home directory search path in the list
+
+An entry in the home directory search path list can be reordered to a new positin by specifying the 'new_index' field. The reordered configuration is identified by the UUID of its SVM and the index.
+
+----
+
+# The API:
+PATCH /api/protocols/cifs/home-directory/search-paths/{svm.uuid}/{index}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/cifs/home-directory/search-paths/2d96f9aa-f4ce-11e8-b075-0050568e278e/2?new_index=1" -H "accept: application/json"
+----
+
+=== Removing a specific home directory search path for an SVM
+
+The entry being removed is identified by the UUID of its SVM and the index.
+
+----
+
+# The API:
+DELETE /api/protocols/cifs/home-directory/search-paths/{svm.uuid}/{index}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/home-directory/search-paths/2d96f9aa-f4ce-11e8-b075-0050568e278e/2" -H "accept: application/json"
+----
+
+

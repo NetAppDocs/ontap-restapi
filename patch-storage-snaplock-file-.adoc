@@ -1,0 +1,307 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-snaplock-file-.html'
+summary: 'Update the SnapLock retention time of a file'
+---
+
+= Update the SnapLock retention time of a file
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/snaplock/file/{volume.uuid}/{path}`#
+
+*Introduced In:* 9.7
+
+Updates the SnapLock retention time of a file or extends the retention time of a WORM file. Input parameters "expiry_time" or "retention_period" can be used to set or extend the retention time of file. Both "expiry_time" and "retention_period" parameters expect the date in ISO 8601 format. Additionally, the "expiry_time" parameter can also be set to "infinite" or "unspecified" and the "retention_period" parameter can also be set to "infinite". The input parameters are mutually exclusive.
+
+== Related ONTAP commands
+
+* `volume file retention set`
+
+== Learn more
+
+* link:storage_snaplock_file_volume.uuid_path_endpoint_overview.html[DOC /storage/snaplock/file/{volume.uuid}/\{path}]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|volume.uuid
+|string
+|path
+|True
+a|Volume UUID
+
+
+|path
+|string
+|path
+|True
+a|Path of the file in the form "/<dirpath>/<filename>"
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|string
+a|Expiry time of the file in date-time format, "infinite", "indefinite", or "unspecified". An "infinite" retention time indicates that the file will be retained forever. An "unspecified" retention time indicates that the file will be retained forever; however, the retention time of the file can be changed to an absolute value. An "indefinite" retention time indicates that the file is under Legal-Hold.
+
+
+|is_expired
+|boolean
+a|This indicates if the file is under active retention or if the file is past its expiry time.
+
+
+|retention_period
+|string
+a|Duration of retention time file to be locked with,  An "infinite" retention period indicates that the file will be retained forever.
+
+
+|seconds_until_expiry
+|integer
+a|Specifies the number of seconds until the expiration time of the file.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "expiry_time": "2058-06-04 19:00:00 +0000",
+  "is_expired": 1,
+  "retention_period": "P2M",
+  "seconds_until_expiry": 168
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response codes
+
+|===
+| Error code | Description
+
+| 262179
+| Unexpected argument "+++<file_name>+++\"+++</file_name>+++
+
+| 262186
+| Field "expiry_time" cannot be used with field "retention_period"
+
+| 6691623
+| User is not authorized
+
+| 13763279
+| The resulting expiry time due to the specified retention period is earlier than the current expiry time
+
+| 14090348
+| Invalid Expiry time
+
+| 14090347
+| File path must be in the format "\/<dir>\/<file path>"
+
+| 917804
+| Path should be given in the format "\/\vol\/<volume name>\/<file path>".
+|===
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#snaplock_file_retention]
+[.api-collapsible-fifth-title]
+snaplock_file_retention
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|string
+a|Expiry time of the file in date-time format, "infinite", "indefinite", or "unspecified". An "infinite" retention time indicates that the file will be retained forever. An "unspecified" retention time indicates that the file will be retained forever; however, the retention time of the file can be changed to an absolute value. An "indefinite" retention time indicates that the file is under Legal-Hold.
+
+
+|is_expired
+|boolean
+a|This indicates if the file is under active retention or if the file is past its expiry time.
+
+
+|retention_period
+|string
+a|Duration of retention time file to be locked with,  An "infinite" retention period indicates that the file will be retained forever.
+
+
+|seconds_until_expiry
+|integer
+a|Specifies the number of seconds until the expiration time of the file.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

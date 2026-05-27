@@ -1,0 +1,231 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_s3_services_svm.uuid_buckets_s3_bucket.uuid_snapshots_endpoint_overview.html'
+summary: 'Manage S3 bucket snapshots'
+---
+
+= Manage S3 bucket snapshots
+
+
+
+== Overview
+
+An S3 bucket snapshot is an image of the bucket as it exists at the time when the snapshot is created.
+
+S3 bucket snapshots can be created using scheduled snapshot policies set on the bucket, or user requested snapshot creations.
+
+S3 bucket snapshot APIs allow you to create, delete, and retrieve snapshots.
+
+== Snapshot APIs
+
+The following APIs are used to perform operations related to snapshots.
+
+&ndash; POST      /api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots
+
+&ndash; GET       /api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots
+
+&ndash; GET       /api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/\{uuid}
+
+&ndash; DELETE    /api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/\{uuid}
+
+== Examples
+
+=== Creating an S3 bucket snapshot
+
+The POST operation is used to create an S3 bucket snapshot with the specified name.
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots:
+
+# The call:
+curl -X POST -k "https://<mgmt-ip>/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots" -H "accept: application/json" -d '{"name" : "ss1"}'
+
+# The response:
+{
+"job": {
+  "uuid": "af10a4d1-60b3-11ef-82cf-005056ae1130",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/af10a4d1-60b3-11ef-82cf-005056ae1130"
+    }
+  }
+}
+}
+
+# The Job:
+{
+"uuid": "af10a4d1-60b3-11ef-82cf-005056ae1130",
+"description": "POST /api/protocols/s3/services/148b9bbd-58d8-11ef-b7ca-005056ae1130/buckets/2aec8270-58e3-11ef-861e-005056ae1130/snapshots/?name=ss1",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2024-08-22T14:23:52-04:00",
+"end_time": "2024-08-22T14:23:54-04:00",
+"svm": {
+  "name": "vs0",
+  "uuid": "148b9bbd-58d8-11ef-b7ca-005056ae1130",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/148b9bbd-58d8-11ef-b7ca-005056ae1130"
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/af10a4d1-60b3-11ef-82cf-005056ae1130"
+  }
+}
+}
+----
+
+=== Retrieving S3 bucket snapshots
+
+The GET operation is used to retrieve all S3 bucket snapshots for a specific bucket.
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots:
+
+# The call:
+curl -X GET -k "https://<mgmt-ip>/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "20837456-3c8b-405a-aa3a-5300c048f87d",
+    "name": "ss1"
+  },
+  {
+    "uuid": "c67cd056-d386-477a-8378-fcc06987bedf",
+    "name": "ss2"
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving S3 bucket snapshots and all snapshot attributes
+
+The GET operation is used to retrieve all S3 bucket snapshots for a specific bucket along with all the snapshot attributes.
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots:
+
+# The call:
+curl -X GET -k "https://<mgmt-ip>/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots?fields=**" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "148b9bbd-58d8-11ef-b7ca-005056ae1130"
+    },
+    "bucket": {
+      "uuid": "2aec8270-58e3-11ef-861e-005056ae1130"
+    },
+    "uuid": "20837456-3c8b-405a-aa3a-5300c048f87d",
+    "name": "ss1",
+    "create_time": "2024-08-22T14:23:54-04:00"
+  },
+  {
+    "svm": {
+      "uuid": "148b9bbd-58d8-11ef-b7ca-005056ae1130"
+    },
+    "bucket": {
+      "uuid": "2aec8270-58e3-11ef-861e-005056ae1130"
+    },
+    "uuid": "c67cd056-d386-477a-8378-fcc06987bedf",
+    "name": "ss2",
+    "create_time": "2024-08-22T14:30:42-04:00"
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving the attributes of a specific S3 bucket snapshot
+
+The GET operation is used to retrieve the attributes of a specific S3 bucket snapshot.
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/{uuid}:
+
+# The call:
+curl -X GET -k "https://<mgmt-ip>/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/{uuid}" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "148b9bbd-58d8-11ef-b7ca-005056ae1130"
+},
+"bucket": {
+  "uuid": "2aec8270-58e3-11ef-861e-005056ae1130"
+},
+"uuid": "c67cd056-d386-477a-8378-fcc06987bedf",
+"name": "ss2",
+"create_time": "2024-08-22T14:30:42-04:00"
+}
+----
+
+=== Deleting an S3 bucket snapshot
+
+The DELETE operation is used to delete an S3 bucket snapshot.
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/{uuid}:
+
+# The call:
+curl -X DELETE -k "https://<mgmt-ip>/api/protocols/s3/services/{svm.uuid}/buckets/{s3_bucket.uuid}/snapshots/{uuid}" -H "accept: application/json"
+
+# The response:
+{
+"job": {
+  "uuid": "94f97fa9-60b7-11ef-82cf-005056ae1130",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/94f97fa9-60b7-11ef-82cf-005056ae1130"
+    }
+  }
+}
+}
+
+# The Job:
+{
+"uuid": "94f97fa9-60b7-11ef-82cf-005056ae1130",
+"description": "DELETE /api/protocols/s3/services/148b9bbd-58d8-11ef-b7ca-005056ae1130/buckets/2aec8270-58e3-11ef-861e-005056ae1130/snapshots/c67cd056-d386-477a-8378-fcc06987bedf",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2024-08-22T14:51:46-04:00",
+"end_time": "2024-08-22T14:51:47-04:00",
+"svm": {
+  "name": "vs0",
+  "uuid": "148b9bbd-58d8-11ef-b7ca-005056ae1130",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/148b9bbd-58d8-11ef-b7ca-005056ae1130"
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/94f97fa9-60b7-11ef-82cf-005056ae1130"
+  }
+}
+}
+----
+
+

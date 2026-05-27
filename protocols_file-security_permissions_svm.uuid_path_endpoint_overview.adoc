@@ -1,0 +1,667 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_file-security_permissions_svm.uuid_path_endpoint_overview.html'
+summary: 'Manage file security permissions and audit policies'
+---
+
+= Manage file security permissions and audit policies
+
+
+
+== Overview
+
+Using this API, You can manage NTFS file security and audit policies of file or directory without the need of a client. It works similar to what you could do with a cacls in windows client. It will create an NTFS security descriptor(SD) to which you can add access control entries (ACEs) to the discretionary access control list (DACL) and the system access control list (SACL). Generally, an SD contains following information:
+
+** Security identifiers (SIDs) for the owner and primary group of an object. A security identifier (SID) is a unique value of variable length used to identify a trustee. Each account has a unique SID issued by an authority, such as a Windows domain controller, and is stored in a security database.
+
+** A DACL  identifies the trustees that are allowed or denied access to a securable object. When a process tries to access a securable object, the system checks the ACEs in the object's DACL to determine whether to grant access to it.
+
+** A SACL  enables administrators to log attempts to access a secured object. Each ACE specifies the types of access attempts by a specified trustee that cause the system to generate a record in the security event log. An ACE in a SACL can generate audit records when an access attempt fails, when it succeeds, or both.
+
+** A set of control bits that qualify the meaning of a SD or its individual members.
+
+Currently, in ONTAP CLI, creating and applying NTFS ACLs is a 5-step process:
+
+** Create an SD.
+
+** Add DACLs and SACLs to the NTFS SD. If you want to audit file and directory events, you must configure auditing on the Vserver, in addition, to adding a SACL to the SD.
+
+** Create a file/directory security policy. This step associates the policy with a SVM.
+
+** Create a policy task. A policy task refers to a single operation to apply to a file (or folder) or to a set of files (or folders). Among other things, the task defines which SD to apply to a path.
+
+** Apply a policy to the associated SVM. If a permission denied error occurs while applying the policy, the policy is skipped for the relevant files (or folders) and the job continues.
+
+This REST API to set the DACL/SACL is similar to the windows GUI. The approach used here has been simplified by combining all steps into a single step. The REST API uses only minimal and mandatory parameters to create access control entries (ACEs), which can be added to the discretionary access control list (DACL) and the system access control list (SACL). Based on information provided, SD is created and  applied on the target path. A path within the FlexCache volume is not supported
+
+Beginning with ONTAP 9.10.1, SLAG (Storage-Level Access Guard) ACLs can also be configured through these endpoints. SLAG is designed to be set on a volume or qtree. Storage-level security cannot be revoked from a client, not even by a system (Windows or UNIX) administrator. It is designed to be modified by storage administrators only, which precedes the share/export permission and the Windows ACLs or UNIX mode bits. Similar to configuring file-directory ACLs, configuring SLAG ACLs is also simplified by combining all steps into a single step.
+
+== Examples
+
+=== Creating a new SD
+
+Use this endpoint to apply a fresh set of SACLs and DACLs. A new SD is created based on the input parameters and it replaces the old SD for the given target path:
+
+'''
+
+----
+
+# The API:
+POST /protocols/file-security/permissions/{svm.uuid}/{path}
+
+# The call:
+curl -X POST "https://10.140.101.39/api/protocols/file-security/permissions/9479099d-5b9f-11eb-9c4e-0050568e8682/%2Fparent?return_timeout=0" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"acls\": [ { \"access\": \"access_allow\", \"advanced_rights\": { \"append_data\": true, \"delete\": true, \"delete_child\": true, \"execute_file\": true, \"full_control\": true, \"read_attr\": true, \"read_data\": true, \"read_ea\": true, \"read_perm\": true, \"write_attr\": true, \"write_data\": true, \"write_ea\": true, \"write_owner\": true, \"write_perm\": true }, \"apply_to\": { \"files\": true, \"sub_folders\": true, \"this_folder\": true }, \"user\": \"administrator\" } ], \"control_flags\": \"32788\", \"group\": \"S-1-5-21-2233347455-2266964949-1780268902-69700\", \"ignore_paths\": [ \"/parent/child2\" ], \"owner\": \"S-1-5-21-2233347455-2266964949-1780268902-69304\", \"propagation_mode\": \"propagate\"}"
+
+# The response:
+{
+"job": {
+  "uuid": "3015c294-5bbc-11eb-9c4e-0050568e8682",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/3015c294-5bbc-11eb-9c4e-0050568e8682"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Configuring a new set of SLAG DACLs and SACLs
+
+Use this endpoint to apply a fresh set of SLAG DACLs and SACLs. A new SD is created based on the input parameters and it replaces the old SLAG permissions for the given target path:
+
+'''
+
+----
+
+# The API:
+POST /protocols/file-security/permissions/{svm.uuid}/{path}
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/file-security/permissions/9f738ac5-c502-11eb-b82c-0050568e5902/%2Ftest_vol?return_timeout=0" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{  \"access_control\": \"slag\",  \"acls\": [    {      \"access\": \"access_allow\",      \"advanced_rights\": {        \"append_data\": true,        \"delete\": true,        \"delete_child\": true,        \"execute_file\": true,        \"full_control\": true,        \"read_attr\": true,        \"read_data\": true,        \"read_ea\": true,        \"read_perm\": true,        \"write_attr\": true,        \"write_data\": true,        \"write_ea\": true,        \"write_owner\": true,        \"write_perm\": true      },      \"apply_to\": {        \"files\": true,        \"sub_folders\": true,        \"this_folder\": true      },      \"user\": \"user1\"    },{      \"access\": \"audit_success\",      \"advanced_rights\": {        \"append_data\": true,        \"delete\": true,        \"delete_child\": true,        \"execute_file\": true,        \"full_control\": true,        \"read_attr\": true,        \"read_data\": true,        \"read_ea\": true,        \"read_perm\": true,        \"write_attr\": true,        \"write_data\": true,        \"write_ea\": true,        \"write_owner\": true,        \"write_perm\": true      },      \"apply_to\": {        \"files\": true,        \"sub_folders\": true,        \"this_folder\": true      },      \"user\": \"user2\"    }  ]}"
+
+# The response:
+{
+"job": {
+  "uuid": "9938d743-d566-11eb-ad60-0050568e5902",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9938d743-d566-11eb-ad60-0050568e5902"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving file permissions
+
+Use this endpoint to retrieve all the security and auditing information of a directory or file:
+
+'''
+
+----
+
+# The API:
+GET /protocols/file-security/permissions/{svm.uuid}/{path}
+
+# The call:
+curl -X GET "https://10.140.101.39/api/protocols/file-security/permissions/9479099d-5b9f-11eb-9c4e-0050568e8682/%2Fparent" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"svm": {
+  "uuid": "9479099d-5b9f-11eb-9c4e-0050568e8682",
+  "name": "vs1"
+},
+"path": "/parent",
+"owner": "BUILTIN\\Administrators",
+"group": "BUILTIN\\Administrators",
+"control_flags": "0x8014",
+"acls": [
+  {
+    "user": "BUILTIN\\Administrators",
+    "access": "access_allow",
+    "apply_to": {
+      "files": true,
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "file_directory"
+  },
+  {
+    "user": "BUILTIN\\Users",
+    "access": "access_allow",
+    "apply_to": {
+      "files": true,
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "file_directory"
+  },
+  {
+    "user": "CREATOR OWNER",
+    "access": "access_allow",
+    "apply_to": {
+      "files": true,
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "file_directory"
+  },
+  {
+    "user": "Everyone",
+    "access": "access_allow",
+    "apply_to": {
+      "files": true,
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "file_directory"
+  },
+  {
+    "user": "NT AUTHORITY\\SYSTEM",
+    "access": "access_allow",
+    "apply_to": {
+      "files": true,
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "file_directory"
+  },
+  {
+    "user": "user1",
+    "access": "access_allow",
+    "apply_to": {
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "slag"
+  },
+  {
+    "user": "user1",
+    "access": "access_allow",
+    "apply_to": {
+      "files": true,
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "slag"
+  },
+  {
+    "user": "user2",
+    "access": "audit_success",
+    "apply_to": {
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "slag"
+  },
+  {
+    "user": "user2",
+    "access": "audit_success",
+    "apply_to": {
+      "files": true,
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "slag"
+  }
+],
+"inode": 64,
+"security_style": "mixed",
+"effective_style": "ntfs",
+"dos_attributes": "10",
+"text_dos_attr": "----D---",
+"user_id": "0",
+"group_id": "0",
+"mode_bits": 777,
+"text_mode_bits": "rwxrwxrwx"
+}
+----
+
+'''
+
+=== Configuring lookup_names in a GET request
+
+When the value of lookup_names is set to false (the default value is true), the SID aren't translated into names:
+
+'''
+
+----
+
+# The API:
+GET /protocols/file-security/permissions/{svm.uuid}/{path}
+
+# The call:
+curl -X GET "https://10.140.101.39/api/protocols/file-security/permissions/bea90fd8-dc69-11ef-9cbd-005056aeb209/%2Fvol01?lookup_names=false&fields=*" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>"
+
+# The response:
+{
+"svm": {
+  "uuid": "bea90fd8-dc69-11ef-9cbd-005056aeb209",
+  "name": "vs0"
+},
+"path": "/vol01",
+"owner": "S-1-1-0",
+"group": "S-1-1-0",
+"control_flags": "0x8014",
+"acls": [
+  {
+    "user": "S-1-5-21-1328775103-872486983-3699758552-1002",
+    "access": "audit_failure",
+    "apply_to": {
+      "files": true,
+      "sub_folders": true,
+      "this_folder": true
+    },
+    "advanced_rights": {
+      "append_data": true,
+      "delete": true,
+      "delete_child": true,
+      "execute_file": true,
+      "full_control": true,
+      "read_attr": true,
+      "read_data": true,
+      "read_ea": true,
+      "read_perm": true,
+      "write_attr": true,
+      "write_data": true,
+      "write_ea": true,
+      "write_owner": true,
+      "synchronize": true,
+      "write_perm": true
+    },
+    "access_control": "file_directory"
+  }
+],
+"inode": 64,
+"security_style": "mixed",
+"effective_style": "ntfs",
+"dos_attributes": "10",
+"text_dos_attr": "----D---",
+"user_id": "0",
+"group_id": "0",
+"mode_bits": 777,
+"text_mode_bits": "rwxrwxrwx"
+}
+----
+
+'''
+
+=== Updating SD-specific information
+
+Use this end point to update the following information:
+
+** Primary owner of the file/directory.
+
+** Primary group of the file/directory.
+
+** Control flags associated with with SD of the file/directory.
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/file-security/permissions/{svm.uuid}/{path}
+
+# The call:
+curl -X PATCH "https://10.140.101.39/api/protocols/file-security/permissions/9479099d-5b9f-11eb-9c4e-0050568e8682/%2Fparent?return_timeout=0" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"control_flags\": \"32788\", \"group\": \"everyone\", \"owner\": \"user1\"}"
+
+# The Response:
+{
+"job": {
+  "uuid": "6f89e612-5bbd-11eb-9c4e-0050568e8682",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/6f89e612-5bbd-11eb-9c4e-0050568e8682"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Removing all SLAG ACLs
+
+Use this end point to remove all SLAG ACLs.
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/file-security/permissions/{svm.uuid}/{path}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/file-security/permissions/713f569f-d4bc-11eb-b24a-005056ac6ce1/%2Ftest_vol?access_control=slag"
+----
+
+'''
+
+=== Adding a single file-directory DACL/SACL ACE
+
+Use this endpoint to add a single SACL/DACL ACE for a new user or for an existing user with a different access type (allow or deny). The given ACE is merged with an existing SACL/DACL and based on the type of "`propagation-mode`", it is reflected to the child object:
+
+'''
+
+----
+
+# The API:
+POST /protocols/file-security/permissions/{svm.uuid}/{path}/acl
+
+# The call:
+curl -X POST "https://10.140.101.39/api/protocols/file-security/permissions/9479099d-5b9f-11eb-9c4e-0050568e8682/%2Fparent/acl?return_timeout=0&return_records=false" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"access\": \"access_allow\", \"apply_to\": { \"files\": true, \"sub_folders\": true, \"this_folder\": true }, \"ignore_paths\": [ \"/parent/child2\" ], \"propagation_mode\": \"propagate\", \"rights\": \"read\", \"user\": \"example_user\"}"
+
+# The Response:
+{
+"job": {
+  "uuid": "26185a2f-5bbe-11eb-9c4e-0050568e8682",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/26185a2f-5bbe-11eb-9c4e-0050568e8682"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Adding a single SLAG DACL/SACL ACE
+
+Use this endpoint to add a single SLAG SACL/DACL ACE to an existing set of ACLs for a user or for an existing user with a different access type (allow or deny).
+
+'''
+
+----
+
+# The API:
+POST /protocols/file-security/permissions/{svm.uuid}/{path}/acl
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/file-security/permissions/713f569f-d4bc-11eb-b24a-005056ac6ce1/%2Ftest_vol/acl?return_timeout=0&return_records=false" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>" -H  "Content-Type: application/json" -d "{  \"access\": \"access_allow\",  \"access_control\": \"slag\",  \"advanced_rights\": {    \"append_data\": true,    \"delete\": true,    \"delete_child\": true,    \"execute_file\": true,    \"full_control\": true,    \"read_attr\": true,    \"read_data\": true,    \"read_ea\": true,    \"read_perm\": true,    \"write_attr\": true,    \"write_data\": true,    \"write_ea\": true,    \"write_owner\": true,    \"write_perm\": true  },  \"apply_to\": {    \"files\": true,    \"sub_folders\": true,    \"this_folder\": true  },  \"user\": \"user1\"}"
+
+# The Response:
+{
+"job": {
+  "uuid": "7fa5f53f-d570-11eb-b24a-005056ac6ce1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/7fa5f53f-d570-11eb-b24a-005056ac6ce1"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Updating existing SACL/DACL ACE
+
+Use this endpoint to update the rights/advanced rights for an existing user, for a specified path. You cannot update the access type using this end point. Based on the type of  "`propagation-mode`", it is reflected to the child object:
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/file-security/permissions/{svm.uuid}/{path}/acl/{user}
+The Call:
+curl -X PATCH "https://10.140.101.39/api/protocols/file-security/permissions/9479099d-5b9f-11eb-9c4e-0050568e8682/%2Fparent/acl/himanshu?return_timeout=0" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"access\": \"access_allow\", \"advanced_rights\": { \"append_data\": true, \"delete\": true, \"delete_child\": true, \"execute_file\": true, \"full_control\": true, \"read_attr\": false, \"read_data\": false, \"read_ea\": false, \"read_perm\": false, \"write_attr\": true, \"write_data\": true, \"write_ea\": true, \"write_owner\": true, \"write_perm\": true }, \"apply_to\": { \"files\": true, \"sub_folders\": true, \"this_folder\": true }, \"ignore_paths\": [ \"/parent/child2\" ], \"propagation_mode\": \"propagate\"}"
+The Response:
+{
+"job": {
+  "uuid": "72067401-5bbf-11eb-9c4e-0050568e8682",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/72067401-5bbf-11eb-9c4e-0050568e8682"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Updating an existing SLG SACL/DACL ACE
+
+Use this endpoint to update the SLAG rights/advanced rights for an existing user, for a specified path. You cannot update the access type using this end point.
+
+'''
+
+----
+
+# The API:
+PATCH /protocols/file-security/permissions/{svm.uuid}/{path}/acl/{user}
+The Call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/file-security/permissions/713f569f-d4bc-11eb-b24a-005056ac6ce1/%2Ftest_vol/acl/user1?return_records=false&return_timeout=0" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>" -H  "Content-Type: application/json" -d "{  \"access\": \"access_allow\",  \"access_control\": \"slag\",  \"apply_to\": {    \"files\": true,    \"sub_folders\": true,    \"this_folder\": true  },  \"rights\": \"read\"}"
+The Response:
+{
+"job": {
+  "uuid": "3d21abcd-d571-11eb-b24a-005056ac6ce1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/3d21abcd-d571-11eb-b24a-005056ac6ce1"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Deleting an existing SACL/DACL ACE
+
+Use this endpoint to delete any of the existing rights/advanced_rights for a user. Based on the type of "`propagation-mode`", it is reflected to the child object:
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/file-security/permissions/{svm.uuid}/{path}/acl/{user}
+
+# The call:
+curl -X DELETE "https://10.140.101.39/api/protocols/file-security/permissions/9479099d-5b9f-11eb-9c4e-0050568e8682/%2Fparent/acl/himanshu?return_timeout=0" -H "accept: application/json" -H "authorization: Basic <CREDENTIALS>" -H "Content-Type: application/json" -d "{ \"access\": \"access_allow\", \"apply_to\": { \"files\": true, \"sub_folders\": true, \"this_folder\": true }, \"ignore_paths\": [ \"/parent/child2\" ], \"propagation_mode\": \"propagate\"}"
+
+# The response:
+{
+"job": {
+  "uuid": "e5683b61-5bbf-11eb-9c4e-0050568e8682",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/e5683b61-5bbf-11eb-9c4e-0050568e8682"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Deleting an existing SLAG SACL/DACL ACE
+
+Use this endpoint to delete any SLAG ACE for a user.
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/file-security/permissions/{svm.uuid}/{path}/acl/{user}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/file-security/permissions/713f569f-d4bc-11eb-b24a-005056ac6ce1/%2Ftest_vol/acl/user1?return_records=false&return_timeout=0" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>" -H  "Content-Type: application/json" -d "{  \"access\": \"access_allow\",  \"access_control\": \"slag\",  \"apply_to\": {    \"files\": true,    \"sub_folders\": true,    \"this_folder\": true  }}"
+
+# The response:
+{
+"job": {
+  "uuid": "10c29534-d572-11eb-b24a-005056ac6ce1",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/10c29534-d572-11eb-b24a-005056ac6ce1"
+    }
+  }
+}
+}
+----
+
+'''
+
+

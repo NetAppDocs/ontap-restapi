@@ -1,0 +1,517 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_metrocluster_endpoint_overview.html'
+summary: 'View and manage MetroCluster configurations'
+---
+
+= View and manage MetroCluster configurations
+
+
+
+= Overview
+
+You can use this API to create, perform operations, and retrieve relevant information pertaining to MetroCluster. The GET operation fetches MetroCluster status and configuration parameters for the local and partner cluster. The PATCH operation executes a switchover, heal or switchback operation. The POST request can be used to setup a MetroCluster.
+
+== Creating a MetroCluster
+
+A new MetroCluster can be set up by issuing a POST to /cluster/metrocluster. Parameters are provided in the body of the POST request.
+
+=== Fields used for setting up a MetroCluster configuration
+
+The fields used for MetroCluster APIs are either required or optional and are described as follows:
+
+=== Required configuration fields
+
+These fields are always required for any POST /cluster/metrocluster request.
+
+* `partner_cluster.name` - Specifies the partner cluster name to which cluster peering has been established.
+* `dr_pairs` - Specifies local and DR partner node pairs.  Each pair uniquely identifies a DR group.
+
+=== Optional configuration fields
+
+This field is used to set up additional components in a MetroCluster configuration.
+
+* `mediator.+*+` - Specifies mediator parameters. If Mediator Assisted Unplanned Switchover (MAUSO) functionality is required, then a mediator should be configured.
+* `mccip_ports` - Specifies relevant layer 3 network configuration information for each port. These include port name, node name, IP address, gateway, and netmask. If mccip_ports is not provided, then the API automatically generates IP addresses for the ports and creates a layer 2 network configuration.
+
+=== Polling the setup job
+
+After a successful POST /cluster/metrocluster is issued, an HTTP status code of 202 (Accepted) is returned along with a job UUID and a link in the body of the response. The setup job continues asynchronously and can be monitored by using the job UUID and the /cluster/jobs API. The "message" field in the response of the GET /cluster/jobs/\{uuid} request shows the current step in the job, and the "state" field shows the overall state of the job.
+
+'''
+
+== Examples
+
+== Setting up a 4-node MetroCluster
+
+----
+This example shows the POST body when setting up a 4-node MetroCluster along with a mediator. It is required that cluster peering be established between two clusters, in this example, site "mcc_siteA" and "mcc_siteB" before issuing the POST request. Nodes "node-a" and "node-b" are HA partners and part of the local cluster "mcc_siteA", wheres nodes "node-c" and "node-d" are HA partners in the partner cluster  "mcc_siteB". Specifying a single DR pairing of "node-a" and "node-c" is sufficient to identify a DR group -- "node-a" and "node-c" will be designated primary DR partners ("node-b" and "node-d" too). "node-d" will then be designated auxiliary partner of "node-a". Once the MetroCluster configuration has been completed, and since mediator parameters have been provided, the mediator will be setup and MAUSO enabled.
+
+# API
+/api/cluster/metrocluster
+----
+
+=== POST body included from file
+
+----
+mcc_post_body.txt:
+{
+"partner_cluster" : {
+  "name": "mcc_siteB"
+},
+"dr_pairs" : [
+  {
+    "node" : {
+      "name" : "node-a"
+    },
+    "partner" : {
+      "name" : "node-c"
+    }
+  }
+],
+"mediator" :  {
+  "ip_address" : "1.2.3.4",
+  "user" : "mcc_mediator",
+  "password" : "openMediator"
+}
+}
+curl -X POST https://<mgmt-ip>/api/cluster/metrocluster -d "@mcc_post_body.txt"
+----
+
+=== Inline POST body
+
+----
+curl -X POST https://<mgmt-ip>/api/cluster/metrocluster -d '{"partner_cluster" : {"name": "mcc_siteB" }, "dr_pairs" : [{"node" : {"name" : "node-a" }, "partner" : {"name" : "node-c" }}], "mediator" :  {"ip_address" : "1.2.3.4", "user" : "mcc_mediator" , "password" : "openMediator" }}'
+----
+
+=== POST Response
+
+----
+HTTP/1.1 202 Accepted
+Date: Thu, 09 Jan 2020 20:38:05 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/cluster/metrocluster
+Content-Length: 189
+Content-Type: application/hal+json
+{
+"job": {
+  "uuid": "f23abbdb-331f-11ea-acd3-005056a708b2",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/f23abbdb-331f-11ea-acd3-005056a708b2"
+    }
+  }
+}
+}
+----
+
+=== Monitoring the job progress
+
+Use the link provided in the response to the POST request to fetch information for the setup job.
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/jobs/f23abbdb-331f-11ea-acd3-005056a708b2
+----
+
+==== Job status response
+
+The following is an example of the job status response returned by the running MetroCluster setup job:
+
+----
+HTTP/1.1 200 OK
+Date: Thu, 09 Jan 2020 20:40:20 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 373
+Content-Type: application/hal+json
+{
+"uuid": "f23abbdb-331f-11ea-acd3-005056a708b2",
+"description": "POST /api/cluster/metrocluster",
+"state": "running",
+"message": "Checking remote storage pool",
+"code": 2432844,
+"start_time": "2020-01-09T15:38:08-05:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/f23abbdb-331f-11ea-acd3-005056a708b2"
+  }
+}
+----
+
+=== Completion message
+
+This is the final update message from the setup job indicating completion.
+
+----
+{
+"uuid": "f23abbdb-331f-11ea-acd3-005056a708b2",
+"description": "POST /api/cluster/metrocluster",
+"state": "running",
+"message": "MetroCluster setup is complete",
+"code": 2432849,
+"start_time": "2020-01-09T15:38:08-05:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/f23abbdb-331f-11ea-acd3-005056a708b2"
+  }
+}
+}
+----
+
+=== Final status of a successful MetroCluster setup workflow
+
+When the setup job completes, the 'end_time' field is populated, and the 'state' and 'message' fields report the final status.
+
+----
+HTTP/1.1 200 OK
+Date: Thu, 09 Jan 2020 20:43:54 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 360
+Content-Type: application/hal+json
+{
+"uuid": "f23abbdb-331f-11ea-acd3-005056a708b2",
+"description": "POST /api/cluster/metrocluster",
+"state": "success",
+"message": "success",
+"code": 0,
+"start_time": "2020-01-09T15:38:08-05:00",
+"end_time": "2020-01-09T15:43:50-05:00",
+"_links": {
+  "self": {
+    "href": "/api/cluster/jobs/f23abbdb-331f-11ea-acd3-005056a708b2"
+  }
+}
+}
+----
+
+=== Retrieving the MetroCluster configuration after completion of the POST request
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/metrocluster
+----
+
+==== Response
+
+----
+HTTP/1.1 200 OK
+Date: Thu, 09 Jan 2020 20:49:40 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 849
+Content-Type: application/hal+json
+{
+"local": {
+  "configuration_state": "configured",
+  "periodic_check_enabled": true,
+  "mode": "normal",
+  "partner_cluster_reachable": true,
+  "cluster": {
+    "name": "mcc_siteA",
+    "uuid": "4294c4f2-30e2-11ea-8cac-005056a708b2",
+    "_links": {
+      "self": {
+        "href": "/api/cluster"
+      }
+    }
+  }
+},
+"remote": {
+  "configuration_state": "configured",
+  "periodic_check_enabled": true,
+  "mode": "normal",
+  "cluster": {
+    "name": "mcc_siteB",
+    "uuid": "4207c6a5-30e2-11ea-be25-005056a7dc84",
+    "_links": {
+      "self": {
+        "href": "/api/cluster/peers/4207c6a5-30e2-11ea-be25-005056a7dc84/cluster"
+      }
+    }
+  }
+},
+"configuration_type": "ip_fabric",
+"_links": {
+  "self": {
+    "href": "/api/cluster/metrocluster"
+  }
+}
+}
+----
+
+=== Retrieving information about the nodes in a MetroCluster configuration
+
+==== Request
+
+----
+curl -X GET https://<mgmt-ip>/api/cluster/metrocluster/nodes
+----
+
+==== Response
+
+----
+HTTP/1.1 200 OK
+Date: Fri, 10 Jan 2020 02:26:20 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Type: application/hal+json
+Transfer-Encoding: chunked
+{
+"records": [
+  {
+    "dr_group_id": 1,
+    "cluster": {
+      "name": "mcc_siteA",
+      "uuid": "4294c4f2-30e2-11ea-8cac-005056a708b2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster"
+        }
+      }
+    },
+    "node": {
+      "name": "node-a",
+      "uuid": "1e6b0137-30dd-11ea-82ba-005056a7c78a",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/1e6b0137-30dd-11ea-82ba-005056a7c78a"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/metrocluster/nodes/1e6b0137-30dd-11ea-82ba-005056a7c78a"
+      }
+    }
+  },
+  {
+    "dr_group_id": 1,
+    "cluster": {
+      "name": "mcc_siteA",
+      "uuid": "4294c4f2-30e2-11ea-8cac-005056a708b2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster"
+        }
+      }
+    },
+    "node": {
+      "name": "node-b",
+      "uuid": "1e57ba22-30dd-11ea-8b19-005056a708b2",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/1e57ba22-30dd-11ea-8b19-005056a708b2"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/metrocluster/nodes/1e57ba22-30dd-11ea-8b19-005056a708b2"
+      }
+    }
+  },
+  {
+    "dr_group_id": 1,
+    "cluster": {
+      "name": "mcc_siteB",
+      "uuid": "4207c6a5-30e2-11ea-be25-005056a7dc84",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/peers/4207c6a5-30e2-11ea-be25-005056a7dc84/cluster"
+        }
+      }
+    },
+    "node": {
+      "name": "node-c",
+      "uuid": "1e563efc-30dd-11ea-a9d3-005056a71573",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/1e563efc-30dd-11ea-a9d3-005056a71573"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/cluster/metrocluster/nodes/1e563efc-30dd-11ea-a9d3-005056a71573"
+      }
+    }
+  },
+  {
+    "dr_group_id": 1,
+    "cluster": {
+      "name": "mcc_siteB",
+      "uuid": "4207c6a5-30e2-11ea-be25-005056a7dc84",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/peers/4207c6a5-30e2-11ea-be25-005056a7dc84/cluster"
+        }
+      }
+    },
+    "node": {
+      "name": "node-d",
+      "uuid": "1e400aa4-30dd-11ea-adec-005056a7dc84",
+      "_links": {
+        "self": {
+          "href": "/api/cluster/nodes/1e400aa4-30dd-11ea-adec-005056a7dc84"
+        }
+      }
+    },
+    "encryption_enabled": false,
+    "_links": {
+      "self": {
+        "href": "/api/cluster/metrocluster/nodes/1e400aa4-30dd-11ea-adec-005056a7dc84"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/cluster/metrocluster/nodes"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving MetroCluster status and configuration information
+
+----
+GET https://<mgmt-ip>/api/cluster/metrocluster
+{
+  "local": {
+      "configuration_state": "configured",
+      "periodic_check_enabled": true,
+      "mode": "normal",
+      "cluster": {
+          "name": "cluster1",
+          "uuid": "bbc00ca3-8d81-11e9-b5a9-005056826931",
+          "_links": {
+              "self": {
+                  "href": "/api/cluster"
+              }
+          }
+      }
+  },
+  "remote": {
+      "configuration_state": "configured",
+      "periodic_check_enabled": true,
+      "mode": "normal",
+      "cluster": {
+          "name": "cluster3",
+          "uuid": "ce2cf803-8d81-11e9-87db-00505682cecf",
+          "_links": {
+              "self": {
+                  "href": "/api/cluster/peers/ce2cf803-8d81-11e9-87db-00505682cecf/cluster"
+              }
+          }
+      }
+  },
+  "_links": {
+      "self": {
+          "href": "/api/cluster/metrocluster"
+      }
+  }
+}
+----
+
+'''
+
+=== Initiating a switchover, heal or switchback command using PATCH
+
+PATCH is used to initiate a variety of operations by specifying one of the following values in the "action" parameter:
+
+* `switchover` - Initiates  an Unplanned Switchover (USO).
+* `negotiated_switchover` - Indicates that an Negotiated switchover (NSO) is to be performed.
+* `negotiated_switchover_simulate` - Provides validation in preparation for NSO but does not perform the operation.
+* `switchback` - Indicates that a switchback is to be performed.
+* `switchback_simulate` - Provides validation for switchback but does not commit the operation.
+* `heal_aggregates` - Indicates that the aggregates phase of the heal operation is to be performed.
+* `heal_root_aggregates` - Indicates that the root aggregates phase of the heal operation is to be performed.
+
+==== PATCH Switchover example
+
+----
+PATCH https://<mgmt-ip>/api/cluster/metrocluster?action=switchover
+{
+  "job": {
+      "uuid": "70e54274-57ee-11e9-aa33-005056820b99",
+      "_links": {
+          "self": {
+              "href": "/api/cluster/jobs/70e54274-57ee-11e9-aa33-005056820b99"
+          }
+      }
+  }
+}
+----
+
+This returns a job UUID. A subsequent GET for this job should return the following:
+
+----
+GET https://<mgmt-ip>/api/cluster/jobs/70e54274-57ee-11e9-aa33-005056820b99
+{
+  "uuid": "70e54274-57ee-11e9-aa33-005056820b99",
+  "description": "MetroCluster Switchover Job",
+  "state": "success",
+  "message": "Complete: Switchover is successful.",
+  "code": 0,
+  "start_time": "2019-04-05T15:02:02-07:00",
+  "end_time": "2019-04-05T15:02:30-07:00",
+  "_links": {
+      "self": {
+          "href": "/api/cluster/jobs/70e54274-57ee-11e9-aa33-005056820b99"
+      }
+  }
+}
+----
+
+==== PATCH Switchback example:
+
+----
+PATCH https://<mgmt-ip>/api/cluster/metrocluster?action=switchback
+{
+  "job": {
+      "uuid": "a62714cc-57ec-11e9-aa33-005056820b99",
+      "_links": {
+          "self": {
+              "href": "/api/cluster/jobs/a62714cc-57ec-11e9-aa33-005056820b99"
+          }
+      }
+  }
+}
+----
+
+This returns a job UUID with a link to the job. A subsequent GET for this job UUID can be used to retrieve the completion status of the operation:
+
+----
+GET https://<mgmt-ip>/api/cluster/jobs/a62714cc-57ec-11e9-aa33-005056820b99
+{
+  "uuid": "a62714cc-57ec-11e9-aa33-005056820b99",
+  "description": "MetroCluster Switchback Job",
+  "state": "success",
+  "message": "Complete: Switchback is successful.",
+  "code": 0,
+  "start_time": "2019-04-05T14:49:12-07:00",
+  "end_time": "2019-04-05T14:50:12-07:00",
+  "_links": {
+      "self": {
+          "href": "/api/cluster/jobs/a62714cc-57ec-11e9-aa33-005056820b99"
+      }
+  }
+}
+----
+
+

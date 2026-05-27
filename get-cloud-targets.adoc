@@ -1,0 +1,755 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cloud-targets.html'
+summary: 'Retrieve cloud targets in the cluster'
+---
+
+= Retrieve cloud targets in the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cloud/targets`#
+
+*Introduced In:* 9.6
+
+Retrieves the collection of cloud targets in the cluster.
+
+== Related ONTAP commands
+
+* `storage aggregate object-store config show`
+* `snapmirror object-store config show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|container
+|string
+|query
+|False
+a|Filter by container
+
+
+|cap_url
+|string
+|query
+|False
+a|Filter by cap_url
+
+
+|access_key
+|string
+|query
+|False
+a|Filter by access_key
+
+
+|certificate_validation_enabled
+|boolean
+|query
+|False
+a|Filter by certificate_validation_enabled
+
+
+|port
+|integer
+|query
+|False
+a|Filter by port
+
+
+|owner
+|string
+|query
+|False
+a|Filter by owner
+
+
+|snapmirror_use
+|string
+|query
+|False
+a|Filter by snapmirror_use
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|use_http_proxy
+|boolean
+|query
+|False
+a|Filter by use_http_proxy
+
+* Introduced in: 9.7
+
+
+|cluster.name
+|string
+|query
+|False
+a|Filter by cluster.name
+
+* Introduced in: 9.7
+
+
+|cluster.uuid
+|string
+|query
+|False
+a|Filter by cluster.uuid
+
+* Introduced in: 9.7
+
+
+|url_style
+|string
+|query
+|False
+a|Filter by url_style
+
+* Introduced in: 9.8
+
+
+|server
+|string
+|query
+|False
+a|Filter by server
+
+
+|used
+|integer
+|query
+|False
+a|Filter by used
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|read_latency_warning_threshold
+|integer
+|query
+|False
+a|Filter by read_latency_warning_threshold
+
+* Introduced in: 9.15
+
+
+|azure_account
+|string
+|query
+|False
+a|Filter by azure_account
+
+
+|ssl_enabled
+|boolean
+|query
+|False
+a|Filter by ssl_enabled
+
+
+|authentication_type
+|string
+|query
+|False
+a|Filter by authentication_type
+
+
+|provider_type
+|string
+|query
+|False
+a|Filter by provider_type
+
+
+|ipspace.name
+|string
+|query
+|False
+a|Filter by ipspace.name
+
+
+|ipspace.uuid
+|string
+|query
+|False
+a|Filter by ipspace.uuid
+
+
+|server_side_encryption
+|string
+|query
+|False
+a|Filter by server_side_encryption
+
+* Introduced in: 9.7
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+* Introduced in: 9.12
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#cloud_target[cloud_target]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "access_key": "string",
+      "authentication_type": "string",
+      "azure_account": "string",
+      "cap_url": "https://123.45.67.89:1234/CAP/api/v1/credentials?agency=myagency&mission=mymission&role=myrole",
+      "cluster": {
+        "name": "string",
+        "uuid": "string"
+      },
+      "container": "bucket1",
+      "ipspace": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "Default",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      },
+      "name": "string",
+      "owner": "string",
+      "provider_type": "string",
+      "scope": "string",
+      "server": "string",
+      "server_side_encryption": "string",
+      "snapmirror_use": "string",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "url_style": "string",
+      "used": 0,
+      "uuid": "string"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the cluster that owns the cloud target. For POST, this accepts the name of the peer cluster only if the cluster is in switchover state.
+
+
+|uuid
+|string
+a|The UUID of the cluster that owns the cloud target. For POST, this accepts the UUID of the peer cluster only if the cluster is in switchover state.
+
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+IPspace to use in order to reach the cloud target.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+This field is only applicable when used for SnapMirror and FabricLink. For POST and PATCH, SVM information is required for SnapMirror and FabricLink targets when the scope is svm and is not allowed for FabricPool targets. For GET, this field is not set if the scope of the cloud target is "cluster".
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#cloud_target]
+[.api-collapsible-fifth-title]
+cloud_target
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_key
+|string
+a|Access key ID for AWS_S3 and other S3 compatible provider types.
+
+
+|authentication_type
+|string
+a|Authentication used to access the target. SnapMirror does not yet support CAP. Required in POST.
+
+
+|azure_account
+|string
+a|Azure account
+
+
+|cap_url
+|string
+a|This parameter is available only when auth-type is CAP. It specifies a full URL of the request to a CAP server for retrieving temporary credentials (access-key, secret-password, and session token) for accessing the object store.
+
+
+|certificate_validation_enabled
+|boolean
+a|Is SSL/TLS certificate validation enabled? The default value is true. This can only be modified for SGWS, IBM_COS, and ONTAP_S3 provider types.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|container
+|string
+a|Data bucket/container name. For FabricLink, a wildcard character "*" can also be specified to indicate that all the buckets in an SVM can use the same target information. However, for containers other than ONTAP, an exact name should be specified.
+
+* example: bucket1
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|IPspace to use in order to reach the cloud target.
+
+
+|name
+|string
+a|Cloud target name
+
+
+|owner
+|string
+a|Owner of the target. Allowed values are  FabricPool,  SnapMirror or S3_SnapMirror. A target can be used by only one feature.
+
+
+|port
+|integer
+a|Port number of the object store that ONTAP uses when establishing a connection. Required in POST.
+
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|provider_type
+|string
+a|Type of cloud provider. Allowed values depend on owner type.  For FabricPool, AliCloud, AWS_S3, Azure_Cloud, GoogleCloud, IBM_COS, SGWS, and ONTAP_S3 are allowed.  For SnapMirror, the valid values are AWS_S3 or SGWS. For FabricLink, AWS_S3, SGWS, S3_Compatible, S3EMU, LOOPBACK and ONTAP_S3 are allowed.
+
+* Introduced in: 9.6
+* readCreate: 1
+* x-nullable: true
+
+
+|read_latency_warning_threshold
+|integer
+a|The warning threshold for read latency that is used to determine when an alert ems for a read operation from an object store should be issued.
+
+
+|scope
+|string
+a|If the cloud target is owned by a data SVM, then the scope is set to svm. Otherwise it will be set to cluster.
+
+
+|server
+|string
+a|Fully qualified domain name of the object store server. Required on POST.  For Amazon S3, server name must be an AWS regional endpoint in the format s3.amazonaws.com or s3-+++<region>+++.amazonaws.com, for example, s3-us-west-2.amazonaws.com. The region of the server and the bucket must match. For Azure, if the server is a "blob.core.windows.net" or a "blob.core.usgovcloudapi.net", then a value of azure-account followed by a period is added in front of the server.+++</region>+++
+
+
+|server_side_encryption
+|string
+a|Encryption of data at rest by the object store server for AWS_S3 and other S3 compatible provider types. In most cases it is best not to change default value of "sse_s3" for object store servers which support SSE-S3 encryption. The encryption is in addition to any encryption done by ONTAP at a volume or at an aggregate level. Note that changing this option does not change encryption of data which already exist in the object store.
+
+* enum: ["none", "sse_s3", "sse_kms", "dsse_kms"]
+* Introduced in: 9.7
+* x-nullable: true
+
+
+|snapmirror_use
+|string
+a|Use of the cloud target by SnapMirror.
+
+
+|ssl_enabled
+|boolean
+a|SSL/HTTPS enabled or not
+
+
+|svm
+|link:#svm[svm]
+a|This field is only applicable when used for SnapMirror and FabricLink. For POST and PATCH, SVM information is required for SnapMirror and FabricLink targets when the scope is svm and is not allowed for FabricPool targets. For GET, this field is not set if the scope of the cloud target is "cluster".
+
+
+|url_style
+|string
+a|URL style used to access S3 bucket.
+
+
+|use_http_proxy
+|boolean
+a|Use HTTP proxy when connecting to the object store.
+
+
+|used
+|integer
+a|The amount of cloud space used by all the aggregates attached to the target, in bytes. This field is only populated for FabricPool targets. The value is recalculated once every 5 minutes.
+
+
+|uuid
+|string
+a|Cloud target UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

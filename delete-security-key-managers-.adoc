@@ -1,0 +1,292 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-key-managers-.html'
+summary: 'Delete key managers'
+---
+
+= Delete key managers
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/key-managers/{uuid}`#
+
+*Introduced In:* 9.6
+
+Deletes a key manager.
+
+== Related ONTAP commands
+
+* `security key-manager external disable`
+* `security key-manager onboard disable`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|Key manager UUID
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+//start table
+[cols=2*,options=header]
+|===
+//header
+| Error Code | Description
+//end header
+//end row
+//start row
+|65536208
+//end row
+//start row
+|Failed to delete the SVM Key ID.
+//end row
+//start row
+|
+//end row
+//start row
+|65536233
+//end row
+//start row
+|Internal error. Deletion of km_wrapped_kdb key database has failed for the Onboard Key Manager.
+//end row
+//start row
+|
+//end row
+//start row
+|65536234
+//end row
+//start row
+|Internal error. Deletion of cluster_kdb key database has failed for the Onboard Key Manager.
+//end row
+//start row
+|
+//end row
+//start row
+|65536239
+//end row
+//start row
+|Encrypted volumes are found for the SVM.
+//end row
+//start row
+|
+//end row
+//start row
+|65536242
+//end row
+//start row
+|One or more self-encrypting drives are assigned an authentication key.
+//end row
+//start row
+|
+//end row
+//start row
+|65536243
+//end row
+//start row
+|Cannot determine authentication key presence on one or more self-encrypting drives.
+//end row
+//start row
+|
+//end row
+//start row
+|65536800
+//end row
+//start row
+|Failed to lookup onboard keys.
+//end row
+//start row
+|
+//end row
+//start row
+|65536813
+//end row
+//start row
+|Encrypted kernel core files found.
+//end row
+//start row
+|
+//end row
+//start row
+|65536817
+//end row
+//start row
+|Failed to determine if key manager is safe to disable.
+//end row
+//start row
+|
+//end row
+//start row
+|65536827
+//end row
+//start row
+|Failed to determine if the SVM has any encrypted volumes.
+//end row
+//start row
+|
+//end row
+//start row
+|65536828
+//end row
+//start row
+|External key management is not enabled for the SVM.
+//end row
+//start row
+|
+//end row
+//start row
+|65536867
+//end row
+//start row
+|Encrypted volumes are found for the SVM.
+//end row
+//start row
+|
+//end row
+//start row
+|196608301
+//end row
+//start row
+|Failed to determine the type of encryption.
+//end row
+//start row
+|
+//end row
+//start row
+|196608305
+//end row
+//start row
+|NAE aggregates are found in the cluster.
+//end row
+//start row
+|Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+* name: KEYMANAGER_MESSAGE_ERR_KM_DISABLE_ENC_CORE_CHECK_TIMEOUT
+message: Failed to disable the key manager because of a timeout when checking for encrypted cores.
+//end row
+|===
+//end table
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,163 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'storage_luns_lun.uuid_attributes_endpoint_overview.html'
+summary: 'Manage LUN attributes'
+---
+
+= Manage LUN attributes
+
+
+
+== Overview
+
+LUN attributes are caller-defined name/value pairs optionally stored with a LUN. Attributes are available to persist small amounts of application-specific metadata. They are in no way interpreted by ONTAP.
+
+Attribute names and values must be at least one byte and no more than 4091 bytes in length. The sum of the name and value lengths must be no more than 4092 bytes.
+
+The LUN attributes REST API allows you to create, update, delete, and discover attributes for a LUN. The LUN REST API also allows you to set attributes when a LUN is first created.
+
+== Examples
+
+=== Retrieving all attributes from a LUN
+
+This example uses the LUN attribute REST API endpoint with the `fields` query parameter to request the names and values.
+
+----
+
+# The API:
+GET /api/storage/luns/{lun.uuid}/attributes
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes?fields=*' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "name": "name1",
+    "value": "value1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name1"
+      }
+    }
+  },
+  {
+    "name": "name2",
+    "value": "value2",
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name2"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes"
+  }
+}
+}
+----
+
+This example uses the LUN REST endpoint with the `fields` query parameter to request the attributes properties.
+
+----
+
+# The API:
+GET /api/storage/luns/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90?fields=attributes' -H 'Accept: application/hal+json'
+
+# The response:
+{
+"uuid": "4bc204df-ecd8-4f35-8207-d0ccb4db3a90",
+"name": "/vol/vol1/lun1",
+"attributes": [
+  {
+    "name": "name1",
+    "value": "name1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name1"
+      }
+    }
+  },
+  {
+    "name": "name2",
+    "value": "value2",
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name2"
+      }
+    }
+  }
+],
+"_links": {
+  "self": {
+    "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90"
+  }
+}
+}
+----
+
+'''
+
+=== Adding an attribute to a LUN
+
+----
+
+# The API:
+POST /api/storage/luns/{lun.uuid}/attributes
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes?return_records=true' -H 'Accept: application/hal+json' -d '{ "name": "name1", "value": "value1" }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "name1",
+    "value": "value1",
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name1"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Modifying an attribute value for a LUN
+
+----
+
+# The API
+PATCH /api/storage/luns/{lun.uuid}/attributes/{name}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name1' -H 'Accept: application/hal+json' -d '{ "value": "newValue" }'
+----
+
+'''
+
+=== Deleting an attribute from a LUN
+
+----
+
+# The API:
+DELETE /api/storage/luns/{lun.uuid}/attributes/{name}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/storage/luns/4bc204df-ecd8-4f35-8207-d0ccb4db3a90/attributes/name1' -H 'Accept: application/hal+json'
+----
+
+

@@ -1,0 +1,675 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-aws-kms-.html'
+summary: 'Update an AWS KMS configuration'
+---
+
+= Update an AWS KMS configuration
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/aws-kms/{uuid}`#
+
+*Introduced In:* 9.12
+
+Updates the AWS KMS configuration.
+
+== Optional properties
+
+* `region` - AWS region of the AWS KMS.
+* `service` - AWS service type.
+* `default_domain` - AWS KMS default domain.
+* `port` - AWS KMS port.
+* `proxy_type` - Type of proxy (http, https, etc.), if proxy configuration is used.
+* `proxy_host` - Proxy hostname if proxy configuration is used.
+* `proxy_port` - Proxy port number if proxy configuration is used.
+* `proxy_username` - Proxy username if proxy configuration is used.
+* `proxy_password` - Proxy password if proxy configuration is used.
+* `polling_period` - Polling period in minutes.
+* `timeout` - AWS Connection timeout, in seconds.
+* `verify` - Set to true to verify the AWS KMS host.
+* `verify_host` - Set to true to verify the AWS KMS host's hostname.
+* `verify_ip` - Set to true to verify the AWS KMS host's IP address.
+* `host` - AWS KMS host's hostname.
+* `secret_access_key` - AWS secret access key for the access key ID provided.
+* `access_key_id` - AWS access key ID of the user with the appropriate access to AWS KMS.
+* `skip_verify` - Set to true to bypass verification of the user provided access_key_id and secret_access_key.
+* `encryption_context` - Additional layer of authentication and logging.
+
+== Related ONTAP commands
+
+* `security key-manager external aws update-config`
+* `security key-manager external aws update-credentials`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|AWS KMS UUID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_key_id
+|string
+a|AWS Access Key ID of the user that has appropriate access to AWS KMS.
+
+
+|amazon_reachability
+|link:#amazon_reachability[amazon_reachability]
+a|Indicates whether or not the Amazon KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|default_domain
+|string
+a|AWS KMS default domain.
+
+
+|ekmip_reachability
+|array[link:#ekmip_reachability[ekmip_reachability]]
+a|
+
+|encryption_context
+|string
+a|Additional layer of authentication and logging.
+
+
+|host
+|string
+a|AWS KMS host's hostname.
+
+
+|polling_period
+|integer
+a|Polling period in minutes.
+
+
+|port
+|integer
+a|AWS KMS port.
+
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|region
+|string
+a|AWS region of the AWS KMS.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|secret_access_key
+|string
+a|AWS Secret Access Key for the provided access key ID.
+
+
+|service
+|string
+a|AWS service type.
+
+
+|skip_verify
+|boolean
+a|Set to true to bypass verification of the user provided access_key_id
+and secret_access_key. An error will be returned if 'skip_verify' is
+provided but 'access_key_id' is not.
+
+
+|state
+|link:#state[state]
+a|Indicates whether or not the Amazon Web Services Key Management Service (AWS KMS) key protection is available cluster-wide.
+
+
+|timeout
+|integer
+a|AWS Connection timeout, in seconds.
+
+
+|uuid
+|string
+a|A unique identifier for the AWS KMS.
+
+
+|verify
+|boolean
+a|Set to true to verify the AWS KMS host.
+
+
+|verify_host
+|boolean
+a|Set to true to verify the AWS KMS host's hostname.
+
+
+|verify_ip
+|boolean
+a|Set to true to verify the AWS KMS host's IP address.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "access_key_id": "<AWS-ACCESS-KEY-ID>",
+  "amazon_reachability": {
+    "code": "346758",
+    "message": "Amazon KMS is not reachable from all nodes - <reason>."
+  },
+  "default_domain": "domainName",
+  "ekmip_reachability": [
+    {
+      "code": "346758",
+      "message": "embedded KMIP server status unavailable on node.",
+      "node": {
+        "name": "node1",
+        "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  ],
+  "encryption_context": "aws:fsx:fs-id=fs-0785c8beceb895999",
+  "host": "aws-host.host.com",
+  "polling_period": 55,
+  "port": 443,
+  "proxy_host": "proxy.eng.com",
+  "proxy_password": "awskze-Jwjje2-WJJPer",
+  "proxy_port": 1234,
+  "proxy_type": "http",
+  "proxy_username": "proxyuser",
+  "region": "us-east-1",
+  "scope": "string",
+  "secret_access_key": "<AWS-SECRET-ACCESS-KEY>",
+  "service": "dynamodb.*.amazonaws.com",
+  "skip_verify": "",
+  "state": {
+    "code": "346758",
+    "message": "AWS KMS key protection is unavailable on the following nodes: node1, node2."
+  },
+  "timeout": 20,
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "verify": "",
+  "verify_host": 1,
+  "verify_ip": ""
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 65537541
+| No inputs provided for the REST API PATCH request.
+
+| 65537906
+| Failed to store the secret access key.
+
+| 65537920
+| Secret access key cannot be empty.
+
+| 65537921
+| Unable to connect to the Amazon Web Service Key Management Service (AWSKMS) using these credentials.
+
+| 65537924
+| Access key ID cannot be empty.
+
+| 65537926
+| Amazon Web Service Key Management Service is not configured for SVM.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#amazon_reachability]
+[.api-collapsible-fifth-title]
+amazon_reachability
+
+Indicates whether or not the Amazon KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if Amazon KMS is reachable from all nodes in the cluster.
+
+
+|message
+|string
+a|Error message returned when 'reachable' is false.
+
+
+|reachable
+|boolean
+a|Set to true if the Amazon KMS is reachable from all nodes of the cluster.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#ekmip_reachability]
+[.api-collapsible-fifth-title]
+ekmip_reachability
+
+Provides the connectivity status for the given SVM on the given node to all EKMIP servers configured on all nodes of the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Code corresponding to the error message. Returns a 0 if a given SVM is able to communicate to the EKMIP servers of all of the nodes in the cluster.
+
+
+|message
+|string
+a|Error message set when cluster-wide EKMIP server availability from the given SVM and node is false.
+
+
+|node
+|link:#node[node]
+a|
+
+|reachable
+|boolean
+a|Set to true if the given SVM on the given node is able to communicate to all EKMIP servers configured on all nodes in the cluster.
+
+
+|===
+
+
+[#state]
+[.api-collapsible-fifth-title]
+state
+
+Indicates whether or not the Amazon Web Services Key Management Service (AWS KMS) key protection is available cluster-wide.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_state
+|boolean
+a|Set to true when AWS KMS key protection is available on all nodes of the cluster.
+
+
+|code
+|string
+a|Code corresponding to the message. Returns a 0 if AWS KMS key protection is available on all nodes of the cluster.
+
+
+|message
+|string
+a|Error message set when cluster_state is false.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#aws_kms]
+[.api-collapsible-fifth-title]
+aws_kms
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_key_id
+|string
+a|AWS Access Key ID of the user that has appropriate access to AWS KMS.
+
+
+|amazon_reachability
+|link:#amazon_reachability[amazon_reachability]
+a|Indicates whether or not the Amazon KMS is reachable from all nodes in the cluster.
+This is an advanced property; there is an added computational cost to retrieving its value. The property is not populated for either a collection GET or an instance GET unless it is explicitly requested using the `fields` query parameter or GET for all advanced properties is enabled.
+
+
+|default_domain
+|string
+a|AWS KMS default domain.
+
+
+|ekmip_reachability
+|array[link:#ekmip_reachability[ekmip_reachability]]
+a|
+
+|encryption_context
+|string
+a|Additional layer of authentication and logging.
+
+
+|host
+|string
+a|AWS KMS host's hostname.
+
+
+|polling_period
+|integer
+a|Polling period in minutes.
+
+
+|port
+|integer
+a|AWS KMS port.
+
+
+|proxy_host
+|string
+a|Proxy host.
+
+
+|proxy_password
+|string
+a|Proxy password. Password is not audited.
+
+
+|proxy_port
+|integer
+a|Proxy port.
+
+
+|proxy_type
+|string
+a|Proxy type.
+
+
+|proxy_username
+|string
+a|Proxy username.
+
+
+|region
+|string
+a|AWS region of the AWS KMS.
+
+
+|scope
+|string
+a|Set to "svm" for interfaces owned by an SVM. Otherwise, set to "cluster".
+
+
+|secret_access_key
+|string
+a|AWS Secret Access Key for the provided access key ID.
+
+
+|service
+|string
+a|AWS service type.
+
+
+|skip_verify
+|boolean
+a|Set to true to bypass verification of the user provided access_key_id
+and secret_access_key. An error will be returned if 'skip_verify' is
+provided but 'access_key_id' is not.
+
+
+|state
+|link:#state[state]
+a|Indicates whether or not the Amazon Web Services Key Management Service (AWS KMS) key protection is available cluster-wide.
+
+
+|timeout
+|integer
+a|AWS Connection timeout, in seconds.
+
+
+|uuid
+|string
+a|A unique identifier for the AWS KMS.
+
+
+|verify
+|boolean
+a|Set to true to verify the AWS KMS host.
+
+
+|verify_host
+|boolean
+a|Set to true to verify the AWS KMS host's hostname.
+
+
+|verify_ip
+|boolean
+a|Set to true to verify the AWS KMS host's IP address.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

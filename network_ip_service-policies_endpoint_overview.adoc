@@ -1,0 +1,578 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'network_ip_service-policies_endpoint_overview.html'
+summary: 'Manage network IP service policies'
+---
+
+= Manage network IP service policies
+
+
+
+== Overview
+
+Service policies are named groupings that define what services are supported by an IP interface.
+The following operations are supported:
+
+*** Creation: POST network/ip/service-policies
+
+*** Collection Get: GET network/ip/service-policies
+
+*** Instance Get: GET network/ip/service-policies/\{uuid}
+
+*** Instance Patch: PATCH network/ip/service-policies/\{uuid}
+
+*** Instance Delete: DELETE network/ip/service-polices/\{uuid}
+
+== Examples
+
+=== Retrieving all service policies in the cluster
+
+The following output shows the collection of all service policies configured in a 2-node cluster. By default (without 'field=*' parameter), only the UUID and name fields are shown for each entry.
+
+'''
+
+----
+
+# The API:
+/api/network/ethernet/ip/service-policies
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/service-policies" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "e4e2f193-c1a3-11e8-bb9d-005056bb88c8",
+    "name": "net-intercluster",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/e4e2f193-c1a3-11e8-bb9d-005056bb88c8"
+      }
+    }
+  },
+  {
+    "uuid": "e4e3f6da-c1a3-11e8-bb9d-005056bb88c8",
+    "name": "net-route-announce",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/e4e3f6da-c1a3-11e8-bb9d-005056bb88c8"
+      }
+    }
+  },
+  {
+    "uuid": "e5111111-c1a3-11e8-bb9d-005056bb88c8",
+    "name": "vserver-route-announce",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/e5111111-c1a3-11e8-bb9d-005056bb88c8"
+      }
+    }
+  },
+  {
+    "uuid": "e6111111-c1a3-11e8-bb9d-005056bb88c8",
+    "name": "data-route-announce",
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/e6111111-c1a3-11e8-bb9d-005056bb88c8"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/network/ip/service-policies/?return_records=true&return_timeout=15"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific service policy (scope=svm)
+
+The following output displays the response when a specific "svm" scoped service policy is requested. Among other parameters, the response contains the svm parameters associated with the service policy. The system returns an error when there is no service policy with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X GET "http://<mgmt-ip>/api/network/ip/service-policies/dad323ff-4ce0-11e9-9372-005056bb91a8?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "dad323ff-4ce0-11e9-9372-005056bb91a8",
+"name": "default-data-files",
+"scope": "svm",
+"svm": {
+  "uuid": "d9060680-4ce0-11e9-9372-005056bb91a8",
+  "name": "vs0",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/d9060680-4ce0-11e9-9372-005056bb91a8"
+    }
+  }
+},
+"ipspace": {
+  "uuid": "45ec2dee-4ce0-11e9-9372-005056bb91a8",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/45ec2dee-4ce0-11e9-9372-005056bb91a8"
+    }
+  }
+},
+"is_built_in": true,
+"services": [
+  "data_core",
+  "data_nfs",
+  "data_cifs",
+  "data_flexcache"
+],
+"_links": {
+  "self": {
+    "href": "/api/network/ip/service-policies/dad323ff-4ce0-11e9-9372-005056bb91a8"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific service policy (scope=svm) when requesting commonly used fields
+
+The following output displays the response when commonly used fields are requested for a specific "svm" scoped service policy. Among other parameters, the response contains the svm parameters associated with the service policy. The system returns an error when there is no service policy with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/service-policies/e0889ce6-1e6a-11e9-89d6-005056bbdc04?fields=name,scope,svm.name,ipspace.name" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "e0889ce6-1e6a-11e9-89d6-005056bbdc04",
+"name": "test_policy",
+"scope": "svm",
+"svm": {
+  "name": "vs0"
+},
+"ipspace": {
+  "name": "Default"
+},
+"_links": {
+  "self": {
+    "href": "/api/network/ip/service-policies/e0889ce6-1e6a-11e9-89d6-005056bbdc04"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific service policy (scope=cluster)
+
+The following output displays the response when a specific cluster-scoped service policy is requested. The SVM object is not included for cluster-scoped service policies. A service policy with a scope of "cluster" is associated with an IPspace. The system returns an error when there is no service policy with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/service-policies/4c6b72b9-0f6c-11e9-875d-005056bb21b8?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "4c6b72b9-0f6c-11e9-875d-005056bb21b8",
+"name": "net-intercluster",
+"scope": "cluster",
+"ipspace": {
+  "uuid": "4051f13e-0f6c-11e9-875d-005056bb21b8",
+  "name": "Default",
+  "_links": {
+    "self": {
+      "href": "/api/network/ipspaces/4051f13e-0f6c-11e9-875d-005056bb21b8"
+    }
+  }
+},
+"is_built_in": false,
+"services": [
+  "intercluster_core"
+],
+"_links": {
+  "self": {
+    "href": "/api/network/ip/service-policies/4c6b72b9-0f6c-11e9-875d-005056bb21b8"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific service policy (scope=cluster) when requesting commonly used fields
+
+The following output displays the response when commonly used fields are requested for a specific "cluster" scoped service policy. The SVM object is not included for cluster-scoped service policies. A service policy with a scope of "cluster" is associated with an IPspace. The system returns an error when there is no service policy with the requested UUID.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/network/ip/service-policies/4c6b72b9-0f6c-11e9-875d-005056bb21b8?fields=name,scope,ipspace.name" -H "accept: application/hal+json"
+
+# The response:
+{
+"uuid": "4c6b72b9-0f6c-11e9-875d-005056bb21b8",
+"name": "net-intercluster",
+"scope": "cluster",
+"ipspace": {
+  "name": "Default"
+},
+"services": [
+  "intercluster_core"
+],
+"_links": {
+  "self": {
+    "href": "/api/network/ip/service-policies/4c6b72b9-0f6c-11e9-875d-005056bb21b8"
+  }
+}
+}
+----
+
+'''
+
+== Creating service policies
+
+You can use this API to create an SVM-scoped service policy by specifying the associated SVM, or a cluster-scoped service policy by specifying the associated IPspace. If the scope is not specified, it is inferred from the presence of the IPspace or SVM.
+Cluster scoped service policies will operate on the IPspace "Default" unless IPspace is explicitly specified.
+
+== Examples
+
+=== Creating a cluster-scoped service policy
+
+The following output displays the response when creating a service policy with a scope of "cluster" and an IPspace of "Default".
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/service-policies?return_records=true" -H "accept: application/json" -d '{ "name": "new-policy", "scope": "cluster", "ipspace": { "name":"Default" }, "services": [ "intercluster_core" ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "74139267-f1aa-11e9-b5d7-005056a73e2e",
+    "name": "new-policy",
+    "scope": "cluster",
+    "ipspace": {
+      "uuid": "ba556295-e912-11e9-a1c8-005056a7080e",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/ba556295-e912-11e9-a1c8-005056a7080e"
+        }
+      }
+    },
+    "is_built_in": false,
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/74139267-f1aa-11e9-b5d7-005056a73e2e"
+      }
+    },
+    "services": [
+      "intercluster_core"
+    ]
+  }
+]
+}
+----
+
+'''
+
+=== Creating a cluster-scoped service policy without specifying IPspace
+
+The following output displays the response when creating a service policy with a scope of "cluster" without specifying an IPspace".
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/service-policies?return_records=true" -H "accept: application/json" -d '{ "name": "new-policy", "scope": "cluster", "services": [ "intercluster_core" ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "74139267-f1aa-11e9-b5d7-005056a73e2e",
+    "name": "new-policy",
+    "scope": "cluster",
+    "ipspace": {
+      "uuid": "ba556295-e912-11e9-a1c8-005056a7080e",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/ba556295-e912-11e9-a1c8-005056a7080e"
+        }
+      }
+    },
+    "is_built_in": false,
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/74139267-f1aa-11e9-b5d7-005056a73e2e"
+      }
+    },
+    "services": [
+      "intercluster_core"
+    ]
+  }
+]
+}
+----
+
+'''
+
+=== Creating a cluster-scoped service policy without specifying scope
+
+The following output displays the response when creating a service policy in the "Default" IPspace without specifying the scope".
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/service-policies?return_records=true" -H "accept: application/json" -d '{ "name": "new-policy2", "ipspace.name": "Default", "services": [ "intercluster_core" ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "59439267-f1aa-11e9-b5d7-005056a73e2e",
+    "name": "new-policy2",
+    "scope": "cluster",
+    "ipspace": {
+      "uuid": "ba556295-e912-11e9-a1c8-005056a7080e",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/ba556295-e912-11e9-a1c8-005056a7080e"
+        }
+      }
+    },
+    "is_built_in": false,
+    "services": [
+      "intercluster_core"
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/74139267-f1aa-11e9-b5d7-005056a73e2e"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an SVM-scoped service policy
+
+The following output displays the response when creating a service policy with a scope of "svm" in the SVM "vs0".
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/service-policies?return_records=true" -H "accept: application/json" -d '{ "name": "new-policy", "scope": "svm", "svm": { "name":"vs0" }, "services": [ "data-nfs", "data-cifs" ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "f3901097-f2c4-11e9-b5d7-005056a73e2e",
+    "name": "new-policy",
+    "scope": "svm",
+    "svm": {
+      "uuid": "07df9cee-e912-11e9-a13a-005056a73e2e",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/07df9cee-e912-11e9-a13a-005056a73e2e"
+        }
+      }
+    },
+    "ipspace": {
+      "uuid": "1d3199d2-e906-11e9-a13a-005056a73e2e",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/1d3199d2-e906-11e9-a13a-005056a73e2e"
+        }
+      }
+    },
+    "is_built_in": false,
+    "services": [
+      "data_nfs",
+      "data_cifs"
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/f3901097-f2c4-11e9-b5d7-005056a73e2e"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an SVM-scoped service policy without specifying scope
+
+The following output displays the response when creating a service policy with a SVM of "vs0" without specifying the scope.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/network/ip/service-policies?return_records=true" -H "accept: application/json" -d '{ "name": "new-policy", "svm": { "name":"vs0" }, "services": [ "data-nfs", "data-cifs" ] }'
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "f3901097-f2c4-11e9-b5d7-005056a73e2e",
+    "name": "new-policy",
+    "scope": "svm",
+    "svm": {
+      "uuid": "07df9cee-e912-11e9-a13a-005056a73e2e",
+      "name": "vs0",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/07df9cee-e912-11e9-a13a-005056a73e2e"
+        }
+      }
+    },
+    "ipspace": {
+      "uuid": "1d3199d2-e906-11e9-a13a-005056a73e2e",
+      "name": "Default",
+      "_links": {
+        "self": {
+          "href": "/api/network/ipspaces/1d3199d2-e906-11e9-a13a-005056a73e2e"
+        }
+      }
+    },
+    "is_built_in": false,
+    "services": [
+      "data_nfs",
+      "data_cifs"
+    ],
+    "_links": {
+      "self": {
+        "href": "/api/network/ip/service-policies/f3901097-f2c4-11e9-b5d7-005056a73e2e"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Updating the name of a service policy
+
+The following example displays the command used to update the name of a service policy scoped to a specific "svm". The system returns an error when there is no
+service policy associated with the UUID or the service policy cannot be renamed.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ip/service-policies/734eaf57-d2fe-11e9-9284-005056acaad4" -d "{ \"name\": \"new-name\" }" -H "accept: application/hal+json"
+----
+
+'''
+
+=== Updating the services for a service policy
+
+The following example displays the command used to update the services a service policy contains.
+The specified services replace the existing services. To retain existing services, they must be included in the PATCH request.
+The system returns an error when there is no
+service policy associated with the UUID or the services cannot be applied.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/network/ip/service-policies/734eaf57-d2fe-11e9-9284-005056acaad4" -d "{ \"services\": [ \"data-nfs\",\"data-cifs\" ] }" -H "accept: application/hal+json"
+----
+
+'''
+
+=== Deleting a service policy
+
+The following output displays the response for deleting a service policy.
+
+'''
+
+----
+
+# The API:
+/api/network/ip/service-policies/{uuid}
+
+# The call:
+curl -X  DELETE "https://<mgmt-ip>/api/network/ip/service-policies/757ed726-bdc1-11e9-8a92-005056a7bf25" -H "accept: application/hal+json"
+----
+
+'''
+
+

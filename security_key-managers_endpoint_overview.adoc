@@ -1,0 +1,852 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_key-managers_endpoint_overview.html'
+summary: 'Manage key managers'
+---
+
+= Manage key managers
+
+
+
+== Overview
+
+A key manager is a key management solution (software or dedicated hardware) that enables other ONTAP client modules to securely and persistently store keys for various uses. For example, WAFL uses the key management framework to store and retrieve the volume encryption keys that it uses to encrypt/decrypt data on NVE volumes. A key manager can be configured at both cluster scope and SVM, with one key manager allowed per SVM. The key management framework in ONTAP supports two mutually exclusive modes for persisting keys: external and onboard.
+
+When an SVM is configured with external key management, the keys are stored on up to four primary key servers that are external to the system.
+
+Once external key management is enabled for an SVM, primary key servers can be added or removed using the _/api/security/key-managers/\{uuid}/key-servers_ endpoint. See [`+POST /security/key-managers/{uuid}/key-servers+`] and [`+DELETE /security/key-managers/{uuid}/key-servers/{server}+`] for more details.
+
+Setting up external key management dictates that the required certificates for securely communicating with the key server are installed prior to configuring the key manager. To install the required client and server_ca certificates, use the _/api/security/certificates/_ endpoint.
+
+See [`POST /security/certificates`], [`GET /security/certificates/uuid`] and [`+DELETE /security/certificates/{uuid}+`] for more details.
+
+When an SVM is configured with the Onboard Key Manager, the keys are stored in ONTAP in wrapped format using a key hierarchy created using the salted hash of the passphrase entered when configuring the Onboard Key Manager. This model fits well for customers who use ONTAP to store their own data.
+
+== Examples
+
+=== Creating an external key manager with 1 primary key server for a cluster
+
+The example key manager is configured at the cluster-scope with one primary key server. Note that the UUIDs of the certificates are those that are already installed at the cluster-scope. Note the _return_records=true_ query parameter is used to obtain the newly created key manager configuration.
+
+----
+
+# The API:
+POST /api/security/key-managers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers?return_records=true' -H 'accept: application/hal+json' -d "{ \"external\": { \"client_certificate\": { \"uuid\": \"5fb1701a-d922-11e8-bfe8-005056bb017d\" }, \"server_ca_certificates\": [ { \"uuid\": \"827d7d31-d6c8-11e8-b5bf-005056bb017d\" }],\"servers\": [ { \"server\": \"10.225.89.33:5696\" } ] } }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "815e9462-dc57-11e8-9b2c-005056bb017d",
+    "external": {
+      "client_certificate": {
+        "uuid": "5fb1701a-d922-11e8-bfe8-005056bb017d"
+      },
+      "server_ca_certificates": [
+        {
+          "uuid": "827d7d31-d6c8-11e8-b5bf-005056bb017d"
+        }
+      ],
+      "servers": [
+        {
+          "server": "10.225.89.33:5696"
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/815e9462-dc57-11e8-9b2c-005056bb017d"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an external key manager with two primary key servers
+
+The example key manager is configured at the cluster-scope with two primary key servers. Note that the UUIDs of the certificates are those that are already installed at the cluster-scope. Note the _return_records=true_ query parameter is used to obtain the newly created key manager configuration.
+
+----
+
+# The API:
+POST /api/security/key-managers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers?return_records=true' -H 'accept: application/hal+json' -d "{ \"external\": { \"client_certificate\": { \"uuid\": \"5fb1701a-d922-11e8-bfe8-005056bb017d\" }, \"server_ca_certificates\": [ { \"uuid\": \"827d7d31-d6c8-11e8-b5bf-005056bb017d\" }],\"servers\": [ { \"server\": \"104.224.89.33:5696\" }, { \"server\": \"104.224.89.34:5696\" } ] } }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "815e9462-dc57-11e8-9b2c-005056bb017d",
+    "external": {
+      "client_certificate": {
+        "uuid": "5fb1701a-d922-11e8-bfe8-005056bb017d"
+      },
+      "server_ca_certificates": [
+        {
+          "uuid": "827d7d31-d6c8-11e8-b5bf-005056bb017d"
+        }
+      ],
+      "servers": [
+        {
+          "server": "10.225.89.33:5696"
+        },
+        {
+          "server": "10.225.89.34:5696"
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/815e9462-dc57-11e8-9b2c-005056bb017d"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an external key manager with 1 primary key server for an SVM
+
+The example key manager is configured at the SVM-scope with one primary key server. Note that the UUIDs of the certificates are those that are already installed in that SVM. Note the _return_records=true_ query parameter is used to obtain the newly created key manager configuration.
+
+----
+
+# The API:
+POST /api/security/key-managers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers?return_records=true' -H 'accept: application/hal+json' -d "{ \"svm\": { \"uuid\": \"216e6c26-d6c6-11e8-b5bf-005056bb017d\" }, \"external\": { \"client_certificate\": { \"uuid\": \"91dcaf7c-dbbd-11e8-9b2c-005056bb017d\" }, \"server_ca_certificates\": [ { \"uuid\": \"a4d4b8ba-dbbd-11e8-9b2c-005056bb017d\" }],\"servers\": [ { \"server\": \"10.225.89.34:5696\" } ] } }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "80af63f2-dbbf-11e8-9b2c-005056bb017d",
+    "svm": {
+      "uuid": "216e6c26-d6c6-11e8-b5bf-005056bb017d"
+    },
+    "external": {
+      "client_certificate": {
+      "uuid": "91dcaf7c-dbbd-11e8-9b2c-005056bb017d"
+      },
+      "server_ca_certificates": [
+        {
+          "uuid": "a4d4b8ba-dbbd-11e8-9b2c-005056bb017d"
+        }
+      ],
+      "servers": [
+        {
+          "server": "10.225.89.34:5696"
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/80af63f2-dbbf-11e8-9b2c-005056bb017d"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Creating an onboard key manager for a cluster
+
+The following example shows how to create an onboard key manager for a cluster with the onboard key manager configured at the cluster-scope.
+
+----
+
+# The API:
+POST /api/security/key-managers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers' -H 'accept: application/hal+json' -d '{ "onboard": { "passphrase": "passphrase" } }'
+----
+
+'''
+
+=== Retrieving the key manager configurations for all clusters and SVMs
+
+The following example shows how to retrieve all configured key managers along with their configurations.
+
+----
+
+# The API:
+GET /api/security/key-managers
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "configuration": {
+      "uuid": "2345f09c-d6c9-11e8-b5bf-005056bb017d",
+      "name" : "default"
+    },
+    "uuid": "2345f09c-d6c9-11e8-b5bf-005056bb017d",
+    "scope": "svm",
+    "svm": {
+      "uuid": "0f22f8f3-d6c6-11e8-b5bf-005056bb017d",
+      "name": "vs0"
+    },
+    "external": {
+      "client_certificate": {
+        "uuid": "4cb15482-d6c8-11e8-b5bf-005056bb017d",
+        "_links": {
+          "self": {
+            "href": "/api/security/certificates/4cb15482-d6c8-11e8-b5bf-005056bb017d/"
+          }
+        }
+      },
+      "server_ca_certificates": [
+        {
+          "uuid": "8a17c858-d6c8-11e8-b5bf-005056bb017d",
+          "_links": {
+            "self": {
+              "href": "/api/security/certificates/8a17c858-d6c8-11e8-b5bf-005056bb017d/"
+            }
+          }
+        }
+      ],
+      "servers": [
+        {
+          "server": "10.2.30.4:5696",
+          "timeout": 25,
+          "username": "",
+          "create_remove_timeout": 10,
+          "_links": {
+            "self": {
+              "href": "/api/security/key-managers/2345f09c-d6c9-11e8-b5bf-005056bb017d/key-servers/10.2.30.4:5696/"
+            }
+          }
+        },
+        {
+          "server": "vs0.local1:3678",
+          "timeout": 25,
+          "username": "",
+          "secondary_key_servers": "1.1.1.1, secondarykeyserver.com",
+          "create_remove_timeout": 10,
+          "_links": {
+            "self": {
+              "href": "/api/security/key-managers/2345f09c-d6c9-11e8-b5bf-005056bb017d/key-servers/vs0.local1:3678/"
+            }
+          }
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/2345f09c-d6c9-11e8-b5bf-005056bb017d"
+      }
+    }
+  },
+  {
+   "configuration": {
+      "uuid": "815e9462-dc57-11e8-9b2c-005056bb017d",
+      "name" : "default"
+    },
+    "enabled": true,
+    "uuid": "815e9462-dc57-11e8-9b2c-005056bb017d",
+    "scope": "cluster",
+    "external": {
+      "client_certificate": {
+        "uuid": "5fb1701a-d922-11e8-bfe8-005056bb017d",
+        "_links": {
+          "self": {
+            "href": "/api/security/certificates/5fb1701a-d922-11e8-bfe8-005056bb017d/"
+          }
+        }
+      },
+      "server_ca_certificates": [
+        {
+          "uuid": "827d7d31-d6c8-11e8-b5bf-005056bb017d",
+          "_links": {
+            "self": {
+              "href": "/api/security/certificates/827d7d31-d6c8-11e8-b5bf-005056bb017d/"
+            }
+          }
+        }
+      ],
+      "servers": [
+        {
+          "server": "10.225.89.33:5696",
+          "timeout": 25,
+          "username": "",
+          "create_remove_timeout": 10,
+          "_links": {
+            "self": {
+              "href": "/api/security/key-managers/815e9462-dc57-11e8-9b2c-005056bb017d/key-servers/10.225.89.33:5696/"
+            }
+          }
+        }
+      ]
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/815e9462-dc57-11e8-9b2c-005056bb017d"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/key-managers?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving the key manager configurations for all clusters and SVMs (showing Onboard Key Manager)
+
+The following example shows how to retrieve all configured key managers along with their configurations.
+
+----
+
+# The API:
+GET /api/security/key-managers
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+   "configuration": {
+      "uuid": "815e9462-dc57-11e8-9b2c-005056bb017d",
+      "name" : "default"
+    },
+    "enabled": true,
+    "uuid": "8ba52e0f-ae22-11e9-b747-005056bb7636",
+    "scope": "cluster",
+    "onboard": {
+      "enabled": true,
+      "key_backup": "--------------------------BEGIN BACKUP--------------------------\n <Backup Data> \n---------------------------END BACKUP---------------------------\n"
+    },
+    "volume_encryption": {
+      "supported": false,
+      "message": "The following nodes do not support volume granular encryption: ntap-vsim2.",
+      "code": 65536935
+    },
+    "is_default_data_at_rest_encryption_disabled": false
+  }
+],
+"num_records": 1
+}
+----
+
+'''
+
+=== Retrieving expensive fields such as, status.code and status.message, associated with a key manager.
+
+These values are not retrieved by default with the 'fields=*' option.
+The following example shows how to retrieve the expensive objects associated with a key manager.
+
+----
+
+# The API:
+GET /api/security/key-managers
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/key-managers?fields=status.message,status.code" -H 'accept: application/hal+jon'
+
+# The response:
+{
+"records": [
+  {
+    "configuration": {
+      "uuid": "ac305d46-aef4-11e9-ad3c-005056bb7636",
+      "name" : "default"
+    },
+    "enabled": true,
+    "uuid": "ac305d46-aef4-11e9-ad3c-005056bb7636",
+    "status": {
+      "message": "No action needed at this time.",
+      "code": 65537200
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/ac305d46-aef4-11e9-ad3c-005056bb7636"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/key-managers?fields=status.message,status.code"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific key manager configuration
+
+The following example shows how to retrieve a specific key manager configuration.
+
+----
+
+# The API:
+GET /api/security/key-managers/{uuid}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers/<uuid>?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"configuration": {
+      "uuid": "2345f09c-d6c9-11e8-b5bf-005056bb017d",
+      "name" : "default"
+},
+"enabled": true,
+"uuid": "2345f09c-d6c9-11e8-b5bf-005056bb017d",
+"scope": "svm",
+"svm": {
+  "uuid": "0f22f8f3-d6c6-11e8-b5bf-005056bb017d",
+  "name": "vs0"
+},
+"external": {
+  "client_certificate": {
+    "uuid": "4cb15482-d6c8-11e8-b5bf-005056bb017d",
+    "_links": {
+      "self": {
+        "href": "/api/security/certificates/4cb15482-d6c8-11e8-b5bf-005056bb017d/"
+      }
+    }
+  },
+  "server_ca_certificates": [
+    {
+      "uuid": "8a17c858-d6c8-11e8-b5bf-005056bb017d",
+      "_links": {
+        "self": {
+          "href": "/api/security/certificates/8a17c858-d6c8-11e8-b5bf-005056bb017d/"
+        }
+      }
+    }
+  ],
+  "servers": [
+    {
+      "server": "10.2.30.4:5696",
+      "timeout": 25,
+      "username": "",
+      "create_remove_timeout": 10,
+      "_links": {
+        "self": {
+          "href": "/api/security/key-managers/2345f09c-d6c9-11e8-b5bf-005056bb017d/key-servers/10.2.30.4:5696/"
+        }
+      }
+    },
+    {
+      "server": "vs0.local1:3678",
+      "timeout": 25,
+      "username": "",
+      "create_remove_timeout": 10,
+      "_links": {
+        "self": {
+          "href": "/api/security/key-managers/2345f09c-d6c9-11e8-b5bf-005056bb017d/key-servers/vs0.local1:3678/"
+        }
+      }
+    }
+  ]
+},
+"_links": {
+  "self": {
+    "href": "/api/security/key-managers/2345f09c-d6c9-11e8-b5bf-005056bb017d"
+  }
+}
+}
+----
+
+'''
+
+=== Updating the configuration of an external key manager
+
+The following example shows how to update the server_ca configuration of an external key manager.
+
+----
+
+# The API:
+PATCH /api/security/key-managers/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-managers/<uuid>?' -H 'accept: application/hal+json' -d "{ \"external\": { \"server_ca_certificates\": [ { \"uuid\": \"23b05c58-d790-11e8-b5bf-005056bb017d\" }] } }"
+----
+
+'''
+
+=== Updating the passphrase of an Onboard Key Manager
+
+The following example shows how to update the passphrase of a given key manager.
+
+----
+
+# The API:
+PATCH /api/security/key-managers/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-managers/<uuid>?' -H 'accept: application/hal+json' -d "{ \"onboard\": { \"existing_passphrase\": \"existing_passphrase\", \"passphrase\": \"new_passphrase\" } }"
+----
+
+'''
+
+=== Synchronizing the passphrase of the Onboard Key Manager on a cluster
+
+The following example shows how to synchronize the passphrase on a cluster where the Onboard Key Manager is already configured.
+
+----
+
+# The API:
+PATCH /api/security/key-managers/{uuid}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-managers/<uuid>?' -H 'accept: application/hal+json' -d "{  \"onboard\": {    \"existing_passphrase\": \"existing_passphrase\",    \"synchronize\": true  }}"
+----
+
+'''
+
+=== Configuring the Onboard Key Manager on a cluster
+
+The following example shows how to configure the Onboard Key Manager on a cluster where the Onboard Key Manager is not configured, but is configured on an MetroCluster partner cluster.
+
+----
+
+# The API:
+POST /api/security/key-managers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers?return_records=false' -H  'accept: application/hal+json' -H  "Content-Type: application/json" -d "{  \"onboard\": {    \"passphrase\": \"passphrase\",    \"synchronize\": true  }}"
+----
+
+'''
+
+=== Deleting a configured key manager
+
+The following example shows how to delete a key manager given its UUID.
+
+----
+
+# The API:
+DELETE /api/security/key-managers/{uuid}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/security/key-managers/<uuid>?' -H 'accept: application/hal+json'
+----
+
+'''
+
+=== Adding a primary key server to an external key manager
+
+The following example shows how to add a primary key server to an external key manager.
+
+----
+
+# The API:
+POST /api/security/key-managers/{uuid}/key-servers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers?return_records=true' -H 'accept: application/hal+json' -d "{ \"server\": \"10.225.89.34:5696\" }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "server": "10.225.89.34:5696",
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers/10.225.89.34%3A5696"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Adding 2 primary key servers to an external key manager
+
+The following example shows how to add 2 primary key servers to an external key manager. Note that the _records_ property is used to add multiple primary key servers to the key manager in a single API call.
+
+----
+
+# The API:
+POST /api/security/key-managers/{uuid}/key-servers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers?return_records=true' -H 'accept: application/hal+json' -d "{ \"records\": [ { \"server\": \"10.225.89.34:5696\" }, { \"server\": \"10.225.89.33:5696\" } ] }"
+
+# The response:
+{
+"num_records": 1,
+"records": [
+  {
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers/"
+      }
+    }
+  }
+]
+}
+----
+
+'''
+
+=== Retrieving all the key servers configured in an external key manager
+
+The following example shows how to retrieve all key servers configured in an external key manager.
+
+----
+
+# The API:
+GET /api/security/key-managers/{uuid}/key-servers
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "43e0c191-dc5c-11e8-9b2c-005056bb017d",
+    "server": "10.225.89.33:5696",
+    "timeout": 25,
+    "username": "",
+    "secondary_key_servers": [
+      "1.1.1.1",
+      "secondarykeyserver.com"
+    ],
+    "create_remove_timeout": 10,
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers/10.225.89.33%3A5696"
+      }
+    }
+  },
+  {
+    "uuid": "43e0c191-dc5c-11e8-9b2c-005056bb017d",
+    "server": "10.225.89.34:5696",
+    "timeout": 25,
+    "username": "",
+    "create_remove_timeout": 10,
+    "_links": {
+      "self": {
+        "href": "/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers/10.225.89.34%3A5696"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers?fields=*"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific primary key server (and any associated secondary key servers) configured in an external key manager
+
+The following example shows how to retrieve a specific primary key server (and any associated secondary key servers) configured in an external key manager.
+
+----
+
+# The API:
+GET /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers/{server}?fields=*' -H 'accept: application/hal+json'
+
+# The response:
+{
+"uuid": "43e0c191-dc5c-11e8-9b2c-005056bb017d",
+"server": "10.225.89.34:5696",
+"timeout": 25,
+"username": "",
+"secondary_key_servers": [
+  "1.1.1.1",
+  "secondarykeyserver.com"
+],
+"create_remove_timeout": 10,
+"_links": {
+  "self": {
+    "href": "/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers/10.225.89.34:5696"
+  }
+}
+}
+----
+
+'''
+
+=== Retrieving a specific primary key server (and any associated secondary key servers) (and connectivity, an expensive field) configured in an external key manager
+
+The following example shows how to retrieve a specific primary key server (and any associated secondary key servers) configured in an external key manager.
+
+----
+
+# The API:
+GET /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers/{server}?fields=**' -H 'accept: application/hal+json'
+
+# The response:
+{
+"uuid": "43e0c191-dc5c-11e8-9b2c-005056bb017d",
+"server": "10.225.89.34:5696",
+"timeout": 25,
+"username": "",
+"secondary_key_servers": [
+  "1.1.1.1",
+  "secondarykeyserver.com"
+],
+"create_remove_timeout": 10,
+"connectivity": {
+  "cluster_availability": true,
+  "node_states": [
+    {
+      "node": {
+        "name": "sti65-vsim-ucs148i",
+        "uuid": "661843b3-a0e5-11ed-81ef-005056a7306b"
+      },
+      "state": "available"
+    },
+    {
+      "node": {
+        "name": "sti65-vsim-ucs148j",
+        "uuid": "551843b3-a0e5-11ed-81ef-005056a7306b"
+      },
+      "state": "not_responding"
+    }
+  ]
+}
+}
+----
+
+'''
+
+=== Retrieving the connectivity status of a specific node for a specific primary key server configured in an external key manager
+
+The following example shows how to retrieve the connectivity status for a specific node for a specific primary key server configured in an external key manager.
+
+----
+
+# The API:
+GET /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X GET 'https://<mgmt-ip>/api/security/key-managers/43e0c191-dc5c-11e8-9b2c-005056bb017d/key-servers/10.225.89.34:5696?fields=connectivity&connectivity.node_states.node.name=sti65-vsim-ucs148i&return_unmatched_nested_array_objects=false' -H 'accept: application/hal+json'
+
+# The response:
+{
+"uuid": "43e0c191-dc5c-11e8-9b2c-005056bb017d",
+"server": "10.225.89.34:5696",
+"connectivity": {
+  "cluster_availability": true,
+  "node_states": [
+    {
+      "node": {
+        "name": "sti65-vsim-ucs148i",
+        "uuid": "661843b3-a0e5-11ed-81ef-005056a7306b"
+      },
+      "state": "available"
+    }
+  ]
+}
+}
+----
+
+'''
+
+=== Updating a specific primary key server configuration configured in an external key manager
+
+The following example shows how to update a specific primary key server configured in an external key manager.
+
+----
+
+# The API:
+PATCH /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers/{server}' -H 'accept: application/hal+json' -d "{ \"timeout\": 45 }"
+----
+
+'''
+
+=== When the 'secondary_key_servers' field is populated in the PATCH API, the list of secondary key servers
+
+=== associated with the primary key servers is replaced by the list of secondary key servers specified in the
+
+=== 'secondary_key_servers' field.
+
+The following example shows how to update the set of secondary key servers associated with a primary key server.
+
+----
+
+# The API:
+PATCH /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X PATCH 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers/{server}' -H 'accept: application/hal+json' -d "{ \"secondary_key_servers\": [ \"1.1.1.1\", \"secondarykeyserver.com\" ] }"
+----
+
+'''
+
+=== Deleting a primary key server from an external key manager
+
+The following example shows how to delete a primary key server from an external key manager.
+
+----
+
+# The API:
+DELETE /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers/{server}' -H 'accept: application/hal+json'
+----
+
+'''
+
+=== Bypass the out of quorum checks when deleting a primary key server from an external key manager
+
+The following example shows how to bypass the out of quorum checks when deleting a primary key server from an external key manager.
+
+----
+
+# The API:
+DELETE /api/security/key-managers/{uuid}/key-servers/{server}
+
+# The call:
+curl -X DELETE 'https://<mgmt-ip>/api/security/key-managers/<uuid>/key-servers/{server}?force=true' -H 'accept: application/hal+json'
+----
+
+'''
+
+

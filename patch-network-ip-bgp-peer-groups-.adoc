@@ -1,0 +1,468 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-network-ip-bgp-peer-groups-.html'
+summary: 'Update a BGP peer group for VIP'
+---
+
+= Update a BGP peer group for VIP
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/network/ip/bgp/peer-groups/{uuid}`#
+
+*Introduced In:* 9.7
+
+Updates a BGP peer group for VIP.
+
+== Related ONTAP commands
+
+* `network bgp peer-group modify`
+* `network bgp peer-group rename`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|UUID of the peer group
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local
+|link:#local[local]
+a|Information describing the local interface that is being used to peer with a router using BGP. On a POST operation, an existing BGP interface is used by specifying the interface, or create a new one by specifying the port and IP address.
+
+
+|name
+|string
+a|Name of the peer group
+
+
+|peer
+|link:#peer[peer]
+a|Information describing the router to peer with
+
+
+|state
+|string
+a|State of the peer group
+
+
+|uuid
+|string
+a|UUID of the peer group
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "name": "bgpv4peer",
+  "peer": {
+    "address": "10.10.10.7",
+    "md5_enabled": 1,
+    "md5_secret": "SECRET_WORD"
+  },
+  "state": "string",
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1967171
+| Internal error. Fail to access or update BGP peer group. Retry the command, if necessary.
+
+| 1967188
+| Configuring peer address as a next hop requires an effective cluster version of 9.9.1 or later.
+
+| 1967192
+| Configuring peer.md5_enabled requires an effective cluster version of 9.16.1 or later.
+
+| 1967193
+| Configuring peer.md5_enabled requires the peer.md5_secret parameter.
+
+| 1967194
+| Configuring peer.md5_secret requires that peer.md5_enabled is set to true.
+
+| 53281998
+| Failed to rename the BGP peer group because that name is already assigned to a different peer group in the IPspace.
+
+| 53282006
+| BGP peer group could not be updated to use a peer address because the value provided is not a valid peer address. If necessary, try the command again with a routable host address.
+
+| 53282007
+| BGP peer group could not be updated to use a peer address because the address represents a different address family to the address of the associated BGP LIF. If necessary, try the command again with a matching address family.
+
+| 53282018
+| Failed to create BGP peer group because an existing peer group has already established a BGP session between LIF and peer address. If necessary, try the command again with a different BGP LIF or a different peer address.
+
+| 53282020
+| To utilize the peer as the next hop, the peer IP address must be within the same subnet as the BGP LIF.
+
+| 53282021
+| IPsec must be enabled to use TCP MD5 in BGP sessions with a BGP peer-group.
+
+| 53282024
+| peer.md5_secret should be 1-80 bytes.
+
+| 53282025
+| peer.md5_secret should have an even length.
+
+| 53282026
+| The hex format of peer.md5_secret should only contain a hex string starting with '0x'. The specified peer.md5-secret contains non-hex characters.
+
+| 53282027
+| peer.md5_secret should be 1-79 characters.
+
+| 53282028
+| peer.md5_secret supports only printable ASCII characters such as numbers, alphabets, or special characters.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+Either the UUID or name is supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information
+
+[#interface]
+[.api-collapsible-fifth-title]
+interface
+
+A network interface. Either UUID or name may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ip
+|link:#ip[ip]
+a|IP information
+
+
+|name
+|string
+a|The name of the interface. If only the name is provided, the SVM scope
+must be provided by the object this object is embedded in.
+
+
+|uuid
+|string
+a|The UUID that uniquely identifies the interface.
+
+
+|===
+
+
+[#ip]
+[.api-collapsible-fifth-title]
+ip
+
+IP information to create a new interface.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address
+
+
+|netmask
+|string
+a|Input as netmask length (16) or IPv4 mask (255.255.0.0). For IPv6, the default value is 64 with a valid range of 1 to 127. Output is always the netmask length.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Name of node on which the port is located.
+
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+Port UUID along with readable names. Either the UUID or both names may be supplied on input.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|node
+|link:#node[node]
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#local]
+[.api-collapsible-fifth-title]
+local
+
+Information describing the local interface that is being used to peer with a router using BGP. On a POST operation, an existing BGP interface is used by specifying the interface, or create a new one by specifying the port and IP address.
+
+[#peer]
+[.api-collapsible-fifth-title]
+peer
+
+Information describing the router to peer with
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|Peer router address
+
+
+|is_next_hop
+|boolean
+a|Use peer address as next hop.
+
+
+|md5_enabled
+|boolean
+a|Enable or disable TCP MD5 signatures per RFC 2385.
+
+
+|md5_secret
+|string
+a|The shared TCP MD5 secret key. This can either be given as a password or hexadecimal key.
+
+
+|===
+
+
+[#bgp_peer_group]
+[.api-collapsible-fifth-title]
+bgp_peer_group
+
+A BGP peer group between a local network interface and a router, for the purpose of announcing VIP interface locations for SVMs in this IPspace.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|local
+|link:#local[local]
+a|Information describing the local interface that is being used to peer with a router using BGP. On a POST operation, an existing BGP interface is used by specifying the interface, or create a new one by specifying the port and IP address.
+
+
+|name
+|string
+a|Name of the peer group
+
+
+|peer
+|link:#peer[peer]
+a|Information describing the router to peer with
+
+
+|state
+|string
+a|State of the peer group
+
+
+|uuid
+|string
+a|UUID of the peer group
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

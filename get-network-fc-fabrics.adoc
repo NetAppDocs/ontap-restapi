@@ -1,0 +1,653 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-network-fc-fabrics.html'
+summary: 'Retrieve FC fabrics'
+---
+
+= Retrieve FC fabrics
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/fc/fabrics`#
+
+*Introduced In:* 9.11
+
+Retrieves Fibre Channel fabrics.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `connections`
+* `zoneset`
+
+== Related ONTAP commands
+
+* `network fcp topology show`
+* `network fcp zone show`
+
+== Learn more
+
+* link:network_fc_fabrics_endpoint_overview.html[DOC /network/fc/fabrics]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|zoneset.name
+|string
+|query
+|False
+a|Filter by zoneset.name
+
+
+|connections.switch.wwn
+|string
+|query
+|False
+a|Filter by connections.switch.wwn
+
+
+|connections.switch.port.wwpn
+|string
+|query
+|False
+a|Filter by connections.switch.port.wwpn
+
+
+|connections.cluster_port.name
+|string
+|query
+|False
+a|Filter by connections.cluster_port.name
+
+
+|connections.cluster_port.node.name
+|string
+|query
+|False
+a|Filter by connections.cluster_port.node.name
+
+
+|connections.cluster_port.uuid
+|string
+|query
+|False
+a|Filter by connections.cluster_port.uuid
+
+
+|connections.cluster_port.wwpn
+|string
+|query
+|False
+a|Filter by connections.cluster_port.wwpn
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|cache.is_current
+|boolean
+|query
+|False
+a|Filter by cache.is_current
+
+
+|cache.update_time
+|string
+|query
+|False
+a|Filter by cache.update_time
+
+
+|cache.age
+|string
+|query
+|False
+a|Filter by cache.age
+
+
+|cache.maximum_age
+|string
+|query
+|False
+a|The maximum age of data in the Fibre Channel fabric cache before it should be refreshed from the fabric. The default is 15 minutes.
+
+* Default value: 1
+* format: iso8601
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|The number of records in the response.
+
+
+|records
+|array[link:#fabric[fabric]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "cache": {
+        "age": "PT3M30S",
+        "update_time": "string"
+      },
+      "connections": [
+        {
+          "cluster_port": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "0a",
+            "node": {
+              "name": "node1"
+            },
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+            "wwpn": "50:0a:11:22:33:44:55:66"
+          },
+          "switch": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "port": {
+              "wwpn": "50:0a:a1:a2:a3:a4:a5:a6"
+            },
+            "wwn": "10:00:b1:b2:b3:b4:b4:b6"
+          }
+        }
+      ],
+      "name": "10:00:c1:c2:c3:c4:c5:c6",
+      "zoneset": {
+        "name": "zoneset1"
+      }
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#cache]
+[.api-collapsible-fifth-title]
+cache
+
+Properties of Fibre Chanel fabric cache.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|age
+|string
+a|The age of the Fibre Channel fabric data cache retrieved. If the FC fabric data cache has not been fully updated for a newly discovered fabric, or a fabric that has been re-discovered after being purged, a value for this property will not be retrieved. The value is in ISO 8601 duration format.
+
+
+|is_current
+|boolean
+a|A boolean that indicates if the retrieved data is current relative to the `cache.maximum_age` value of the request. A value of `true` indicates that the data is no older than the requested maximum age. A value of `false` indicates that the data is older than the requested maximum age; if more current data is required, the caller should wait for some time for the cache update to complete and query the data again.
+
+
+|update_time
+|string
+a|The date and time at which the Fibre Channel fabric data cache retrieved was last updated. If the FC fabric data cache has not been fully updated for a newly discovered fabric, or a fabric that has been re-discovered after being purged, a value for this property will not be retrieved.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The node on which the cluster Fibre Channel port is located.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the node on which the cluster Fibre Channel port is located.
+
+
+|===
+
+
+[#cluster_port]
+[.api-collapsible-fifth-title]
+cluster_port
+
+The cluster Fibre Channel (FC) port that connects the FC fabric.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the cluster Fibre Channel port.
+
+
+|node
+|link:#node[node]
+a|The node on which the cluster Fibre Channel port is located.
+
+
+|uuid
+|string
+a|The unique identifier of the cluster Fibre Channel port.
+
+
+|wwpn
+|string
+a|The world wide port name (WWPN) of the cluster Fibre Channel port.
+
+
+|===
+
+
+[#port]
+[.api-collapsible-fifth-title]
+port
+
+The port of the Fibre Channel switch to which the cluster node port is connected.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|wwpn
+|string
+a|The world wide port name (WWPN) of the Fibre Channel switch port.
+
+
+|===
+
+
+[#switch]
+[.api-collapsible-fifth-title]
+switch
+
+The Fibre Channel switch to which the cluster node port is connected.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|port
+|link:#port[port]
+a|The port of the Fibre Channel switch to which the cluster node port is connected.
+
+
+|wwn
+|string
+a|The world-wide name (WWN) of the Fibre Channel switch to which the cluster node port is attached.
+
+
+|===
+
+
+[#connections]
+[.api-collapsible-fifth-title]
+connections
+
+A connection between a cluster node Fibre Channel (FC) port and an FC switch port.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster_port
+|link:#cluster_port[cluster_port]
+a|The cluster Fibre Channel (FC) port that connects the FC fabric.
+
+
+|switch
+|link:#switch[switch]
+a|The Fibre Channel switch to which the cluster node port is connected.
+
+
+|===
+
+
+[#zoneset]
+[.api-collapsible-fifth-title]
+zoneset
+
+The active Fibre Channel zoneset in the fabric.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the Fibre Channel zoneset.
+
+
+|===
+
+
+[#fabric]
+[.api-collapsible-fifth-title]
+fabric
+
+A Fibre Channel (FC) fabric REST object provides information about an FC network (fabric) connected to the cluster. Logically, the FC fabric also contains FC switches and the FC zones that comprise the active zoneset of the fabric. FC switch and zone information is not reported directly in the FC fabric REST object for reasons of scale and flexibility; they are found by querying the FC switches and FC zones REST endpoints.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|cache
+|link:#cache[cache]
+a|Properties of Fibre Chanel fabric cache.
+
+
+|connections
+|array[link:#connections[connections]]
+a|An array of the connections between the cluster and the switches Fibre Channel fabric.
+
+
+|name
+|string
+a|The world wide name (WWN) of the primary switch of the Fibre Channel (FC) fabric. This is used as a unique identifier for the FC fabric.
+
+
+|zoneset
+|link:#zoneset[zoneset]
+a|The active Fibre Channel zoneset in the fabric.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

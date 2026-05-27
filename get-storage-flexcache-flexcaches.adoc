@@ -1,0 +1,1116 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-storage-flexcache-flexcaches.html'
+summary: 'Retrieve a FlexCache volume in the cluster'
+---
+
+= Retrieve a FlexCache volume in the cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/flexcache/flexcaches`#
+
+*Introduced In:* 9.6
+
+Retrieves FlexCache in the cluster.
+
+== Expensive properties
+
+There is an added computational cost to retrieving values for these properties. They are not included by default in GET results and must be explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+* `origins.ip_address` - IP address of origin.
+* `origins.size` - Physical size of origin.
+* `origins.state` - State of origin.
+* `size` - Physical size of FlexCache.
+* `guarantee.type` - Space guarantee style of FlexCache.
+* `aggregates.name` or `aggregates.uuid` - Name or UUID of aggregate of FlexCache volume.
+* `path` - Fully-qualified path of the owning SVM's namespace where the FlexCache is mounted.
+
+== Related ONTAP commands
+
+* `volume flexcache show`
+
+== Learn more
+
+* link:storage_flexcache_flexcaches_endpoint_overview.html[DOC /storage/flexcache/flexcaches]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|relative_size.enabled
+|boolean
+|query
+|False
+a|Filter by relative_size.enabled
+
+* Introduced in: 9.13
+
+
+|relative_size.percentage
+|integer
+|query
+|False
+a|Filter by relative_size.percentage
+
+* Introduced in: 9.13
+
+
+|origins.create_time
+|string
+|query
+|False
+a|Filter by origins.create_time
+
+
+|origins.ip_address
+|string
+|query
+|False
+a|Filter by origins.ip_address
+
+
+|origins.state
+|string
+|query
+|False
+a|Filter by origins.state
+
+
+|origins.volume.name
+|string
+|query
+|False
+a|Filter by origins.volume.name
+
+
+|origins.volume.uuid
+|string
+|query
+|False
+a|Filter by origins.volume.uuid
+
+
+|origins.svm.name
+|string
+|query
+|False
+a|Filter by origins.svm.name
+
+
+|origins.svm.uuid
+|string
+|query
+|False
+a|Filter by origins.svm.uuid
+
+
+|origins.size
+|integer
+|query
+|False
+a|Filter by origins.size
+
+
+|origins.cluster.name
+|string
+|query
+|False
+a|Filter by origins.cluster.name
+
+
+|origins.cluster.uuid
+|string
+|query
+|False
+a|Filter by origins.cluster.uuid
+
+
+|s3.enabled
+|boolean
+|query
+|False
+a|Filter by s3.enabled
+
+* Introduced in: 9.18
+
+
+|atime_scrub.period
+|integer
+|query
+|False
+a|Filter by atime_scrub.period
+
+* Introduced in: 9.14
+
+
+|atime_scrub.enabled
+|boolean
+|query
+|False
+a|Filter by atime_scrub.enabled
+
+* Introduced in: 9.14
+
+
+|global_file_locking_enabled
+|boolean
+|query
+|False
+a|Filter by global_file_locking_enabled
+
+* Introduced in: 9.9
+
+
+|use_tiered_aggregate
+|boolean
+|query
+|False
+a|Filter by use_tiered_aggregate
+
+* Introduced in: 9.8
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|override_encryption
+|boolean
+|query
+|False
+a|Filter by override_encryption
+
+* Introduced in: 9.14
+
+
+|constituents_per_aggregate
+|integer
+|query
+|False
+a|Filter by constituents_per_aggregate
+
+
+|guarantee.type
+|string
+|query
+|False
+a|Filter by guarantee.type
+
+* Introduced in: 9.7
+
+
+|dr_cache
+|boolean
+|query
+|False
+a|Filter by dr_cache
+
+* Introduced in: 9.9
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|size
+|integer
+|query
+|False
+a|Filter by size
+
+
+|nfsv4.enabled
+|boolean
+|query
+|False
+a|Filter by nfsv4.enabled
+
+* Introduced in: 9.18
+
+
+|cifs_change_notify.enabled
+|boolean
+|query
+|False
+a|Filter by cifs_change_notify.enabled
+
+* Introduced in: 9.14
+
+
+|aggregates.name
+|string
+|query
+|False
+a|Filter by aggregates.name
+
+
+|aggregates.uuid
+|string
+|query
+|False
+a|Filter by aggregates.uuid
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 203
+* minLength: 1
+
+
+|writeback.enabled
+|boolean
+|query
+|False
+a|Filter by writeback.enabled
+
+* Introduced in: 9.12
+
+
+|cifs.enabled
+|boolean
+|query
+|False
+a|Filter by cifs.enabled
+
+* Introduced in: 9.18
+
+
+|path
+|string
+|query
+|False
+a|Filter by path
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
+
+* Default value: 15
+* Max value: 120
+* Min value: 0
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+
+|max_records
+|integer
+|query
+|False
+a|Limit the number of records returned.
+
+
+|order_by
+|array[string]
+|query
+|False
+a|Order results by specified fields and optional [asc|desc] direction. Default direction is 'asc' for ascending.
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is true for GET calls.  When set to false, only the number of records is returned.
+
+* Default value: 1
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|num_records
+|integer
+a|Number of records
+
+
+|records
+|array[link:#flexcache[flexcache]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "next": {
+      "href": "/api/resourcelink"
+    },
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "num_records": 1,
+  "records": [
+    {
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "aggregates": [
+        {
+          "_links": {
+            "self": {
+              "href": "/api/resourcelink"
+            }
+          },
+          "name": "aggr1",
+          "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+        }
+      ],
+      "constituents_per_aggregate": 1,
+      "guarantee": {
+        "type": "string"
+      },
+      "name": "vol1",
+      "origins": [
+        {
+          "cluster": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "cluster1",
+            "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+          },
+          "create_time": "2018-06-04 19:00:00 +0000",
+          "ip_address": "10.10.10.7",
+          "size": 0,
+          "state": "string",
+          "svm": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "svm1",
+            "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+          },
+          "volume": {
+            "_links": {
+              "self": {
+                "href": "/api/resourcelink"
+              }
+            },
+            "name": "volume1",
+            "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+          }
+        }
+      ],
+      "path": "/user/my_fc",
+      "svm": {
+        "_links": {
+          "self": {
+            "href": "/api/resourcelink"
+          }
+        },
+        "name": "svm1",
+        "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+      },
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ]
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|next
+|link:#href[href]
+a|
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#aggregates]
+[.api-collapsible-fifth-title]
+aggregates
+
+Aggregate
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#atime_scrub]
+[.api-collapsible-fifth-title]
+atime_scrub
+
+FlexCache volume atime-based scrub
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether scrubbing of inactive files based on atime is enabled for the FlexCache volume. When scrubbing is enabled, files whose atime is older than the specified duration are evicted from the cache volume. The scrubber runs once a day and looks for files whose atime has exceeded the provisioned value.
+
+
+|period
+|integer
+a|Specifies the atime duration in days after which a cached file is considered inactive. Inactive files are purged from the FlexCache volumes when the scrubber runs once a day.
+
+
+|===
+
+
+[#cifs]
+[.api-collapsible-fifth-title]
+cifs
+
+FlexCache CIFS
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether CIFS access is enabled on the FlexCache volume.
+
+
+|===
+
+
+[#cifs_change_notify]
+[.api-collapsible-fifth-title]
+cifs_change_notify
+
+Notifies that a change has been made to the FlexCache volume CIFS.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether a CIFS change notification is enabled for the FlexCache volume.
+
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|type
+|string
+a|The type of space guarantee of this volume in the aggregate.
+
+
+|===
+
+
+[#nfsv4]
+[.api-collapsible-fifth-title]
+nfsv4
+
+FlexCache NFSv4
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether NFSv4 access is enabled on the FlexCache volume.
+
+
+|===
+
+
+[#cluster]
+[.api-collapsible-fifth-title]
+cluster
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#volume]
+[.api-collapsible-fifth-title]
+volume
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the volume. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|Unique identifier for the volume. This corresponds to the instance-uuid that is exposed in the CLI and ONTAPI. It does not change due to a volume move.
+
+* example: 028baa66-41bd-11e9-81d5-00a0986138f7
+* Introduced in: 9.6
+* x-nullable: true
+
+
+|===
+
+
+[#flexcache_relationship]
+[.api-collapsible-fifth-title]
+flexcache_relationship
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|cluster
+|link:#cluster[cluster]
+a|
+
+|create_time
+|string
+a|Creation time of the relationship.
+
+
+|ip_address
+|string
+a|Cluster management IP of the remote cluster.
+
+
+|size
+|integer
+a|Size of the remote volume.
+
+
+|state
+|string
+a|Volume state
+
+
+|svm
+|link:#svm[svm]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|volume
+|link:#volume[volume]
+a|
+
+|===
+
+
+[#prepopulate]
+[.api-collapsible-fifth-title]
+prepopulate
+
+FlexCache prepopulate
+
+[#relative_size]
+[.api-collapsible-fifth-title]
+relative_size
+
+FlexCache Relative Size
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Specifies whether the relative sizing is enabled for the FlexCache volume. Relative sizing is introduced as a part of follow the origin feature. When relative sizing is enabled, it blocks any modifications done manually in the absolute size of the FlexCache volume. The size of the FlexCache volume is calculated and entered automatically based on the size of the origin volume.
+
+
+|percentage
+|integer
+a|Specifies the percent size the FlexCache volume should have relative to the total size of the origin volume. This property is only relevant to a FlexCache volume that has the relative size property enabled.
+
+
+|===
+
+
+[#s3]
+[.api-collapsible-fifth-title]
+s3
+
+Flexcache S3
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether S3 access is enabled on the Flexcache volume.
+
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+FlexCache SVM
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#writeback]
+[.api-collapsible-fifth-title]
+writeback
+
+FlexCache Writeback
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether or not writeback is enabled for the FlexCache volume. Writeback is a storage method where data is first written to the FlexCache volume and then written to the origin of a FlexCache volume.
+
+
+|===
+
+
+[#flexcache]
+[.api-collapsible-fifth-title]
+flexcache
+
+Defines the cache endpoint of FlexCache.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|aggregates
+|array[link:#aggregates[aggregates]]
+a|
+
+|atime_scrub
+|link:#atime_scrub[atime_scrub]
+a|FlexCache volume atime-based scrub
+
+
+|cifs
+|link:#cifs[cifs]
+a|FlexCache CIFS
+
+
+|cifs_change_notify
+|link:#cifs_change_notify[cifs_change_notify]
+a|Notifies that a change has been made to the FlexCache volume CIFS.
+
+
+|constituents_per_aggregate
+|integer
+a|Number of FlexCache constituents per aggregate when the 'aggregates' field is mentioned.
+
+
+|dr_cache
+|boolean
+a|If set to true, a DR cache is created.
+
+
+|global_file_locking_enabled
+|boolean
+a|Specifies whether or not a FlexCache volume has global file locking mode enabled. Global file locking mode is a mode where protocol read locking semantics are enforced across all FlexCaches and origins of a FlexCache volume. When global file locking mode is enabled, the "is_disconnected_mode_off_for_locks" flag is always set to "true".
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|
+
+|name
+|string
+a|FlexCache name
+
+
+|nfsv4
+|link:#nfsv4[nfsv4]
+a|FlexCache NFSv4
+
+
+|origins
+|array[link:#flexcache_relationship[flexcache_relationship]]
+a|
+
+|override_encryption
+|boolean
+a|If set to true, a plaintext FlexCache volume for an encrypted origin volume is created.
+
+
+|path
+|string
+a|The fully-qualified path in the owning SVM's namespace at which the FlexCache is mounted. The path is case insensitive and must be unique within a SVM's namespace. Path must begin with '/' and must not end with '/'. Only one FlexCache be mounted at any given junction path.
+
+
+|relative_size
+|link:#relative_size[relative_size]
+a|FlexCache Relative Size
+
+
+|s3
+|link:#s3[s3]
+a|Flexcache S3
+
+
+|size
+|integer
+a|Physical size of the FlexCache. The recommended size for a FlexCache is 10% of the origin volume. The minimum FlexCache constituent size is 1GB.
+
+
+|svm
+|link:#svm[svm]
+a|FlexCache SVM
+
+
+|use_tiered_aggregate
+|boolean
+a|Specifies whether or not a Fabricpool-enabled aggregate can be used in FlexCache creation. The use_tiered_aggregate is only used when auto-provisioning a FlexCache volume.
+
+
+|uuid
+|string
+a|FlexCache UUID. Unique identifier for the FlexCache.
+
+
+|writeback
+|link:#writeback[writeback]
+a|FlexCache Writeback
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

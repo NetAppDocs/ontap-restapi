@@ -1,0 +1,203 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_roles_owner.uuid_name_privileges_path_endpoint_overview.html'
+summary: 'Manage role privilege path'
+---
+
+= Manage role privilege path
+
+
+
+== Overview
+
+A role can comprise of multiple tuples and each tuple consists of a REST API path or command/command directory path and its access level. If the tuple refers to a command/command directory path, it may optionally be associated with a query. These APIs can be used to retrieve or modify the associated access level and optional query. They can also be used to delete one of the constituent REST API paths or command/command directory paths within a role. The REST API path can be a resource-qualified endpoint. Currently, the only supported resource-qualified endpoints are the following&#58;
+
+=== Snapshots APIs
+
+&ndash; _/api/storage/volumes/{volume.uuid}/snapshots_
+
+=== File System Analytics APIs
+
+&ndash; _/api/storage/volumes/{volume.uuid}/files_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/clients_
+
+&ndash;  _/api/storage/volumes/{volume.uuid}/top-metrics/directories_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/files_
+
+&ndash; _/api/storage/volumes/{volume.uuid}/top-metrics/users_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/clients_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/directories_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/files_
+
+&ndash; _/api/svm/svms/{svm.uuid}/top-metrics/users_
+
+==== ONTAP S3 APIs
+
+&ndash; _/api/protocols/s3/services/{svm.uuid}/users_
+
+In the APIs above, and in the context of REST roles, the wildcard character &#42; can be used in place of _{volume.uuid}_ or _{svm.uuid}_ to represent _all_ volumes or _all_ SVMs, depending on whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ corresponds to the _-instance-uuid_ field in the output of the "volume show" command at the diagnostic privilege level. It can also be retrieved through the REST endpoint _/api/storage/volumes_.
+
+The role can be SVM-scoped or cluster-scoped.
+
+Specify the owner UUID and the role name in the URI path. The owner UUID corresponds to the UUID of the SVM for which the role has been created and can be obtained from the response body of a GET request performed on one of the following APIs&#58;
+_/api/security/roles_ for all roles
+_/api/security/roles/?scope=svm_ for SVM-scoped roles
+_/api/security/roles/?owner.name=+++<svm-name>+++</i> for roles in a specific SVM This API response contains the complete URI for each tuple of the role and can be used for GET, PATCH, or DELETE operations.+++</svm-name>+++_
+
+NOTE: The access level for paths in pre-defined roles cannot be updated.
+
+== Examples
+
+=== Updating the access level for a REST API path in the privilege tuple of an existing role
+
+----
+
+# The API:
+PATCH "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fprotocols" -d '{"access":"all"}'
+----
+
+=== Updating the access level for a command/command directory path in the privilege tuple of an existing role
+
+----
+
+# The API:
+PATCH "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/netp%20port" -d '{"access":"readonly","query":"-type if-group&#124;vlan"}'
+----
+
+=== Updating the access level for a resource-qualified endpoint in the privilege tuple of an existing role
+
+----
+
+# The API:
+PATCH "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fvolumes%2F742ef001-24f0-4d5a-9ec1-2fdaadb282f4%2Ffiles" -d '{"access":"readonly"}'
+----
+
+=== Retrieving the access level for a REST API path in the privilege tuple of an existing role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fprotocols"
+
+# The response:
+{
+"owner": {
+  "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25"
+},
+"name": "svm_role1",
+"path": "/api/protocols",
+"access": "all",
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fprotocols"
+  }
+}
+}
+----
+
+=== Retrieving the access level for a command/command directory path in the privilege tuple of an existing role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/net%20port"
+
+# The response:
+{
+"owner": {
+  "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25"
+},
+"name": "svm_role1",
+"path": "net port",
+"query":"-type if-group&#124;vlan",
+"access": "readonly",
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/net%20port"
+  }
+}
+}
+----
+
+=== Retrieving the access level for a resource-qualified endpoint in the privilege tuple of an existing role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fvolumes%2Fd0f3b91a-4ce7-4de4-afb9-7eda668659dd%2F%2Fsnapshots"
+
+# The response:
+{
+"owner": {
+  "uuid": "aaef7c38-4bd3-11e9-b238-0050568e2e25"
+},
+"name": "svm_role1",
+"path": "/api/storage/volumes/d0f3b91a-4ce7-4de4-afb9-7eda668659dd/snapshots",
+"access": "all",
+"_links": {
+  "self": {
+    "href": "/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fvolumes%2Fd0f3b91a-4ce7-4de4-afb9-7eda668659dd%2Fsnapshots"
+  }
+}
+}
+----
+
+=== Deleting a privilege tuple, containing a REST API path, from an existing role
+
+----
+
+# The API:
+DELETE "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fprotocols"
+----
+
+=== Deleting a privilege tuple, containing a command/command directory path, from an existing role
+
+----
+
+# The API:
+DELETE "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/net%20port"
+----
+
+=== Deleting a privilege tuple, containing a resource-qualified endpoint, from an existing role
+
+----
+
+# The API:
+DELETE "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fsvm%2F6e000659-9a16-11ec-819e-005056bb1a7c%2Ftop-metrics%2Ffiles"
+----
+
+

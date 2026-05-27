@@ -1,0 +1,930 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'application_consistency-groups_endpoint_overview.html'
+summary: 'Manage application consistency groups'
+---
+
+= Manage application consistency groups
+
+
+
+== Overview
+
+A consistency group is a group of volumes that supports capabilities such as creating a snapshot of all of its member volumes at the same point-in-time with a write-fence, thus ensuring a consistent image of the volumes at that time.
+
+Applications with datasets scoped to a single volume can have its contents saved to a snapshot, replicated, or cloned in a crash-consistent manner implicitly with corresponding native ONTAP volume-granular operations. Applications with datasets spanning a group of multiple volumes must have such operations performed on the group. Typically, by first fencing writes to all the volumes in the group, flushing any writes pending in queues, executing the intended operation, that is, take snapshot of every volume in the group and when that is complete, unfence and resume writes. A consistency group is the conventional mechanism for providing such group semantics.
+
+== Consistency group  APIs
+
+The following APIs are used to perform operations related to consistency groups:
+
+&ndash; GET       /api/application/consistency-groups
+
+&ndash; POST      /api/application/consistency-groups
+
+&ndash; GET       /api/application/consistency-groups/\{uuid}
+
+&ndash; PATCH     /api/application/consistency-groups/\{uuid}
+
+&ndash; DELETE    /api/application/consistency-groups/\{uuid}
+
+== Examples
+
+=== Retrieving all consistency groups of an SVM
+
+----
+
+# The API:
+/api/application/consistency-groups
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/application/consistency-groups?svm.name=vs1" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "6f48d798-0a7f-11ec-a449-005056bbcf9f",
+    "name": "vol1",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b22c85-0a82-11ec-a449-005056bbcf9f",
+    "name": "parent_cg",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b22c85-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b270b1-0a82-11ec-a449-005056bbcf9f",
+    "name": "child_1",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b270b1-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b270c3-0a82-11ec-a449-005056bbcf9f",
+    "name": "child_2",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b270c3-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups"
+  }
+}
+}
+----
+
+=== Retrieving details of all consistency groups of an SVM
+
+Retrieving details of the consistency groups for a specified SVM. These details are considered to be performant and will return within 1 second when 40 records or less are requested.
+
+----
+curl -X GET "https://<mgmt-ip>/api/application/consistency-groups?svm.name=vs1&fields=*&max_records=40"
+
+#### Response:
+{
+"records": [
+  {
+    "uuid": "6f48d798-0a7f-11ec-a449-005056bbcf9f",
+    "name": "vol1",
+    "svm": {
+      "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "space": {
+      "size": 108003328,
+      "available": 107704320,
+      "used": 299008
+    },
+    "replicated": false,
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b22c85-0a82-11ec-a449-005056bbcf9f",
+    "name": "parent_cg",
+    "svm": {
+      "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "snapshot_policy": {
+      "name": "default-1weekly",
+      "uuid": "a30bd0fe-067d-11ec-a449-005056bbcf9f",
+      "_links": {
+        "self": {
+          "href": "/api/storage/snapshot-policies/a30bd0fe-067d-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "consistency_groups": [
+      {
+        "uuid": "c1b270b1-0a82-11ec-a449-005056bbcf9f",
+        "name": "child_1",
+        "space": {
+          "size": 41943040,
+          "available": 39346176,
+          "used": 499712
+        },
+        "_links": {
+          "self": {
+            "href": "/api/application/consistency-groups/c1b270b1-0a82-11ec-a449-005056bbcf9f"
+          }
+        }
+      },
+      {
+        "uuid": "c1b270c3-0a82-11ec-a449-005056bbcf9f",
+        "name": "child_2",
+        "space": {
+          "size": 41943040,
+          "available": 39350272,
+          "used": 495616
+        },
+        "_links": {
+          "self": {
+            "href": "/api/application/consistency-groups/c1b270c3-0a82-11ec-a449-005056bbcf9f"
+          }
+        }
+      }
+    ],
+    "space": {
+      "size": 83886080,
+      "available": 78696448,
+      "used": 995328
+    },
+    "replicated": false,
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b22c85-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b270b1-0a82-11ec-a449-005056bbcf9f",
+    "name": "child_1",
+    "parent_consistency_group": {
+      "uuid": "c1b22c85-0a82-11ec-a449-005056bbcf9f",
+      "name": "parent_cg",
+      "_links": {
+        "self": {
+          "href": "/api/application/consistency-groups/c1b22c85-0a82-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "svm": {
+      "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "snapshot_policy": {
+      "name": "default",
+      "uuid": "a30b60a4-067d-11ec-a449-005056bbcf9f",
+      "_links": {
+        "self": {
+          "href": "/api/storage/snapshot-policies/a30b60a4-067d-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "space": {
+      "size": 41943040,
+      "available": 39346176,
+      "used": 499712
+    },
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b270b1-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b270c3-0a82-11ec-a449-005056bbcf9f",
+    "name": "child_2",
+    "parent_consistency_group": {
+      "uuid": "c1b22c85-0a82-11ec-a449-005056bbcf9f",
+      "name": "parent_cg",
+      "_links": {
+        "self": {
+          "href": "/api/application/consistency-groups/c1b22c85-0a82-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "svm": {
+      "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "snapshot_policy": {
+      "name": "default",
+      "uuid": "a30b60a4-067d-11ec-a449-005056bbcf9f",
+      "_links": {
+        "self": {
+          "href": "/api/storage/snapshot-policies/a30b60a4-067d-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "space": {
+      "size": 41943040,
+      "available": 39350272,
+      "used": 495616
+    },
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b270c3-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  }
+],
+"num_records": 4,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups?svm.name=vs1&fields=*&max_records=40"
+  }
+}
+}
+----
+
+=== Retrieving details of non-nested consistency groups
+
+Retrieves details of the consistency groups without nested consistency groups, or only the parent consistency group for a number of consistency groups of a specified SVM.
+
+----
+curl -X GET "https://<mgmt-ip>/api/application/consistency-groups?svm.name=vs1&parent_consistency_group.uuid=null"
+
+#### Response:
+{
+"records": [
+  {
+    "uuid": "6f48d798-0a7f-11ec-a449-005056bbcf9f",
+    "name": "vol1",
+    "svm": {
+      "name": "vs1"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f"
+      }
+    }
+  },
+  {
+    "uuid": "c1b22c85-0a82-11ec-a449-005056bbcf9f",
+    "name": "parent_cg",
+    "svm": {
+      "name": "vs1"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/c1b22c85-0a82-11ec-a449-005056bbcf9f"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups?svm.name=vs1&parent_consistency_group.uuid=null"
+  }
+}
+}
+----
+
+=== Creating a single consistency group with a new SAN volume
+
+Provisions an application with one consistency group, each with one new SAN volumes, with one LUN, an igroup and no explicit snapshot policy, FabricPool tiering policy, storage service, and QoS policy specification. The igroup to map a LUN to is specified at LUN-granularity.
+
+----
+curl -X POST https://<mgmt-ip>/api/application/consistency-groups?return_records=true -d '{ "svm": { "name": "vs1" }, "luns": [ { "name": "/vol/vol1/lun1", "space": { "size": "100mb" }, "os_type": "linux", "lun_maps": [ { "igroup": { "name": "igroup1", "initiators": [ { "name": "example_name" } ] } } ] } ] }'
+
+#### Response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "6f48d798-0a7f-11ec-a449-005056bbcf9f",
+    "name": "vol1",
+    "svm": {
+    "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+    "name": "vs1",
+    "_links": {
+      "self": {
+        "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+      }
+    }
+    },
+    "luns": [
+    {
+      "lun_maps": [
+        {
+          "igroup": {
+            "name": "igroup1",
+            "initiators": [
+              {
+                "name": "example_name"
+              }
+            ]
+          }
+        }
+      ],
+      "name": "/vol/vol1/lun1",
+      "os_type": "linux",
+      "space": {
+        "size": 104857600
+      }
+    }
+    ]
+  }
+],
+"job": {
+  "uuid": "6f4907ae-0a7f-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+    "href": "/api/cluster/jobs/6f4907ae-0a7f-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Creating an Application with two consistency groups with existing SAN volumes
+
+Provisions an application with two consistency groups, each with two existing SAN volumes, a snapshot policy at application-granularity, and a distinct consistency group granular snapshot policy.
+
+----
+curl -X POST https://<mgmt-ip>/api/application/consistency-groups?return_records=true -d '{ "svm": { "name": "vs1" }, "name": "parent_cg", "snapshot_policy": { "name": "default-1weekly" }, "consistency_groups": [ { "name": "child_1", "snapshot_policy": { "name": "default" }, "volumes": [ { "name": "existing_vol1", "provisioning_options": { "action": "add" } }, { "name": "existing_vol2", "provisioning_options": { "action": "add" } } ] }, { "name": "child_2", "snapshot_policy": { "name": "default" }, "volumes": [ { "name": "existing_vol3", "provisioning_options": { "action": "add" } }, { "name": "existing_vol4", "provisioning_options": { "action": "add" } } ] } ] }'
+
+#### Response:
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "c1b22c85-0a82-11ec-a449-005056bbcf9f",
+    "name": "parent_cg",
+    "svm": {
+      "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+      "name": "vs1",
+      "_links": {
+        "self": {
+          "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+        }
+      }
+    },
+    "snapshot_policy": {
+      "name": "default-1weekly"
+    },
+    "consistency_groups": [
+      {
+        "uuid": "c1b270b1-0a82-11ec-a449-005056bbcf9f",
+        "name": "child_1",
+        "snapshot_policy": {
+          "name": "default"
+        },
+        "volumes": [
+          {
+            "name": "existing_vol1"
+          },
+          {
+            "name": "existing_vol2"
+          }
+        ]
+      },
+      {
+        "uuid": "c1b270c3-0a82-11ec-a449-005056bbcf9f",
+        "name": "child_2",
+        "snapshot_policy": {
+          "name": "default"
+        },
+        "volumes": [
+          {
+            "name": "existing_vol3"
+          },
+          {
+            "name": "existing_vol4"
+          }
+        ]
+      }
+    ]
+  }
+],
+"job": {
+  "uuid": "c1b272b9-0a82-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/c1b272b9-0a82-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Retrieving specific details of an existing consistency group
+
+Retrieves the details of an existing consistency group.
+
+----
+curl -X GET https://<mgmt-ip>/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f
+
+#### Response:
+{
+"uuid": "6f48d798-0a7f-11ec-a449-005056bbcf9f",
+"name": "vol1",
+"svm": {
+  "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+    }
+  }
+},
+"space": {
+  "size": 108003328,
+  "available": 107724800,
+  "used": 278528
+},
+"replicated": false,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f"
+  }
+}
+}
+----
+
+=== Retrieving all details of an existing consistency group
+
+Retrieves all details of an existing consistency group. These details are expensive and are not guaranteed to return within one second.
+
+----
+curl -X GET https://<mgmt-ip>/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f?fields=**
+
+#### Response:
+{
+"uuid": "6f48d798-0a7f-11ec-a449-005056bbcf9f",
+"name": "vol1",
+"svm": {
+  "uuid": "4853f97a-0a63-11ec-a449-005056bbcf9f",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/4853f97a-0a63-11ec-a449-005056bbcf9f"
+    }
+  }
+},
+"qos": {
+  "policy": {
+    "uuid": "b7189398-e572-48ab-8f69-82cd46580812",
+    "name": "extreme-fixed",
+    "_links": {
+      "self": {
+        "href": "/api/storage/qos/policies/b7189398-e572-48ab-8f69-82cd46580812"
+      }
+    }
+  }
+},
+"tiering": {
+  "policy": "none"
+},
+"create_time": "2021-08-31T13:18:24-04:00",
+"volumes": [
+  {
+    "uuid": "6f516c6c-0a7f-11ec-a449-005056bbcf9f",
+    "qos": {
+      "policy": {
+        "uuid": "b7189398-e572-48ab-8f69-82cd46580812",
+        "name": "extreme-fixed",
+        "_links": {
+          "self": {
+            "href": "/api/storage/qos/policies/b7189398-e572-48ab-8f69-82cd46580812"
+          }
+        }
+      }
+    },
+    "tiering": {
+      "policy": "none"
+    },
+    "comment": "",
+    "create_time": "2021-08-31T13:18:22-04:00",
+    "name": "vol1",
+    "snapshot_policy": {
+      "name": "default",
+      "uuid": "a30b60a4-067d-11ec-a449-005056bbcf9f"
+    },
+    "space": {
+      "size": 108003328,
+      "available": 107569152,
+      "used": 434176,
+      "snapshot": {
+        "used": 151552,
+        "reserve_percent": 0,
+        "autodelete_enabled": false
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/volumes/6f516c6c-0a7f-11ec-a449-005056bbcf9f"
+      }
+    }
+  }
+],
+"luns": [
+  {
+    "uuid": "6f51748a-0a7f-11ec-a449-005056bbcf9f",
+    "location": {
+      "logical_unit": "lun1",
+      "node": {
+        "name": "example_node_name",
+        "uuid": "6eb682f2-067d-11ec-a449-005056bbcf9f",
+        "_links": {
+          "self": {
+            "href": "/api/cluster/nodes/6eb682f2-067d-11ec-a449-005056bbcf9f"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "6f516c6c-0a7f-11ec-a449-005056bbcf9f",
+        "name": "vol1",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/6f516c6c-0a7f-11ec-a449-005056bbcf9f"
+          }
+        }
+      }
+    },
+    "lun_maps": [
+      {
+        "igroup": {
+          "uuid": "6f4a4b86-0a7f-11ec-a449-005056bbcf9f",
+          "name": "igroup1",
+          "os_type": "linux",
+          "protocol": "mixed",
+          "initiators": [
+            {
+              "name": "example_name"
+            }
+          ],
+          "_links": {
+            "self": {
+              "href": "/api/protocols/san/igroups/6f4a4b86-0a7f-11ec-a449-005056bbcf9f"
+            }
+          }
+        },
+        "logical_unit_number": 0
+      }
+    ],
+    "name": "/vol/vol1/lun1",
+    "auto_delete": false,
+    "class": "regular",
+    "create_time": "2021-08-31T13:18:24-04:00",
+    "os_type": "linux",
+    "serial_number": "wIqM6]RfQK3t",
+    "space": {
+      "size": 104857600,
+      "used": 0,
+      "guarantee": {
+        "requested": false,
+        "reserved": false
+      }
+    },
+    "status": {
+      "container_state": "online",
+      "mapped": true,
+      "read_only": false,
+      "state": "online"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/luns/6f51748a-0a7f-11ec-a449-005056bbcf9f"
+      }
+    }
+  }
+],
+"space": {
+  "size": 108003328,
+  "available": 107569152,
+  "used": 434176
+},
+"replicated": false,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f?fields=**"
+  }
+}
+}
+----
+
+=== Adding LUNs to an existing volume in an existing consistency group
+
+Adds two NVMe namespaces to an existing volume in an existing consistency group, creates a new subsystem, and binds the new namespaces to it.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f' -d '{ "luns": [ { "name": "/vol/vol1/new_luns", "provisioning_options": { "count": 2, "action": "create" }, "space": { "size": "100mb" }, "os_type": "linux", "lun_maps": [ { "igroup": { "name": "igroup2", "initiators": [ { "name": "01:02:03:04:05:06:07:01" } ] } } ] } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "5306ea44-0a87-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/5306ea44-0a87-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Restoring a consistency group to the contents of an existing snapshot
+
+Restores an existing consistency group to the contents of an existing snapshot of the consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "restore_to": { "snapshot": { "uuid": "92c6c770-17a1-11eb-b141-005056acd498"} } }' -H "Accept: Application/hal+json"
+
+#### Response:
+{
+"job": {
+  "uuid": "8907bd9e-1463-11eb-a719-005056ac70af",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8907bd9e-1463-11eb-a719-005056ac70af"
+    }
+  }
+}
+}
+----
+
+=== Deleting a consistency group
+
+Deletes a consistency group, where all storage originally associated with that consistency group remains in place.
+
+----
+curl -X DELETE 'https://<mgmt-ip>/api/application/consistency-groups/6f48d798-0a7f-11ec-a449-005056bbcf9f'
+
+#### Response:
+{
+}
+----
+
+=== Cloning an existing consistency group
+
+The following example clones an existing consistency group with the current contents:
+
+----
+curl -X POST 'https://<mgmt-ip>/api/application/consistency-groups' -d '{ "name": "clone01_of_cg01","svm": { "name": "vs_0"},"clone": { "volume": { "prefix": "my_clone_pfx","suffix": "my_clone_sfx"},"split_initiated": true,"parent_consistency_group": { "name": "cg01","uuid": "ca5e76fb-98c0-11ec-855a-005056a7693b"},"guarantee": { "type": "none"} } }' -H "accept: application/hal+json"
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Cloning a consistency group from an existing snapshot
+
+The following example clones an existing consistency group with contents from an existing snapshot:
+
+----
+curl -X POST 'https://<mgmt-ip>/api/application/consistency-groups' -d '{ "name": "clone01_of_cg01","svm": { "name": "vs_0"},"clone": { "volume": { "prefix": "my_clone_pfx","suffix": "my_clone_sfx"},"split_initiated": true,"parent_snapshot":{ "name": "snap01_of_cg01"},"parent_consistency_group": { "name": "cg01","uuid": "ca5e76fb-98c0-11ec-855a-005056a7693b"},"guarantee": { "type": "none"} } }' -H "accept: application/hal+json"
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Adding namespaces to an existing volume in an existing consistency group
+
+To add two NVMe Namespaces to an existing volume in an existing consistency group, create a new subsystem and bind the new namespaces to it.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "namespaces": [ { "name": "/vol/vol1/new_namespace", "space": { "size": "10M" }, "os_type": "windows", "provisioning_options": { "count": 2 }, "subsystem_map": { "subsystem": { "name": "mySubsystem", "hosts": [ { "nqn": "nqn.1992-08.com.netapp:sn.d04594ef915b4c73b642169e72e4c0b1:subsystem.host1" }, { "nqn": "nqn.1992-08.com.netapp:sn.d04594ef915b4c73b642169e72e4c0b1:subsystem.host2" } ] } } } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Add a new volume in an existing consistency group
+
+The following example adds two new volumes to an existing consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "volumes" : [ { "name": "new_vol_", "provisioning_options": { "count" : "2"}, "space": { "size": "1gb"} } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Adding an existing volume to an existing consistency group
+
+The following example adds an existing volume to an existing consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "volumes" : [ { "name": "existing_vol", "provisioning_options": { "action" : "add"} } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Promoting a single consistency group to a nested consistency group
+
+The following example promotes a single consistency group to a
+nested consistency group with a new child consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "provisioning_options": { "action":"promote" }, "consistency_groups": [ { "name":"cg_child", "provisioning_options": { "action":"create" } } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Demoting a nested consistency group to a single consistency group
+
+The following example demotes (flattens) a nested consistency group to a
+single consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "provisioning_options": { "action":"demote" } }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Adding a new child consistency group to nested consistency group
+
+The following example adds a new child consistency group to an
+existing nested consistency group, creating a new volume.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "consistency_groups": [ { "name": "cg_child5", "provisioning_options": { "action" : "create" }, "volumes": [ { "name": "child5_vol_1", "space": { "size": "100mb" } } ] } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Removing a child consistency group from nested consistency group
+
+The following example removes a child consistency group from a
+nested consistency, changing it to a single consistency group
+with a new consistency group name.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "consistency_groups": [ { "name": "cg_child5", "provisioning_options": { "action" : "remove", "name" : "new_single_cg" } } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Create a new parent consistency group with an existing consistency group
+
+The following example creates a new nested consistency group
+with an existing consistency group as child consistency group.
+
+----
+curl -X POST 'https://<mgmt-ip>/api/application/consistency-groups' -d '{ "svm": { "name": "vs1" }, "name": "cg_parent2", "consistency_groups": [ { "name": "cg_large", "provisioning_options":{ "action": "add" } }, { "name": "cg_standalone2", "provisioning_options":{ "action": "add" } } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+=== Reassign a volume to another child consistency group.
+
+The following example reassigns a volume from a child consistency group
+to another child consistency group with the same parent consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "consistency_groups": [ { "name": "cg_child1", "volumes": [ { "name": "child2_vol_1", "provisioning_options": { "action":"reassign"} } ] }, { "name": "cg_child2" } ] }'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
+

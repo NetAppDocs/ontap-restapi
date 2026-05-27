@@ -1,0 +1,51 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_ntp_endpoints.html'
+summary: 'ONTAP REST API cluster NTP endpoints'
+---
+
+= ONTAP REST API cluster NTP endpoints
+
+
+
+== Overview
+
+ONTAP uses the Network Time Protocol (NTP) for world clock time synchronization of the cluster. Some functional services
+require the time to be correct to within one second for all the nodes in the cluster.
+
+The success and speed of this synchronization depends on the number, alignment, and consistent network latency of external
+time servers. It is a best practice to configure ONTAP with four independent external time servers.
+
+To aid set up, the Pre-Cluster API of POST /cluster supports a list of NTP time servers
+using either the host name, IPv4 address, or IPv6 address.
+
+You can enhance time security by acquiring private keys from external time servers, recording those keys and
+configuring the entries that match the external time servers to use those keys.
+
+To use NTP symmetric authentication keys (keys), the shared private key must be recorded
+first using the /cluster/ntp/keys API associated with the server and enabled to be used.
+
+== APIs
+
+There are three sets of APIs. The most basic set is part of the /api/cluster APIs, in which a set of NTP servers are provided.
+The next two sets are used to manage the NTP servers in more detail and optionally record keys to enable NTP
+symmetric authentication.
+
+=== link:cluster_endpoint_overview.html[/api/cluster]
+
+More details can be found under the documentation for link:cluster_endpoint_overview.html[/api/cluster] . This API supports a list of NTP servers to
+start with. It does not take any individual configuration values for the NTP servers themselves.
+
+=== link:cluster_ntp_servers_endpoint_overview.html[/api/cluster/ntp/servers]
+
+You can use this API for a more detailed configuration of NTP servers. You must use this API to set and enable
+NTP symmetric authentication keys.
+
+=== link:cluster_ntp_keys_endpoint_overview.html[/api/cluster/ntp/keys]
+
+You can use this API to manage shared NTP symmetric keys that are provided by the remote NTP time server
+by using the key identifier (ID), type of key, and the private shared key.
+
+

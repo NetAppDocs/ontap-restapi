@@ -1,0 +1,256 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-jit-privileges-.html'
+summary: 'Modify JIT privilege configurations for an SVM'
+---
+
+= Modify JIT privilege configurations for an SVM
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/jit-privileges/{owner.uuid}/{application}`#
+
+*Introduced In:* 9.17
+
+Modifies the JIT privilege configurations for an SVM.
+
+== Related ONTAP commands
+
+* `security jit-privilege modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Used to identify a cluster or an SVM.
+
+
+|application
+|string
+|path
+|True
+a|Application name.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_session_validity_period
+|string
+a|The default session validity period on this SVM.
+
+
+|max_jit_validity_period
+|string
+a|The maximum JIT validity period allowed on this SVM.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "default_session_validity_period": "PT1H",
+  "max_jit_validity_period": "P90D"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_session_validity_period
+|string
+a|The default session validity period on this SVM.
+
+
+|max_jit_validity_period
+|string
+a|The maximum JIT validity period allowed on this SVM.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "default_session_validity_period": "PT1H",
+  "max_jit_validity_period": "P90D"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#owner]
+[.api-collapsible-fifth-title]
+owner
+
+Owner name and UUID that uniquely identifies the JIT privilege global settings.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#security_jit_privilege]
+[.api-collapsible-fifth-title]
+security_jit_privilege
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|default_session_validity_period
+|string
+a|The default session validity period on this SVM.
+
+
+|max_jit_validity_period
+|string
+a|The maximum JIT validity period allowed on this SVM.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

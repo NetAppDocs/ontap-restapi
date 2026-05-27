@@ -1,0 +1,89 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_cluster_saml-sp_default-metadata_endpoint_overview.html'
+summary: 'Manage SAML default metadata configuration'
+---
+
+= Manage SAML default metadata configuration
+
+
+
+== Overview
+
+This API is used to manage relevant information about the SAML default metadata configuration in the cluster. The POST request creates a SAML default metadata configuration if there is none present.  The DELETE request removes the SAML default metadata configuration.  Various responses are shown in the examples below.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving the SAML default metadata configuration in the cluster
+
+The following output shows the SAML default metadata configuration in the cluster.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/saml-sp/default-metadata
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/authentication/cluster/saml-sp/default-metadata" -H "accept: application/hal+json"
+
+# The response:
+{
+"host": "172.21.74.181",
+"certificate": {
+  "ca": "cluster-1",
+  "serial_number": "180E3331A0DC5A19",
+  "common_name": "cluster-1"
+},
+"scope": "cluster",
+"_links": {
+  "self": {
+    "href": "/api/security/authentication/cluster/saml-sp/default-metadata"
+  }
+}
+}
+----
+
+'''
+
+=== Creating the SAML default metadata configuration in the cluster
+
+The following output shows how to create the SAML default metadata in the cluster.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/saml-sp/default-metadata
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/authentication/cluster/saml-sp/default-metadata?return_records=true" -H "accept: application/hal+json" -d '{ "host": "172.21.74.181", "certificate": { "ca": "cluster1", "serial_number": "156F10C3EB4C51C1" }}'
+----
+
+'''
+
+=== Deleting the SAML default metadata configuration in the cluster
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/saml-sp/default-metadata
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/authentication/cluster/saml-sp/default-metadata/"
+----
+
+'''
+
+

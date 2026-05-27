@@ -1,0 +1,373 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-storage-file-clone-tokens.html'
+summary: 'Create a new token to reserve the split load'
+---
+
+= Create a new token to reserve the split load
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/storage/file/clone/tokens`#
+
+*Introduced In:* 9.10
+
+Creates a new token to reserve the split load.
+
+== Required Properties
+
+* `node.uuid`
+* `reserve-size`
+
+== Optional Properties
+
+* `expiry_time.limit`
+
+== Default values
+
+* `expiry_time.limit` - "60"
+
+== Related ONTAP Commands
+
+* `volume file clone token create`
+
+== Learn More
+
+* [`DOC /storage/file/clone`]
+
+== Creating clone tokens to reserve space for clone creation on the node
+
+There is a limit on the amount of clone data that can undergo a split at a point of time on the node (clone split load). Clone tokens are used to reserve space from clone split load for clone creation. The POST operation is used to create clone tokens with `reserve-size` and `expiry-time.limit` in the body.<br>
+
+----
+
+# The API
+/api/storage/file/clone/tokens
+
+# The call
+curl -X POST "https://<mgmt_ip>/api/storage/file/clone/tokens" -H "accept: application/hal+json" -d '{"node": {"uuid": "97255711-a1ad-11eb-92b2-0050568eb2ca"}, "reserve_size": "40M", "expiry_time": { "limit": "4200"} }'
+
+# The response
+{
+"num_records": 1,
+"records": [
+  {
+    "node": {
+      "uuid": "97255711-a1ad-11eb-92b2-0050568eb2ca",
+      "name": "node1"
+    },
+    "uuid": "286f6ae4-c94d-11eb-adb5-005056bbeb0b",
+    "reserve_size": 41943040,
+    "expiry_time": {
+      "limit": "PT1H10M"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/storage/file/clone/tokens/97255711-a1ad-11eb-92b2-0050568eb2ca"
+      }
+    }
+  }
+]
+}
+----
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|link:#expiry_time[expiry_time]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|reserve_size
+|integer
+a|Specifies the available reserve in the file clone split load for the given token. Also note that the minimum value for reserve size is 4KB and any value specified below 4KB will be rounded off to 4KB.
+
+
+|uuid
+|string
+a|Token UUID.
+
+
+|===
+
+
+== Response
+
+```
+Status: 201, Created
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|num_records
+|integer
+a|Number of records.
+
+
+|records
+|array[link:#token[token]]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "num_records": 1,
+  "records": [
+    {}
+  ]
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 13565959
+| Failed to create token for node `node.name`.
+
+| 13565964
+| Reserve size cannot be negative.
+
+| 13565997
+| The node.uuid doesn't exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#expiry_time]
+[.api-collapsible-fifth-title]
+expiry_time
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|left
+|string
+a|Specifies the time remaining before the given token expires in ISO-8601 format.
+
+
+|limit
+|string
+a|Specifies when the given token expires in ISO-8601 format.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Node name
+
+
+|uuid
+|string
+a|Node UUID
+
+
+|===
+
+
+[#token]
+[.api-collapsible-fifth-title]
+token
+
+token
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|expiry_time
+|link:#expiry_time[expiry_time]
+a|
+
+|node
+|link:#node[node]
+a|
+
+|reserve_size
+|integer
+a|Specifies the available reserve in the file clone split load for the given token. Also note that the minimum value for reserve size is 4KB and any value specified below 4KB will be rounded off to 4KB.
+
+
+|uuid
+|string
+a|Token UUID.
+
+
+|===
+
+
+[#collection_links]
+[.api-collapsible-fifth-title]
+collection_links
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,272 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'application_consistency-groups_consistency_group.uuid_snapshots_endpoint_overview.html'
+summary: 'Manage application consistency group snapshots'
+---
+
+= Manage application consistency group snapshots
+
+
+
+== Overview
+
+Consistency groups support snapshot create, inventory, and restore. Snapshots can be created on a specified schedule or on-demand. On-demand snapshots can have a type of application consistent or crash consistent. Crash consistent is the default. Scheduled snapshotss are always crash consistent. There is no functional difference in ONTAP between crash consistent or application consistent snapshots.
+
+The functionality provided by these APIs is not integrated with the host application. Snapshots have limited value without host coordination, so the use of the SnapCenter Backup Management suite is recommended to ensure correct interaction between host applications and ONTAP.
+
+=== On-Demand Snapshots
+
+A manual snapshot may be created on-demand for a parent consistency group and for any of the children consistency groups within it.
+
+Scheduled and manual snapshot creation operations are subject to a pre-defined seven second internal timeout. If the snapshot creation operation does not complete within this time, it is aborted.
+
+Individual volume snapshots within a consistency group snapshots can be accessed and used with native volume snapshot operations.
+
+When an individual volume snapshot is deleted that is part of a consistency group snapshot, then that consistency group snapshot becomes invalid and which cannot be used for restoring the consistency group.
+
+=== Restoring to a Previous Snapshot
+
+A snapshot restores to a parent consistency group from an existing parent consistency group's snapshot.  A snapshot restores to any of the children's consistency groups within it from an existing children's consistency group. Granular snapshots are supported. This is performed by a PATCH operation on the specific consistency group for the restore. An example is shown in link:patch-application-consistency-groups.html[PATCH /application/consistency-groups] .
+
+Any existing snapshots that were created chronologically after the time of the snapshot used in a successful restore operation is deleted, in compliance with existing ONTAP "future-snapshot" handling principles.
+
+On failures during consistency group restores, any volumes that have been restored will remain so and will not be rolled back. The user must retry the failed restore operation until it is successful. The user can retry with consistency group restore or individual volume-granular restore.
+
+== Consistency group Snapshot APIs
+
+The following APIs are used to perform operations related to consistency group snapshots:
+
+&ndash; GET       /api/application/consistency-groups/{consistency_group.uuid}/snapshots
+
+&ndash; POST      /api/application/consistency-groups/{consistency_group.uuid}/snapshots
+
+&ndash; POST      /api/application/consistency-groups/{consistency_group.uuid}/snapshots?action=start
+
+&ndash; GET       /api/application/consistency-groups/{consistency_group.uuid}/snapshots/\{uuid}
+
+&ndash; PATCH     /api/application/consistency-groups/{consistency_group.uuid}/snapshots/\{uuid}?action=commit
+
+&ndash; DELETE    /api/application/consistency-groups/{consistency_group.uuid}/snapshots/\{uuid}
+
+== Examples
+
+=== Required properties
+
+* `consistency_group.uuid` - Existing consistency group UUID in which to create the snapshot.
+
+=== Retrieving the list of existing snapshots for a consistency group
+
+Retrieves the list of consistency group granular snapshots for a specific consistency group.
+
+----
+curl -X GET 'https://<mgmt-ip>/api/application/consistency-groups/92c6c770-17a1-11eb-b141-005056acd498/snapshots'
+
+#### Response:
+{
+"records": [
+  {
+    "uuid": "92c6c770-17a1-11eb-b141-005056acd498",
+    "name": "sa3s1",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots/92c6c770-17a1-11eb-b141-005056acd498"
+      }
+    }
+  },
+  {
+    "uuid": "c5a250ba-17a1-11eb-b141-005056acd498",
+    "name": "sa3s2",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots/c5a250ba-17a1-11eb-b141-005056acd498"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots"
+  }
+}
+}
+----
+
+=== Retrieves details of a specific snapshot for a consistency group
+
+Retrieves details for a specific snapshot in a consistency group.
+
+----
+curl -X GET 'https://<mgmt-ip>/api/application/consistency-groups/92c6c770-17a1-11eb-b141-005056acd498/snapshots/a175c021-4199-11ec-8674-005056accf3f'
+
+#### Response:
+{
+"consistency_group": {
+  "uuid": "ddabc6a5-4196-11ec-8674-005056accf3f",
+  "name": "CG_1",
+  "_links": {
+    "self": {
+      "href": "/api/application/consistency-groups/ddabc6a5-4196-11ec-8674-005056accf3f"
+    }
+  }
+},
+"uuid": "a175c021-4199-11ec-8674-005056accf3f",
+"name": "sa3s2",
+"consistency_type": "crash",
+"comment": "manually created snapshot",
+"create_time": "2021-11-09T15:14:23-05:00",
+"svm": {
+  "uuid": "7379fecb-4195-11ec-8674-005056accf3f",
+  "name": "vs1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/7379fecb-4195-11ec-8674-005056accf3f"
+    }
+  }
+},
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups/ddabc6a5-4196-11ec-8674-005056accf3f/snapshots/a175c021-4199-11ec-8674-005056accf3f"
+  }
+}
+}
+----
+
+=== Retrieving bulk snapshots
+
+Retrieves the list of consistency group granular snapshots for all consistency groups on the cluster.
+
+----
+curl -X GET 'https://<mgmt-ip>/api/application/consistency-groups/*/snapshots'
+
+#### Response:
+{
+"records": [
+  {
+    "consistency_group": {
+      "uuid": "1218f900-c124-11ee-bbfe-005056acb65e",
+      "name": "cg3",
+      "_links": {
+        "self": {
+          "href": "/api/application/consistency-groups/1218f900-c124-11ee-bbfe-005056acb65e"
+        }
+      }
+    },
+    "uuid": "7da4d364-c12e-11ee-bbfe-005056acb65e",
+    "name": "cg3ss",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/1218f900-c124-11ee-bbfe-005056acb65e/snapshots/7da4d364-c12e-11ee-bbfe-005056acb65e"
+      }
+    }
+  },
+  {
+    "consistency_group": {
+      "uuid": "15a8f66e-c124-11ee-bbfe-005056acb65e",
+      "name": "cg2",
+      "_links": {
+        "self": {
+          "href": "/api/application/consistency-groups/15a8f66e-c124-11ee-bbfe-005056acb65e"
+        }
+      }
+    },
+    "uuid": "83595384-c12e-11ee-bbfe-005056acb65e",
+    "name": "cg2ss",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/15a8f66e-c124-11ee-bbfe-005056acb65e/snapshots/83595384-c12e-11ee-bbfe-005056acb65e"
+      }
+    }
+  },
+  {
+    "consistency_group": {
+      "uuid": "1c101d17-c124-11ee-bbfe-005056acb65e",
+      "name": "cg1",
+      "_links": {
+        "self": {
+          "href": "/api/application/consistency-groups/1c101d17-c124-11ee-bbfe-005056acb65e"
+        }
+      }
+    },
+    "uuid": "87d0e49c-c12e-11ee-bbfe-005056acb65e",
+    "name": "cg1ss",
+    "_links": {
+      "self": {
+        "href": "/api/application/consistency-groups/1c101d17-c124-11ee-bbfe-005056acb65e/snapshots/87d0e49c-c12e-11ee-bbfe-005056acb65e"
+      }
+    }
+  }
+],
+"num_records": 3,
+"_links": {
+  "self": {
+    "href": "/api/application/consistency-groups/*/snapshots"
+  }
+}
+}
+----
+
+=== Creating a crash-consistent snapshot of a consistency group
+
+Creates an on-demand crash-consistent snapshot of an existing consistency group.
+
+----
+curl -X POST 'https://<mgmt-ip>/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots' -d '{ "name": "name_of_this_snapshot", "consistency_type": "crash", "comment": "this is a manually created on-demand snapshot", "snapmirror_label": "my_special_sm_label" }' -H "accept: application/hal+json"
+
+#### Response:
+{
+}
+----
+
+=== Creating a app-consistent snapshot of a consistency group
+
+Creates an on-demand crash-consistent snapshot of an existing consistency group.
+
+----
+curl -X POST 'https://<mgmt-ip>/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots' -d '{ "name": "name_of_this_snapshot", "consistency_type": "application", "comment": "this is a manually created on-demand snapshot", "snapmirror_label": "my_special_sm_label" }' -H "accept: application/hal+json"
+
+#### Response:
+{
+}
+----
+
+=== Starting a two-phase crash-consistent snapshot creation for a consistency group
+
+Starts a two-phase on-demand crash-consistent snapshot creation for an existing consistency group.
+
+----
+curl -X POST 'https://<mgmt-ip>/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots?action=start&action_timeout=7' -d '{ "name": "name_of_this_snapshot", "consistency_type": "application", "comment": "this is a manually created on-demand snapshot", "snapmirror_label": "my_special_sm_label" }' -H "accept: application/hal+json"
+
+#### Response:
+Location: /api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots/7aac0607-0c4d-11ee-ad32-005056a73101
+{
+}
+----
+
+=== Committing a previously started two-phase crash-consistent snapshot creation for a consistency group
+
+Commits a previously started two-phase on-demand crash-consistent snapshot creation for an existing consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots/7aac0607-0c4d-11ee-ad32-005056a73101?action=commit' -H "accept: application/hal+json"
+
+#### Response:
+{
+}
+----
+
+=== Deleting a snapshot from a consistency group
+
+Deletes an existing snapshot from a consistency group.
+
+----
+curl -X DELETE 'https://<mgmt-ip>/api/application/consistency-groups/a8d0626a-17a0-11eb-b141-005056acd498/snapshots/92c6c770-17a1-11eb-b141-005056acd498'
+
+#### Response:
+{
+}
+----
+
+

@@ -1,0 +1,172 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-authentication-publickeys--.html'
+summary: 'Delete a public key for a user account'
+---
+
+= Delete a public key for a user account
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/authentication/publickeys/{owner.uuid}/{account.name}/{index}`#
+
+*Introduced In:* 9.7
+
+Deletes the public key for a user account.
+
+== Related ONTAP commands
+
+* `security login publickey delete`
+
+== Learn more
+
+* link:security_authentication_publickeys_owner.uuid_account.name_index_endpoint_overview.html[DOC /security/authentication/publickeys/{owner.uuid}/{account.name}/\{index}]
+* link:security_accounts_endpoint_overview.html[DOC /security/accounts]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Account owner UUID
+
+
+|account.name
+|string
+|path
+|True
+a|User account name
+
+
+|index
+|integer
+|path
+|True
+a|Index number for the public key (where there are multiple keys for the same account).
+
+* Max value: 99
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,297 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-authentication-cluster-saml-sp-default-metadata.html'
+summary: 'Retrieve the SAML default metadata configuration'
+---
+
+= Retrieve the SAML default metadata configuration
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/authentication/cluster/saml-sp/default-metadata`#
+
+*Introduced In:* 9.17
+
+Retrieves the SAML default metadata configuration.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|host
+|string
+|query
+|False
+a|Filter by host
+
+
+|certificate.common_name
+|string
+|query
+|False
+a|Filter by certificate.common_name
+
+
+|certificate.serial_number
+|string
+|query
+|False
+a|Filter by certificate.serial_number
+
+* maxLength: 40
+* minLength: 1
+
+
+|certificate.ca
+|string
+|query
+|False
+a|Filter by certificate.ca
+
+* maxLength: 256
+* minLength: 1
+
+
+|scope
+|string
+|query
+|False
+a|Filter by scope
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|certificate
+|link:#certificate[certificate]
+a|
+
+|host
+|string
+a|The SAML service provider host.
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "certificate": {
+    "ca": "string",
+    "common_name": "cluster1",
+    "serial_number": "1506B24A94F566BA"
+  },
+  "host": "string",
+  "scope": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|ca
+|string
+a|Server certificate issuing certificate authority (CA).  This cannot be used with the server certificate common name.
+
+
+|common_name
+|string
+a|Server certificate common name.  This cannot be used with the certificate authority (CA) or serial_number.
+
+
+|serial_number
+|string
+a|Server certificate serial number.  This cannot be used with the server certificate common name.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

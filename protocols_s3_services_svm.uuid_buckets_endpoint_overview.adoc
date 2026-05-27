@@ -1,0 +1,839 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_s3_services_svm.uuid_buckets_endpoint_overview.html'
+summary: 'Manage S3 service bucket configuration'
+---
+
+= Manage S3 service bucket configuration
+
+
+
+== Overview
+
+An S3 bucket is a container of objects. Each bucket defines an object namespace. S3 server requests specify objects using a bucket-name and object-name pair. An object consists of data, along with optional metadata and access controls, accessible via a name. An object resides within a bucket. There can be more than one bucket in an S3 server. Buckets which are created for the server are associated with an S3 user that is created on the S3 server.
+An access policy is an object that when associated with a resource, defines their permissions. Buckets and objects are defined as resources. By default, only the "root" user can access these resources. Access policies are used to manage access to these resources by enabling ONTAP admin to provide "grants" to allow other users to perform operations on the buckets.
+
+== Examples
+
+=== Retrieving all fields for all S3 buckets of an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets?fields=**&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "12f3ba4c-7ae0-11e9-8c06-0050568ea123",
+      "name": "vs1"
+    },
+    "uuid": "527812ab-7c6d-11e9-97e8-0050568ea123",
+    "name": "bucket-2",
+    "volume": {
+      "name": "fg_oss_1558514455",
+      "uuid": "51276f5f-7c6d-11e9-97e8-0050568ea123"
+    },
+    "size": 107374182400,
+    "logical_used_size": 157286400,
+    "encryption": {
+      "enabled": false
+    },
+    "comment": "S3 bucket.",
+    "qos_policy": {
+      "min_throughput_iops": 0,
+      "min_throughput_mbps": 0,
+      "max_throughput_iops": 1000,
+      "max_throughput_mbps": 50,
+      "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab52",
+      "name": "vs0_auto_gen_policy_39a9522f_ff35_11e9_b0f9_005056a7ab52"
+    },
+    "audit_event_selector": {
+      "access":"all",
+      "permission":"all"
+    },
+    "versioning-state": "disabled",
+    "snapshot-policy": {
+      "name": "default-1weekly",
+      "uuid": "f9c5f090-4ac8-11ef-ba24-005056a7ceb6"
+    },
+  },
+  {
+    "svm": {
+      "uuid": "12f3ba4c-7ae0-11e9-8c06-0050568ea123",
+      "name": "vs1"
+    },
+    "uuid": "a8234aec-7e06-11e9-97e8-0050568ea123",
+    "name": "bucket-1",
+    "volume": {
+      "name": "fg_oss_1558690256",
+      "uuid": "a36a1ea7-7e06-11e9-97e8-0050568ea123"
+    },
+    "size": 107374182400,
+    "logical_used_size": 0,
+    "encryption": {
+      "enabled": false
+    },
+    "comment": "bucket1",
+    "qos_policy": {
+      "min_throughput_iops": 0,
+      "min_throughput_mbps": 0,
+      "max_throughput_iops": 1000,
+      "max_throughput_mbps": 50,
+      "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab52",
+      "name": "vs0_auto_gen_policy_39a9522f_ff35_11e9_b0f9_005056a7ab52"
+    },
+    "policy": {
+      "statements": [
+        {
+          "effect": "allow",
+          "actions": [
+            "*"
+          ],
+          "principals": [
+            "Alice"
+          ],
+          "resources": [
+            "*"
+          ],
+          "sid": "fullAccessForAliceToBucket"
+        },
+        {
+          "effect": "allow",
+          "actions": [
+            "ListBucket",
+            "GetObject"
+          ],
+          "principals": [
+            "ann",
+            "jack"
+          ],
+          "resources": [
+            "bucket-1",
+            "bucket-1/*"
+          ],
+          "sid": "AccessToListAndGetObjectForAnnAndJack",
+          "conditions": [
+            {
+              "operator": "ip_address",
+              "source_ips": [
+                "1.1.1.1/10"
+              ]
+            },
+            {
+              "operator": "string_equals",
+              "prefixes": [
+                "pref1",
+                "pref2"
+              ],
+              "usernames": [
+                "user1",
+                "user2"
+              ],
+              "delimiters": [
+                "del1",
+                "del2"
+              ]
+            },
+            {
+              "operator": "numeric_equals",
+              "max_keys": [
+                100
+              ]
+            }
+          ]
+        },
+        {
+          "effect": "deny",
+          "actions": [
+            "*Object"
+          ],
+          "principals": [
+            "mike",
+            "group/group1",
+            "nasgroup/group2",
+          ],
+          "resources": [
+            "bucket-1/policy-docs/*",
+            "bucket-1/confidential-*"
+          ],
+          "sid": "DenyAccessToGetPutDeleteObjectForMike"
+        },
+        {
+          "effect": "allow",
+          "actions": [
+            "GetObject"
+          ],
+          "principals": [
+            "*"
+          ],
+          "resources": [
+            "bucket-1/readme"
+          ],
+          "sid": "AccessToGetObjectForAnonymousUsers"
+        },
+        {
+          "effect": "allow",
+          "actions": [
+            "GetObject"
+          ],
+          "principals": [
+          ],
+          "resources": [
+            "bucket-1/policies/examples/*"
+          ],
+          "sid": "AccessToGetObjectForAllUsersOfSVM"
+        }
+      ]
+    },
+    "cors": {
+      "rules": [
+        {
+          "id": "string",
+          "allowed_origins": [
+            "http://www.example.com"
+          ],
+          "allowed_methods": [
+            "PUT",
+            "DELETE"
+          ],
+          "allowed_headers": [
+            "x-amz-request-id"
+          ],
+          "expose_headers": [
+            "http://www.example.com"
+          ],
+          "max_age_seconds": 1024
+        }
+      ]
+    }
+  }
+],
+"num_records": 2
+}
+----
+
+=== Retrieving the specified bucket associated with an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/527812ab-7c6d-11e9-97e8-0050568ea123" -H "accept: application/json"
+
+# The response:
+{
+"svm": {
+  "uuid": "12f3ba4c-7ae0-11e9-8c06-0050568ea123",
+  "name": "vs1"
+},
+"uuid": "527812ab-7c6d-11e9-97e8-0050568ea123",
+"name": "bucket-2",
+"volume": {
+  "name": "fg_oss_1558514455",
+  "uuid": "51276f5f-7c6d-11e9-97e8-0050568ea123"
+},
+"size": 107374182400,
+"logical_used_size": 157286400,
+"encryption": {
+  "enabled": false
+},
+"comment": "S3 bucket.",
+"qos_policy": {
+  "min_throughput_iops": 0,
+  "min_throughput_mbps": 0,
+  "max_throughput_iops": 1000,
+  "max_throughput_mbps": 0,
+  "uuid": "39ac471f-ff35-11e9-b0f9-005056a7ab52",
+  "name": "vs0_auto_gen_policy_39a9522f_ff35_11e9_b0f9_005056a7ab52"
+},
+"snapshot-policy": {
+  "name": "default-1weekly",
+  "uuid": "f9c5f090-4ac8-11ef-ba24-005056a7ceb6"
+},
+"snapshot_restore": {
+  "name": "snap1",
+  "state": "restoring",
+  "progress": 80,
+  "objects_remaining": 300
+},
+}
+----
+
+=== Creating an S3 bucket for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"aggregates\": [ { \"name\": \"aggr5\", \"uuid\": \"12f3ba4c-7ae0-11e9-8c06-0050568ea123\" } ], \"comment\": \"S3 bucket.\", \"constituents_per_aggregate\": 4, \"name\": \"bucket-3\"}"
+
+
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/?name=bucket-3
+Content-Length: 353
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "bucket-3",
+    "comment": "S3 bucket."
+  }
+],
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Creating an S3 bucket along with QoS policies and event selector for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"comment\": \"S3 bucket.\", \"name\": \"bucket-3\", \"qos_policy\": { \"min_throughput_iops\": 0, \"min_throughput_mbps\": 0, \"max_throughput_iops\": 1000000, \"max_throughput_mbps\": 900000, \"uuid\": \"02d07a93-6177-11ea-b241-000c293feac8\", \"name\": \"vs0_auto_gen_policy_02cfa02a_6177_11ea_b241_000c293feac8\" },  \"audit_event_selector\": { \"access\": \"all\", \"permission\": \"all\"}}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/?name=bucket-3
+Content-Length: 353
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "bucket-3",
+    "comment": "S3 bucket."
+  }
+],
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Creating an S3 bucket along with policies for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"aggregates\": [ { \"name\": \"aggr5\", \"uuid\": \"12f3ba4c-7ae0-11e9-8c06-0050568ea123\" } ], \"comment\": \"S3 bucket.\", \"constituents_per_aggregate\": 4, \"name\": \"bucket-3\", \"policy\": { \"statements\": [ { \"actions\": [ \"GetObject\" ], \"conditions\": [ { \"operator\": \"ip_address\", \"source_ips\": [ \"1.1.1.1/23\", \"1.2.2.2/20\" ] }, { \"max_keys\": [ 1000 ], \"operator\": \"numeric_equals\" }, { \"delimiters\": [ \"/\" ], \"operator\": \"string_equals\", \"prefixes\": [ \"pref\" ], \"usernames\": [ \"user1\" ] } ], \"effect\": \"allow\", \"resources\": [ \"bucket-3/policies/examples/*\" ], \"sid\": \"AccessToGetObjectForAllUsersofSVM\" }, { \"actions\": [ \"*Object\" ], \"effect\": \"deny\", \"principals\": [ \"mike\", \"group/grp1\" ], \"resources\": [ \"bucket-3/policy-docs/*\", \"bucket-3/confidential-*\" ], \"sid\": \"DenyAccessToObjectForMike\" }, { \"actions\": [ \"GetObject\" ], \"effect\": \"allow\", \"principals\": [ \"*\" ], \"resources\": [ \"bucket-3/readme\" ], \"sid\": \"AnonymousAccessToGetObjectForUsers\" } ] } }"
+
+
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/?name=bucket-3
+Content-Length: 353
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "bucket-3",
+    "comment": "S3 bucket."
+  }
+],
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Creating an S3 bucket along with lifecycle management rules
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"aggregates\": [ { \"name\": \"aggr5\", \"uuid\": \"12f3ba4c-7ae0-11e9-8c06-0050568ea123\" } ], \"comment\": \"S3 bucket.\", \"constituents_per_aggregate\": 4, \"name\": \"bucket-4\", \"lifecycle_management\": { \"rules\": [ { \"name\": \"rule1\", \"expiration\": { \"object_age_days\" : \"1000\" } , \"abort_incomplete_multipart_upload\" : { \"after_initiation_days\" : 200 } , \"object_filter\": { \"prefix\" : \"obj1*/\" ,  \"size_greater_than\" : \"1000\" } }, { \"name\": \"rule2\", \"object_filter\": { \"size_greater_than\" : \"50\" }, \"expiration\": { \"object_age_days\" : \"5000\" } } ] } }"
+
+
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 18 April 2022 11:22:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/?name=bucket-4
+Content-Length: 363
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "bucket-4",
+    "comment": "S3 bucket."
+  }
+],
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Creating an S3 bucket with object locking enabled for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea143/buckets?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"aggregates\": [ { \"name\": \"aggr5\", \"uuid\": \"12f3ba4c-7ae0-11e9-8c06-0050568ea143\" } ], \"comment\": \"S3 Compliance mode bucket.\", \"constituents_per_aggregate\": 4, \"name\": \"bucket-5\", \"retention\": { \"mode\": \"compliance\", \"default_period\" : \"P1Y\" } }"
+
+
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2023 11:25:14 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea143/buckets/?name=bucket-5
+Content-Length: 353
+Content-Type: application/json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "bucket-5",
+    "comment": "S3 Compliance mode bucket."
+  }
+],
+"job": {
+  "uuid": "2e880171-7e16-11e9-bfdc-0050568ea143",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/2e880171-7e16-11e9-bfdc-0050568ea143"
+    }
+  }
+}
+}
+----
+
+=== Creating an S3 bucket with CORS rules for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/protocols/s3/services/2da46d66-2327-11ef-ab73-005056a7a2dd/buckets?return_timeout=0&return_records=true" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>" -H  "Content-Type: application/json" -d "{  \"cors\": { \"rules\": [{ \"allowed_headers\": [ \"x-amz-request-id\" ], \"allowed_methods\": [ \"PUT\", \"DELETE\" ], \"allowed_origins\": [ \"http://www.example.com\" ], \"expose_headers\": [ \"http://www.example.com\" ], \"id\": \"id1\", \"max_age_seconds\": 1024 }]}, \"name\": \"bucket1\"}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Thu, 06 Jun 2024 09:18:26 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors: 'self'
+Location: /api/protocols/s3/services/2da46d66-2327-11ef-ab73-005056a7a2dd/buckets/baf69601-23e5-11ef-ab73-005056a7a2dd
+Content-Length: 871
+Content-Type: application/json
+Vary: Origin
+{
+"num_records": 1,
+"records": [
+  {
+    "uuid": "baf69601-23e5-11ef-ab73-005056a7a2dd",
+    "name": "bucket1",
+    "type": "s3",
+    "cors": {
+      "rules": [
+        {
+          "id": "id1",
+          "allowed_origins": [
+            "http://www.example.com"
+          ],
+          "allowed_methods": [
+            "PUT",
+            "DELETE"
+          ],
+          "allowed_headers": [
+            "x-amz-request-id"
+          ],
+          "expose_headers": [
+            "http://www.example.com"
+          ],
+          "max_age_seconds": 1024
+        }
+      ]
+    }
+  }
+],
+"job": {
+  "uuid": "baf69953-23e5-11ef-ab73-005056a7a2dd",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/baf69953-23e5-11ef-ab73-005056a7a2dd"
+    }
+  }
+}
+}
+----
+
+=== Creating an S3 bucket with a snapshot-policy
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets
+
+# The call:
+curl -iku admin:<password> -X POST "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea143/buckets?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"comment\": \"S3 snapshot policy bucket.\", \"snapshot_policy\": { \"name\": \"default-1weekly\", \"uuid\": \"f9c5f090-4ac8-11ef-ba24-005056a7ceb6\" }, \"name\": \"bucket-6\" }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Thu, 25 Jul 2024 16:40:37 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Location: /api/protocols/s3/services/8c38f10b-4871-11ef-aab5-005056a7ceb6/buckets/9f21f404-4aa4-11ef-ba24-005056a7ceb6
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "9f21f716-4aa4-11ef-ba24-005056a7ceb6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9f21f716-4aa4-11ef-ba24-005056a7ceb6"
+    }
+  }
+}
+}
+----
+
+=== Updating an S3 bucket for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/754389d0-7e13-11e9-bfdc-0050568ea122" -H "accept: application/json?return_records=true" -H "Content-Type: application/json" -d "{ \"comment\": \"Bucket modified.\", \"size\": 111111111111,  \"qos_policy\": { \"min_throughput_iops\": 0, \"min_throughput_mbps\": 0, \"max_throughput_iops\": 1000000, \"max_throughput_mbps\": 900000, \"uuid\": \"02d07a93-6177-11ea-b241-000c293feac8\", \"name\": \"vs0_auto_gen_policy_02cfa02a_6177_11ea_b241_000c293feac8\"}}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "9beafabb-7e17-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9beafabb-7e17-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Updating an S3 bucket policy and event selector for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets/754389d0-7e13-11e9-bfdc-0050568ea122?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"policy\": { \"statements\": [ { \"actions\": [ \"*\" ], \"conditions\": [ { \"operator\": \"ip_address\", \"source_ips\": [ \"1.1.1.1/23\", \"1.2.2.2/20\" ] }, { \"max_keys\": [ 1000 ], \"operator\": \"numeric_equals\" }, { \"delimiters\": [ \"/\" ], \"operator\": \"string_equals\", \"prefixes\": [ \"pref\" ], \"usernames\": [ \"user1\" ] } ], \"effect\": \"allow\", \"resources\": [ \"*\" ], \"sid\": \"fullAccessForAllPrincipalsToBucket\"} ] }, \"audit_event_selector\": { \"access\": \"read\", \"permission\": \"deny\"} }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "9beafabb-7e17-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9beafabb-7e17-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Updating the default-retention period on an S3 bucket for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets/754389d0-7e13-11e9-bfdc-0050568ea122?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"retention\": { \"default_period\" : \"P10Y\" } }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2023 11:35:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "9beafabb-7e17-11e9-bfdc-0050568ea143",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9beafabb-7e17-11e9-bfdc-0050568ea143"
+    }
+  }
+}
+}
+----
+
+=== Updating the CORS rules of an S3 bucket for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/2da46d66-2327-11ef-ab73-005056a7a2dd/buckets/dce4e40-2330-11ef-ab73-005056a7a2dd?return_timeout=0" -H  "accept: application/json" -H  "authorization: Basic <CREDENTIALS>" -H  "Content-Type: application/json" -d "{ \"cors\": { \"rules\": [{ \"allowed_headers\": [ \"x-amz-new-header\" ], \"allowed_methods\": [ \"PUT\" ], \"allowed_origins\": [ \"http://www.example.in\" ], \"expose_headers\": [ \"http://www.example\" ], \"id\": \"id3\", \"max_age_seconds\": 10 }]}}"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Thu, 06 Jun 2024 09:30:57 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors: 'self'
+Content-Length: 189
+Content-Type: application/json
+Vary: Origin
+{
+"job": {
+  "uuid": "7aaa2b64-23e7-11ef-ab73-005056a7a2dd",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/7aaa2b64-23e7-11ef-ab73-005056a7a2dd"
+    }
+  }
+}
+}
+----
+
+=== Updating the snapshot-policy for an S3 bucket for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets/754389d0-7e13-11e9-bfdc-0050568ea122?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"snapshot_policy\": { \"name\": \"default-1weekly\", \"uuid\": \"f9c5f090-4ac8-11ef-ba24-005056a7ceb6\" } }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Thu, 25 Jul 2024 16:56:44 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "df350023-4aa6-11ef-ba24-005056a7ceb6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/df350023-4aa6-11ef-ba24-005056a7ceb6"
+    }
+  }
+}
+}
+----
+
+=== Restoring a snapshot for an S3 bucket
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}?restore_to.snapshot.name={snapshot.name}
+
+# The call:
+curl -iku admin:<password> -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/754389d0-7e13-11e9-bfdc-0050568ea122?restore_to.snapshot.name=snap1" -H "accept: application/json" -H "Content-Type: application/json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Thu, 25 Jul 2024 16:56:44 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "df350023-4aa6-11ef-ba24-005056a7ceb6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/df350023-4aa6-11ef-ba24-005056a7ceb6"
+    }
+  }
+}
+}
+----
+
+=== Deleting an S3 bucket policy for an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets/754389d0-7e13-11e9-bfdc-0050568ea122?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"policy\": { \"statements\": [ ] } }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "9beafabb-7e17-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9beafabb-7e17-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Deleting CORS rules for an S3 bucket in an SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/3e538980-f0af-11e9-ba68-0050568e9798/buckets/754389d0-7e13-11e9-bfdc-0050568ea122?return_records=true" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"cors\": { \"rules\": [ ] } }"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2024 11:32:27 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "9beafabb-7e17-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/9beafabb-7e17-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+=== Deleting an S3 bucket for a specified SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/buckets/{uuid}
+
+# The call:
+curl -iku admin:<password> -X DELETE "https://<mgmt-ip>/api/protocols/s3/services/12f3ba4c-7ae0-11e9-8c06-0050568ea123/buckets/754389d0-7e13-11e9-bfdc-0050568ea123?return_records=true" -H "accept: application/json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 24 May 2019 11:40:17 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/json
+{
+"job": {
+  "uuid": "b3af4a54-7e18-11e9-bfdc-0050568ea123",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/b3af4a54-7e18-11e9-bfdc-0050568ea123"
+    }
+  }
+}
+}
+----
+
+

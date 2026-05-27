@@ -1,0 +1,91 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_multi-admin-verify_requests_index_endpoint_overview.html'
+summary: 'Manage a multi-admin-verify approval request'
+---
+
+= Manage a multi-admin-verify approval request
+
+
+
+== Overview
+
+These APIs provide information about a specific multi-admin verification request.
+If you need to execute a command that is protected by a multi-admin rule, you must first submit a request to be allowed to execute the command.
+The request must then be approved by the designated approvers according to the rule associated with the command.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving a multi-admin-verify request
+
+Retrieves information about a specific multi-admin verification request.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/requests/{index}
+
+# The call:
+curl -X GET "https://<cluster-ip>/api/security/multi-admin-verify/requests/1"
+
+# The response:
+{
+"index": 1,
+"operation": "security multi-admin-verify modify",
+"query": "",
+"state": "expired",
+"required_approvers": 1,
+"pending_approvers": 1,
+"execute_on_approval": false,
+"permitted_users": [
+  "example_user"
+],
+"user_requested": "admin",
+"owner": {
+  "uuid": "c1483186-6e73-11ec-bc92-005056a7ad04",
+  "name": "cluster1",
+  "_links": {
+    "self": {
+      "href": "/api/svm/svms/c1483186-6e73-11ec-bc92-005056a7ad04"
+    }
+  }
+},
+"create_time": "2022-01-05T20:07:09-05:00",
+"approve_expiry_time": "2022-01-05T21:07:09-05:00",
+"_links": {
+  "self": {
+    "href": "/api/security/multi-admin-verify/requests/1"
+  }
+}
+}
+----
+
+'''
+
+=== Updating a multi-admin-verify request
+
+Updates a specific multi-admin-verify request
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/multi-admin-verify/requests/{index}
+
+# The call:
+curl -X PATCH "https://<cluster-ip>/api/security/multi-admin-verify/requests/1" -d '{"state": "approved", "execute_on_approval": false}'
+----
+
+'''
+
+

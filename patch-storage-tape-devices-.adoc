@@ -1,0 +1,622 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-storage-tape-devices-.html'
+summary: 'Update a tape device'
+---
+
+= Update a tape device
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/storage/tape-devices/{node.uuid}/{device_id}`#
+
+*Introduced In:* 9.11
+
+Updates a specific tape device.
+
+== Related ONTAP commands
+
+* `storage tape alias-set`
+* `storage tape alias-clear`
+* `storage tape online`
+* `storage tape offline`
+* `storage tape position`
+
+== Learn more
+
+* link:storage_tape-devices_endpoint_overview.html[DOC /storage/tape-devices]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID
+
+
+|device_id
+|string
+|path
+|True
+a|Device ID
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|link:#alias[alias]
+a|
+
+|aliases
+|array[link:#aliases[aliases]]
+a|
+
+|block_number
+|integer
+a|Block number.
+
+
+|density
+|string
+a|Density.
+
+
+|description
+|string
+a|
+
+|device_id
+|string
+a|
+
+|device_names
+|array[link:#device_names[device_names]]
+a|
+
+|device_state
+|string
+a|Operational state of the device.
+
+
+|file_number
+|integer
+a|File number.
+
+
+|formats
+|array[string]
+a|Tape cartridge format.
+
+
+|interface
+|string
+a|Device interface type.
+
+
+|node
+|link:#node[node]
+a|
+
+|online
+|boolean
+a|
+
+|position
+|link:#position[position]
+a|
+
+|reservation_type
+|string
+a|
+
+|residual_count
+|integer
+a|Residual count of the last I/O operation.
+
+
+|serial_number
+|string
+a|
+
+|storage_port
+|link:#storage_port[storage_port]
+a|
+
+|type
+|string
+a|Device type.
+
+
+|wwnn
+|string
+a|World Wide Node Name.
+
+
+|wwpn
+|string
+a|World Wide Port Name.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "alias": {
+    "mapping": "SN[10WT000933]",
+    "name": "st6"
+  },
+  "aliases": [
+    {
+      "mapping": "SN[10WT000933]",
+      "name": "st6"
+    }
+  ],
+  "block_number": 0,
+  "density": "low",
+  "description": "QUANTUM LTO-8 ULTRIUM",
+  "device_id": "1a.0",
+  "device_names": [
+    {
+      "no_rewind_device": "nrst6l",
+      "rewind_device": "rst6l",
+      "unload_reload_device": "urst6l"
+    }
+  ],
+  "device_state": "read_write_enabled",
+  "file_number": 0,
+  "formats": [
+    "LTO-7 6TB",
+    "LTO-7 15TB Compressed",
+    "LTO-8 12TB",
+    "LTO-8 30TB Compressed"
+  ],
+  "interface": "sas",
+  "node": {
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "position": {
+    "count": 5,
+    "operation": "rewind"
+  },
+  "reservation_type": "off",
+  "residual_count": 0,
+  "serial_number": "10WT00093",
+  "storage_port": {
+    "name": "2b"
+  },
+  "type": "tape",
+  "wwnn": "500507631295741c",
+  "wwpn": "500507631295741c"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 11403264
+| Tape operation "+++<operation>+++\" failed on tape device \"+++<device_id>+++\". This may indicate tape reached end of data, a hardware error, an illegal request, an invalid name format, or an aborted command.+++</device_id>++++++</operation>+++
+
+| 11403265
+| Tape operation  "+++<operation>+++\" failed because it encountered an unexpected file mark on tape device \"+++<device_id>+++\".+++</device_id>++++++</operation>+++
+
+| 11403266
+| Internal error. Unknown tape parameter for tape device "+++<device_id>+++\".+++</device_id>+++
+
+| 11403267
+| Tape device "+++<device_id>+++\" is busy.+++</device_id>+++
+
+| 11403268
+| No tape loaded for "+++<operation>+++\" operation on tape drive \"+++<device_id>+++\".+++</device_id>++++++</operation>+++
+
+| 11403269
+| Tape device "+++<device_id>+++\" unknown.+++</device_id>+++
+
+| 11403270
+| Tape alias name "+++<alias>+++\" already exists.+++</alias>+++
+
+| 11403271
+| The format of the tape alias name "+++<alias>+++\" is invalid. Use \"st\" or \"mc\" followed by one or more digits.+++</alias>+++
+
+| 11403273
+| Internal error. Tape alias name "+++<alias>+++\" not saved.+++</alias>+++
+
+| 11403274
+| Internal error. Tape alias operation "+++<operation>+++\" for alias name \"+++<alias>+++\" failed.+++</alias>++++++</operation>+++
+
+| 11403275
+| Tape alias name "+++<alias>+++\" not found.+++</alias>+++
+
+| 11403277
+| Tape device "+++<device_id>+++\" is reserved by another host.+++</device_id>+++
+
+| 11403278
+| Invalid count value specified with operation "+++<operation>+++\". Valid values are from 0 to \{1}.+++</operation>+++
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#alias]
+[.api-collapsible-fifth-title]
+alias
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mapping
+|string
+a|This field will no longer be supported in a future release. Use aliases.mapping instead.
+
+
+|name
+|string
+a|This field will no longer be supported in a future release. Use aliases.name instead.
+
+
+|===
+
+
+[#aliases]
+[.api-collapsible-fifth-title]
+aliases
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mapping
+|string
+a|Alias mapping.
+
+
+|name
+|string
+a|Alias name.
+
+
+|===
+
+
+[#device_names]
+[.api-collapsible-fifth-title]
+device_names
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|no_rewind_device
+|string
+a|Device name for no rewind.
+
+
+|rewind_device
+|string
+a|Device name for rewind.
+
+
+|unload_reload_device
+|string
+a|Device name for unload or reload operations.
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#position]
+[.api-collapsible-fifth-title]
+position
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|count
+|integer
+a|Number of times to run position operation.
+
+
+|operation
+|string
+a|Position operation.
+
+
+|===
+
+
+[#storage_port]
+[.api-collapsible-fifth-title]
+storage_port
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|Initiator port.
+
+
+|===
+
+
+[#tape_device]
+[.api-collapsible-fifth-title]
+tape_device
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|alias
+|link:#alias[alias]
+a|
+
+|aliases
+|array[link:#aliases[aliases]]
+a|
+
+|block_number
+|integer
+a|Block number.
+
+
+|density
+|string
+a|Density.
+
+
+|description
+|string
+a|
+
+|device_id
+|string
+a|
+
+|device_names
+|array[link:#device_names[device_names]]
+a|
+
+|device_state
+|string
+a|Operational state of the device.
+
+
+|file_number
+|integer
+a|File number.
+
+
+|formats
+|array[string]
+a|Tape cartridge format.
+
+
+|interface
+|string
+a|Device interface type.
+
+
+|node
+|link:#node[node]
+a|
+
+|online
+|boolean
+a|
+
+|position
+|link:#position[position]
+a|
+
+|reservation_type
+|string
+a|
+
+|residual_count
+|integer
+a|Residual count of the last I/O operation.
+
+
+|serial_number
+|string
+a|
+
+|storage_port
+|link:#storage_port[storage_port]
+a|
+
+|type
+|string
+a|Device type.
+
+
+|wwnn
+|string
+a|World Wide Node Name.
+
+
+|wwpn
+|string
+a|World Wide Port Name.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

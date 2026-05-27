@@ -1,0 +1,120 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'cluster_web_endpoint_overview.html'
+summary: 'View and update cluster web configurations'
+---
+
+= View and update cluster web configurations
+
+
+
+= Overview
+
+You can use this API to update web services configurations and to retrieve current configurations.
+
+== Retrieving the current web services configuration
+
+The cluster web GET API retrieves the current cluster-wide configuration.
+
+== Updating the current web services configuration
+
+The cluster web PATCH API updates the current cluster-wide configuration.
+
+Once updated, ONTAP restarts the web services to apply the
+changes.
+
+When updating the certificate, the certificate UUID of an existing certificate known to ONTAP must
+be provided. The certificate must be of type "server".
+
+A "client-ca" certificate must be installed on ONTAP to enable "client_enabled".
+
+The following fields can be used to update the cluster-wide configuration:
+
+* enabled
+* http_port
+* https_port
+* http_enabled
+* csrf.protection_enabled
+* csrf.token.concurrent_limit
+* csrf.token.idle_timeout
+* csrf.token.max_timeout
+* certificate.uuid
+* client_enabled
+* ocsp_enabled
+* hsts.enabled
+* hsts.max_age
+
+== Examples
+
+=== Retrieving the cluster-wide web services configuration
+
+[,json]
+----
+
+# API:
+GET /api/cluster/web
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/cluster/web" -H "accept: application/hal+json"
+
+# The response:
+{
+"enabled": true,
+"http_port": 80,
+"https_port": 443,
+"state": "online",
+"http_enabled": false,
+"csrf": {
+  "protection_enabled": true,
+  "token": {
+    "concurrent_limit": 500,
+    "idle_timeout": 900,
+    "max_timeout": 650
+  }
+},
+"certificate": {
+  "uuid": "a3bb219d-4382-1fe0-9c06-1070568ea23d",
+  "name": "cert1",
+  "_links": {
+    "self": {
+      "href": "/api/security/certificates/a3bb219d-4382-1fe0-9c06-1070568ea23d"
+    }
+  }
+},
+"client_enabled": false,
+"ocsp_enabled": false,
+"hsts": {
+  "enabled": true,
+  "max_age": 31536000
+},
+"_links": {
+  "self": {
+    "href": "/api/cluster/web"
+  }
+}
+}
+----
+
+=== Updating the cluster-wide web services configuration
+
+[,json]
+----
+
+# The API:
+PATCH /api/cluster/web
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/cluster/web" -d '{ "https_port": 446, "csrf": { "token": { "concurrent_limit": 600 } } }' -H "accept: application/hal+json"
+
+# The response:
+HTTP/1.1 202 Accepted
+Date: Fri, 28 May 2021 09:36:43 GMT
+Server: libzapid-httpd
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 189
+Content-Type: application/hal+json
+----
+
+

@@ -1,0 +1,375 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-software-download.html'
+summary: 'Download a software or firmware package'
+---
+
+= Download a software or firmware package
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/software/download`#
+
+*Introduced In:* 9.6
+
+Downloads a software or firmware package from the server.
+
+== Required properties
+
+* `url` - URL location of the software package
+
+== Recommended optional parameters
+
+* `username` - Username of HTTPS/FTP server
+* `password` - Password of HTTPS/FTP server
+
+== Related ONTAP commands
+
+* `cluster image package get`
+
+== Learn more
+
+* link:cluster_software_download_endpoint_overview.html[DOC /cluster/software/download]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code returned corresponds to a download message.
+
+
+|message
+|string
+a|Download progress details.
+
+
+|password
+|string
+a|Password for download
+
+
+|state
+|string
+a|Download status of the package.
+
+
+|url
+|string
+a|HTTP or FTP URL of the package through a server
+
+
+|username
+|string
+a|Username for download
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "code": 10551382,
+  "message": "Package download in progress",
+  "password": "admin_password",
+  "state": "success",
+  "url": "http://server/package",
+  "username": "admin"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10551327
+| Package image with the same name already exists.
+
+| 10551357
+| Cannot perform an update when a previous update is still in progress.
+
+| 10551359
+| Internal error. Failed to process the package after download completed. Try uploading the file again or contact technical support for assistance.
+
+| 10551381
+| Package download failed.
+
+| 10551382
+| Package download is still running.
+
+| 10551384
+| Package download has not started.
+
+| 10551391
+| Internal error. Contact technical support for assistance.
+
+| 10551392
+| Internal error. Contact technical support for assistance.
+
+| 10551496
+| Firmware file already exists.
+
+| 10551797
+| Internal error. Failed to check if file upload is enabled. Contact technical support for assistance.
+
+| 10551859
+| Failed to set primary and secondary nodes to store new image.
+
+| 10551885
+| Package download failed due to invalid url.
+
+| 10551892
+| Package download failed due to an unhealthy node. Restore the node to a healthy state, then retry the operation.
+
+| 39387137
+| Invalid URL syntax was provided. Retry with a valid URL.
+
+| 39387138
+| Unsupported URL scheme provided. Retry with one of FILE://, FTP://, or HTTPS://.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#software_package_download]
+[.api-collapsible-fifth-title]
+software_package_download
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|integer
+a|Code returned corresponds to a download message.
+
+
+|message
+|string
+a|Download progress details.
+
+
+|password
+|string
+a|Password for download
+
+
+|state
+|string
+a|Download status of the package.
+
+
+|url
+|string
+a|HTTP or FTP URL of the package through a server
+
+
+|username
+|string
+a|Username for download
+
+
+|===
+
+
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

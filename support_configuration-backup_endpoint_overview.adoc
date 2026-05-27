@@ -1,0 +1,79 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'support_configuration-backup_endpoint_overview.html'
+summary: 'Manage cluster configuration backup information'
+---
+
+= Manage cluster configuration backup information
+
+
+
+== Overview
+
+This API retrieves the current settings for the configuration and updates configuration backup settings. The GET operation retrieves the current settings for the configuration and the PATCH operation updates the configuration backup settings.
+
+== Examples
+
+These examples show how to retrieve and update the configuration backup settings.
+
+=== Retrieving the configuration backup settings
+
+'''
+
+----
+
+# The API:
+/api/support/configuration-backup
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/support/configuration-backup" -H "accept: application/hal+json"
+
+# The response:
+{
+  "url": "http://10.224.65.198/backups",
+  "username": "me",
+  "_links": {
+      "self": {
+          "href": "/api/support/configuration-backup"
+      }
+  }
+}
+----
+
+'''
+
+=== Updating the configuration backup settings
+
+'''
+
+----
+
+# The API:
+/api/support/configuration-backup
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/support/configuration-backup" -H "accept: application/hal+json"
+
+# The body:
+{
+  "url": "https://10.224.65.198/new_backups",
+  "username": "new_me",
+  "password": "new_pass",
+  "validate_certificate": "true",
+  "rest_method": "post"
+}
+
+# The response header:
+HTTP/1.1 200 OK
+Date: Tue, 05 Jun 2018 18:17:48 GMT
+Server: libzapid-httpd
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 3
+Content-Type: application/hal+json
+----
+
+'''
+
+

@@ -1,0 +1,174 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'protocols_cifs_session_files_endpoint_overview.html'
+summary: 'View CIFS active file sessions'
+---
+
+= View CIFS active file sessions
+
+
+
+== Overview
+
+ONTAP `cifs sessions file show` functionality is used to provide a list of currently opened files.<h2/>
+
+=== Information on the open files
+
+* Lists all files opened in current session.
+
+== Example
+
+=== Retrieving established open file information
+
+To retrieve the list of open files, use the following API. Note that _return_records=true_.
+
+'''
+
+----
+
+# The API:
+GET /protocols/cifs/session/files
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/cifs/session/files?fields=*&return_timeout=15&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+                {
+                           "node": {
+                             "uuid": "a5f65ec0-3550-11ee-93c5-005056ae78de",
+                             "name": "sti220-vsim-sr050u"
+                            },
+                            "svm": {
+                              "name": "vs0",
+                              "uuid": "80e795f4-3553-11ee-9f97-005056ae78de"
+                            },
+                            "identifier": 109,
+                            "connection": {
+                              "identifier": 103985,
+                              "count": 1
+                            },
+                            "session": {
+                              "identifier": 10878444899913433090
+                            },
+                            "type": "regular",
+                            "open_mode": "r",
+                            "volume": {
+                              "uuid": "8384f6ae-3553-11ee-a3c3-005056ae0dd5",
+                              "name": "root_vs0"
+                            },
+                            "share": {
+                              "name": "sh1",
+                              "mode": "r"
+                            },
+                            "path": "first_file.txt",
+                            "continuously_available": "no",
+                            "range_locks_count": 0
+                },
+                {
+                            "node": {
+                              "uuid": "a5f65ec0-3550-11ee-93c5-005056ae78de",
+                              "name": "sti220-vsim-sr050u"
+                            },
+                            "svm": {
+                              "name": "vs0",
+                              "uuid": "80e795f4-3553-11ee-9f97-005056ae78de"
+                            },
+                            "identifier": 110,
+                            "connection": {
+                              "identifier": 103985,
+                              "count": 1
+                            },
+                            "session": {
+                              "identifier": 10878444899913433090
+                            },
+                            "type": "regular",
+                            "open_mode": "r",
+                            "volume": {
+                              "uuid": "8384f6ae-3553-11ee-a3c3-005056ae0dd5",
+                              "name": "root_vs0"
+                             },
+                             "share": {
+                               "name": "sh1",
+                               "mode": "r"
+                             },
+                             "path": "second_file.txt",
+                             "continuously_available": "no",
+                             "range_locks_count": 0
+                }
+           ],
+           "num_records": 2
+}
+----
+
+'''
+
+=== Retrieving specific open file Information
+
+'''
+
+----
+
+# The API:
+GET /protocols/cifs/session/files/{node.uuid}/{svm.uuid}/{file.identifier}/{connection.identifier}/{session_id}
+
+# The call:
+curl -X GET "https://<cluster-mgmt-ip>/api/protocols/cifs/session/files/a5f65ec0-3550-11ee-93c5-005056ae78de/80e795f4-3553-11ee-9f97-005056ae78de/109/103985/10878444899913433090"
+
+# The response:
+        {
+              "node": {
+                "uuid": "a5f65ec0-3550-11ee-93c5-005056ae78de",
+                "name": "sti220-vsim-sr050u"
+              },
+              "svm": {
+                "uuid": "80e795f4-3553-11ee-9f97-005056ae78de",
+                "name": "vs0"
+              },
+              "identifier": 109,
+              "connection": {
+                "identifier": 103985,
+                "count": 1
+              },
+              "session": {
+                "identifier": 10878444899913433000
+              },
+              "type": "regular",
+              "open_mode": "r",
+              "volume": {
+                "uuid": "8384f6ae-3553-11ee-a3c3-005056ae0dd5",
+                "name": "root_vs0"
+              },
+              "share": {
+                "name": "sh1",
+                "mode": "r"
+              },
+              "path": "first_file.txt",
+              "continuously_available": "no",
+              "range_locks_count": 0
+        }
+----
+
+'''
+
+=== Closing a specific file based on `file.identifier`, `connection.identifier` and `session_id`
+
+The file being closed is identified by the UUID of its SVM, the corresponding file.identifier, connection.identifier and session_id.
+
+'''
+
+----
+
+# The API:
+DELETE /protocols/cifs/session/files/{node.uuid}/{svm.uuid}/{file.identifier}/{connection.identifier}/{session_id}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/protocols/cifs/session/files/a5f65ec0-3550-11ee-93c5-005056ae78de/80e795f4-3553-11ee-9f97-005056ae78de/109/103985/10878444899913433090" -H "accept: application/json"
+----
+
+'''
+
+

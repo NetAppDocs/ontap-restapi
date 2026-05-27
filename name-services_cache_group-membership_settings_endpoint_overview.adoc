@@ -1,0 +1,103 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'name-services_cache_group-membership_settings_endpoint_overview.html'
+summary: 'Manage group membership cache settings'
+---
+
+= Manage group membership cache settings
+
+
+
+== Overview
+
+This API is used to retrieve and manage group-membership cache settings.
+
+== Examples
+
+=== Retrieving group-membership cache settings
+
+'''
+
+The following example shows how to use the cache group-membership settings GET endpoint to retrieve group-membership cache settings.
+
+----
+
+# The API:
+GET /api/name-services/cache/group-membership/settings
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/cache/group-membership/settings?fields=*" -H "accept: application/hal+json"
+
+# The response:
+{
+"records": [
+  {
+    "svm": {
+      "uuid": "8a1a8730-2036-11ec-8457-005056bbcfdb",
+      "name": "vs43"
+    },
+    "enabled": true,
+    "ttl": "PT1H"
+  },
+  {
+    "svm": {
+      "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+      "name": "vs34"
+    },
+    "enabled": true,
+    "ttl": "PT5M"
+  }
+],
+"num_records": 2
+}
+----
+
+'''
+
+=== Retrieving group-membership cache settings for a given SVM
+
+'''
+
+The following example shows how to use the cache group-membership settings GET endpoint to retrieve group-membership cache settings for a given SVM.
+
+----
+
+# The API:
+GET /api/name-services/cache/group-membership/settings/{svm.uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/name-services/cache/group-membership/settings/dc458b2f-2035-11ec-bfe2-005056bb6bef" -H "accept: application/hal+json"
+
+# The response:
+{
+"svm": {
+  "uuid": "dc458b2f-2035-11ec-bfe2-005056bb6bef",
+  "name": "vs34"
+},
+"enabled": true,
+"ttl": "PT1H"
+}
+----
+
+'''
+
+=== Updating a group-membership cache setting
+
+'''
+
+The following example shows how to use the cache group-membership settings PATCH endpoint to update a group-membership setting.
+
+----
+
+# The API:
+PATCH /api/name-services/cache/group-membership/settings/{svm.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/name-services/cache/unix-user/settings/02c9e252-41be-11e9-81d5-00a0986138f9" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"enabled\": \"false\" }"
+----
+
+'''
+
+

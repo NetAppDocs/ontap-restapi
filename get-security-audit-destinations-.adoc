@@ -1,0 +1,301 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-audit-destinations-.html'
+summary: 'Retrieve the remote syslog or splunk server information'
+---
+
+= Retrieve the remote syslog or splunk server information
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/audit/destinations/{address}/{port}`#
+
+*Introduced In:* 9.6
+
+Defines a remote syslog/splunk server for sending audit information to.
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|address
+|string
+|path
+|True
+a|IP address of remote syslog/splunk server.
+
+
+|port
+|integer
+|path
+|True
+a|Port number of remote syslog/splunk server.
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|Destination syslog\|splunk host to forward audit records to. This can be an IP address (IPv4\|IPv6) or a hostname.
+
+
+|facility
+|string
+a|This is the standard Syslog Facility value that is used when sending audit records to a remote server.
+
+
+|hostname_format_override
+|string
+a|Syslog Hostname Format Override
+
+
+|ipspace
+|link:#ipspace[ipspace]
+a|
+
+|message_format
+|string
+a|Syslog message format to be used. legacy_netapp format (variation of RFC-3164) is default message format.
+
+
+|port
+|integer
+a|Destination Port. The default port depends on the protocol chosen:
+For un-encrypted destinations the default port is 514.
+For encrypted destinations the default port is 6514.
+
+
+|protocol
+|string
+a|Log forwarding protocol
+
+
+|timestamp_format_override
+|string
+a|Syslog Timestamp Format Override.
+
+
+|verify_server
+|boolean
+a|This is only applicable when the protocol is tcp_encrypted. This controls whether the remote server's certificate is validated. Setting "verify_server" to "true" will enforce validation of remote server's certificate. Setting "verify_server" to "false" will not enforce validation of remote server's certificate.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "address": "1.1.1.1",
+  "facility": "string",
+  "hostname_format_override": "string",
+  "ipspace": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "Default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "message_format": "string",
+  "port": 514,
+  "protocol": "string",
+  "timestamp_format_override": "string"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#ipspace]
+[.api-collapsible-fifth-title]
+ipspace
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|IPspace name
+
+
+|uuid
+|string
+a|IPspace UUID
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -1,0 +1,273 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-cluster-software-upload.html'
+summary: 'Upload a software or firmware package located on the local file system'
+---
+
+= Upload a software or firmware package located on the local file system
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/cluster/software/upload`#
+
+*Introduced In:* 9.8
+
+Uploads a software or firmware package located on the local filesystem.
+
+== Related ONTAP commands
+
+* `cluster image package get`
+
+== Learn more
+
+* link:cluster_software_endpoint_overview.html[DOC /cluster/software]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|file
+|file
+|formData
+|False
+a|Info specification
+
+
+|return_records
+|boolean
+|query
+|False
+a|The default is false.  If set to true, the records are returned.
+
+* Default value:
+
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 10551359
+| Internal error. Failed to process the package after download completed. Try uploading the file again or contact technical support for assistance.
+
+| 10551373
+| Operation took longer than the maximum 1 hour time limit.
+
+| 10551391
+| Internal error. Contact technical support for assistance.
+
+| 10551392
+| Internal error. Contact technical support for assistance.
+
+| 10551496
+| Firmware file already exists.
+
+| 10551797
+| Internal error. Failed to check if file upload is enabled.
+
+| 10551798
+| File upload is disabled. Enable file upload by setting "ApacheUploadEnabled 1" in the web services configuration file or contact technical support for assistance.
+
+| 10551799
+| The requested filename exceeds the max path length. Rename using a shorter name.
+
+| 10551800
+| Internal error. Access permissions restrict file upload. This is likely due to a bad web jail setup. Contact technical support for assistance.
+
+| 10551801
+| Internal error. A read/write error occurred when uploading this file. Contact technical support for assistance
+
+| 10551802
+| An invalid argument was supplied to create a file handle. Try uploading the file again or contact technical support for assistance.
+
+| 10551803
+| An unknown error occurred. Retry file upload operation again or contact technical support for assistance.
+
+| 10551804
+| Internal error. There is not sufficient space in the file upload directory to upload this file. Contact technical support for assistance.
+
+| 10551805
+| Internal error in JAIL setup. Contact technical support for assistance.
+
+| 10551806
+| Internal error. Failed to write to file in the webjail directory. Contact technical support for assistance.
+
+| 10551807
+| The request must only contain a single file. More than one file per request is not supported.
+
+| 10551808
+| The request must be of type multipart/form-data.
+
+| 10551892
+| Package upload failed due to an unhealthy node. Restore the node to a healthy state, then retry the operation.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

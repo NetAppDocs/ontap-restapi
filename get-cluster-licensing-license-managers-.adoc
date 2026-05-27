@@ -1,0 +1,275 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-cluster-licensing-license-managers-.html'
+summary: 'Retrieve the license manager information'
+---
+
+= Retrieve the license manager information
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/licensing/license-managers/{uuid}`#
+
+*Introduced In:* 9.8
+
+Retrieves information about the license manager.
+
+== Learn more
+
+* link:cluster_licensing_license-managers_endpoint_overview.html[DOC /cluster/licensing/license-managers]
+
+== Related ONTAP commands
+
+* `system license license-manager show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|uuid
+|string
+|path
+|True
+a|
+
+|uri.host
+|string
+|query
+|False
+a|Filter by uri.host
+
+
+|default
+|boolean
+|query
+|False
+a|Filter by default
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#self_link[self_link]
+a|
+
+|default
+|boolean
+a|Flag that indicates whether it's the default license manager instance used by the cluster.'
+When a capacity pool is created and if the license manager field is omitted, it is assumed that the license of the capacity pool is installed on the default license manager instance.
+
+
+|uri
+|link:#uri[uri]
+a|License manager URI.
+
+
+|uuid
+|string
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "uri": {
+    "host": "10.1.1.1"
+  },
+  "uuid": "4ea7a442-86d1-11e0-ae1c-112233445566"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#uri]
+[.api-collapsible-fifth-title]
+uri
+
+License manager URI.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|host
+|string
+a|License manager host name, IPv4 or IPv6 address.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

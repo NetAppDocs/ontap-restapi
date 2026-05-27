@@ -1,0 +1,225 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'delete-security-roles-.html'
+summary: 'Delete a role'
+---
+
+= Delete a role
+
+[.api-doc-operation .api-doc-operation-delete]#DELETE# [.api-doc-code-block]#`/security/roles/{owner.uuid}/{name}`#
+
+*Introduced In:* 9.6
+
+Deletes the specified role.
+
+== Required parameters
+
+* `name` - Name of the role to be deleted.
+* `owner.uuid` - UUID of the SVM housing the role.
+
+== Related ONTAP commands
+
+* `security login rest-role delete`
+* `security login role delete`
+
+== Learn more
+
+* link:security_roles_owner.uuid_name_endpoint_overview.html[DOC /security/roles/{owner.uuid}/\{name}]
+* link:security_roles_endpoint_overview.html[DOC /security/roles]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Role owner UUID
+
+
+|name
+|string
+|path
+|True
+a|Role name to be deleted.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 1263347
+| Cannot modify pre-defined roles.
+
+| 5636169
+| Specified URI path is invalid or not supported. Resource-qualified endpoints are not supported.
+
+| 5636170
+| URI does not exist.
+
+| 5636172
+| User accounts detected with this role assigned. Update or delete those accounts before deleting this role.
+
+| 5636173
+| Features require an effective cluster version of 9.6 or later.
+
+| 5636184
+| Expanded REST roles for granular resource control feature is currently disabled.
+
+| 5636185
+| The specified UUID was not found.
+
+| 5636186
+| Expanded REST roles for granular resource control requires an effective cluster version of 9.10.1 or later.
+
+| 5636245
+| Failed to delete the role because it is part of the group role-mapping configuration.
+
+| 5636246
+| Failed to delete the rest role because it is part of the group role-mapping configuration.
+
+| 5636247
+| Failed to delete the rest role because it is part of the external-role-mapping configuration.
+
+| 5636249
+| Failed to delete the role because it is part of the external-role-mapping configuration.
+
+| 5636259
+| The specified child AIDE object was not found within the specified parent AIDE object.
+
+| 5636261
+| The specified grandchild AIDE object was not found within the specified child AIDE object that belongs to the specified parent AIDE object.</personalities>
+
+| 13434890
+| Vserver-ID failed for Vserver roles.
+
+| 13434893
+| The SVM does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====
