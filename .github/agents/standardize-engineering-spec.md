@@ -310,7 +310,36 @@ Certain HTML elements embedded inside `description` fields break AsciiDoc render
 
 A response or parameter is declared as a non-array type but the example shows array data, or vice versa. Auto-correct is risky because the agent doesn't know which is the source of truth. **Flag for engineering review**, providing both the declared type and the example structure.
 
-### 4.8 Quality Check for Category 4
+### 4.9 Unclosed Markdown code fences in description fields
+
+Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap-long-description` values must always appear in balanced pairs. An unclosed code fence causes all subsequent content — including content on later pages — to render as monospace/code, breaking PDF generation and HTML formatting from that point onward.
+
+**Detection:** For each `description` or `x-ntap-long-description` string value, count occurrences of `\n``` ` (the escaped newline + triple-backtick pattern in YAML-quoted strings). If the count is odd, the last code block is unclosed.
+
+**Action:** Auto-correct by appending `\n``` ` before the closing quote of the description value.
+
+**Examples:**
+
+- ❌ Description ends with response JSON but no closing fence:
+  ```
+  ...\"num_records\": 2\n  }\n"
+  ```
+- ✅ Closing fence appended:
+  ```
+  ...\"num_records\": 2\n  }\n```\n"
+  ```
+
+**Known instances (ONTAP unified.yml on `build_main`):**
+
+| Line | API Path | Fence count |
+|------|----------|-------------|
+| 221516 | `/security/authentication/cluster/oauth2/clients` | 3 (needs 4) |
+| 232301 | `/security/key-managers/{uuid}/auth-keys` | 5 (needs 6) |
+| 232682 | `/security/key-managers/{uuid}/keys/{node.uuid}/key-ids` | 3 (needs 4) |
+
+**Impact:** The unclosed fence at line 232682 is confirmed to break PDF rendering at the page "Retrieving key manager key-id information of a specific key-type for a node" — all subsequent pages have corrupted formatting.
+
+### 4.10 Quality Check for Category 4
 
 - ✓ Numbered list `+`-separators inserted where needed?
 - ✓ Bullet markers normalized to `*`?
@@ -319,6 +348,7 @@ A response or parameter is declared as a non-array type but the example shows ar
 - ✓ `<h2>`/`<h3>`/`<h4>` removed from descriptions?
 - ✓ Admonitions inside tables flagged (not auto-fixed)?
 - ✓ Type-vs-example mismatches flagged with both sides shown?
+- ✓ All code fences in description values balanced (even count of `` ``` `` markers)?
 
 ---
 
@@ -342,6 +372,7 @@ A response or parameter is declared as a non-array type but the example shows ar
 | Other block-level HTML (Cat 4.5) | Flag | Intent-dependent |
 | Admonition inside tables (Cat 4.6) | Flag | Structural fix requires judgment |
 | Type-vs-example mismatch (Cat 4.7) | Flag | Don't know which is source of truth |
+| Unclosed Markdown code fences (Cat 4.9) | Auto-correct | Mechanical; odd fence count is always a defect |
 
 **General rule:** if you would have to guess engineering intent, flag. If the OpenAPI spec, W3 HTML reference, or NetApp's documented AsciiDoc-transform rule defines a single correct form, auto-correct.
 
