@@ -401,6 +401,8 @@ Same format as input (YAML or JSON), with auto-correctable defects fixed in plac
 
 ### 2. Change report
 
+Save the change report as `_change_report.yml` (underscore prefix prevents the autodoc build from processing it).
+
 A YAML document with the following structure:
 
 ```yaml
