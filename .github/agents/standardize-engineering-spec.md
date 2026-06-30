@@ -473,20 +473,6 @@ categories:
 
 ---
 
-## Runtime Execution Requirement
-
-**For any spec file exceeding 10,000 lines, you MUST write and execute a Python script to scan the entire file.** Do not attempt to read or analyze large files through your context window — you will miss the majority of defects.
-
-The script must:
-- Read the full file line-by-line
-- Apply regex patterns for each defect category
-- Track line numbers for all findings
-- Output structured results that you then use to compose the change report
-
-This is non-negotiable for large files. Context-window scanning covers only a small fraction of a large spec and produces incomplete results.
-
----
-
 ## Task Process
 
 **STEP 0 — Confirm input shape.** Identify spec format (YAML/JSON) and OpenAPI version. If either is ambiguous, stop and report.
