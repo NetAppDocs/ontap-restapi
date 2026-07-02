@@ -298,7 +298,9 @@ Specific to error tables under SnapLock retention endpoints (and likely others):
 Certain HTML elements embedded inside `description` fields break AsciiDoc rendering. Highest-priority offenders observed:
 
 - `<h2>`, `<h3>`, `<h4>` — heading tags inside descriptions. Auto-correct by removing the tags entirely (the surrounding AsciiDoc will provide structural headings).
-- Other block-level HTML (`<div>`, `<table>`, `<ul>`) — flag for review; the right fix depends on the content's intent.
+- `<ul>` / `<li>` / `</li>` / `</ul>` list markup — **attempt auto-correct** by converting the full `<ul>...</ul>` block to AsciiDoc unordered list items. For each `<li>...</li>` element, extract the inner text content and emit it as `* <text>`. If the HTML is malformed (e.g., unclosed tags, nested lists, or non-`<li>` children of `<ul>`), fall back to flag-for-review. Record each converted block as a single finding with `action: auto_corrected`. Track all four tag variants (`<ul>`, `<li>`, `</li>`, `</ul>`) — do not report only the opening `<ul>` tag.
+- `<br/>` and `<br>` inline line-break elements — **auto-correct** by replacing with `\n`. These do not render in AsciiDoc or PDF and break paragraph flow in the transformed output.
+- Other block-level HTML (`<div>`, `<table>`) — flag for review; the right fix depends on the content's intent.
 
 ### 4.6 Admonition rendering failures (Console URLs #1 and #5)
 
@@ -315,7 +317,7 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 
 **Detection:** For each `description` or `x-ntap-long-description` string value, count occurrences of `\n``` ` (the escaped newline + triple-backtick pattern in YAML-quoted strings). If the count is odd, the last code block is unclosed.
 
-**Action:** Auto-correct by appending `\n``` ` before the closing quote of the description value.
+**Action:** Auto-correct by appending `\n```\n` (one newline before the fence, one trailing newline after) immediately before the closing `"` of the YAML string value. The final characters in the string must be `\n```\n"`. Do **not** insert a blank line before the fence — `\n\n```"` is wrong and creates an empty code-block artifact in the rendered output. Do **not** omit the trailing newline after the fence — `\n```"` is also wrong.
 
 **Examples:**
 
@@ -323,7 +325,7 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
   ```
   ...\"num_records\": 2\n  }\n"
   ```
-- ✅ Closing fence appended:
+- ✅ Closing fence appended (one `\n` before, one `\n` after — no blank line):
   ```
   ...\"num_records\": 2\n  }\n```\n"
   ```
@@ -345,9 +347,12 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 - ✓ Pipe-table closing pipes verified?
 - ✓ Angle-bracket variables in tables converted to HTML entities?
 - ✓ `<h2>`/`<h3>`/`<h4>` removed from descriptions?
+- ✓ Well-formed `<ul>`/`<li>` blocks converted to `* item` AsciiDoc lists; malformed ones flagged?
+- ✓ All `<br/>` and `<br>` replaced with `\n`?
 - ✓ Admonitions inside tables flagged (not auto-fixed)?
 - ✓ Type-vs-example mismatches flagged with both sides shown?
-- ✓ All code fences in description values balanced (even count of `` ``` `` markers)?
+- ✓ All code fences in description values balanced (even count of `` ``` `` markers)? Closing fence appended as `\n```\n"` — one newline before, one after, no blank line?
+- ✓ `asciidoc_transform` sub-category scan summary block present covering all 4.x rules?
 
 ---
 
@@ -368,7 +373,9 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 | Pipe-table missing/extra pipes (Cat 4.3, 4.4) | Auto-correct | Mechanical |
 | Angle-bracket variables in tables (Cat 4.3) | Auto-correct (HTML entity) | Mechanical equivalent rendering |
 | Raw `<h2>`/`<h3>`/`<h4>` in descriptions (Cat 4.5) | Auto-correct (remove) | Mechanical; AsciiDoc owns headings |
-| Other block-level HTML (Cat 4.5) | Flag | Intent-dependent |
+| `<ul>`/`<li>` list markup in descriptions (Cat 4.5) | Auto-correct if well-formed; flag if malformed | Mechanical conversion to AsciiDoc `* item` list |
+| `<br/>` / `<br>` in descriptions (Cat 4.5) | Auto-correct (replace with `\n`) | Mechanical; `<br>` has no AsciiDoc equivalent |
+| Other block-level HTML `<div>`, `<table>` (Cat 4.5) | Flag | Intent-dependent |
 | Admonition inside tables (Cat 4.6) | Flag | Structural fix requires judgment |
 | Type-vs-example mismatch (Cat 4.7) | Flag | Don't know which is source of truth |
 | Unclosed Markdown code fences (Cat 4.9) | Auto-correct | Mechanical; odd fence count is always a defect |
@@ -388,6 +395,7 @@ To produce approximately the same set of findings on successive runs of the same
 5. Do not summarize "what the spec is about." Your job is defect detection and correction, not characterization.
 6. If you find zero defects in a category, explicitly say so: `category: text_cleanup, findings: 0`. Do not omit empty categories.
 7. **Re-flagging known issues is expected.** Many of these defects are tracked in NetApp's AUTODOC Jira backlog. Do not attempt to deduplicate against existing tickets — that's handled downstream.
+8. **Attest sub-category coverage in `asciidoc_transform`.** For every Cat 4.x sub-rule (4.1 through 4.9), include a `sub_category_scan_summary` entry in the change report confirming it was scanned and how many findings it produced. "0 findings" and "not scanned" must be distinguishable. This enables regression comparison between runs and makes it immediately visible if a sub-rule was silently skipped due to context-window or other limits.
 
 ---
 
@@ -449,6 +457,15 @@ categories:
   asciidoc_transform:
     auto_corrected: 14
     flagged: 3
+    sub_category_scan_summary:
+      "4.1 numbered_list_plus": {scanned: true, findings: 1}
+      "4.2 mixed_bullets": {scanned: true, findings: 0}
+      "4.3 pipe_table": {scanned: true, findings: 16}
+      "4.4 missing_closing_pipe": {scanned: true, findings: 0}
+      "4.5 raw_html": {scanned: true, findings: 3}
+      "4.6 admonitions": {scanned: true, findings: 0}
+      "4.7 type_vs_example": {scanned: true, findings: 0}
+      "4.9 unclosed_code_fences": {scanned: true, findings: 6}
     findings:
       - id: ADC-001
         type: numbered_list_missing_plus
@@ -470,6 +487,7 @@ categories:
 7. **✓ No commentary outside the structured report?**
 8. **✓ Scope guard respected?** (No modifications to human-authored content outside the OpenAPI `paths.` structure.)
 9. **✓ Line numbers included for all flagged secrets?**
+10. **✓ Sub-category scan summary present in `asciidoc_transform`?** (Every 4.x sub-rule attested with `scanned: true/false` and `findings: N`.)
 
 ---
 
