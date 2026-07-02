@@ -297,9 +297,9 @@ Specific to error tables under SnapLock retention endpoints (and likely others):
 
 Certain HTML elements embedded inside `description` fields break AsciiDoc rendering. Highest-priority offenders observed:
 
-- `<h2>`, `<h3>`, `<h4>` — heading tags inside descriptions. Auto-correct by removing the tags entirely (the surrounding AsciiDoc will provide structural headings).
-- `<ul>` / `<li>` / `</li>` / `</ul>` list markup — **attempt auto-correct** by converting the full `<ul>...</ul>` block to AsciiDoc unordered list items. For each `<li>...</li>` element, extract the inner text content and emit it as `* <text>`. If the HTML is malformed (e.g., unclosed tags, nested lists, or non-`<li>` children of `<ul>`), fall back to flag-for-review. Record each converted block as a single finding with `action: auto_corrected`. Track all four tag variants (`<ul>`, `<li>`, `</li>`, `</ul>`) — do not report only the opening `<ul>` tag.
-- `<br/>` and `<br>` inline line-break elements — **auto-correct** by replacing with `\n`. These do not render in AsciiDoc or PDF and break paragraph flow in the transformed output.
+- `<h2>`, `<h3>`, `<h4>` — heading tags inside descriptions. **Do NOT modify.** The formatter's `xml_to_asciidoc` function correctly converts these to AsciiDoc heading syntax (`==`, `===`, `====`). Removing the tags would silently destroy the heading text; leave them for the formatter.
+- `<ul>` / `<li>` / `</li>` / `</ul>` list markup — **attempt auto-correct** by converting the full `<ul>...</ul>` block to `* item` Markdown unordered list items. For each `<li>...</li>` element, extract the inner text content and emit it as `* <text>`. This is necessary because `xml_to_asciidoc` does not handle `ul`/`li` tags and they would pass through as raw HTML to Kramdoc, producing broken output. If the HTML is malformed (e.g., unclosed tags, nested lists, or non-`<li>` children of `<ul>`), fall back to flag-for-review. Record each converted block as a single finding with `action: auto_corrected`. Track all four tag variants (`<ul>`, `<li>`, `</li>`, `</ul>`) — do not report only the opening `<ul>` tag.
+- `<br/>` and `<br>` inline line-break elements — **Do NOT modify.** The formatter's `format_ontap` function already converts `<br/>` → `\n\n` (paragraph break) and `<br>` → `\n` (line break) before the AsciiDoc transform. Pre-processing these in the spec would produce the wrong whitespace and is redundant.
 - Other block-level HTML (`<div>`, `<table>`) — flag for review; the right fix depends on the content's intent.
 
 ### 4.6 Admonition rendering failures (Console URLs #1 and #5)
@@ -346,9 +346,9 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 - ✓ Bullet markers normalized to `*`?
 - ✓ Pipe-table closing pipes verified?
 - ✓ Angle-bracket variables in tables converted to HTML entities?
-- ✓ `<h2>`/`<h3>`/`<h4>` removed from descriptions?
-- ✓ Well-formed `<ul>`/`<li>` blocks converted to `* item` AsciiDoc lists; malformed ones flagged?
-- ✓ All `<br/>` and `<br>` replaced with `\n`?
+- ✓ `<h2>`/`<h3>`/`<h4>` tags NOT touched (formatter's `xml_to_asciidoc` handles them)?
+- ✓ Well-formed `<ul>`/`<li>` blocks converted to `* item` Markdown lists; malformed ones flagged?
+- ✓ `<br/>` and `<br>` tags NOT touched (formatter's `format_ontap` handles them)?
 - ✓ Admonitions inside tables flagged (not auto-fixed)?
 - ✓ Type-vs-example mismatches flagged with both sides shown?
 - ✓ All code fences in description values balanced (even count of `` ``` `` markers)? Closing fence appended as `\n```\n"` — one newline before, one after, no blank line?
@@ -372,9 +372,9 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 | Mixed bullet markers (Cat 4.2) | Auto-correct | Mechanical normalization |
 | Pipe-table missing/extra pipes (Cat 4.3, 4.4) | Auto-correct | Mechanical |
 | Angle-bracket variables in tables (Cat 4.3) | Auto-correct (HTML entity) | Mechanical equivalent rendering |
-| Raw `<h2>`/`<h3>`/`<h4>` in descriptions (Cat 4.5) | Auto-correct (remove) | Mechanical; AsciiDoc owns headings |
-| `<ul>`/`<li>` list markup in descriptions (Cat 4.5) | Auto-correct if well-formed; flag if malformed | Mechanical conversion to AsciiDoc `* item` list |
-| `<br/>` / `<br>` in descriptions (Cat 4.5) | Auto-correct (replace with `\n`) | Mechanical; `<br>` has no AsciiDoc equivalent |
+| Raw `<h2>`/`<h3>`/`<h4>` in descriptions (Cat 4.5) | Do not modify | `xml_to_asciidoc` in the formatter converts these to `==`/`===`/`====`; removing tags destroys content |
+| `<ul>`/`<li>` list markup in descriptions (Cat 4.5) | Auto-correct if well-formed; flag if malformed | `xml_to_asciidoc` does not handle `ul`/`li`; pre-convert to `* item` Markdown so Kramdoc processes correctly |
+| `<br/>` / `<br>` in descriptions (Cat 4.5) | Do not modify | `format_ontap` in the formatter already converts `<br/>` → `\n\n` and `<br>` → `\n`; pre-processing changes the rendered whitespace |
 | Other block-level HTML `<div>`, `<table>` (Cat 4.5) | Flag | Intent-dependent |
 | Admonition inside tables (Cat 4.6) | Flag | Structural fix requires judgment |
 | Type-vs-example mismatch (Cat 4.7) | Flag | Don't know which is source of truth |
