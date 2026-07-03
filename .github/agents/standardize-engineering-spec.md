@@ -288,6 +288,9 @@ Two patterns:
 
 - **Extra closing pipes** at the end of a table row breaking the column count. Auto-correct by stripping the extra pipe.
 - **Angle-bracket variables** like `<bucket name>` inside a pipe table breaking the parser. Auto-correct by replacing with the HTML-entity form (`&lt;bucket name&gt;`) which renders identically but doesn't break the parser. Alternative fix using `{}{}` placeholders is also acceptable; this profile defaults to HTML entities for consistency with NetApp's IE-applied fix.
+  - The pattern is `<[^>]+>` — applies to **all** angle-bracket constructs in a table cell, including multi-word and pipe-separated expressions like `<create | modify | delete>`.
+  - Replace **all** occurrences in a cell, not just the first.
+  - If the original text has a backslash immediately before `<` (i.e., `\<name>`), strip the backslash as well — the result must be `&lt;name&gt;`, not `\&lt;name&gt;`.
 
 ### 4.4 Missing closing pipe (AUTODOC-243)
 
