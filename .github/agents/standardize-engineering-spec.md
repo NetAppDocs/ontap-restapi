@@ -314,11 +314,16 @@ Certain HTML elements embedded inside `description` fields break AsciiDoc render
 
 A response or parameter is declared as a non-array type but the example shows array data, or vice versa. Auto-correct is risky because the agent doesn't know which is the source of truth. **Flag for engineering review**, providing both the declared type and the example structure.
 
-### 4.9 Unclosed Markdown code fences in description fields
+### 4.8 Unclosed Markdown code fences in description fields
 
 Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap-long-description` values must always appear in balanced pairs. An unclosed code fence causes all subsequent content — including content on later pages — to render as monospace/code, breaking PDF generation and HTML formatting from that point onward.
 
-**Detection:** For each `description` or `x-ntap-long-description` string value, count occurrences of `\n``` ` (the escaped newline + triple-backtick pattern in YAML-quoted strings). If the count is odd, the last code block is unclosed.
+**Detection:** For each `description` or `x-ntap-long-description` string value, count occurrences of triple-backtick fence markers. The detection approach differs by file format:
+
+- **YAML:** count occurrences of `\n``` ` (escaped newline + triple-backtick in a YAML-quoted string). If the count is odd, the last code block is unclosed.
+- **JSON:** count occurrences of `\n``` ` (literal `\n` escape sequence + triple-backtick in a JSON string value). If the count is odd, the last code block is unclosed. Note: in JSON, newlines inside string values are encoded as `\n` (two characters: backslash + n), not as actual newline characters — the fence pattern to match is therefore `\\n``` ` when expressed as a regex against the raw JSON text.
+
+In both formats, if the fence count is odd, the last code block is unclosed.
 
 **Action:** Auto-correct by appending `\n```\n` (one newline before the fence, one trailing newline after) immediately before the closing `"` of the YAML string value. The final characters in the string must be `\n```\n"`. Do **not** insert a blank line before the fence — `\n\n```"` is wrong and creates an empty code-block artifact in the rendered output. Do **not** omit the trailing newline after the fence — `\n```"` is also wrong.
 
@@ -343,7 +348,7 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 
 **Impact:** The unclosed fence at line 232682 is confirmed to break PDF rendering at the page "Retrieving key manager key-id information of a specific key-type for a node" — all subsequent pages have corrupted formatting.
 
-### 4.10 Quality Check for Category 4
+### 4.9 Quality Check for Category 4
 
 - ✓ Numbered list `+`-separators inserted where needed?
 - ✓ Bullet markers normalized to `*`?
@@ -355,6 +360,7 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 - ✓ Admonitions inside tables flagged (not auto-fixed)?
 - ✓ Type-vs-example mismatches flagged with both sides shown?
 - ✓ All code fences in description values balanced (even count of `` ``` `` markers)? Closing fence appended as `\n```\n"` — one newline before, one after, no blank line?
+- ✓ JSON spec files scanned using JSON-encoded fence pattern (`\\n``` `) not YAML pattern?
 - ✓ `asciidoc_transform` sub-category scan summary block present covering all 4.x rules?
 
 ---
@@ -381,7 +387,7 @@ Markdown code fences (triple-backtick `` ``` ``) inside `description` or `x-ntap
 | Other block-level HTML `<div>`, `<table>` (Cat 4.5) | Flag | Intent-dependent |
 | Admonition inside tables (Cat 4.6) | Flag | Structural fix requires judgment |
 | Type-vs-example mismatch (Cat 4.7) | Flag | Don't know which is source of truth |
-| Unclosed Markdown code fences (Cat 4.9) | Auto-correct | Mechanical; odd fence count is always a defect |
+| Unclosed Markdown code fences (Cat 4.8) | Auto-correct | Mechanical; odd fence count is always a defect |
 
 **General rule:** if you would have to guess engineering intent, flag. If the OpenAPI spec, W3 HTML reference, or NetApp's documented AsciiDoc-transform rule defines a single correct form, auto-correct.
 
@@ -398,7 +404,7 @@ To produce approximately the same set of findings on successive runs of the same
 5. Do not summarize "what the spec is about." Your job is defect detection and correction, not characterization.
 6. If you find zero defects in a category, explicitly say so: `category: text_cleanup, findings: 0`. Do not omit empty categories.
 7. **Re-flagging known issues is expected.** Many of these defects are tracked in NetApp's AUTODOC Jira backlog. Do not attempt to deduplicate against existing tickets — that's handled downstream.
-8. **Attest sub-category coverage in `asciidoc_transform`.** For every Cat 4.x sub-rule (4.1 through 4.9), include a `sub_category_scan_summary` entry in the change report confirming it was scanned and how many findings it produced. "0 findings" and "not scanned" must be distinguishable. This enables regression comparison between runs and makes it immediately visible if a sub-rule was silently skipped due to context-window or other limits.
+8. **Attest sub-category coverage in `asciidoc_transform`.** For every Cat 4.x sub-rule (4.1 through 4.8), include a `sub_category_scan_summary` entry in the change report confirming it was scanned and how many findings it produced. "0 findings" and "not scanned" must be distinguishable. This enables regression comparison between runs and makes it immediately visible if a sub-rule was silently skipped due to context-window or other limits.
 
 ---
 
@@ -468,7 +474,7 @@ categories:
       "4.5 raw_html": {scanned: true, findings: 3}
       "4.6 admonitions": {scanned: true, findings: 0}
       "4.7 type_vs_example": {scanned: true, findings: 0}
-      "4.9 unclosed_code_fences": {scanned: true, findings: 6}
+      "4.8 unclosed_code_fences": {scanned: true, findings: 6}
     findings:
       - id: ADC-001
         type: numbered_list_missing_plus
