@@ -464,8 +464,8 @@ categories:
         note: "OpenAPI 2.0 disallows description inside items. Move to same level as items."
 
   asciidoc_transform:
-    auto_corrected: 14
-    flagged: 3
+    auto_corrected: 20
+    flagged: 6
     sub_category_scan_summary:
       "4.1 numbered_list_plus": {scanned: true, findings: 1}
       "4.2 mixed_bullets": {scanned: true, findings: 0}
