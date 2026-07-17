@@ -304,6 +304,9 @@ a|Specifies the FlexGroup volume name and UUID where the bucket is hosted. This 
             "delimiters": [
               "/"
             ],
+            "if_match": [
+              "true"
+            ],
             "max_keys": [
               1000
             ],
@@ -750,7 +753,7 @@ a|Size of the object smaller than specified for which the corresponding lifecycl
 
 |tags
 |array[string]
-a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+a|An array of key-value paired tags of the form +++<tag>+++or <tag=value>.+++</tag>+++
 
 
 |===
@@ -890,9 +893,24 @@ Information about policy conditions based on various condition operators and con
 a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
 
 
+|if_match
+|array[string]
+a|Controls conditional writes via If-Match header, evaluated with the Null operator; indicates whether the If-Match header is present or not.
+
+
+|if_none_match
+|boolean
+a|Controls conditional writes via If-None-Match header, evaluated with the Null operator; indicates whether the If-None-Match header is present or not.
+
+
 |max_keys
 |array[integer]
 a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|object_creation_operation
+|boolean
+a|Controls object creation requests, evaluated with the Bool operator; indicates whether it is an object-creation request or not.
 
 
 |operator

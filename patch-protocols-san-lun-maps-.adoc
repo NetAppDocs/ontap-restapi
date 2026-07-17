@@ -1,0 +1,429 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-protocols-san-lun-maps-.html'
+summary: 'Modify an ONTAP LUN map'
+---
+
+= Modify an ONTAP LUN map
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}`#
+
+*Introduced In:* 9.19
+
+Modifies a LUN map.
+
+== Related ONTAP commands
+
+* `lun mapping modify`
+
+== Learn more
+
+* link:protocols_san_lun-maps_endpoint_overview.html[DOC /protocols/san/lun-maps]
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|lun.uuid
+|string
+|path
+|True
+a|The unique identifier of the LUN.
+
+
+|igroup.uuid
+|string
+|path
+|True
+a|The unique identifier of the igroup.
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group to which the LUN is mapped. Required in POST by supplying either the `igroup.uuid`, `igroup.name`, or both.
+
+
+|lun
+|link:#lun[lun]
+a|The LUN to which the initiator group is mapped. Required in POST by supplying either the `lun.uuid`, `lun.name`, or both.
+
+
+|replicated
+|boolean
+a|The `replicated` property only applies when the initiator group is replicated and the mapped LUN is a member of a SnapMirror Synchronous relationship. When these conditions are met, `replicated` defaults to _true_, and maps are replicated. The `replicated` property can be PATCHed to _false_ to disable this replication for a LUN map.
+When set to _false_, the LUN map on the remote cluster is deleted. When set to _true_, the LUN map on the remote cluster is created.
+This property is closely related to the `local_delete_only` query parameter that can be used during DELETE. The properties achieve the same result, with the difference being the cluster where the map is deleted. PATCH the `replicated` property to _false_ to keep the local map and delete the remote map. DELETE with `local_delete_only` set to _true_ to delete the local map and keep the remote map.
+
+
+|reporting_nodes
+|array[link:#reporting_nodes[reporting_nodes]]
+a|The cluster nodes from which network paths to the mapped LUNs are advertised via the SAN protocols as part of the Selective LUN Map (SLM) feature of ONTAP.
+
+When a LUN map is created, the cluster node hosting the LUN and its high availability (HA) partner are set as the default reporting node. In POST, the property `additional_reporting_node` may be used to add an additional node and its HA partner.
+
+For further information, see link:protocols_san_lun-maps_lun.uuid_igroup.uuid_reporting-nodes_endpoint_overview.html[DOC /protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes] .
+
+* readOnly: 1
+* Introduced in: 9.10
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "igroup": {
+    "initiators": [
+      "iqn.1998-01.com.corp.iscsi:name1"
+    ],
+    "os_type": "string",
+    "protocol": "string"
+  },
+  "lun": {
+    "node": {
+      "name": "node1",
+      "uuid": "1cf8aa42-8cd1-12e0-a11c-423468563412"
+    }
+  }
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 5374875
+| The specified LUN does not exist or is not accessible to the caller.
+
+| 5374878
+| The specified initiator group does not exist, is not accessible to the caller, or is not in the same SVM as the specified LUN.
+
+| 5374922
+| The specified LUN map does not exist.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#igroup]
+[.api-collapsible-fifth-title]
+igroup
+
+The initiator group to which the LUN is mapped. Required in POST by supplying either the `igroup.uuid`, `igroup.name`, or both.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|initiators
+|array[string]
+a|The initiators that are members of the initiator group.
+
+
+|os_type
+|string
+a|The host operating system of the initiator group. All initiators in the group should be hosts of the same operating system.
+
+
+|protocol
+|string
+a|The protocols supported by the initiator group. This restricts the type of initiators that can be added to the initiator group.
+
+
+|replicated
+|boolean
+a|This property reports if the initiator group is replicated.
+
+
+|===
+
+
+[#node]
+[.api-collapsible-fifth-title]
+node
+
+The LUN node.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the LUN's node.
+
+
+|uuid
+|string
+a|The unique identifier of the LUN node.
+
+
+|===
+
+
+[#smbc]
+[.api-collapsible-fifth-title]
+smbc
+
+"Properties related to SM-BC replication."
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|replicated
+|boolean
+a|This property reports if the LUN is replicated via SM-BC.
+
+
+|===
+
+
+[#lun]
+[.api-collapsible-fifth-title]
+lun
+
+The LUN to which the initiator group is mapped. Required in POST by supplying either the `lun.uuid`, `lun.name`, or both.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|node
+|link:#node[node]
+a|The LUN node.
+
+
+|smbc
+|link:#smbc[smbc]
+a|"Properties related to SM-BC replication."
+
+
+|===
+
+
+[#reporting_nodes]
+[.api-collapsible-fifth-title]
+reporting_nodes
+
+A cluster node from which network paths to the LUN are advertised by ONTAP via the SAN protocols.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|===
+
+
+[#svm]
+[.api-collapsible-fifth-title]
+svm
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#lun_map]
+[.api-collapsible-fifth-title]
+lun_map
+
+A LUN map is an association between a LUN and an initiator group. When a LUN is mapped to an initiator group, the initiator group's initiators are granted access to the LUN. The relationship between a LUN and an initiator group is many LUNs to many initiator groups.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|igroup
+|link:#igroup[igroup]
+a|The initiator group to which the LUN is mapped. Required in POST by supplying either the `igroup.uuid`, `igroup.name`, or both.
+
+
+|lun
+|link:#lun[lun]
+a|The LUN to which the initiator group is mapped. Required in POST by supplying either the `lun.uuid`, `lun.name`, or both.
+
+
+|replicated
+|boolean
+a|The `replicated` property only applies when the initiator group is replicated and the mapped LUN is a member of a SnapMirror Synchronous relationship. When these conditions are met, `replicated` defaults to _true_, and maps are replicated. The `replicated` property can be PATCHed to _false_ to disable this replication for a LUN map.
+When set to _false_, the LUN map on the remote cluster is deleted. When set to _true_, the LUN map on the remote cluster is created.
+This property is closely related to the `local_delete_only` query parameter that can be used during DELETE. The properties achieve the same result, with the difference being the cluster where the map is deleted. PATCH the `replicated` property to _false_ to keep the local map and delete the remote map. DELETE with `local_delete_only` set to _true_ to delete the local map and keep the remote map.
+
+
+|reporting_nodes
+|array[link:#reporting_nodes[reporting_nodes]]
+a|The cluster nodes from which network paths to the mapped LUNs are advertised via the SAN protocols as part of the Selective LUN Map (SLM) feature of ONTAP.
+
+When a LUN map is created, the cluster node hosting the LUN and its high availability (HA) partner are set as the default reporting node. In POST, the property `additional_reporting_node` may be used to add an additional node and its HA partner.
+
+For further information, see link:protocols_san_lun-maps_lun.uuid_igroup.uuid_reporting-nodes_endpoint_overview.html[DOC /protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes] .
+
+* readOnly: 1
+* Introduced in: 9.10
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -30,6 +30,8 @@ In cases where a role has tuples with multiple APIs having the same prefix or mu
 
 Related REST APIs and related commands/command directories are used to form predefined cluster-scoped and SVM-scoped roles, such as: "admin", "backup", "readonly" for cluster and "vsadmin", "vsadmin-backup", "vsadmin-protocol" for SVMs.
 
+Additionally, Artificial Intelligence Data Engine (AIDE) defines the following predefined cluster-scoped roles: "data-engineer", "data-scientist", and "aide-rag".
+
 All of the above predefined roles can be retrieved by calling a GET request on the _/api/security/roles_ API and can be assigned to user accounts. See the examples for _api/security/accounts_.
 
 A GET request on _/api/security/roles/{owner.uuid}/\{name}_ or _/api/security/roles/{owner.uuid}/\{name}/privileges_, where "name" refers to a predefined (built-in) role, returns privilege tuples containing REST API paths along with privilege tuples containing command/command directory paths.
@@ -86,7 +88,62 @@ Resource-qualified endpoints are now supported. At present, the only supported r
 
 &ndash; _/api/protocols/s3/services/{svm.uuid}/users_
 
+==== Artificial Intelligence Data Engine (AIDE) APIs
+
+===== Data Compute Node (DCN) APIs
+
+&ndash; _/api/dcn/cluster/nodes/{node.uuid}/metrics_
+
+&ndash; _/api/dcn/network/ports/{port.uuid}/metrics_
+
+===== Data-Engine APIs
+
+&ndash; _/api/data-engine/policies/{policy.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/acls_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/acls_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{entity.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/search_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/versions/{version.uuid}/diffs_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-sources_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/entities/{entity.uuid}/custom-attributes_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/queries_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/queries/{query.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/versions/{version.uuid}/diffs_
+
+When used in the context of data collection APIs, _{version.uuid}_ refers to a data collection version. In the context of workspace APIs, it refers to a workspace version.
+
 In the APIs above, and in the context of REST roles, the wildcard character &#42; can be used in place of _{volume.uuid}_ or _{svm.uuid}_ to represent _all_ volumes or _all_ SVMs, depending on whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ corresponds to the _-instance-uuid_ field in the output of the "volume show" command at the diagnostic privilege level. It can also be retrieved through the REST endpoint _/api/storage/volumes_.
+
+In the AIDE APIs described above, and in the context of REST roles, the wildcard character &#42; can be used in place of variable components in the Uniform Resource Identifier (URI) path, such as _{node.uuid}_, _{port.uuid}_, _{policy.uuid}_, _{workspace.uuid}_, _{datacollection.uuid}_, _{entity.uuid}_, _{version.uuid}_, or _{query.uuid}_. The specific variable to be replaced depends on whether the REST endpoint references nodes, ports, policies, workspaces, data collections, entities, versions, or queries.
+
+However, when using the wildcard character &#42; in place of a variable component in a URI path, it must replace
+
+*all* variable components in that path. Mixing wildcards and specific values for different variable components within the same URI path is not supported in REST roles. For example, a URI path such as _/api/data-engine/workspaces/c6e1b325-4125-11f0-abb5-bc2411f6fd43/data-collections/*/search_ is not supported.
+
+In summary, only the following two types of resource-qualified endpoints are supported in a REST role:
+
+* All variable components in the URI path are specific values. Example: _/api/data-engine/workspaces/c6e1b325-4125-11f0-abb5-bc2411f6fd43/data-collections/b09b6d25-4126-11f0-abb5-bc2411f6fd43/search_
+* All variable components in the URI path are wildcards. Example: _/api/data-engine/workspaces/*/data-collections/*/search_
+
+AIDE APIs are supported only in cluster-scoped REST roles, not in SVM-scoped REST roles.
 
 == Examples
 
@@ -144,7 +201,7 @@ curl -X POST "https://<mgmt-ip>/api/security/roles" -d '{"owner": {"uuid" : "9f9
 
 === Creating a custom role with a resource-qualified endpoint
 
-Specify the role name and the tuples (of REST APIs and their access levels) in the body of the POST request. One or more of the tuples can now contain a resource-qualified endpoint. At present, the only supported resource-qualified endpoints are the _Snapshots_, _ONTAP S3_, and _File System Analytics_ endpoints listed above in the _Overview_ section.
+Specify the role name and the tuples (of REST APIs and their access levels) in the body of the POST request. One or more of the tuples can now contain a resource-qualified endpoint. At present, the only supported resource-qualified endpoints are the _Snapshots_, _ONTAP S3_, _Artificial Intelligence Data Engine (AIDE)_, and _File System Analytics_ endpoints listed above in the _Overview_ section.
 
 ----
 
@@ -153,6 +210,19 @@ POST "/api/security/roles"
 
 # The call:
 curl -X POST "https://<mgmt-ip>/api/security/roles" -d '{"name":"cluster_role", "privileges" : [{"access":"readonly","path":"/api/cluster/jobs"},{"access":"all","path":"/api/storage/volumes/4ae77149-7752-11eb-8d4e-0050568ed6bd/snapshots"},{"access":"all","path":"/api/storage/volumes/6519986e-7752-11eb-8d4e-0050568ed6bd/snapshots"},{"access":"readonly","path":"/api/storage/volumes/8823c869-9ea1-11ec-8771-005056bb1a7c/top-metrics/users"},{"access":"readonly","path":"/api/application/templates"}]}'
+----
+
+=== Creating a custom role with an AIDE resource-qualified endpoint
+
+Specify the role name and the tuples (of REST APIs and their access levels) in the body of the POST request. One or more of the tuples can now contain an AIDE resource-qualified endpoint. At present, the only supported AIDE resource-qualified endpoints are the _Artificial Intelligence Data Engine (AIDE)_ endpoints listed above in the _Overview_ section.
+
+----
+
+# The API:
+POST "/api/security/roles"
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/roles" -d '{"name":"cluster_role", "privileges" : [{"access":"read_modify","path":"/api/dcn/cluster"},{"access":"all","path":"/api/data-engine/workspaces/77d1dbed-7b26-4bf9-a1fa-0bf84d4f5213/data-collections/a5008c21-f487-4db4-a3a8-c831749cf9b3/acls"},{"access":"readonly","path":"/api/data-engine/workspaces/81b976c4-1f95-4d10-9766-38c1d3b099d4/queries"},{"access":"readonly","path":"/api/data-engine/policies/479e825a-b6ea-445a-9a14-89ef0d7a94a9/versions"},{"access":"readonly","path":"/api/dcn/manager/jobs"}]}'
 ----
 
 === Creating a custom role with a private CLI endpoint

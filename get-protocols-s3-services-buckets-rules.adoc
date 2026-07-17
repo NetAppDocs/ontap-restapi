@@ -34,45 +34,18 @@ Retrieves all S3 Lifecycle rules associated with a bucket. Note that in order to
 |Required
 |Description
 
-|bucket_name
-|string
-|query
-|False
-a|Filter by bucket_name
-
-* maxLength: 63
-* minLength: 3
-* Introduced in: 9.14
-
-
-|non_current_version_expiration.non_current_days
-|integer
-|query
-|False
-a|Filter by non_current_version_expiration.non_current_days
-
-
-|non_current_version_expiration.new_non_current_versions
-|integer
-|query
-|False
-a|Filter by non_current_version_expiration.new_non_current_versions
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
-
-* Introduced in: 9.14
-
-
 |expiration.expired_object_delete_marker
 |boolean
 |query
 |False
 a|Filter by expiration.expired_object_delete_marker
+
+
+|expiration.object_age_days
+|integer
+|query
+|False
+a|Filter by expiration.object_age_days
 
 
 |expiration.object_expiry_date
@@ -82,11 +55,50 @@ a|Filter by expiration.expired_object_delete_marker
 a|Filter by expiration.object_expiry_date
 
 
-|expiration.object_age_days
+|object_filter.size_greater_than
 |integer
 |query
 |False
-a|Filter by expiration.object_age_days
+a|Filter by object_filter.size_greater_than
+
+
+|object_filter.tags
+|string
+|query
+|False
+a|Filter by object_filter.tags
+
+
+|object_filter.prefix
+|string
+|query
+|False
+a|Filter by object_filter.prefix
+
+
+|object_filter.size_less_than
+|integer
+|query
+|False
+a|Filter by object_filter.size_less_than
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|bucket_name
+|string
+|query
+|False
+a|Filter by bucket_name
+
+* Introduced in: 9.14
+* maxLength: 63
+* minLength: 3
 
 
 |name
@@ -108,46 +120,34 @@ a|Filter by svm.name
 * Introduced in: 9.14
 
 
-|object_filter.prefix
-|string
-|query
-|False
-a|Filter by object_filter.prefix
-
-
-|object_filter.size_greater_than
-|integer
-|query
-|False
-a|Filter by object_filter.size_greater_than
-
-
-|object_filter.size_less_than
-|integer
-|query
-|False
-a|Filter by object_filter.size_less_than
-
-
-|object_filter.tags
-|string
-|query
-|False
-a|Filter by object_filter.tags
-
-
-|enabled
-|boolean
-|query
-|False
-a|Filter by enabled
-
-
 |abort_incomplete_multipart_upload.after_initiation_days
 |integer
 |query
 |False
 a|Filter by abort_incomplete_multipart_upload.after_initiation_days
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+* Introduced in: 9.14
+
+
+|non_current_version_expiration.non_current_days
+|integer
+|query
+|False
+a|Filter by non_current_version_expiration.non_current_days
+
+
+|non_current_version_expiration.new_non_current_versions
+|integer
+|query
+|False
+a|Filter by non_current_version_expiration.new_non_current_versions
 
 
 |s3_bucket.uuid
@@ -537,7 +537,7 @@ a|Size of the object smaller than specified for which the corresponding lifecycl
 
 |tags
 |array[string]
-a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+a|An array of key-value paired tags of the form +++<tag>+++or <tag=value>.+++</tag>+++
 
 
 |===

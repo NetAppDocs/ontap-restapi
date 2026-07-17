@@ -49,35 +49,11 @@ Important notes:
 |Required
 |Description
 
-|scanner_pools.role
-|string
+|enabled
+|boolean
 |query
 |False
-a|Filter by scanner_pools.role
-
-
-|scanner_pools.name
-|string
-|query
-|False
-a|Filter by scanner_pools.name
-
-* maxLength: 256
-* minLength: 1
-
-
-|scanner_pools.cluster.name
-|string
-|query
-|False
-a|Filter by scanner_pools.cluster.name
-
-
-|scanner_pools.cluster.uuid
-|string
-|query
-|False
-a|Filter by scanner_pools.cluster.uuid
+a|Filter by enabled
 
 
 |scanner_pools.privileged_users
@@ -94,35 +70,49 @@ a|Filter by scanner_pools.privileged_users
 a|Filter by scanner_pools.servers
 
 
-|on_demand_policies.scan_paths
+|scanner_pools.name
 |string
 |query
 |False
-a|Filter by on_demand_policies.scan_paths
+a|Filter by scanner_pools.name
+
+* maxLength: 256
+* minLength: 1
 
 
-|on_demand_policies.scope.exclude_extensions
+|scanner_pools.role
 |string
 |query
 |False
-a|Filter by on_demand_policies.scope.exclude_extensions
+a|Filter by scanner_pools.role
 
 
-|on_demand_policies.scope.include_extensions
+|scanner_pools.cluster.uuid
 |string
 |query
 |False
-a|Filter by on_demand_policies.scope.include_extensions
+a|Filter by scanner_pools.cluster.uuid
 
 
-|on_demand_policies.scope.max_file_size
-|integer
+|scanner_pools.cluster.name
+|string
 |query
 |False
-a|Filter by on_demand_policies.scope.max_file_size
+a|Filter by scanner_pools.cluster.name
 
-* Max value: 1099511627776
-* Min value: 1024
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
 
 
 |on_demand_policies.scope.exclude_paths
@@ -142,18 +132,28 @@ a|Filter by on_demand_policies.scope.exclude_paths
 a|Filter by on_demand_policies.scope.scan_without_extension
 
 
-|on_demand_policies.log_path
+|on_demand_policies.scope.include_extensions
 |string
 |query
 |False
-a|Filter by on_demand_policies.log_path
+a|Filter by on_demand_policies.scope.include_extensions
 
 
-|on_demand_policies.schedule.name
+|on_demand_policies.scope.exclude_extensions
 |string
 |query
 |False
-a|Filter by on_demand_policies.schedule.name
+a|Filter by on_demand_policies.scope.exclude_extensions
+
+
+|on_demand_policies.scope.max_file_size
+|integer
+|query
+|False
+a|Filter by on_demand_policies.scope.max_file_size
+
+* Max value: 1099511627776
+* Min value: 1024
 
 
 |on_demand_policies.schedule.uuid
@@ -161,6 +161,13 @@ a|Filter by on_demand_policies.schedule.name
 |query
 |False
 a|Filter by on_demand_policies.schedule.uuid
+
+
+|on_demand_policies.schedule.name
+|string
+|query
+|False
+a|Filter by on_demand_policies.schedule.name
 
 
 |on_demand_policies.name
@@ -173,27 +180,34 @@ a|Filter by on_demand_policies.name
 * minLength: 1
 
 
-|svm.name
+|on_demand_policies.scan_paths
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by on_demand_policies.scan_paths
 
 
-|svm.uuid
+|on_demand_policies.log_path
 |string
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by on_demand_policies.log_path
 
 
-|on_access_policies.name
+|on_access_policies.scope.scan_without_extension
+|boolean
+|query
+|False
+a|Filter by on_access_policies.scope.scan_without_extension
+
+
+|on_access_policies.scope.exclude_paths
 |string
 |query
 |False
-a|Filter by on_access_policies.name
+a|Filter by on_access_policies.scope.exclude_paths
 
-* maxLength: 256
+* maxLength: 255
 * minLength: 1
 
 
@@ -214,6 +228,13 @@ a|Filter by on_access_policies.scope.max_file_size
 a|Filter by on_access_policies.scope.only_execute_access
 
 
+|on_access_policies.scope.exclude_extensions
+|string
+|query
+|False
+a|Filter by on_access_policies.scope.exclude_extensions
+
+
 |on_access_policies.scope.include_extensions
 |string
 |query
@@ -228,28 +249,11 @@ a|Filter by on_access_policies.scope.include_extensions
 a|Filter by on_access_policies.scope.scan_readonly_volumes
 
 
-|on_access_policies.scope.exclude_extensions
-|string
-|query
-|False
-a|Filter by on_access_policies.scope.exclude_extensions
-
-
-|on_access_policies.scope.scan_without_extension
+|on_access_policies.enabled
 |boolean
 |query
 |False
-a|Filter by on_access_policies.scope.scan_without_extension
-
-
-|on_access_policies.scope.exclude_paths
-|string
-|query
-|False
-a|Filter by on_access_policies.scope.exclude_paths
-
-* maxLength: 255
-* minLength: 1
+a|Filter by on_access_policies.enabled
 
 
 |on_access_policies.mandatory
@@ -257,13 +261,6 @@ a|Filter by on_access_policies.scope.exclude_paths
 |query
 |False
 a|Filter by on_access_policies.mandatory
-
-
-|on_access_policies.enabled
-|boolean
-|query
-|False
-a|Filter by on_access_policies.enabled
 
 
 |on_access_policies.protocol
@@ -275,11 +272,14 @@ a|Filter by on_access_policies.protocol
 * Introduced in: 9.18
 
 
-|enabled
-|boolean
+|on_access_policies.name
+|string
 |query
 |False
-a|Filter by enabled
+a|Filter by on_access_policies.name
+
+* maxLength: 256
+* minLength: 1
 
 
 |fields

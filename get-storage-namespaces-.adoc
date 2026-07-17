@@ -92,6 +92,13 @@ This property is optional in POST and PATCH. The default value for a new NVMe na
 There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
 
 
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
+
+When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
+
+
 |comment
 |string
 a|A configurable comment available for use by the administrator. Valid in POST and PATCH.
@@ -462,6 +469,22 @@ clone
 This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
 
 When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|created_as_clone
+|boolean
+a|This property is _true_ when the NVMe namespace was created as a clone of another namespace. Note that this property only indicates how the namespace was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for namespaces that are not clones.
+
+
+|===
+
 
 [#consistency_group]
 [.api-collapsible-fifth-title]
@@ -949,15 +972,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 
@@ -1396,6 +1419,7 @@ Possible values:
 
 * `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
 * `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+* `generated` - A PSK generated via NVMe in-band authentication is configured to setup the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. No value is allowed for `configured_psk`. Secure connection concatenation is only supported when DH-HMAC-CHAP authentication is also being used. A value must be set for property `dh_hmac_chap.host_secret_key` while the property `dh_hmac_chap.group_size` cannot have value `none`.
 
 This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
 

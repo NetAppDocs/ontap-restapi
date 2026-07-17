@@ -312,6 +312,8 @@ a|Number of volumes in the aggregate.
       "savings": 0
     },
     "footprint": 608896,
+    "logical_used": 2461696,
+    "logical_used_percent": 50,
     "snapshot": {
       "available": 2000,
       "reserve_percent": 20,
@@ -507,6 +509,8 @@ a|List of validation warnings and remediation advice for the aggregate simulate 
           "savings": 0
         },
         "footprint": 608896,
+        "logical_used": 2461696,
+        "logical_used_percent": 50,
         "snapshot": {
           "available": 2000,
           "reserve_percent": 20,
@@ -719,6 +723,12 @@ ONTAP Error Response Codes
 
 | 787295
 | The storage pool allocation units count is required.
+
+| 787419
+| An aggregate already uses the specified name in either of the MetroCluster sites.
+
+| 787420
+| Substring mcc_renamed is not allowed to be used as an aggregate name in MetroCluster configurations.
 
 | 1258699
 | Cannot use all the disks specified for the requested operation.
@@ -2065,6 +2075,20 @@ a|Storage efficiency that does not include the savings provided by snapshots and
 |integer
 a|A summation of volume footprints (including volume guarantees), in bytes. This includes all of the volume footprints in the block_storage tier and the cloud_storage tier.
 This is an advanced property; there is an added computational cost to retrieving its value. The field is not populated for either a collection GET or an instance GET unless it is explicitly requested using the _fields_ query parameter containing either footprint or **.
+
+
+|logical_used
+|integer
+a|Total volume logical used size of an aggregate in bytes.
+
+NOTE: This field is not applicable for aggregates when the underlying storage medium does not support it. It is only supported for specific NetApp environments. For unsupported environments, this field appears blank.
+
+
+|logical_used_percent
+|integer
+a|Total volume logical used percentage.
+
+NOTE: This field is not applicable for aggregates when the underlying storage medium does not support it. It is only supported for specific NetApp environments. For unsupported environments, this field appears blank.
 
 
 |snapshot

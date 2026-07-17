@@ -36,42 +36,41 @@ Retrieves NVMe subsystems.
 |Required
 |Description
 
-|replication.peer_subsystem.uuid
+|serial_number
 |string
 |query
 |False
-a|Filter by replication.peer_subsystem.uuid
+a|Filter by serial_number
 
-* Introduced in: 9.17
-
-
-|replication.error.subsystem.local_svm
-|boolean
-|query
-|False
-a|Filter by replication.error.subsystem.local_svm
-
-* Introduced in: 9.17
+* maxLength: 20
+* minLength: 20
 
 
-|replication.error.subsystem.uuid
+|replication.peer_svm.uuid
 |string
 |query
 |False
-a|Filter by replication.error.subsystem.uuid
+a|Filter by replication.peer_svm.uuid
 
 * Introduced in: 9.17
 
 
-|replication.error.subsystem.name
+|replication.peer_svm.name
 |string
 |query
 |False
-a|Filter by replication.error.subsystem.name
+a|Filter by replication.peer_svm.name
 
 * Introduced in: 9.17
-* maxLength: 64
-* minLength: 1
+
+
+|replication.error.summary.code
+|string
+|query
+|False
+a|Filter by replication.error.summary.code
+
+* Introduced in: 9.17
 
 
 |replication.error.summary.arguments.message
@@ -92,20 +91,49 @@ a|Filter by replication.error.summary.arguments.code
 * Introduced in: 9.17
 
 
-|replication.error.summary.code
-|string
-|query
-|False
-a|Filter by replication.error.summary.code
-
-* Introduced in: 9.17
-
-
 |replication.error.summary.message
 |string
 |query
 |False
 a|Filter by replication.error.summary.message
+
+* Introduced in: 9.17
+
+
+|replication.error.subsystem.name
+|string
+|query
+|False
+a|Filter by replication.error.subsystem.name
+
+* maxLength: 64
+* minLength: 1
+* Introduced in: 9.17
+
+
+|replication.error.subsystem.uuid
+|string
+|query
+|False
+a|Filter by replication.error.subsystem.uuid
+
+* Introduced in: 9.17
+
+
+|replication.error.subsystem.local_svm
+|boolean
+|query
+|False
+a|Filter by replication.error.subsystem.local_svm
+
+* Introduced in: 9.17
+
+
+|replication.peer_subsystem.uuid
+|string
+|query
+|False
+a|Filter by replication.peer_subsystem.uuid
 
 * Introduced in: 9.17
 
@@ -117,137 +145,6 @@ a|Filter by replication.error.summary.message
 a|Filter by replication.state
 
 * Introduced in: 9.17
-
-
-|replication.peer_svm.name
-|string
-|query
-|False
-a|Filter by replication.peer_svm.name
-
-* Introduced in: 9.17
-
-
-|replication.peer_svm.uuid
-|string
-|query
-|False
-a|Filter by replication.peer_svm.uuid
-
-* Introduced in: 9.17
-
-
-|serial_number
-|string
-|query
-|False
-a|Filter by serial_number
-
-* maxLength: 20
-* minLength: 20
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-* maxLength: 64
-* minLength: 1
-
-
-|hosts.proximity.peer_svms.name
-|string
-|query
-|False
-a|Filter by hosts.proximity.peer_svms.name
-
-* Introduced in: 9.17
-
-
-|hosts.proximity.peer_svms.uuid
-|string
-|query
-|False
-a|Filter by hosts.proximity.peer_svms.uuid
-
-* Introduced in: 9.17
-
-
-|hosts.proximity.local_svm
-|boolean
-|query
-|False
-a|Filter by hosts.proximity.local_svm
-
-* Introduced in: 9.17
-
-
-|hosts.dh_hmac_chap.group_size
-|string
-|query
-|False
-a|Filter by hosts.dh_hmac_chap.group_size
-
-* Introduced in: 9.12
-
-
-|hosts.dh_hmac_chap.hash_function
-|string
-|query
-|False
-a|Filter by hosts.dh_hmac_chap.hash_function
-
-* Introduced in: 9.12
-
-
-|hosts.dh_hmac_chap.mode
-|string
-|query
-|False
-a|Filter by hosts.dh_hmac_chap.mode
-
-* Introduced in: 9.12
-
-
-|hosts.nqn
-|string
-|query
-|False
-a|Filter by hosts.nqn
-
-
-|hosts.priority
-|string
-|query
-|False
-a|Filter by hosts.priority
-
-* Introduced in: 9.14
-
-
-|hosts.tls.key_type
-|string
-|query
-|False
-a|Filter by hosts.tls.key_type
-
-* Introduced in: 9.16
 
 
 |io_queue.default.depth
@@ -270,22 +167,6 @@ a|Filter by io_queue.default.count
 * Min value: 1
 
 
-|delete_on_unmap
-|boolean
-|query
-|False
-a|Filter by delete_on_unmap
-
-* Introduced in: 9.7
-
-
-|os_type
-|string
-|query
-|False
-a|Filter by os_type
-
-
 |vendor_uuids
 |string
 |query
@@ -295,14 +176,83 @@ a|Filter by vendor_uuids
 * Introduced in: 9.9
 
 
-|comment
+|hosts.proximity.peer_svms.uuid
 |string
 |query
 |False
-a|Filter by comment
+a|Filter by hosts.proximity.peer_svms.uuid
 
-* maxLength: 255
-* minLength: 0
+* Introduced in: 9.17
+
+
+|hosts.proximity.peer_svms.name
+|string
+|query
+|False
+a|Filter by hosts.proximity.peer_svms.name
+
+* Introduced in: 9.17
+
+
+|hosts.proximity.local_svm
+|boolean
+|query
+|False
+a|Filter by hosts.proximity.local_svm
+
+* Introduced in: 9.17
+
+
+|hosts.nqn
+|string
+|query
+|False
+a|Filter by hosts.nqn
+
+
+|hosts.dh_hmac_chap.hash_function
+|string
+|query
+|False
+a|Filter by hosts.dh_hmac_chap.hash_function
+
+* Introduced in: 9.12
+
+
+|hosts.dh_hmac_chap.mode
+|string
+|query
+|False
+a|Filter by hosts.dh_hmac_chap.mode
+
+* Introduced in: 9.12
+
+
+|hosts.dh_hmac_chap.group_size
+|string
+|query
+|False
+a|Filter by hosts.dh_hmac_chap.group_size
+
+* Introduced in: 9.12
+
+
+|hosts.tls.key_type
+|string
+|query
+|False
+a|Filter by hosts.tls.key_type
+
+* Introduced in: 9.16
+
+
+|hosts.priority
+|string
+|query
+|False
+a|Filter by hosts.priority
+
+* Introduced in: 9.14
 
 
 |uuid
@@ -322,11 +272,23 @@ a|Filter by target_nqn
 * minLength: 1
 
 
-|subsystem_maps.anagrpid
+|comment
 |string
 |query
 |False
-a|Filter by subsystem_maps.anagrpid
+a|Filter by comment
+
+* maxLength: 255
+* minLength: 0
+
+
+|delete_on_unmap
+|boolean
+|query
+|False
+a|Filter by delete_on_unmap
+
+* Introduced in: 9.7
 
 
 |subsystem_maps.namespace.uuid
@@ -348,6 +310,44 @@ a|Filter by subsystem_maps.namespace.name
 |query
 |False
 a|Filter by subsystem_maps.nsid
+
+
+|subsystem_maps.anagrpid
+|string
+|query
+|False
+a|Filter by subsystem_maps.anagrpid
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 64
+* minLength: 1
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|os_type
+|string
+|query
+|False
+a|Filter by os_type
 
 
 |fields
@@ -771,6 +771,7 @@ Possible values:
 
 * `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
 * `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+* `generated` - A PSK generated via NVMe in-band authentication is configured to setup the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. No value is allowed for `configured_psk`. Secure connection concatenation is only supported when DH-HMAC-CHAP authentication is also being used. A value must be set for property `dh_hmac_chap.host_secret_key` while the property `dh_hmac_chap.group_size` cannot have value `none`.
 
 This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
 

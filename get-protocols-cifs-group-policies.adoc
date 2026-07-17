@@ -30,18 +30,62 @@ Retrieves group policy objects that are yet to be applied for all SVMs.
 |Required
 |Description
 
-|registry_settings.branchcache.supported_hash_version
+|name
 |string
 |query
 |False
-a|Filter by registry_settings.branchcache.supported_hash_version
+a|Filter by name
+
+* minLength: 1
 
 
-|registry_settings.branchcache.hash_publication_mode
+|version
+|integer
+|query
+|False
+a|Filter by version
+
+
+|svm.uuid
 |string
 |query
 |False
-a|Filter by registry_settings.branchcache.hash_publication_mode
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|link
+|string
+|query
+|False
+a|Filter by link
+
+
+|ldap_path
+|string
+|query
+|False
+a|Filter by ldap_path
+
+
+|index
+|integer
+|query
+|False
+a|Filter by index
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
 
 
 |registry_settings.refresh_time_random_offset
@@ -58,27 +102,18 @@ a|Filter by registry_settings.refresh_time_random_offset
 a|Filter by registry_settings.refresh_time_interval
 
 
-|name
+|registry_settings.branchcache.hash_publication_mode
 |string
 |query
 |False
-a|Filter by name
-
-* minLength: 1
+a|Filter by registry_settings.branchcache.hash_publication_mode
 
 
-|svm.name
+|registry_settings.branchcache.supported_hash_version
 |string
 |query
 |False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
+a|Filter by registry_settings.branchcache.supported_hash_version
 
 
 |central_access_policy_settings
@@ -88,18 +123,18 @@ a|Filter by svm.uuid
 a|Filter by central_access_policy_settings
 
 
-|file_system_path
+|uuid
 |string
 |query
 |False
-a|Filter by file_system_path
+a|Filter by uuid
 
 
-|enabled
-|boolean
+|extensions
+|string
 |query
 |False
-a|Filter by enabled
+a|Filter by extensions
 
 
 |central_access_policy_staging_audit_type
@@ -109,18 +144,11 @@ a|Filter by enabled
 a|Filter by central_access_policy_staging_audit_type
 
 
-|ldap_path
+|file_system_path
 |string
 |query
 |False
-a|Filter by ldap_path
-
-
-|extensions
-|string
-|query
-|False
-a|Filter by extensions
+a|Filter by file_system_path
 
 
 |security_settings.event_audit_settings.object_access_type
@@ -137,39 +165,18 @@ a|Filter by security_settings.event_audit_settings.object_access_type
 a|Filter by security_settings.event_audit_settings.logon_type
 
 
-|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
-|boolean
-|query
-|False
-a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
-
-
-|security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
+|security_settings.event_log_settings.retention_method
 |string
 |query
 |False
-a|Filter by security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
+a|Filter by security_settings.event_log_settings.retention_method
 
 
-|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
-|boolean
+|security_settings.event_log_settings.max_size
+|integer
 |query
 |False
-a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
-
-
-|security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
-|boolean
-|query
-|False
-a|Filter by security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
-
-
-|security_settings.files_or_folders
-|string
-|query
-|False
-a|Filter by security_settings.files_or_folders
+a|Filter by security_settings.event_log_settings.max_size
 
 
 |security_settings.registry_values.signing_required
@@ -177,6 +184,34 @@ a|Filter by security_settings.files_or_folders
 |query
 |False
 a|Filter by security_settings.registry_values.signing_required
+
+
+|security_settings.kerberos.max_renew_age
+|string
+|query
+|False
+a|Filter by security_settings.kerberos.max_renew_age
+
+
+|security_settings.kerberos.max_clock_skew
+|string
+|query
+|False
+a|Filter by security_settings.kerberos.max_clock_skew
+
+
+|security_settings.kerberos.max_ticket_age
+|string
+|query
+|False
+a|Filter by security_settings.kerberos.max_ticket_age
+
+
+|security_settings.files_or_folders
+|string
+|query
+|False
+a|Filter by security_settings.files_or_folders
 
 
 |security_settings.privilege_rights.change_notify_users
@@ -200,74 +235,39 @@ a|Filter by security_settings.privilege_rights.security_privilege_users
 a|Filter by security_settings.privilege_rights.take_ownership_users
 
 
+|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
+|boolean
+|query
+|False
+a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
+
+
+|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
+|boolean
+|query
+|False
+a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
+
+
+|security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
+|string
+|query
+|False
+a|Filter by security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
+
+
+|security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
+|boolean
+|query
+|False
+a|Filter by security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
+
+
 |security_settings.restricted_groups
 |string
 |query
 |False
 a|Filter by security_settings.restricted_groups
-
-
-|security_settings.kerberos.max_ticket_age
-|string
-|query
-|False
-a|Filter by security_settings.kerberos.max_ticket_age
-
-
-|security_settings.kerberos.max_renew_age
-|string
-|query
-|False
-a|Filter by security_settings.kerberos.max_renew_age
-
-
-|security_settings.kerberos.max_clock_skew
-|string
-|query
-|False
-a|Filter by security_settings.kerberos.max_clock_skew
-
-
-|security_settings.event_log_settings.max_size
-|integer
-|query
-|False
-a|Filter by security_settings.event_log_settings.max_size
-
-
-|security_settings.event_log_settings.retention_method
-|string
-|query
-|False
-a|Filter by security_settings.event_log_settings.retention_method
-
-
-|link
-|string
-|query
-|False
-a|Filter by link
-
-
-|version
-|integer
-|query
-|False
-a|Filter by version
-
-
-|index
-|integer
-|query
-|False
-a|Filter by index
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
 
 
 |fields

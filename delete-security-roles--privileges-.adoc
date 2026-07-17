@@ -42,13 +42,68 @@ Deletes a privilege tuple (of REST URI or command/command directory path, its ac
 
 &ndash; _/api/protocols/s3/services/{svm.uuid}/users_
 
+== Artificial Intelligence Data Engine (AIDE) APIs
+
+== Data Compute Node (DCN) APIs
+
+&ndash; _/api/dcn/cluster/nodes/{node.uuid}/metrics_
+
+&ndash; _/api/dcn/network/ports/{port.uuid}/metrics_
+
+== Data-Engine APIs
+
+&ndash; _/api/data-engine/policies/{policy.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/acls_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/acls_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{entity.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/search_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/versions/{version.uuid}/diffs_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-sources_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/entities/{entity.uuid}/custom-attributes_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/queries_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/queries/{query.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/versions/{version.uuid}/diffs_
+
+When used in the context of data collection APIs, _{version.uuid}_ refers to a data collection version. In the context of workspace APIs, it refers to a workspace version.
+
 In the APIs above, and in the context of REST roles, the wildcard character &#42; can be used in place of _{volume.uuid}_ or _{svm.uuid}_ to represent _all_ volumes or _all_ SVMs, depending on whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ corresponds to the _-instance-uuid_ field in the output of the "volume show" command at the diagnostic privilege level. It can also be retrieved through the REST endpoint _/api/storage/volumes_.
+
+In the AIDE APIs described above, and in the context of REST roles, the wildcard character &#42; can be used in place of variable components in the Uniform Resource Identifier (URI) path, such as _{node.uuid}_, _{port.uuid}_, _{policy.uuid}_, _{workspace.uuid}_, _{datacollection.uuid}_, _{entity.uuid}_, _{version.uuid}_, or _{query.uuid}_. The specific variable to be replaced depends on whether the REST endpoint references nodes, ports, policies, workspaces, data collections, entities, versions, or queries.
+
+However, when using the wildcard character &#42; in place of a variable component in a URI path, it must replace
+
+*all* variable components in that path. Mixing wildcards and specific values for different variable components within the same URI path is not supported in REST roles. For example, a URI path such as _/api/data-engine/workspaces/c6e1b325-4125-11f0-abb5-bc2411f6fd43/data-collections/*/search_ is not supported.
+
+In summary, only the following two types of resource-qualified endpoints are supported in a REST role:
+
+* All variable components in the URI path are specific values. Example: _/api/data-engine/workspaces/c6e1b325-4125-11f0-abb5-bc2411f6fd43/data-collections/b09b6d25-4126-11f0-abb5-bc2411f6fd43/search_
+* All variable components in the URI path are wildcards. Example: _/api/data-engine/workspaces/*/data-collections/*/search_
+
+AIDE APIs are supported only in cluster-scoped REST roles, not in SVM-scoped REST roles.
 
 == Required parameters
 
 * `owner.uuid` - UUID of the SVM which houses this role.
 * `name` - Name of the role to be updated.
-* `path` - Constituent REST API path or command/command directory path to be deleted from this role. Can be a resource-qualified endpoint (example: _/api/svm/svms/43256a71-be02-474d-a2a9-9642e12a6a2c/top-metrics/users_). Currently, resource-qualified endpoints are limited to the _Snapshots_, _File System Analytics_ and _ONTAP S3_ endpoints listed above in the description.
+* `path` - Constituent REST API path or command/command directory path to be deleted from this role. Can be a resource-qualified endpoint (example: _/api/svm/svms/43256a71-be02-474d-a2a9-9642e12a6a2c/top-metrics/users_). Currently, resource-qualified endpoints are limited to the _Snapshots_, _File System Analytics__, Artificial Intelligence Data Engine (AIDE)_ and _ONTAP S3_ endpoints listed above in the description.
 
 == Related ONTAP commands
 
@@ -116,6 +171,33 @@ ONTAP Error Response Codes
 
 | 5636168
 | This role is mapped to a REST role and can only be modified by updating the REST role.
+
+| 5636169
+| Specified URI path is invalid or not supported. Resource-qualified endpoints are not supported.
+
+| 5636170
+| URI does not exist.
+
+| 5636172
+| User accounts detected with this role assigned. Update or delete those accounts before deleting this role.
+
+| 5636173
+| This feature requires an effective cluster version of 9.6 or later.
+
+| 5636184
+| Expanded REST roles for granular resource control feature is currently disabled.
+
+| 5636185
+| The specified UUID was not found.
+
+| 5636186
+| Expanded REST roles for granular resource control requires an effective cluster version of 9.10.1 or later.
+
+| 5636259
+| The specified child AIDE object was not found within the specified parent AIDE object.
+
+| 5636261
+| The specified grandchild AIDE object was not found within the specified child AIDE object that belongs to the specified parent AIDE object.
 
 | 13434890
 | Vserver-ID failed for Vserver roles.

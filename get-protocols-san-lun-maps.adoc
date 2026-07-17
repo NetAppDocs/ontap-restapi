@@ -34,11 +34,11 @@ Retrieves LUN maps.
 |Required
 |Description
 
-|lun.name
+|lun.uuid
 |string
 |query
 |False
-a|Filter by lun.name
+a|Filter by lun.uuid
 
 
 |lun.smbc.replicated
@@ -48,6 +48,13 @@ a|Filter by lun.name
 a|Filter by lun.smbc.replicated
 
 * Introduced in: 9.15
+
+
+|lun.name
+|string
+|query
+|False
+a|Filter by lun.name
 
 
 |lun.node.uuid
@@ -64,11 +71,18 @@ a|Filter by lun.node.uuid
 a|Filter by lun.node.name
 
 
-|lun.uuid
+|svm.uuid
 |string
 |query
 |False
-a|Filter by lun.uuid
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
 
 
 |reporting_nodes.name
@@ -89,34 +103,14 @@ a|Filter by reporting_nodes.uuid
 * Introduced in: 9.10
 
 
-|igroup.replicated
-|boolean
+|logical_unit_number
+|integer
 |query
 |False
-a|Filter by igroup.replicated
+a|Filter by logical_unit_number
 
-* Introduced in: 9.15
-
-
-|igroup.uuid
-|string
-|query
-|False
-a|Filter by igroup.uuid
-
-
-|igroup.protocol
-|string
-|query
-|False
-a|Filter by igroup.protocol
-
-
-|igroup.os_type
-|string
-|query
-|False
-a|Filter by igroup.os_type
+* Max value: 4095
+* Min value: 0
 
 
 |igroup.name
@@ -133,28 +127,43 @@ a|Filter by igroup.name
 a|Filter by igroup.initiators
 
 
-|svm.name
+|igroup.uuid
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by igroup.uuid
 
 
-|svm.uuid
+|igroup.os_type
 |string
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by igroup.os_type
 
 
-|logical_unit_number
-|integer
+|igroup.protocol
+|string
 |query
 |False
-a|Filter by logical_unit_number
+a|Filter by igroup.protocol
 
-* Max value: 4095
-* Min value: 0
+
+|igroup.replicated
+|boolean
+|query
+|False
+a|Filter by igroup.replicated
+
+* Introduced in: 9.15
+
+
+|replicated
+|boolean
+|query
+|False
+a|Filter by replicated
+
+* Introduced in: 9.19
 
 
 |fields
@@ -677,6 +686,13 @@ a|The logical unit number assigned to the LUN when mapped to the specified initi
 |lun
 |link:#lun[lun]
 a|The LUN to which the initiator group is mapped. Required in POST by supplying either the `lun.uuid`, `lun.name`, or both.
+
+
+|replicated
+|boolean
+a|The `replicated` property only applies when the initiator group is replicated and the mapped LUN is a member of a SnapMirror Synchronous relationship. When these conditions are met, `replicated` defaults to _true_, and maps are replicated. The `replicated` property can be PATCHed to _false_ to disable this replication for a LUN map.
+When set to _false_, the LUN map on the remote cluster is deleted. When set to _true_, the LUN map on the remote cluster is created.
+This property is closely related to the `local_delete_only` query parameter that can be used during DELETE. The properties achieve the same result, with the difference being the cluster where the map is deleted. PATCH the `replicated` property to _false_ to keep the local map and delete the remote map. DELETE with `local_delete_only` set to _true_ to delete the local map and keep the remote map.
 
 
 |reporting_nodes
