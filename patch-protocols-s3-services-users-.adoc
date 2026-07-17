@@ -108,6 +108,11 @@ a|Can contain any additional information about the user being created or modifie
 a|Specifies the date and time after which keys expire and are no longer valid.
 
 
+|key_id
+|integer
+a|Specifies the identifier of an S3 user key that needs to be generated or deleted. The key_id can either be '1' or '2'.
+
+
 |key_time_to_live
 |string
 a|Indicates the time period from when this parameter is specified:
@@ -116,6 +121,11 @@ a|Indicates the time period from when this parameter is specified:
 * when the user keys were last regenerated, after which the user keys expire and are no longer valid.
 * Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
 * If the value specified is '0' seconds, then the keys won't expire.
+
+
+|keys
+|array[link:#keys[keys]]
+a|Specifies the keys associated with an S3 User.
 
 
 |secret_key
@@ -139,7 +149,16 @@ a|SVM, applies only to SVM-scoped objects.
   "access_key": "<AWS-ACCESS-KEY-ID>",
   "comment": "S3 user",
   "key_expiry_time": "2024-01-01 00:00:00 +0000",
+  "key_id": 1,
   "key_time_to_live": "PT6H3M",
+  "keys": [
+    {
+      "access_key": "<AWS-ACCESS-KEY-ID>",
+      "expiry_time": "2024-01-01 00:00:00 +0000",
+      "id": 1,
+      "time_to_live": "PT6H3M"
+    }
+  ],
   "secret_key": "<AWS-SECRET-ACCESS-KEY>",
   "svm": {
     "name": "svm1",
@@ -224,11 +243,10 @@ ONTAP Error Response Codes
 
 | 92406097
 | Internal error. The operation configuration is not correct.
-
-| 92406196
-| The specified value for the "key_time_to_live" field cannot be greater than the maximum limit specified for the "max_key_time_to_live" field in the object store server.
 |===
 
+| 92406108   | The "key_id" field must be used with either the "regenerate_keys" or "delete_keys" operation.
+| 92406196   | The specified value for the "key_time_to_live" field cannot be greater than the maximum limit specified for the "max_key_time_to_live" field in the object store server. |
 | 92406197   | Object store user "user-2" must have a non-zero value for the "key_time_to_live" field because the maximum limit specified for the "max_key_time_to_live" field in the object store server is not zero.
 | 92406200   | An object store user with the same access-key already exists. |
 | 92406201   | Missing access-key or secret-key. Either provide both of the keys or none. If not provided, keys are generated automatically. |
@@ -244,6 +262,47 @@ ONTAP Error Response Codes
 [%collapsible%closed]
 //Start collapsible Definitions block
 ====                
+[#keys]
+[.api-collapsible-fifth-title]
+keys
+
+Specifies a key associated with an S3 user. At most only two keys can be associated with a user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|id
+|integer
+a|Specifies an S3 user key identifier. Each user can only have a maximum of two keys. The key_id can either be '1' or '2'.
+
+
+|time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys do not expire.
+
+
+|===
+
+
 [#href]
 [.api-collapsible-fifth-title]
 href
@@ -318,6 +377,11 @@ a|Can contain any additional information about the user being created or modifie
 a|Specifies the date and time after which keys expire and are no longer valid.
 
 
+|key_id
+|integer
+a|Specifies the identifier of an S3 user key that needs to be generated or deleted. The key_id can either be '1' or '2'.
+
+
 |key_time_to_live
 |string
 a|Indicates the time period from when this parameter is specified:
@@ -326,6 +390,11 @@ a|Indicates the time period from when this parameter is specified:
 * when the user keys were last regenerated, after which the user keys expire and are no longer valid.
 * Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
 * If the value specified is '0' seconds, then the keys won't expire.
+
+
+|keys
+|array[link:#keys[keys]]
+a|Specifies the keys associated with an S3 User.
 
 
 |secret_key

@@ -117,6 +117,17 @@ Status: 200, Ok
 |link:#_links[_links]
 a|
 
+|access_mode
+|string
+a|The `access_mode` property controls how SCSI task set management is handled for the LUN.
+This property is only supported on LUNs with the following `os_type`:
+
+* aix
+A value of _global_ is the default access mode, and indicates that task set operations impact all initiators accessing the LUN. In this mode, if an individual initiator encounters an I/O failure, its recovery can cascade the disruption to other initiators accessing the same LUN. Host operating systems not supported by this property are designed to avoid these cascading disruptions, so this property can be safely ignored.
+A value of _local_ indicates that task set operations only impact the initiator that requested the operation. When many hosts of a supported `os_type` are accessing the same LUN, the _local_ `access_mode` should be preferred.
+Modification of this property is only supported while the `status.state` of the LUN is _offline_. If a PATCH is performed while the LUN is _online_, the PATCH will automatically bring the LUN _offline_, perform the `access_mode` modification, and then bring the LUN back _online_. The host must perform a rescan to detect the new `access_mode`.
+
+
 |attributes
 |array[link:#attributes[attributes]]
 a|An array of name/value pairs optionally stored with the LUN. Attributes are available to callers to persist small amounts of application-specific metadata. They are in no way interpreted by ONTAP.
@@ -149,6 +160,15 @@ There is an added computational cost to retrieving this property's value. It is 
 a|The class of LUN.
 
 Optional in POST.
+
+
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new LUN as a clone of an existing LUN, or PATCH to overwrite an existing LUN as a clone of another. Setting a property in this sub-object indicates that a LUN clone is desired. Consider the following other properties when cloning a LUN: `auto_delete`, `qos_policy`, `space.guarantee.requested` and `space.scsi_thin_provisioning_support_enabled`.
+
+When used in a PATCH, the patched LUN's data is over-written as a clone of the source and the following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `serial_number`, `status.state`, and `uuid`.
+
+Persistent reservations for the patched LUN are also preserved.
 
 
 |comment
@@ -313,6 +333,7 @@ There is an added computational cost to retrieving property values for `vvol`. T
       "href": "/api/resourcelink"
     }
   },
+  "access_mode": "string",
   "attributes": [
     {
       "_links": {
@@ -747,6 +768,22 @@ This sub-object is used in POST to create a new LUN as a clone of an existing LU
 When used in a PATCH, the patched LUN's data is over-written as a clone of the source and the following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `serial_number`, `status.state`, and `uuid`.
 
 Persistent reservations for the patched LUN are also preserved.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|created_as_clone
+|boolean
+a|This property is _true_ when the LUN was created as a clone of another LUN. Note that this property only indicates how the LUN was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for LUNs that are not clones.
+
+
+|===
+
 
 [#consistency_group]
 [.api-collapsible-fifth-title]
@@ -1871,15 +1908,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 

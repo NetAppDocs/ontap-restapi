@@ -65,6 +65,11 @@ a|The number of seconds to allow the call to execute before returning. When doin
 a|Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
 
 
+|burst
+|link:#burst[burst]
+a|Burst settings for the QoS policy.
+
+
 |fixed
 |link:#fixed[fixed]
 a|QoS policy-groups define a fixed service level objective (SLO) for a storage object.
@@ -315,6 +320,37 @@ a|Specifies the size to be used to calculate peak IOPS per TB. The size options 
 |===
 
 
+[#burst]
+[.api-collapsible-fifth-title]
+burst
+
+Burst settings for the QoS policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|integer
+a|Amount of time in seconds a policy can burst at either the maximum percentage or maximum IOPS above the set limit.
+
+
+|iops
+|integer
+a|Burst maximum IOPS for a policy max_throughput or peak_iops. Policy max_throughput must have an IOPS component. If burst_iops is less than max_throughput or peak_iops, then max_throughput or peak_iops is used. This is mutually exclusive with burst_percent.
+
+
+|percent
+|integer
+a|Percentage of IOPS or throughput above policy max_throughput or peak_iops. This is mutually exclusive with burst_iops.
+
+
+|===
+
+
 [#fixed]
 [.api-collapsible-fifth-title]
 fixed
@@ -400,6 +436,11 @@ qos_policy
 |adaptive
 |link:#adaptive[adaptive]
 a|Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+|burst
+|link:#burst[burst]
+a|Burst settings for the QoS policy.
 
 
 |fixed

@@ -84,27 +84,25 @@ The following examples show how to retrieve the list of SnapMirror relationships
 a|Set to true to show relationships from the source only.
 
 
-|transfer.end_time
+|policy.name
 |string
 |query
 |False
-a|Filter by transfer.end_time
-
-* Introduced in: 9.9
+a|Filter by policy.name
 
 
-|transfer.uuid
+|policy.type
 |string
 |query
 |False
-a|Filter by transfer.uuid
+a|Filter by policy.type
 
 
-|transfer.bytes_transferred
-|integer
+|policy.uuid
+|string
 |query
 |False
-a|Filter by transfer.bytes_transferred
+a|Filter by policy.uuid
 
 
 |transfer.state
@@ -132,6 +130,22 @@ a|Filter by transfer.type
 * Introduced in: 9.14
 
 
+|transfer.end_time
+|string
+|query
+|False
+a|Filter by transfer.end_time
+
+* Introduced in: 9.9
+
+
+|transfer.uuid
+|string
+|query
+|False
+a|Filter by transfer.uuid
+
+
 |transfer.last_updated_time
 |string
 |query
@@ -141,48 +155,154 @@ a|Filter by transfer.last_updated_time
 * Introduced in: 9.14
 
 
-|state
+|transfer.bytes_transferred
+|integer
+|query
+|False
+a|Filter by transfer.bytes_transferred
+
+
+|last_transfer_network_compression_ratio
 |string
 |query
 |False
-a|Filter by state
+a|Filter by last_transfer_network_compression_ratio
+
+* Introduced in: 9.13
 
 
-|restore
-|boolean
-|query
-|False
-a|Filter by restore
-
-
-|policy.name
+|transfer_schedule.uuid
 |string
 |query
 |False
-a|Filter by policy.name
+a|Filter by transfer_schedule.uuid
+
+* Introduced in: 9.11
 
 
-|policy.type
+|transfer_schedule.name
 |string
 |query
 |False
-a|Filter by policy.type
+a|Filter by transfer_schedule.name
+
+* Introduced in: 9.11
 
 
-|policy.uuid
+|throttle
+|integer
+|query
+|False
+a|Filter by throttle
+
+* Introduced in: 9.11
+
+
+|total_transfer_bytes
+|integer
+|query
+|False
+a|Filter by total_transfer_bytes
+
+* Introduced in: 9.13
+
+
+|svmdr_volumes.name
 |string
 |query
 |False
-a|Filter by policy.uuid
+a|Filter by svmdr_volumes.name
+
+* Introduced in: 9.13
 
 
-|source.cluster.name
+|destination.luns.name
 |string
 |query
 |False
-a|Filter by source.cluster.name
+a|Filter by destination.luns.name
+
+* Introduced in: 9.16
+
+
+|destination.luns.uuid
+|string
+|query
+|False
+a|Filter by destination.luns.uuid
+
+* Introduced in: 9.16
+
+
+|destination.path
+|string
+|query
+|False
+a|Filter by destination.path
+
+
+|destination.cluster.uuid
+|string
+|query
+|False
+a|Filter by destination.cluster.uuid
 
 * Introduced in: 9.7
+
+
+|destination.cluster.name
+|string
+|query
+|False
+a|Filter by destination.cluster.name
+
+* Introduced in: 9.7
+
+
+|destination.svm.uuid
+|string
+|query
+|False
+a|Filter by destination.svm.uuid
+
+
+|destination.svm.name
+|string
+|query
+|False
+a|Filter by destination.svm.name
+
+
+|destination.consistency_group_volumes.name
+|string
+|query
+|False
+a|Filter by destination.consistency_group_volumes.name
+
+* Introduced in: 9.8
+
+
+|unhealthy_reason.code
+|string
+|query
+|False
+a|Filter by unhealthy_reason.code
+
+
+|unhealthy_reason.arguments
+|string
+|query
+|False
+a|Filter by unhealthy_reason.arguments
+
+* Introduced in: 9.14
+
+
+|unhealthy_reason.message
+|string
+|query
+|False
+a|Filter by unhealthy_reason.message
 
 
 |source.cluster.uuid
@@ -194,29 +314,27 @@ a|Filter by source.cluster.uuid
 * Introduced in: 9.7
 
 
-|source.consistency_group_volumes.name
+|source.cluster.name
 |string
 |query
 |False
-a|Filter by source.consistency_group_volumes.name
+a|Filter by source.cluster.name
 
-* Introduced in: 9.8
+* Introduced in: 9.7
 
 
-|source.path
+|source.svm.uuid
 |string
 |query
 |False
-a|Filter by source.path
+a|Filter by source.svm.uuid
 
 
-|source.luns.uuid
+|source.svm.name
 |string
 |query
 |False
-a|Filter by source.luns.uuid
-
-* Introduced in: 9.16
+a|Filter by source.svm.name
 
 
 |source.luns.name
@@ -228,18 +346,63 @@ a|Filter by source.luns.name
 * Introduced in: 9.16
 
 
-|source.svm.name
+|source.luns.uuid
 |string
 |query
 |False
-a|Filter by source.svm.name
+a|Filter by source.luns.uuid
+
+* Introduced in: 9.16
 
 
-|source.svm.uuid
+|source.path
 |string
 |query
 |False
-a|Filter by source.svm.uuid
+a|Filter by source.path
+
+
+|source.consistency_group_volumes.name
+|string
+|query
+|False
+a|Filter by source.consistency_group_volumes.name
+
+* Introduced in: 9.8
+
+
+|backoff_level
+|string
+|query
+|False
+a|Filter by backoff_level
+
+* Introduced in: 9.14
+
+
+|preferred_site
+|string
+|query
+|False
+a|Filter by preferred_site
+
+* Introduced in: 9.14
+
+
+|restore
+|boolean
+|query
+|False
+a|Filter by restore
+
+
+|master_bias_activated_site
+|string
+|query
+|False
+a|Filter by master_bias_activated_site
+
+* Introduced in: 9.14
 
 
 |lag_time
@@ -247,6 +410,94 @@ a|Filter by source.svm.uuid
 |query
 |False
 a|Filter by lag_time
+
+
+|selective_volumes.name
+|string
+|query
+|False
+a|Filter by selective_volumes.name
+
+* Introduced in: 9.19
+
+
+|selective_volumes.mode
+|string
+|query
+|False
+a|Filter by selective_volumes.mode
+
+* Introduced in: 9.19
+
+
+|identity_preservation
+|string
+|query
+|False
+a|Filter by identity_preservation
+
+* Introduced in: 9.11
+
+
+|io_serving_copy
+|string
+|query
+|False
+a|Filter by io_serving_copy
+
+* Introduced in: 9.14
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|consistency_group_failover.state
+|string
+|query
+|False
+a|Filter by consistency_group_failover.state
+
+* Introduced in: 9.14
+
+
+|consistency_group_failover.type
+|string
+|query
+|False
+a|Filter by consistency_group_failover.type
+
+* Introduced in: 9.14
+
+
+|consistency_group_failover.status.code
+|string
+|query
+|False
+a|Filter by consistency_group_failover.status.code
+
+* Introduced in: 9.8
+
+
+|consistency_group_failover.status.message
+|string
+|query
+|False
+a|Filter by consistency_group_failover.status.message
+
+* Introduced in: 9.8
+
+
+|consistency_group_failover.error.code
+|string
+|query
+|False
+a|Filter by consistency_group_failover.error.code
+
+* Introduced in: 9.8
 
 
 |consistency_group_failover.error.arguments.message
@@ -267,15 +518,6 @@ a|Filter by consistency_group_failover.error.arguments.code
 * Introduced in: 9.8
 
 
-|consistency_group_failover.error.code
-|string
-|query
-|False
-a|Filter by consistency_group_failover.error.code
-
-* Introduced in: 9.8
-
-
 |consistency_group_failover.error.message
 |string
 |query
@@ -285,40 +527,11 @@ a|Filter by consistency_group_failover.error.message
 * Introduced in: 9.8
 
 
-|consistency_group_failover.state
+|exported_snapshot
 |string
 |query
 |False
-a|Filter by consistency_group_failover.state
-
-* Introduced in: 9.14
-
-
-|consistency_group_failover.status.message
-|string
-|query
-|False
-a|Filter by consistency_group_failover.status.message
-
-* Introduced in: 9.8
-
-
-|consistency_group_failover.status.code
-|string
-|query
-|False
-a|Filter by consistency_group_failover.status.code
-
-* Introduced in: 9.8
-
-
-|consistency_group_failover.type
-|string
-|query
-|False
-a|Filter by consistency_group_failover.type
-
-* Introduced in: 9.14
+a|Filter by exported_snapshot
 
 
 |group_type
@@ -330,97 +543,13 @@ a|Filter by group_type
 * Introduced in: 9.11
 
 
-|master_bias_activated_site
+|total_transfer_duration
 |string
 |query
 |False
-a|Filter by master_bias_activated_site
+a|Filter by total_transfer_duration
 
-* Introduced in: 9.14
-
-
-|destination.luns.uuid
-|string
-|query
-|False
-a|Filter by destination.luns.uuid
-
-* Introduced in: 9.16
-
-
-|destination.luns.name
-|string
-|query
-|False
-a|Filter by destination.luns.name
-
-* Introduced in: 9.16
-
-
-|destination.svm.name
-|string
-|query
-|False
-a|Filter by destination.svm.name
-
-
-|destination.svm.uuid
-|string
-|query
-|False
-a|Filter by destination.svm.uuid
-
-
-|destination.consistency_group_volumes.name
-|string
-|query
-|False
-a|Filter by destination.consistency_group_volumes.name
-
-* Introduced in: 9.8
-
-
-|destination.cluster.name
-|string
-|query
-|False
-a|Filter by destination.cluster.name
-
-* Introduced in: 9.7
-
-
-|destination.cluster.uuid
-|string
-|query
-|False
-a|Filter by destination.cluster.uuid
-
-* Introduced in: 9.7
-
-
-|destination.path
-|string
-|query
-|False
-a|Filter by destination.path
-
-
-|io_serving_copy
-|string
-|query
-|False
-a|Filter by io_serving_copy
-
-* Introduced in: 9.14
-
-
-|throttle
-|integer
-|query
-|False
-a|Filter by throttle
-
-* Introduced in: 9.11
+* Introduced in: 9.13
 
 
 |last_transfer_type
@@ -432,72 +561,6 @@ a|Filter by last_transfer_type
 * Introduced in: 9.11
 
 
-|preferred_site
-|string
-|query
-|False
-a|Filter by preferred_site
-
-* Introduced in: 9.14
-
-
-|exported_snapshot
-|string
-|query
-|False
-a|Filter by exported_snapshot
-
-
-|identity_preservation
-|string
-|query
-|False
-a|Filter by identity_preservation
-
-* Introduced in: 9.11
-
-
-|unhealthy_reason.message
-|string
-|query
-|False
-a|Filter by unhealthy_reason.message
-
-
-|unhealthy_reason.arguments
-|string
-|query
-|False
-a|Filter by unhealthy_reason.arguments
-
-* Introduced in: 9.14
-
-
-|unhealthy_reason.code
-|string
-|query
-|False
-a|Filter by unhealthy_reason.code
-
-
-|svmdr_volumes.name
-|string
-|query
-|False
-a|Filter by svmdr_volumes.name
-
-* Introduced in: 9.13
-
-
-|total_transfer_duration
-|string
-|query
-|False
-a|Filter by total_transfer_duration
-
-* Introduced in: 9.13
-
-
 |healthy
 |boolean
 |query
@@ -505,56 +568,11 @@ a|Filter by total_transfer_duration
 a|Filter by healthy
 
 
-|uuid
+|state
 |string
 |query
 |False
-a|Filter by uuid
-
-
-|total_transfer_bytes
-|integer
-|query
-|False
-a|Filter by total_transfer_bytes
-
-* Introduced in: 9.13
-
-
-|backoff_level
-|string
-|query
-|False
-a|Filter by backoff_level
-
-* Introduced in: 9.14
-
-
-|transfer_schedule.name
-|string
-|query
-|False
-a|Filter by transfer_schedule.name
-
-* Introduced in: 9.11
-
-
-|transfer_schedule.uuid
-|string
-|query
-|False
-a|Filter by transfer_schedule.uuid
-
-* Introduced in: 9.11
-
-
-|last_transfer_network_compression_ratio
-|string
-|query
-|False
-a|Filter by last_transfer_network_compression_ratio
-
-* Introduced in: 9.13
+a|Filter by state
 
 
 |fields
@@ -723,6 +741,12 @@ a|
       },
       "preferred_site": "C1_sti85-vsim-ucs209a_cluster",
       "restore_to_snapshot": "string",
+      "selective_volumes": [
+        {
+          "mode": "string",
+          "name": "volume1"
+        }
+      ],
       "source": {
         "cluster": {
           "_links": {
@@ -1074,24 +1098,17 @@ storage_service
 
 |enabled
 |boolean
-a|This property indicates whether to create the destination endpoint using storage service. This property is supported for Unified ONTAP destination endpoints only.
-
-* Introduced in: 9.7
-* x-nullable: true
+a|This property indicates whether to create the destination endpoint using storage service.
 
 
 |enforce_performance
 |boolean
-a|Optional property to enforce storage service performance on the destination endpoint. This property is applicable to FlexVol volume, FlexGroup volume, and Consistency Group endpoints. This property is supported for Unified ONTAP destination endpoints only.
-
-* Default value:
-* Introduced in: 9.7
-* x-nullable: true
+a|Optional property to enforce storage service performance on the destination endpoint. This property is applicable to FlexVol volume, FlexGroup volume, and Consistency Group endpoints.
 
 
 |name
 |string
-a|Optional property to specify the storage service name for the destination endpoint. This property is considered when the property "create_destination.storage_service.enabled" is set to "true". When the property "create_destination.storage_service.enabled" is set to "true" and the "create_destination.storage_service.name" for the endpoint is not specified, then ONTAP selects the highest storage service available on the cluster to provision the destination endpoint. This property is applicable to FlexVol volume, FlexGroup volume, and Consistency Group endpoints. This property is supported for Unified ONTAP destination endpoints only.
+a|Optional property to specify the storage service name for the destination endpoint. This property is considered when the property "create_destination.storage_service.enabled" is set to "true". When the property "create_destination.storage_service.enabled" is set to "true" and the "create_destination.storage_service.name" for the endpoint is not specified, then ONTAP selects the highest storage service available on the cluster to provision the destination endpoint. This property is applicable to FlexVol volume, FlexGroup volume, and Consistency Group endpoints.
 
 * enum: ["extreme", "performance", "value"]
 * Introduced in: 9.6
@@ -1117,19 +1134,12 @@ a|Optional property to specify the destination endpoint's tiering policy when "c
 all &dash; This policy allows tiering of both destination endpoint snapshots and the user transferred data blocks to the cloud store as soon as possible by ignoring the temperature on the volume blocks. This tiering policy is not applicable for Consistency Group destination endpoints or for synchronous relationships.
 auto &dash; This policy allows tiering of both destination endpoint snapshots and the active file system user data to the cloud store
 none &dash; Destination endpoint volume blocks will not be tiered to the cloud store.
-snapshot_only &dash; This policy allows tiering of only the destination endpoint volume snapshots not associated with the active file system. The default tiering policy is "snapshot_only" for a FlexVol volume and "none" for a FlexGroup volume. This property is supported for Unified ONTAP destination endpoints only.
-
-* enum: ["all", "auto", "none", "snapshot_only"]
-* Introduced in: 9.6
-* x-nullable: true
+snapshot_only &dash; This policy allows tiering of only the destination endpoint volume snapshots not associated with the active file system. The default tiering policy is "snapshot_only" for a FlexVol volume and "none" for a FlexGroup volume.
 
 
 |supported
 |boolean
-a|Optional property to enable provisioning of the destination endpoint volumes on FabricPool aggregates. This property is applicable to FlexVol volume, FlexGroup volume, and Consistency Group endpoints. Only FabricPool aggregates are used if this property is set to "true" and only non FabricPool aggregates are used if this property is set to "false". Tiering support for a FlexGroup volume can be changed by moving all of the constituents to the required aggregates. Note that in order to tier data, not only do the destination endpoint volumes need to support tiering by using FabricPools, the "create_destination.tiering.policy" must not be "none". A destination endpoint that uses FabricPools but has a tiering "policy" of "none" supports tiering but will not tier any data. This property is supported for Unified ONTAP destination endpoints only.
-
-* Introduced in: 9.6
-* x-nullable: true
+a|Optional property to enable provisioning of the destination endpoint volumes on FabricPool aggregates. This property is applicable to FlexVol volume, FlexGroup volume, and Consistency Group endpoints. Only FabricPool aggregates are used if this property is set to "true" and only non FabricPool aggregates are used if this property is set to "false". Tiering support for a FlexGroup volume can be changed by moving all of the constituents to the required aggregates. Note that in order to tier data, not only do the destination endpoint volumes need to support tiering by using FabricPools, the "create_destination.tiering.policy" must not be "none".
 
 
 |===
@@ -1307,7 +1317,7 @@ a|
 
 |consistency_group_volumes
 |array[link:#consistency_group_volumes[consistency_group_volumes]]
-a|This property specifies the list of FlexVol volumes or LUNs of a Consistency Group. Optional on the ASA r2 platform. Mandatory for all other platforms.
+a|Mandatory property to specify the list of FlexVol volumes or LUNs of a Consistency Group.
 
 
 |luns
@@ -1370,6 +1380,29 @@ a|Unique identifier of the SnapMirror policy.
 |===
 
 
+[#selective_volumes]
+[.api-collapsible-fifth-title]
+selective_volumes
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|mode
+|string
+a|Indicates whether volumes need to be included or excluded for SnapMirror Active Sync NAS relationship. Default behavior is to protect all volumes under a vserver.
+
+
+|name
+|string
+a|The name of the volume.
+
+
+|===
+
+
 [#snapmirror_source_endpoint]
 [.api-collapsible-fifth-title]
 snapmirror_source_endpoint
@@ -1389,7 +1422,7 @@ a|
 
 |consistency_group_volumes
 |array[link:#consistency_group_volumes[consistency_group_volumes]]
-a|This property specifies the list of FlexVol volumes or LUNs of a Consistency Group. Optional on the ASA r2 platform. Mandatory for all other platforms.
+a|Mandatory property to specify the list of FlexVol volumes or LUNs of a Consistency Group.
 
 
 |luns
@@ -1596,7 +1629,7 @@ a|Snapshot exported to clients on destination.
 
 |group_type
 |string
-a|Specifies the group type of the top level SnapMirror relationship. The volume relationships are shown as _none_, the SVMDR relationships are shown as _svm_dr_, the Consistency Group relationships are shown as _consistency_group_, and the FlexGroup volume relationships are shown as _flexgroup_.
+a|Specifies the group type of the top level SnapMirror relationship. The volume relationships are shown as _none_, the SVMDR relationships are shown as _svm_dr_, the Consistency Group relationships are shown as _consistency_group_, FlexGroup volume relationships are shown as _flexgroup_ and in Snapmirror Active Sync NAS relationships the group type is _coordination_group_.
 
 
 |healthy
@@ -1667,6 +1700,11 @@ a|Set to true to create a relationship for restore. To trigger restore-transfer,
 |restore_to_snapshot
 |string
 a|Specifies the snapshot to restore to on the destination during the break operation. This property is applicable only for SnapMirror relationships with FlexVol volume endpoints and when the PATCH state is being changed to "broken_off".
+
+
+|selective_volumes
+|array[link:#selective_volumes[selective_volumes]]
+a|This field specifies the list of volumes to be protected under a vserver.
 
 
 |source

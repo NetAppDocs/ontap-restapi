@@ -159,14 +159,17 @@ a|
     }
   ],
   "mediator": {
+    "account_token": "string",
     "bluexp_account_token": "string",
     "bluexp_org_id": "string",
     "ca_certificate": "string",
+    "connection_type": "string",
     "dr_group": {
       "id": 0
     },
     "ip_address": "10.10.10.7",
     "local_mediator_connectivity": "connected",
+    "org_id": "string",
     "password": "mypassword",
     "peer_cluster": {
       "name": "cluster2",
@@ -662,20 +665,31 @@ Mediator information
 |Type
 |Description
 
-|bluexp_account_token
+|account_token
 |string
-a|BlueXP account token. This field is only applicable to the ONTAP cloud mediator.
+a|NetApp Console account token. This field is only applicable to the ONTAP cloud mediator.
 
 * x-ntap-createOnly: true
+* Introduced in: 9.19
+* x-nullable: true
+
+
+|bluexp_account_token
+|string
+a|BlueXP account token. This field is only applicable to the ONTAP cloud mediator. This has been replaced by account_token. Support for this field will be removed in a future release.
+
+* x-ntap-createOnly: true
+* x-ntap-deprecated: 9.19.1
 * Introduced in: 9.17
 * x-nullable: true
 
 
 |bluexp_org_id
 |string
-a|BlueXP organization ID. This field is only applicable to the ONTAP cloud mediator.
+a|BlueXP organization ID. This field is only applicable to the ONTAP cloud mediator. This has been replaced by org_id. Support for this field will be removed in a future release.
 
 * x-ntap-createOnly: true
+* x-ntap-deprecated: 9.19.1
 * Introduced in: 9.17
 * x-nullable: true
 
@@ -686,6 +700,17 @@ a|CA certificate for ONTAP Mediator. This is optional if the certificate is alre
 
 * x-ntap-createOnly: true
 * Introduced in: 9.8
+* x-nullable: true
+
+
+|connection_type
+|string
+a|Connection type from ONTAP MetroCluster to mediator. Applicable only to on-prem mediator used in ONTAP MetroCluster configurations.
+
+* Default value: 1
+* enum: ["iscsi_mediator", "https_mediator"]
+* Introduced in: 9.19
+* readCreate: 1
 * x-nullable: true
 
 
@@ -702,6 +727,15 @@ a|The IP address of the mediator.
 |local_mediator_connectivity
 |string
 a|Indicates the mediator connectivity status of the local cluster. Possible values are connected, unreachable, unusable and down-high-latency. This field is only applicable to the mediators in SnapMirror active sync configuration.
+
+
+|org_id
+|string
+a|NetApp Console organization ID. This field is only applicable to the ONTAP cloud mediator.
+
+* x-ntap-createOnly: true
+* Introduced in: 9.19
+* x-nullable: true
 
 
 |password
@@ -731,7 +765,7 @@ a|Indicates the connectivity status of the mediator.
 
 |service_account_client_id
 |string
-a|Client ID of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+a|Client ID of the NetApp Console service account. This field is only applicable to the ONTAP cloud mediator.
 
 * x-ntap-createOnly: true
 * Introduced in: 9.17
@@ -740,7 +774,7 @@ a|Client ID of the BlueXP service account. This field is only applicable to the 
 
 |service_account_client_secret
 |string
-a|Client secret token of the BlueXP service account. This field is only applicable to the ONTAP cloud mediator.
+a|Client secret token of the NetApp Console service account. This field is only applicable to the ONTAP cloud mediator.
 
 * x-ntap-createOnly: true
 * Introduced in: 9.17

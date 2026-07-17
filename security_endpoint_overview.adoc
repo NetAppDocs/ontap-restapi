@@ -61,12 +61,13 @@ A PATCH request on this API using the parameter "fips.enabled" switches the syst
 Contains TLS configuration information.
 
 A PATCH request on this API using the parameter "tls.cipher_suites" and/or "tls.protocol_versions" configures the permissible cipher suites and/or protocol versions for all TLS-enabled applications in the system. All protocol versions at or above the lowest version level specified are enabled, including those that are not explicitly specified.
+A PATCH request on this API using the parameter "tls.offload_enabled" configures the use of hardware (NIC) offload where it is supported.
 
 &ndash; GET    /api/security
 
 &ndash; GET    /api/security?fields=tls
 
-&ndash; PATCH  /api/security -d '{ "tls" : { "protocol_versions" : ["TLSv1.3", "TLSv1.2"], "cipher_suites" : ["TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"] } }'
+&ndash; PATCH  /api/security -d '{ "tls" : { "protocol_versions" : ["TLSv1.3", "TLSv1.2"], "cipher_suites" : ["TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"], "offload_enabled" : false } }'
 
 == "management_protocols" object
 
@@ -251,7 +252,8 @@ curl -X GET 'https://<mgmt-ip>/api/security?fields=*' -H 'accept: application/ha
   "protocol_versions": [
     "TLSv1.3",
     "TLSv1.2"
-  ]
+  ],
+  "offload_enabled": false
 },
 "management_protocols": {
   "rsh_enabled": false,

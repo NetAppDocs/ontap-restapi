@@ -12,10 +12,64 @@ summary: 'Manage cluster network security configuration'
 
 == Overview
 
-You can use the security cluster-network API endpoints to modify the cluster network security configuration.
+You can use the security cluster-network API endpoints to retrieve and modify the cluster network security configuration.
 The following operations are supported:
 
 * GET to retrieve the cluster network security status: GET security/cluster-network
 * PATCH to update the cluster network security configuration: PATCH security/cluster-network
+
+== Examples
+
+=== Retrieving the cluster network security configuration
+
+----
+
+# The API:
+GET /api/security/cluster-network
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/cluster-network" -H "accept: application/json"
+
+# The response:
+{
+"enabled": true,
+"mode": "tls",
+"status": "READY",
+"ipsec_status": "READY",
+"_links": {
+  "self": {
+    "href": "/api/security/cluster-network"
+  }
+}
+}
+----
+
+=== Enabling cluster network security with TLS and IPsec mode
+
+----
+
+# The API:
+PATCH /api/security/cluster-network
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/cluster-network" -H "accept: application/json" -H "Content-Type: application/json" -d '{"enabled": true, "mode": "tls_ipsec"}'
+
+# The response:
+HTTP/1.1 200 OK
+----
+
+=== Disabling cluster network security
+
+----
+
+# The API:
+PATCH /api/security/cluster-network
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/cluster-network" -H "accept: application/json" -H "Content-Type: application/json" -d '{"enabled": false}'
+
+# The response:
+HTTP/1.1 200 OK
+----
 
 

@@ -39,4 +39,50 @@ curl -X POST 'https://<mgmt-ip>/api/application/containers' -d '{ "svm": { "name
 }
 ----
 
+=== Creating a Flexgroup with NAS (NFS and CIFS access) along with S3 NAS bucket with S3 access policies
+
+----
+
+# The API:
+/api/application/containers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/application/containers' -d '{"svm": {"name": "vs0"}, "volumes": [{"name": "vol1", "space": {"size": "100mb"}, "scale_out": true, "qos": {"policy": {"name": "none"}}, "nas": {"path": "/vol1", "export_policy": {"name": "test_ep1", "rules": [{"clients": [{"match": "0.0.0.0/0"}], "rw_rule": ["any"], "ro_rule": ["any"]}]}, "cifs": {"shares": [{"name": "vol1", "acls": [{"type": "windows", "permission": "full_control", "user_or_group": "everyone"}]}]}}, "s3_bucket": {"name": "vol14", "nas_path": "/vol14", "policy": {"statements": [{"actions": ["ListBucket"], "effect": "allow", "resources": ["vol14", "vol1/*"]}]}}}]}'
+
+#### Response:
+{
+"job": {
+  "uuid": "66b5f040-7ae7-4635-adbd-e55768fa89a6",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/66b5f040-7ae7-4635-adbd-e55768fa89a6"
+    }
+  }
+}
+}
+----
+
+=== Creating a Flexcache with NAS (NFS and CIFS access), given there exist a Flexvol "vol1" on the cluster
+
+----
+
+# The API:
+/api/application/containers
+
+# The call:
+curl -X POST 'https://<mgmt-ip>/api/application/containers' -d '{"svm": {"name": "vs0"}, "volumes": [{"name": "vol11", "space": {"size": "320mb"}, "flexcache": {"origins": [{"volume": {"name": "vol1"}, "svm": {"name": "vs0"}}]}, "qos": {"policy": {"name": "value-fixed"}}, "nas": {"path": "/vol11", "export_policy": {"name": "vol11", "rules": [{"clients": [{"match": "0.0.0.0/0"}], "rw_rule": ["any"], "ro_rule": ["any"]}]}, "cifs": {"shares": [{"name": "vol11", "acls": [{"type": "windows", "permission": "full_control", "user_or_group": "everyone"}]}]}}}]}'
+
+#### Response:
+{
+"job": {
+  "uuid": "a9ae403c-81cd-4ff2-8c56-2a31f31a1da3",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/a9ae403c-81cd-4ff2-8c56-2a31f31a1da3"
+    }
+  }
+}
+}
+----
+
 

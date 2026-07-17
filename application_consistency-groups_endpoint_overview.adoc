@@ -760,6 +760,26 @@ curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7
 }
 ----
 
+=== Assign a QoS policy when adding a new volume to a consistency group
+
+The following example adds a single new volume with a QoS policy to an existing consistency group.
+
+----
+curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{"volumes":[{"name":"new_cg_vol","provisioning_options":{"action":"create"},"space":{"size":"500MB"},"qos":{"policy":{"name":"value-fixed"}}}]}'
+
+#### Response:
+{
+"job": {
+  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
+    }
+  }
+}
+}
+----
+
 === Add a new volume in an existing consistency group
 
 The following example adds two new volumes to an existing consistency group.

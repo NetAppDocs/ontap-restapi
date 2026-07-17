@@ -30,21 +30,25 @@ Retrieves all the LDAP schemas.
 |Required
 |Description
 
-|global_schema
-|boolean
-|query
-|False
-a|Filter by global_schema
-
-
-|name
+|rfc2307bis.group_of_unique_names
 |string
 |query
 |False
-a|Filter by name
+a|Filter by rfc2307bis.group_of_unique_names
 
-* maxLength: 32
-* minLength: 1
+
+|rfc2307bis.enabled
+|boolean
+|query
+|False
+a|Filter by rfc2307bis.enabled
+
+
+|rfc2307bis.unique_member
+|string
+|query
+|False
+a|Filter by rfc2307bis.unique_member
 
 
 |rfc2307bis.maximum_groups
@@ -57,46 +61,56 @@ a|Filter by rfc2307bis.maximum_groups
 * Min value: 1
 
 
-|rfc2307bis.enabled
-|boolean
-|query
-|False
-a|Filter by rfc2307bis.enabled
-
-
-|rfc2307bis.group_of_unique_names
+|name
 |string
 |query
 |False
-a|Filter by rfc2307bis.group_of_unique_names
+a|Filter by name
+
+* maxLength: 32
+* minLength: 1
 
 
-|rfc2307bis.unique_member
+|scope
 |string
 |query
 |False
-a|Filter by rfc2307bis.unique_member
+a|Filter by scope
 
 
-|rfc2307.attribute.home_directory
+|rfc2307.nis.netgroup
 |string
 |query
 |False
-a|Filter by rfc2307.attribute.home_directory
+a|Filter by rfc2307.nis.netgroup
 
 
-|rfc2307.attribute.user_password
+|rfc2307.nis.object
 |string
 |query
 |False
-a|Filter by rfc2307.attribute.user_password
+a|Filter by rfc2307.nis.object
 
 
-|rfc2307.attribute.gid_number
+|rfc2307.nis.netgroup_triple
 |string
 |query
 |False
-a|Filter by rfc2307.attribute.gid_number
+a|Filter by rfc2307.nis.netgroup_triple
+
+
+|rfc2307.nis.mapname
+|string
+|query
+|False
+a|Filter by rfc2307.nis.mapname
+
+
+|rfc2307.nis.mapentry
+|string
+|query
+|False
+a|Filter by rfc2307.nis.mapentry
 
 
 |rfc2307.attribute.login_shell
@@ -106,18 +120,18 @@ a|Filter by rfc2307.attribute.gid_number
 a|Filter by rfc2307.attribute.login_shell
 
 
+|rfc2307.attribute.user_password
+|string
+|query
+|False
+a|Filter by rfc2307.attribute.user_password
+
+
 |rfc2307.attribute.gecos
 |string
 |query
 |False
 a|Filter by rfc2307.attribute.gecos
-
-
-|rfc2307.attribute.uid
-|string
-|query
-|False
-a|Filter by rfc2307.attribute.uid
 
 
 |rfc2307.attribute.uid_number
@@ -127,32 +141,25 @@ a|Filter by rfc2307.attribute.uid
 a|Filter by rfc2307.attribute.uid_number
 
 
-|rfc2307.posix.account
+|rfc2307.attribute.home_directory
 |string
 |query
 |False
-a|Filter by rfc2307.posix.account
+a|Filter by rfc2307.attribute.home_directory
 
 
-|rfc2307.posix.group
+|rfc2307.attribute.uid
 |string
 |query
 |False
-a|Filter by rfc2307.posix.group
+a|Filter by rfc2307.attribute.uid
 
 
-|rfc2307.member.uid
+|rfc2307.attribute.gid_number
 |string
 |query
 |False
-a|Filter by rfc2307.member.uid
-
-
-|rfc2307.member.nis_netgroup
-|string
-|query
-|False
-a|Filter by rfc2307.member.nis_netgroup
+a|Filter by rfc2307.attribute.gid_number
 
 
 |rfc2307.cn.group
@@ -169,53 +176,39 @@ a|Filter by rfc2307.cn.group
 a|Filter by rfc2307.cn.netgroup
 
 
-|rfc2307.nis.object
+|rfc2307.member.uid
 |string
 |query
 |False
-a|Filter by rfc2307.nis.object
+a|Filter by rfc2307.member.uid
 
 
-|rfc2307.nis.mapname
+|rfc2307.member.nis_netgroup
 |string
 |query
 |False
-a|Filter by rfc2307.nis.mapname
+a|Filter by rfc2307.member.nis_netgroup
 
 
-|rfc2307.nis.netgroup_triple
+|rfc2307.posix.group
 |string
 |query
 |False
-a|Filter by rfc2307.nis.netgroup_triple
+a|Filter by rfc2307.posix.group
 
 
-|rfc2307.nis.netgroup
+|rfc2307.posix.account
 |string
 |query
 |False
-a|Filter by rfc2307.nis.netgroup
+a|Filter by rfc2307.posix.account
 
 
-|rfc2307.nis.mapentry
-|string
+|global_schema
+|boolean
 |query
 |False
-a|Filter by rfc2307.nis.mapentry
-
-
-|owner.name
-|string
-|query
-|False
-a|Filter by owner.name
-
-
-|owner.uuid
-|string
-|query
-|False
-a|Filter by owner.uuid
+a|Filter by global_schema
 
 
 |comment
@@ -225,18 +218,18 @@ a|Filter by owner.uuid
 a|Filter by comment
 
 
-|name_mapping.account.unix
+|owner.uuid
 |string
 |query
 |False
-a|Filter by name_mapping.account.unix
+a|Filter by owner.uuid
 
 
-|name_mapping.account.windows
+|owner.name
 |string
 |query
 |False
-a|Filter by name_mapping.account.windows
+a|Filter by owner.name
 
 
 |name_mapping.windows_to_unix.attribute
@@ -260,11 +253,18 @@ a|Filter by name_mapping.windows_to_unix.object_class
 a|Filter by name_mapping.windows_to_unix.no_domain_prefix
 
 
-|scope
+|name_mapping.account.windows
 |string
 |query
 |False
-a|Filter by scope
+a|Filter by name_mapping.account.windows
+
+
+|name_mapping.account.unix
+|string
+|query
+|False
+a|Filter by name_mapping.account.unix
 
 
 |fields

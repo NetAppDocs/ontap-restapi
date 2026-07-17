@@ -30,11 +30,13 @@ Retrieves the SVM migration status.
 |Required
 |Description
 
-|state
-|string
+|throttle
+|integer
 |query
 |False
-a|Filter by state
+a|Filter by throttle
+
+* Introduced in: 9.12
 
 
 |post_ponr_retry_count
@@ -46,39 +48,18 @@ a|Filter by post_ponr_retry_count
 * Introduced in: 9.17
 
 
-|auto_source_cleanup
+|auto_cutover
 |boolean
 |query
 |False
-a|Filter by auto_source_cleanup
+a|Filter by auto_cutover
 
 
-|source.cluster.name
+|last_failed_state
 |string
 |query
 |False
-a|Filter by source.cluster.name
-
-
-|source.cluster.uuid
-|string
-|query
-|False
-a|Filter by source.cluster.uuid
-
-
-|source.svm.name
-|string
-|query
-|False
-a|Filter by source.svm.name
-
-
-|source.svm.uuid
-|string
-|query
-|False
-a|Filter by source.svm.uuid
+a|Filter by last_failed_state
 
 
 |point_of_no_return
@@ -88,25 +69,46 @@ a|Filter by source.svm.uuid
 a|Filter by point_of_no_return
 
 
-|destination.ipspace.name
+|last_operation
 |string
 |query
 |False
-a|Filter by destination.ipspace.name
+a|Filter by last_operation
 
 
-|destination.ipspace.uuid
+|auto_source_cleanup
+|boolean
+|query
+|False
+a|Filter by auto_source_cleanup
+
+
+|source.svm.uuid
 |string
 |query
 |False
-a|Filter by destination.ipspace.uuid
+a|Filter by source.svm.uuid
 
 
-|uuid
+|source.svm.name
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by source.svm.name
+
+
+|source.cluster.uuid
+|string
+|query
+|False
+a|Filter by source.cluster.uuid
+
+
+|source.cluster.name
+|string
+|query
+|False
+a|Filter by source.cluster.name
 
 
 |current_operation
@@ -114,6 +116,20 @@ a|Filter by uuid
 |query
 |False
 a|Filter by current_operation
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|restart_count
+|integer
+|query
+|False
+a|Filter by restart_count
 
 
 |messages.message
@@ -130,48 +146,18 @@ a|Filter by messages.message
 a|Filter by messages.code
 
 
-|auto_cutover
-|boolean
-|query
-|False
-a|Filter by auto_cutover
-
-
-|restart_count
-|integer
-|query
-|False
-a|Filter by restart_count
-
-
-|throttle
-|integer
-|query
-|False
-a|Filter by throttle
-
-* Introduced in: 9.12
-
-
-|last_operation
+|uuid
 |string
 |query
 |False
-a|Filter by last_operation
+a|Filter by uuid
 
 
-|time_metrics.start_time
+|time_metrics.end_time
 |string
 |query
 |False
-a|Filter by time_metrics.start_time
-
-
-|time_metrics.last_resume_time
-|string
-|query
-|False
-a|Filter by time_metrics.last_resume_time
+a|Filter by time_metrics.end_time
 
 
 |time_metrics.last_pause_time
@@ -179,15 +165,6 @@ a|Filter by time_metrics.last_resume_time
 |query
 |False
 a|Filter by time_metrics.last_pause_time
-
-
-|time_metrics.last_post_ponr_retry_time
-|string
-|query
-|False
-a|Filter by time_metrics.last_post_ponr_retry_time
-
-* Introduced in: 9.17
 
 
 |time_metrics.cutover_start_time
@@ -204,6 +181,29 @@ a|Filter by time_metrics.cutover_start_time
 a|Filter by time_metrics.cutover_trigger_time
 
 
+|time_metrics.last_resume_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_resume_time
+
+
+|time_metrics.start_time
+|string
+|query
+|False
+a|Filter by time_metrics.start_time
+
+
+|time_metrics.last_post_ponr_retry_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_post_ponr_retry_time
+
+* Introduced in: 9.17
+
+
 |time_metrics.cutover_complete_time
 |string
 |query
@@ -211,18 +211,18 @@ a|Filter by time_metrics.cutover_trigger_time
 a|Filter by time_metrics.cutover_complete_time
 
 
-|time_metrics.end_time
+|destination.ipspace.name
 |string
 |query
 |False
-a|Filter by time_metrics.end_time
+a|Filter by destination.ipspace.name
 
 
-|last_failed_state
+|destination.ipspace.uuid
 |string
 |query
 |False
-a|Filter by last_failed_state
+a|Filter by destination.ipspace.uuid
 
 
 |fields

@@ -51,7 +51,7 @@ Deleting the relationship on the source only. This API must be run on the cluste
  DELETE "/api/snapmirror/relationships/93e828ba-02bc-11e9-acc7-005056a7697f/?source_only=true"
 ----
 
-Deleting the source information only. This API must be run on the cluster containing the source endpoint. This does not delete the common snapshots between the source and destination.
+Deleting the source information only. This API can be run on the both the clusters containing the source or destination endpoint. This does not delete the common snapshots between the source and destination.
 
 ----
  DELETE "/api/snapmirror/relationships/caf545a2-fc60-11e8-aa13-005056a707ff/?source_info_only=true"
@@ -110,7 +110,7 @@ a|Deletes a relationship on the source only. This parameter is applicable only w
 |boolean
 |query
 |False
-a|Deletes relationship information on the source only. This parameter is applicable only when the call is executed on the cluster that contains the source endpoint.
+a|Deletes relationship information on the source only. This parameter is applicable on both clusters containing source and destination endpoint.
 
 
 |delete_lun_maps_in_destination
@@ -221,6 +221,9 @@ ONTAP Error Response codes
 
 | 13303865
 | Deleting the specified SnapMirror policy is not supported.
+
+| 13304161
+| Delete of restore relationship took longer than expected. Check the SnapMirror relationship to determine whether the relationship was deleted successfully.
 
 | 6619715
 | Modification of relationship is in progress. Retry the command after a few minutes.

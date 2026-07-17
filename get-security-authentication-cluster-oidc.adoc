@@ -1,0 +1,419 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-authentication-cluster-oidc.html'
+summary: 'Retrieve the OIDC configuration in the ONTAP cluster'
+---
+
+= Retrieve the OIDC configuration in the ONTAP cluster
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/authentication/cluster/oidc`#
+
+*Introduced In:* 9.19
+
+Retrieves the OIDC configuration in the cluster.
+
+== Related ONTAP commands
+
+* `security oidc show`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|jwks_refresh_interval
+|string
+|query
+|False
+a|Filter by jwks_refresh_interval
+
+
+|issuer
+|string
+|query
+|False
+a|Filter by issuer
+
+
+|skip_uri_validation
+|boolean
+|query
+|False
+a|Filter by skip_uri_validation
+
+
+|end_session_endpoint
+|string
+|query
+|False
+a|Filter by end_session_endpoint
+
+
+|client_id
+|string
+|query
+|False
+a|Filter by client_id
+
+
+|provider
+|string
+|query
+|False
+a|Filter by provider
+
+
+|remote_user_claim
+|string
+|query
+|False
+a|Filter by remote_user_claim
+
+
+|access_token_issuer
+|string
+|query
+|False
+a|Filter by access_token_issuer
+
+
+|outgoing_proxy
+|string
+|query
+|False
+a|Filter by outgoing_proxy
+
+
+|token_endpoint
+|string
+|query
+|False
+a|Filter by token_endpoint
+
+
+|client_secret
+|string
+|query
+|False
+a|Filter by client_secret
+
+
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|redirect_ipaddress
+|string
+|query
+|False
+a|Filter by redirect_ipaddress
+
+
+|provider_jwks_uri
+|string
+|query
+|False
+a|Filter by provider_jwks_uri
+
+
+|authorization_endpoint
+|string
+|query
+|False
+a|Filter by authorization_endpoint
+
+
+|client_secret_hash
+|string
+|query
+|False
+a|Filter by client_secret_hash
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|access_token_issuer
+|string
+a|The issuer value for the access token when it is different from the OpenID Connect issuer.
+
+
+|authorization_endpoint
+|string
+a|The URI of the authorization endpoint for the OpenID Connect provider.
+
+
+|client_id
+|string
+a|The client ID for the application.
+
+
+|client_secret
+|string
+a|The client secret for the application.
+
+
+|client_secret_hash
+|string
+a|The hash of the client secret for the application.
+
+
+|enabled
+|boolean
+a|Indicates whether the OpenID Connect configuration is enabled.
+
+
+|end_session_endpoint
+|string
+a|The URI of the end session endpoint for the OpenID Connect provider.
+
+
+|issuer
+|string
+a|The URI of the OpenID Connect provider.
+
+
+|jwks_refresh_interval
+|string
+a|The refresh interval for the JSON Web Key Set (JWKS), in ISO-8601 format. This can be set to a value from 300 seconds to 2147483647 seconds.
+
+
+|outgoing_proxy
+|string
+a|Outgoing proxy to access external identity providers (IdPs). If not specified, no proxy is configured.
+
+
+|provider
+|string
+a|The OpenID Connect provider type.
+
+
+|provider_jwks_uri
+|string
+a|The URI of the JSON Web Key Set (JWKS) for the OpenID Connect provider.
+
+
+|redirect_ipaddress
+|string
+a|The IP address to redirect to after authentication.
+
+
+|remote_user_claim
+|string
+a|The claim used to identify the remote user.
+
+
+|skip_uri_validation
+|boolean
+a|Indicates whether to skip URI validation.
+
+
+|token_endpoint
+|string
+a|The URI of the token endpoint for the OpenID Connect provider.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "access_token_issuer": "https://example.netapp.com/adfs/services/trust",
+  "authorization_endpoint": "https://example.netapp.com/adfs/oauth2/authorize",
+  "client_id": "1234567890abcdef",
+  "client_secret": "1234567890abcdef1234567890abcdef",
+  "client_secret_hash": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "enabled": 1,
+  "end_session_endpoint": "https://example.netapp.com/adfs/oauth2/logout",
+  "issuer": "https://example.netapp.com/adfs",
+  "jwks_refresh_interval": "PT2H",
+  "outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080",
+  "provider": "adfs",
+  "provider_jwks_uri": "https://example.netapp.com/adfs/discovery/v2.0/keys",
+  "redirect_ipaddress": "10.10.10.10",
+  "remote_user_claim": "unique_name",
+  "skip_uri_validation": "",
+  "token_endpoint": "https://example.netapp.com/adfs/oauth2/token"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

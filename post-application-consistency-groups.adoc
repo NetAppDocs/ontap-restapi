@@ -275,6 +275,7 @@ The total number of volumes across all child consistency groups contained in a c
       },
       "luns": [
         {
+          "access_mode": "string",
           "clone": {
             "source": {
               "name": "/vol/volume1/lun1",
@@ -520,6 +521,7 @@ The total number of volumes across all child consistency groups contained in a c
   ],
   "luns": [
     {
+      "access_mode": "string",
       "clone": {
         "source": {
           "name": "/vol/volume1/lun1",
@@ -904,6 +906,12 @@ ONTAP Error Response Codes
 
 | 53412040
 | Splitting a non-SnapLock clone from a Snaplock consistency group during clone creation is not supported.
+
+| 53412086
+| Failed to determine the SnapMirror active sync NAS relationship for the SVM.
+
+| 53412087
+| Consistency group cannot be created because the SVM is part of a SnapMirror active sync NAS relationship.
 |===
 
 Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
@@ -1194,6 +1202,12 @@ Persistent reservations for the patched LUN are also preserved.
 |Name
 |Type
 |Description
+
+|created_as_clone
+|boolean
+a|This property is _true_ when the LUN was created as a clone of another LUN. Note that this property only indicates how the LUN was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for LUNs that are not clones.
+
 
 |source
 |link:#source[source]
@@ -1538,6 +1552,17 @@ A LUN can be created to a specified size using thin or thick provisioning. A LUN
 |Name
 |Type
 |Description
+
+|access_mode
+|string
+a|The `access_mode` property controls how SCSI task set management is handled for the LUN.
+This property is only supported on LUNs with the following `os_type`:
+
+* aix
+A value of _global_ is the default access mode, and indicates that task set operations impact all initiators accessing the LUN. In this mode, if an individual initiator encounters an I/O failure, its recovery can cascade the disruption to other initiators accessing the same LUN. Host operating systems not supported by this property are designed to avoid these cascading disruptions, so this property can be safely ignored.
+A value of _local_ indicates that task set operations only impact the initiator that requested the operation. When many hosts of a supported `os_type` are accessing the same LUN, the _local_ `access_mode` should be preferred.
+Modification of this property is only supported while the `status.state` of the LUN is _offline_. If a PATCH is performed while the LUN is _online_, the PATCH will automatically bring the LUN _offline_, perform the `access_mode` modification, and then bring the LUN back _online_. The host must perform a rescan to detect the new `access_mode`.
+
 
 |clone
 |link:#clone[clone]
@@ -1885,6 +1910,7 @@ Possible values:
 
 * `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
 * `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+* `generated` - A PSK generated via NVMe in-band authentication is configured to setup the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. No value is allowed for `configured_psk`. Secure connection concatenation is only supported when DH-HMAC-CHAP authentication is also being used. A value must be set for property `dh_hmac_chap.host_secret_key` while the property `dh_hmac_chap.group_size` cannot have value `none`.
 
 This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
 
@@ -2386,15 +2412,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 
@@ -2661,6 +2687,11 @@ export_rules
 |allow_device_creation
 |boolean
 a|Specifies whether or not device creation is allowed.
+
+
+|allow_nfs_tls_only
+|boolean
+a|Specifies whether to allow NFS access only over TLS connections.
 
 
 |allow_suid
@@ -2934,15 +2965,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 

@@ -26,11 +26,36 @@ Retrieves a collection of QoS policies.
 |Required
 |Description
 
+|pgid
+|integer
+|query
+|False
+a|Filter by pgid
+
+* Introduced in: 9.10
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
 |object_count
 |integer
 |query
 |False
 a|Filter by object_count
+
+
+|policy_class
+|string
+|query
+|False
+a|Filter by policy_class
+
+* Introduced in: 9.10
 
 
 |fixed.max_throughput_iops
@@ -43,24 +68,6 @@ a|Filter by fixed.max_throughput_iops
 * Min value: 0
 
 
-|fixed.min_throughput_mbps
-|integer
-|query
-|False
-a|Filter by fixed.min_throughput_mbps
-
-* Introduced in: 9.8
-* Max value: 4194303
-* Min value: 0
-
-
-|fixed.capacity_shared
-|boolean
-|query
-|False
-a|Filter by fixed.capacity_shared
-
-
 |fixed.max_throughput_mbps
 |integer
 |query
@@ -71,14 +78,11 @@ a|Filter by fixed.max_throughput_mbps
 * Min value: 0
 
 
-|fixed.min_throughput_iops
-|integer
+|fixed.capacity_shared
+|boolean
 |query
 |False
-a|Filter by fixed.min_throughput_iops
-
-* Max value: 2147483647
-* Min value: 0
+a|Filter by fixed.capacity_shared
 
 
 |fixed.max_throughput
@@ -99,25 +103,25 @@ a|Filter by fixed.min_throughput
 * Introduced in: 9.17
 
 
-|svm.name
-|string
+|fixed.min_throughput_iops
+|integer
 |query
 |False
-a|Filter by svm.name
+a|Filter by fixed.min_throughput_iops
+
+* Max value: 2147483647
+* Min value: 0
 
 
-|svm.uuid
-|string
+|fixed.min_throughput_mbps
+|integer
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by fixed.min_throughput_mbps
 
-
-|name
-|string
-|query
-|False
-a|Filter by name
+* Introduced in: 9.8
+* Max value: 4194303
+* Min value: 0
 
 
 |scope
@@ -129,29 +133,58 @@ a|Filter by scope
 * Introduced in: 9.11
 
 
-|pgid
+|burst.duration
 |integer
 |query
 |False
-a|Filter by pgid
+a|Filter by burst.duration
 
-* Introduced in: 9.10
+* Introduced in: 9.19
+* Max value: 3600
+* Min value: 1
 
 
-|uuid
+|burst.percent
+|integer
+|query
+|False
+a|Filter by burst.percent
+
+* Introduced in: 9.19
+* Max value: 2147483647
+* Min value: 0
+
+
+|burst.iops
+|integer
+|query
+|False
+a|Filter by burst.iops
+
+* Introduced in: 9.19
+* Max value: 2147483647
+* Min value: 0
+
+
+|name
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by name
 
 
-|policy_class
+|svm.uuid
 |string
 |query
 |False
-a|Filter by policy_class
+a|Filter by svm.uuid
 
-* Introduced in: 9.10
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
 
 
 |adaptive.absolute_min_iops
@@ -186,13 +219,6 @@ a|Filter by adaptive.block_size
 a|Filter by adaptive.expected_iops
 
 
-|adaptive.peak_iops
-|integer
-|query
-|False
-a|Filter by adaptive.peak_iops
-
-
 |adaptive.peak_iops_allocation
 |string
 |query
@@ -200,6 +226,13 @@ a|Filter by adaptive.peak_iops
 a|Filter by adaptive.peak_iops_allocation
 
 * Introduced in: 9.10
+
+
+|adaptive.peak_iops
+|integer
+|query
+|False
+a|Filter by adaptive.peak_iops
 
 
 |fields
@@ -551,6 +584,37 @@ a|Specifies the size to be used to calculate peak IOPS per TB. The size options 
 |===
 
 
+[#burst]
+[.api-collapsible-fifth-title]
+burst
+
+Burst settings for the QoS policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|integer
+a|Amount of time in seconds a policy can burst at either the maximum percentage or maximum IOPS above the set limit.
+
+
+|iops
+|integer
+a|Burst maximum IOPS for a policy max_throughput or peak_iops. Policy max_throughput must have an IOPS component. If burst_iops is less than max_throughput or peak_iops, then max_throughput or peak_iops is used. This is mutually exclusive with burst_percent.
+
+
+|percent
+|integer
+a|Percentage of IOPS or throughput above policy max_throughput or peak_iops. This is mutually exclusive with burst_iops.
+
+
+|===
+
+
 [#fixed]
 [.api-collapsible-fifth-title]
 fixed
@@ -649,6 +713,11 @@ a|
 |adaptive
 |link:#adaptive[adaptive]
 a|Adaptive QoS policy-groups define measurable service level objectives (SLOs) that adjust based on the storage object used space and the storage object allocated space.
+
+
+|burst
+|link:#burst[burst]
+a|Burst settings for the QoS policy.
 
 
 |fixed

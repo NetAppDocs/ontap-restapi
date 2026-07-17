@@ -32,18 +32,85 @@ Retrieves a collection of ports (physical, VLAN and LAG) for an entire cluster.
 |Required
 |Description
 
-|state
+|rdma_protocols
 |string
 |query
 |False
-a|Filter by state
+a|Filter by rdma_protocols
+
+* Introduced in: 9.10
 
 
-|name
+|flowcontrol_admin
 |string
 |query
 |False
-a|Filter by name
+a|Filter by flowcontrol_admin
+
+* Introduced in: 9.16
+
+
+|lag.distribution_policy
+|string
+|query
+|False
+a|Filter by lag.distribution_policy
+
+
+|lag.member_ports.name
+|string
+|query
+|False
+a|Filter by lag.member_ports.name
+
+
+|lag.member_ports.uuid
+|string
+|query
+|False
+a|Filter by lag.member_ports.uuid
+
+
+|lag.member_ports.node.name
+|string
+|query
+|False
+a|Filter by lag.member_ports.node.name
+
+
+|lag.active_ports.name
+|string
+|query
+|False
+a|Filter by lag.active_ports.name
+
+
+|lag.active_ports.uuid
+|string
+|query
+|False
+a|Filter by lag.active_ports.uuid
+
+
+|lag.active_ports.node.name
+|string
+|query
+|False
+a|Filter by lag.active_ports.node.name
+
+
+|lag.mode
+|string
+|query
+|False
+a|Filter by lag.mode
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
 
 
 |mac_address
@@ -53,36 +120,88 @@ a|Filter by name
 a|Filter by mac_address
 
 
-|speed
+|mtu
 |integer
 |query
 |False
-a|Filter by speed
+a|Filter by mtu
+
+* Min value: 68
 
 
-|statistics.timestamp
+|type
 |string
 |query
 |False
-a|Filter by statistics.timestamp
+a|Filter by type
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
+|reachability
+|string
+|query
+|False
+a|Filter by reachability
 
 * Introduced in: 9.8
 
 
-|statistics.device.timestamp
+|metric.timestamp
 |string
 |query
 |False
-a|Filter by statistics.device.timestamp
+a|Filter by metric.timestamp
 
 * Introduced in: 9.8
 
 
-|statistics.device.receive_raw.discards
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.8
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.8
+
+
+|metric.throughput.write
 |integer
 |query
 |False
-a|Filter by statistics.device.receive_raw.discards
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.8
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.8
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
 
 * Introduced in: 9.8
 
@@ -105,11 +224,29 @@ a|Filter by statistics.device.receive_raw.packets
 * Introduced in: 9.8
 
 
-|statistics.device.transmit_raw.discards
+|statistics.device.receive_raw.discards
 |integer
 |query
 |False
-a|Filter by statistics.device.transmit_raw.discards
+a|Filter by statistics.device.receive_raw.discards
+
+* Introduced in: 9.8
+
+
+|statistics.device.timestamp
+|string
+|query
+|False
+a|Filter by statistics.device.timestamp
+
+* Introduced in: 9.8
+
+
+|statistics.device.link_down_count_raw
+|integer
+|query
+|False
+a|Filter by statistics.device.link_down_count_raw
 
 * Introduced in: 9.8
 
@@ -132,11 +269,20 @@ a|Filter by statistics.device.transmit_raw.packets
 * Introduced in: 9.8
 
 
-|statistics.device.link_down_count_raw
+|statistics.device.transmit_raw.discards
 |integer
 |query
 |False
-a|Filter by statistics.device.link_down_count_raw
+a|Filter by statistics.device.transmit_raw.discards
+
+* Introduced in: 9.8
+
+
+|statistics.timestamp
+|string
+|query
+|False
+a|Filter by statistics.timestamp
 
 * Introduced in: 9.8
 
@@ -159,15 +305,6 @@ a|Filter by statistics.throughput_raw.write
 * Introduced in: 9.8
 
 
-|statistics.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.read
-
-* Introduced in: 9.8
-
-
 |statistics.throughput_raw.total
 |integer
 |query
@@ -177,67 +314,13 @@ a|Filter by statistics.throughput_raw.total
 * Introduced in: 9.8
 
 
-|lag.active_ports.node.name
-|string
+|statistics.throughput_raw.read
+|integer
 |query
 |False
-a|Filter by lag.active_ports.node.name
+a|Filter by statistics.throughput_raw.read
 
-
-|lag.active_ports.uuid
-|string
-|query
-|False
-a|Filter by lag.active_ports.uuid
-
-
-|lag.active_ports.name
-|string
-|query
-|False
-a|Filter by lag.active_ports.name
-
-
-|lag.distribution_policy
-|string
-|query
-|False
-a|Filter by lag.distribution_policy
-
-
-|lag.mode
-|string
-|query
-|False
-a|Filter by lag.mode
-
-
-|lag.member_ports.node.name
-|string
-|query
-|False
-a|Filter by lag.member_ports.node.name
-
-
-|lag.member_ports.uuid
-|string
-|query
-|False
-a|Filter by lag.member_ports.uuid
-
-
-|lag.member_ports.name
-|string
-|query
-|False
-a|Filter by lag.member_ports.name
-
-
-|type
-|string
-|query
-|False
-a|Filter by type
+* Introduced in: 9.8
 
 
 |node.name
@@ -254,20 +337,67 @@ a|Filter by node.name
 a|Filter by node.uuid
 
 
-|reachability
+|pfc_queues_admin
+|integer
+|query
+|False
+a|Filter by pfc_queues_admin
+
+* Introduced in: 9.16
+* Min value: 0
+* Max value: 7
+
+
+|vlan.tag
+|integer
+|query
+|False
+a|Filter by vlan.tag
+
+* Min value: 1
+* Max value: 4094
+
+
+|vlan.base_port.name
 |string
 |query
 |False
-a|Filter by reachability
-
-* Introduced in: 9.8
+a|Filter by vlan.base_port.name
 
 
-|enabled
-|boolean
+|vlan.base_port.uuid
+|string
 |query
 |False
-a|Filter by enabled
+a|Filter by vlan.base_port.uuid
+
+
+|vlan.base_port.node.name
+|string
+|query
+|False
+a|Filter by vlan.base_port.node.name
+
+
+|broadcast_domain.uuid
+|string
+|query
+|False
+a|Filter by broadcast_domain.uuid
+
+
+|broadcast_domain.name
+|string
+|query
+|False
+a|Filter by broadcast_domain.name
+
+
+|broadcast_domain.ipspace.name
+|string
+|query
+|False
+a|Filter by broadcast_domain.ipspace.name
 
 
 |interface_count
@@ -279,216 +409,13 @@ a|Filter by interface_count
 * Introduced in: 9.11
 
 
-|vlan.base_port.node.name
+|reachable_broadcast_domains.uuid
 |string
 |query
 |False
-a|Filter by vlan.base_port.node.name
-
-
-|vlan.base_port.uuid
-|string
-|query
-|False
-a|Filter by vlan.base_port.uuid
-
-
-|vlan.base_port.name
-|string
-|query
-|False
-a|Filter by vlan.base_port.name
-
-
-|vlan.tag
-|integer
-|query
-|False
-a|Filter by vlan.tag
-
-* Max value: 4094
-* Min value: 1
-
-
-|metric.status
-|string
-|query
-|False
-a|Filter by metric.status
+a|Filter by reachable_broadcast_domains.uuid
 
 * Introduced in: 9.8
-
-
-|metric.duration
-|string
-|query
-|False
-a|Filter by metric.duration
-
-* Introduced in: 9.8
-
-
-|metric.timestamp
-|string
-|query
-|False
-a|Filter by metric.timestamp
-
-* Introduced in: 9.8
-
-
-|metric.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.throughput.write
-
-* Introduced in: 9.8
-
-
-|metric.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.throughput.read
-
-* Introduced in: 9.8
-
-
-|metric.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.throughput.total
-
-* Introduced in: 9.8
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
-
-
-|broadcast_domain.name
-|string
-|query
-|False
-a|Filter by broadcast_domain.name
-
-
-|broadcast_domain.uuid
-|string
-|query
-|False
-a|Filter by broadcast_domain.uuid
-
-
-|broadcast_domain.ipspace.name
-|string
-|query
-|False
-a|Filter by broadcast_domain.ipspace.name
-
-
-|mtu
-|integer
-|query
-|False
-a|Filter by mtu
-
-* Min value: 68
-
-
-|discovered_devices.remaining_hold_time
-|integer
-|query
-|False
-a|Filter by discovered_devices.remaining_hold_time
-
-* Introduced in: 9.11
-
-
-|discovered_devices.protocol
-|string
-|query
-|False
-a|Filter by discovered_devices.protocol
-
-* Introduced in: 9.11
-
-
-|discovered_devices.version
-|string
-|query
-|False
-a|Filter by discovered_devices.version
-
-* Introduced in: 9.11
-
-
-|discovered_devices.ip_addresses
-|string
-|query
-|False
-a|Filter by discovered_devices.ip_addresses
-
-* Introduced in: 9.11
-
-
-|discovered_devices.chassis_id
-|string
-|query
-|False
-a|Filter by discovered_devices.chassis_id
-
-* Introduced in: 9.11
-
-
-|discovered_devices.capabilities
-|string
-|query
-|False
-a|Filter by discovered_devices.capabilities
-
-* Introduced in: 9.11
-
-
-|discovered_devices.platform
-|string
-|query
-|False
-a|Filter by discovered_devices.platform
-
-* Introduced in: 9.11
-
-
-|discovered_devices.remote_port
-|string
-|query
-|False
-a|Filter by discovered_devices.remote_port
-
-* Introduced in: 9.11
-
-
-|discovered_devices.system_name
-|string
-|query
-|False
-a|Filter by discovered_devices.system_name
-
-* Introduced in: 9.11
-
-
-|discovered_devices.name
-|string
-|query
-|False
-a|Filter by discovered_devices.name
-
-* Introduced in: 9.11
 
 
 |reachable_broadcast_domains.name
@@ -496,15 +423,6 @@ a|Filter by discovered_devices.name
 |query
 |False
 a|Filter by reachable_broadcast_domains.name
-
-* Introduced in: 9.8
-
-
-|reachable_broadcast_domains.uuid
-|string
-|query
-|False
-a|Filter by reachable_broadcast_domains.uuid
 
 * Introduced in: 9.8
 
@@ -518,33 +436,115 @@ a|Filter by reachable_broadcast_domains.ipspace.name
 * Introduced in: 9.8
 
 
-|pfc_queues_admin
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|speed
 |integer
 |query
 |False
-a|Filter by pfc_queues_admin
-
-* Introduced in: 9.16
-* Max value: 7
-* Min value: 0
+a|Filter by speed
 
 
-|flowcontrol_admin
+|discovered_devices.name
 |string
 |query
 |False
-a|Filter by flowcontrol_admin
+a|Filter by discovered_devices.name
 
-* Introduced in: 9.16
+* Introduced in: 9.11
 
 
-|rdma_protocols
+|discovered_devices.remaining_hold_time
+|integer
+|query
+|False
+a|Filter by discovered_devices.remaining_hold_time
+
+* Introduced in: 9.11
+
+
+|discovered_devices.version
 |string
 |query
 |False
-a|Filter by rdma_protocols
+a|Filter by discovered_devices.version
 
-* Introduced in: 9.10
+* Introduced in: 9.11
+
+
+|discovered_devices.remote_port
+|string
+|query
+|False
+a|Filter by discovered_devices.remote_port
+
+* Introduced in: 9.11
+
+
+|discovered_devices.capabilities
+|string
+|query
+|False
+a|Filter by discovered_devices.capabilities
+
+* Introduced in: 9.11
+
+
+|discovered_devices.protocol
+|string
+|query
+|False
+a|Filter by discovered_devices.protocol
+
+* Introduced in: 9.11
+
+
+|discovered_devices.system_name
+|string
+|query
+|False
+a|Filter by discovered_devices.system_name
+
+* Introduced in: 9.11
+
+
+|discovered_devices.chassis_id
+|string
+|query
+|False
+a|Filter by discovered_devices.chassis_id
+
+* Introduced in: 9.11
+
+
+|discovered_devices.platform
+|string
+|query
+|False
+a|Filter by discovered_devices.platform
+
+* Introduced in: 9.11
+
+
+|discovered_devices.ip_addresses
+|string
+|query
+|False
+a|Filter by discovered_devices.ip_addresses
+
+* Introduced in: 9.11
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
 
 
 |fields
@@ -576,8 +576,8 @@ a|The default is true for GET calls.  When set to false, only the number of reco
 |False
 a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
 
-* Max value: 120
 * Min value: 0
+* Max value: 120
 * Default value: 15
 
 

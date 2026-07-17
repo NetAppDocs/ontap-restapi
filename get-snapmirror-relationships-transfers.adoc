@@ -47,6 +47,13 @@ GET "/api/snapmirror/relationships/293baa53-e63d-11e8-bff1-005056a793dd/transfer
 a|SnapMirror relationship UUID
 
 
+|state
+|string
+|query
+|False
+a|Filter by state
+
+
 |snapshot
 |string
 |query
@@ -72,134 +79,6 @@ a|Filter by error_info.code
 * Introduced in: 9.10
 
 
-|bytes_transferred
-|integer
-|query
-|False
-a|Filter by bytes_transferred
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
-
-
-|relationship.restore
-|boolean
-|query
-|False
-a|Filter by relationship.restore
-
-
-|relationship.destination.luns.uuid
-|string
-|query
-|False
-a|Filter by relationship.destination.luns.uuid
-
-* Introduced in: 9.16
-
-
-|relationship.destination.luns.name
-|string
-|query
-|False
-a|Filter by relationship.destination.luns.name
-
-* Introduced in: 9.16
-
-
-|relationship.destination.svm.name
-|string
-|query
-|False
-a|Filter by relationship.destination.svm.name
-
-
-|relationship.destination.svm.uuid
-|string
-|query
-|False
-a|Filter by relationship.destination.svm.uuid
-
-
-|relationship.destination.consistency_group_volumes.name
-|string
-|query
-|False
-a|Filter by relationship.destination.consistency_group_volumes.name
-
-* Introduced in: 9.8
-
-
-|relationship.destination.cluster.name
-|string
-|query
-|False
-a|Filter by relationship.destination.cluster.name
-
-* Introduced in: 9.7
-
-
-|relationship.destination.cluster.uuid
-|string
-|query
-|False
-a|Filter by relationship.destination.cluster.uuid
-
-* Introduced in: 9.7
-
-
-|relationship.destination.path
-|string
-|query
-|False
-a|Filter by relationship.destination.path
-
-
-|state
-|string
-|query
-|False
-a|Filter by state
-
-
-|last_updated_time
-|string
-|query
-|False
-a|Filter by last_updated_time
-
-* Introduced in: 9.14
-
-
-|on_demand_attrs
-|string
-|query
-|False
-a|Filter by on_demand_attrs
-
-* Introduced in: 9.13
-
-
-|total_duration
-|string
-|query
-|False
-a|Filter by total_duration
-
-* Introduced in: 9.10
-
-
-|checkpoint_size
-|integer
-|query
-|False
-a|Filter by checkpoint_size
-
-
 |end_time
 |string
 |query
@@ -218,6 +97,45 @@ a|Filter by network_compression_ratio
 * Introduced in: 9.13
 
 
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|on_demand_attrs
+|string
+|query
+|False
+a|Filter by on_demand_attrs
+
+* Introduced in: 9.13
+
+
+|bytes_transferred
+|integer
+|query
+|False
+a|Filter by bytes_transferred
+
+
+|checkpoint_size
+|integer
+|query
+|False
+a|Filter by checkpoint_size
+
+
+|total_duration
+|string
+|query
+|False
+a|Filter by total_duration
+
+* Introduced in: 9.10
+
+
 |throttle
 |integer
 |query
@@ -225,6 +143,88 @@ a|Filter by network_compression_ratio
 a|Filter by throttle
 
 * Introduced in: 9.9
+
+
+|last_updated_time
+|string
+|query
+|False
+a|Filter by last_updated_time
+
+* Introduced in: 9.14
+
+
+|relationship.restore
+|boolean
+|query
+|False
+a|Filter by relationship.restore
+
+
+|relationship.destination.luns.name
+|string
+|query
+|False
+a|Filter by relationship.destination.luns.name
+
+* Introduced in: 9.16
+
+
+|relationship.destination.luns.uuid
+|string
+|query
+|False
+a|Filter by relationship.destination.luns.uuid
+
+* Introduced in: 9.16
+
+
+|relationship.destination.path
+|string
+|query
+|False
+a|Filter by relationship.destination.path
+
+
+|relationship.destination.cluster.uuid
+|string
+|query
+|False
+a|Filter by relationship.destination.cluster.uuid
+
+* Introduced in: 9.7
+
+
+|relationship.destination.cluster.name
+|string
+|query
+|False
+a|Filter by relationship.destination.cluster.name
+
+* Introduced in: 9.7
+
+
+|relationship.destination.svm.uuid
+|string
+|query
+|False
+a|Filter by relationship.destination.svm.uuid
+
+
+|relationship.destination.svm.name
+|string
+|query
+|False
+a|Filter by relationship.destination.svm.name
+
+
+|relationship.destination.consistency_group_volumes.name
+|string
+|query
+|False
+a|Filter by relationship.destination.consistency_group_volumes.name
+
+* Introduced in: 9.8
 
 
 |fields
@@ -657,7 +657,7 @@ a|
 
 |consistency_group_volumes
 |array[link:#consistency_group_volumes[consistency_group_volumes]]
-a|This property specifies the list of FlexVol volumes or LUNs of a Consistency Group. Optional on the ASA r2 platform. Mandatory for all other platforms.
+a|Mandatory property to specify the list of FlexVol volumes or LUNs of a Consistency Group.
 
 
 |luns

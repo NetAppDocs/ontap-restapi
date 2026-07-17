@@ -1,0 +1,234 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-authentication-cluster-oidc.html'
+summary: 'Update the OIDC configuration in the ONTAP cluster'
+---
+
+= Update the OIDC configuration in the ONTAP cluster
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/authentication/cluster/oidc`#
+
+*Introduced In:* 9.19
+
+Updates the OIDC configuration in the cluster.
+
+== Required properties
+
+* `enabled`
+
+== Related ONTAP commands
+
+* `security oidc modify`
+
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_secret_hash
+|string
+a|The hash of the client secret for the application.
+
+
+|enabled
+|boolean
+a|Indicates whether the OpenID Connect configuration is enabled.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "client_secret_hash": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "enabled": 1,
+  "skip_uri_validation": ""
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 301465616
+| Failed to enable OIDC feature, web server setup is in progress. Retry after some time.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#security_oidc]
+[.api-collapsible-fifth-title]
+security_oidc
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|client_secret_hash
+|string
+a|The hash of the client secret for the application.
+
+
+|enabled
+|boolean
+a|Indicates whether the OpenID Connect configuration is enabled.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

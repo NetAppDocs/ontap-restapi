@@ -291,6 +291,9 @@ a|Specifies the FlexGroup volume name and UUID where the bucket is hosted. This 
             "delimiters": [
               "/"
             ],
+            "if_match": [
+              "true"
+            ],
             "max_keys": [
               1000
             ],
@@ -475,89 +478,10 @@ ONTAP Error Response Codes
 
 //end row
 //start row
-|92405894 +
+|92406417 +
 //end row
 //start row
-|"Statements, principals and resources list can have a maximum of 10 entries.";
-//end row
-//start row
-|92405897 +
-//end row
-//start row
-|The principals specified in the access policy are not in the correct format. User name must be in between 1 and 64 characters. Valid characters for a user name are 0-9, A-Z, a-z, _, +, =, comma, ., @, and - .
-
-//end row
-//start row
-|92405898 +
-//end row
-//start row
-|"The SID specified in the access policy is not valid.";
-//end row
-//start row
-|92405940 +
-//end row
-//start row
-|"The specified condition key is not valid for operator "ip-address". Valid choices of keys for this operator: source-ips.";
-//end row
-//start row
-|92406014 +
-//end row
-//start row
-|"Failed to modify event selector for bucket "{bucket name}". If value of either access or permission is set to none, then the other must be set to none as well.";
-//end row
-//start row
-|92406032 +
-//end row
-//start row
-|"Modifying the NAS path for a NAS bucket is not supported.";
-//end row
-//start row
-|92406230 +
-//end row
-//start row
-|"The value for "retention.default_period" parameter for object store bucket "\{bucket}" cannot be greater than the maximum lock retention period set in the object store server for SVM "\{SVM}". Check the maximum allowed lock retention period present in the object store server for SVM "\{SVM}" and try the operation again.";
-//end row
-//start row
-|92406236 +
-//end row
-//start row
-|"The value for "retention.default_period" parameter for object store bucket "\{bucket}" cannot be less than the minimum lock retention period set in the object store server for SVM "\{SVM}". Check the minimum allowed lock retention period present in the object store server for SVM "\{SVM}" and try the operation again.";
-//end row
-//start row
-|92406217 +
-//end row
-//start row
-|"The specified "allowed_headers" is not valid because it contains more than one wild card ("*") character.";
-//end row
-//start row
-|92406224 +
-//end row
-//start row
-|"A Cross-Origin Resource Sharing (CORS) rule must have an origin and HTTP method specified.";
-//end row
-//start row
-|92406222 +
-//end row
-//start row
-|"Cannot specify Cross-Origin Resource Sharing (CORS) configuration for object store bucket "\{bucket}" on SVM "\{SVM}". Specifying such configuration is supported on object store volumes created in ONTAP 9.8 or later releases only.";
-//end row
-//start row
-|92406211 +
-//end row
-//start row
-|"The specified method "DONE" is not valid. Valid methods are GET, PUT, DELETE, HEAD, and POST.";
-//end row
-//start row
-|92405863 +
-//end row
-//start row
-|"Failed to create CORS rules for bucket "bb1". Reason: "Field "index" cannot be specified for this operation.". Resolve all the issues and retry the operation.";
-//end row
-//start row
-|92406228 +
-//end row
-//start row
-|"Cannot exceed the maximum limit of 100 Cross-Origin Resource Sharing (CORS) rules per S3 bucket "\{bucket}" in SVM "\{SVM}".";;
+|"Conditions do not apply to the combination of actions and resources in the statement.";
 //end row
 |===
 //end table
@@ -833,7 +757,7 @@ a|Size of the object smaller than specified for which the corresponding lifecycl
 
 |tags
 |array[string]
-a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+a|An array of key-value paired tags of the form +++<tag>+++or <tag=value>.+++</tag>+++
 
 
 |===
@@ -950,9 +874,24 @@ Information about policy conditions based on various condition operators and con
 a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
 
 
+|if_match
+|array[string]
+a|Controls conditional writes via If-Match header, evaluated with the Null operator; indicates whether the If-Match header is present or not.
+
+
+|if_none_match
+|boolean
+a|Controls conditional writes via If-None-Match header, evaluated with the Null operator; indicates whether the If-None-Match header is present or not.
+
+
 |max_keys
 |array[integer]
 a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|object_creation_operation
+|boolean
+a|Controls object creation requests, evaluated with the Bool operator; indicates whether it is an object-creation request or not.
 
 
 |operator

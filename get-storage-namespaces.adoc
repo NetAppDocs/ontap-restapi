@@ -49,62 +49,29 @@ There is an added computational cost to retrieving values for these properties. 
 |Required
 |Description
 
-|auto_delete
-|boolean
-|query
-|False
-a|Filter by auto_delete
-
-
-|svm.name
+|consistency_group.uuid
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by consistency_group.uuid
+
+* Introduced in: 9.16
 
 
-|svm.uuid
+|consistency_group.name
 |string
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by consistency_group.name
+
+* Introduced in: 9.16
 
 
-|status.state
+|uuid
 |string
 |query
 |False
-a|Filter by status.state
-
-
-|status.read_only
-|boolean
-|query
-|False
-a|Filter by status.read_only
-
-
-|status.mapped
-|boolean
-|query
-|False
-a|Filter by status.mapped
-
-
-|status.container_state
-|string
-|query
-|False
-a|Filter by status.container_state
-
-
-|create_time
-|string
-|query
-|False
-a|Filter by create_time
-
-* Introduced in: 9.7
+a|Filter by uuid
 
 
 |subsystem_map.anagrpid
@@ -121,15 +88,6 @@ a|Filter by subsystem_map.anagrpid
 a|Filter by subsystem_map.nsid
 
 
-|subsystem_map.subsystem.os_type
-|string
-|query
-|False
-a|Filter by subsystem_map.subsystem.os_type
-
-* Introduced in: 9.16
-
-
 |subsystem_map.subsystem.name
 |string
 |query
@@ -138,6 +96,13 @@ a|Filter by subsystem_map.subsystem.name
 
 * maxLength: 64
 * minLength: 1
+
+
+|subsystem_map.subsystem.uuid
+|string
+|query
+|False
+a|Filter by subsystem_map.subsystem.uuid
 
 
 |subsystem_map.subsystem.comment
@@ -151,11 +116,22 @@ a|Filter by subsystem_map.subsystem.comment
 * minLength: 0
 
 
-|subsystem_map.subsystem.uuid
+|subsystem_map.subsystem.os_type
 |string
 |query
 |False
-a|Filter by subsystem_map.subsystem.uuid
+a|Filter by subsystem_map.subsystem.os_type
+
+* Introduced in: 9.16
+
+
+|subsystem_map.subsystem.hosts.priority
+|string
+|query
+|False
+a|Filter by subsystem_map.subsystem.hosts.priority
+
+* Introduced in: 9.16
 
 
 |subsystem_map.subsystem.hosts.tls.key_type
@@ -163,15 +139,6 @@ a|Filter by subsystem_map.subsystem.uuid
 |query
 |False
 a|Filter by subsystem_map.subsystem.hosts.tls.key_type
-
-* Introduced in: 9.16
-
-
-|subsystem_map.subsystem.hosts.nqn
-|string
-|query
-|False
-a|Filter by subsystem_map.subsystem.hosts.nqn
 
 * Introduced in: 9.16
 
@@ -203,20 +170,20 @@ a|Filter by subsystem_map.subsystem.hosts.dh_hmac_chap.mode
 * Introduced in: 9.16
 
 
-|subsystem_map.subsystem.hosts.priority
+|subsystem_map.subsystem.hosts.nqn
 |string
 |query
 |False
-a|Filter by subsystem_map.subsystem.hosts.priority
+a|Filter by subsystem_map.subsystem.hosts.nqn
 
 * Introduced in: 9.16
 
 
-|subsystem_map.subsystem.hosts.proximity.local_svm
-|boolean
+|subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
+|string
 |query
 |False
-a|Filter by subsystem_map.subsystem.hosts.proximity.local_svm
+a|Filter by subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
 
 * Introduced in: 9.17
 
@@ -230,190 +197,13 @@ a|Filter by subsystem_map.subsystem.hosts.proximity.peer_svms.name
 * Introduced in: 9.17
 
 
-|subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
-|string
-|query
-|False
-a|Filter by subsystem_map.subsystem.hosts.proximity.peer_svms.uuid
-
-* Introduced in: 9.17
-
-
-|os_type
-|string
-|query
-|False
-a|Filter by os_type
-
-
-|consistency_group.name
-|string
-|query
-|False
-a|Filter by consistency_group.name
-
-* Introduced in: 9.16
-
-
-|consistency_group.uuid
-|string
-|query
-|False
-a|Filter by consistency_group.uuid
-
-* Introduced in: 9.16
-
-
-|statistics.latency_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.latency_raw.other
-
-* Introduced in: 9.8
-
-
-|statistics.latency_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.latency_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.latency_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.latency_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.latency_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.latency_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.iops_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.iops_raw.other
-
-* Introduced in: 9.8
-
-
-|statistics.iops_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.iops_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.iops_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.iops_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.iops_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.iops_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.throughput_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.throughput_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.status
-|string
-|query
-|False
-a|Filter by statistics.status
-
-* Introduced in: 9.8
-
-
-|statistics.timestamp
-|string
-|query
-|False
-a|Filter by statistics.timestamp
-
-* Introduced in: 9.8
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-
-|enabled
+|subsystem_map.subsystem.hosts.proximity.local_svm
 |boolean
 |query
 |False
-a|Filter by enabled
+a|Filter by subsystem_map.subsystem.hosts.proximity.local_svm
 
-
-|location.volume.name
-|string
-|query
-|False
-a|Filter by location.volume.name
-
-
-|location.volume.uuid
-|string
-|query
-|False
-a|Filter by location.volume.uuid
-
-
-|location.qtree.name
-|string
-|query
-|False
-a|Filter by location.qtree.name
+* Introduced in: 9.17
 
 
 |location.qtree.id
@@ -424,6 +214,13 @@ a|Filter by location.qtree.id
 
 * Max value: 4994
 * Min value: 0
+
+
+|location.qtree.name
+|string
+|query
+|False
+a|Filter by location.qtree.name
 
 
 |location.node.name
@@ -444,6 +241,20 @@ a|Filter by location.node.uuid
 * Introduced in: 9.10
 
 
+|location.volume.name
+|string
+|query
+|False
+a|Filter by location.volume.name
+
+
+|location.volume.uuid
+|string
+|query
+|False
+a|Filter by location.volume.uuid
+
+
 |location.namespace
 |string
 |query
@@ -451,38 +262,145 @@ a|Filter by location.node.uuid
 a|Filter by location.namespace
 
 
-|metric.latency.other
+|clone.created_as_clone
+|boolean
+|query
+|False
+a|Filter by clone.created_as_clone
+
+* Introduced in: 9.19
+
+
+|os_type
+|string
+|query
+|False
+a|Filter by os_type
+
+
+|space.physical_used
 |integer
 |query
 |False
-a|Filter by metric.latency.other
+a|Filter by space.physical_used
+
+* Introduced in: 9.16
+
+
+|space.physical_used_by_snapshots
+|integer
+|query
+|False
+a|Filter by space.physical_used_by_snapshots
+
+* Introduced in: 9.16
+
+
+|space.efficiency_ratio
+|number
+|query
+|False
+a|Filter by space.efficiency_ratio
+
+* Introduced in: 9.16
+
+
+|space.guarantee.requested
+|boolean
+|query
+|False
+a|Filter by space.guarantee.requested
+
+
+|space.guarantee.reserved
+|boolean
+|query
+|False
+a|Filter by space.guarantee.reserved
+
+
+|space.block_size
+|integer
+|query
+|False
+a|Filter by space.block_size
+
+
+|space.used
+|integer
+|query
+|False
+a|Filter by space.used
+
+
+|space.size
+|integer
+|query
+|False
+a|Filter by space.size
+
+* Max value: 140737488355328
+* Min value: 4096
+
+
+|create_time
+|string
+|query
+|False
+a|Filter by create_time
+
+* Introduced in: 9.7
+
+
+|auto_delete
+|boolean
+|query
+|False
+a|Filter by auto_delete
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 254
+* minLength: 0
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
 
 * Introduced in: 9.8
 
 
-|metric.latency.total
+|metric.throughput.total
 |integer
 |query
 |False
-a|Filter by metric.latency.total
+a|Filter by metric.throughput.total
 
 * Introduced in: 9.8
 
 
-|metric.latency.write
+|metric.throughput.read
 |integer
 |query
 |False
-a|Filter by metric.latency.write
+a|Filter by metric.throughput.read
 
 * Introduced in: 9.8
 
 
-|metric.latency.read
+|metric.iops.read
 |integer
 |query
 |False
-a|Filter by metric.latency.read
+a|Filter by metric.iops.read
 
 * Introduced in: 9.8
 
@@ -514,11 +432,11 @@ a|Filter by metric.iops.write
 * Introduced in: 9.8
 
 
-|metric.iops.read
-|integer
+|metric.status
+|string
 |query
 |False
-a|Filter by metric.iops.read
+a|Filter by metric.status
 
 * Introduced in: 9.8
 
@@ -532,33 +450,6 @@ a|Filter by metric.timestamp
 * Introduced in: 9.8
 
 
-|metric.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.throughput.write
-
-* Introduced in: 9.8
-
-
-|metric.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.throughput.read
-
-* Introduced in: 9.8
-
-
-|metric.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.throughput.total
-
-* Introduced in: 9.8
-
-
 |metric.duration
 |string
 |query
@@ -568,95 +459,213 @@ a|Filter by metric.duration
 * Introduced in: 9.8
 
 
-|metric.status
-|string
+|metric.latency.read
+|integer
 |query
 |False
-a|Filter by metric.status
+a|Filter by metric.latency.read
 
 * Introduced in: 9.8
 
 
-|comment
+|metric.latency.other
+|integer
+|query
+|False
+a|Filter by metric.latency.other
+
+* Introduced in: 9.8
+
+
+|metric.latency.total
+|integer
+|query
+|False
+a|Filter by metric.latency.total
+
+* Introduced in: 9.8
+
+
+|metric.latency.write
+|integer
+|query
+|False
+a|Filter by metric.latency.write
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.iops_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.latency_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.status
 |string
 |query
 |False
-a|Filter by comment
+a|Filter by statistics.status
 
-* maxLength: 254
-* minLength: 0
+* Introduced in: 9.8
 
 
-|uuid
+|statistics.timestamp
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by statistics.timestamp
+
+* Introduced in: 9.8
 
 
-|space.used
+|statistics.throughput_raw.write
 |integer
 |query
 |False
-a|Filter by space.used
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.8
 
 
-|space.efficiency_ratio
-|number
-|query
-|False
-a|Filter by space.efficiency_ratio
-
-* Introduced in: 9.16
-
-
-|space.physical_used_by_snapshots
+|statistics.throughput_raw.total
 |integer
 |query
 |False
-a|Filter by space.physical_used_by_snapshots
+a|Filter by statistics.throughput_raw.total
 
-* Introduced in: 9.16
+* Introduced in: 9.8
 
 
-|space.guarantee.requested
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.8
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|status.mapped
 |boolean
 |query
 |False
-a|Filter by space.guarantee.requested
+a|Filter by status.mapped
 
 
-|space.guarantee.reserved
+|status.container_state
+|string
+|query
+|False
+a|Filter by status.container_state
+
+
+|status.state
+|string
+|query
+|False
+a|Filter by status.state
+
+
+|status.read_only
 |boolean
 |query
 |False
-a|Filter by space.guarantee.reserved
+a|Filter by status.read_only
 
 
-|space.block_size
-|integer
+|svm.uuid
+|string
 |query
 |False
-a|Filter by space.block_size
+a|Filter by svm.uuid
 
 
-|space.physical_used
-|integer
+|svm.name
+|string
 |query
 |False
-a|Filter by space.physical_used
-
-* Introduced in: 9.16
+a|Filter by svm.name
 
 
-|space.size
-|integer
+|enabled
+|boolean
 |query
 |False
-a|Filter by space.size
-
-* Max value: 140737488355328
-* Min value: 4096
+a|Filter by enabled
 
 
 |fields
@@ -1030,6 +1039,22 @@ clone
 This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
 
 When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|created_as_clone
+|boolean
+a|This property is _true_ when the NVMe namespace was created as a clone of another namespace. Note that this property only indicates how the namespace was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for namespaces that are not clones.
+
+
+|===
+
 
 [#consistency_group]
 [.api-collapsible-fifth-title]
@@ -1517,15 +1542,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 
@@ -1964,6 +1989,7 @@ Possible values:
 
 * `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
 * `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+* `generated` - A PSK generated via NVMe in-band authentication is configured to setup the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. No value is allowed for `configured_psk`. Secure connection concatenation is only supported when DH-HMAC-CHAP authentication is also being used. A value must be set for property `dh_hmac_chap.host_secret_key` while the property `dh_hmac_chap.group_size` cannot have value `none`.
 
 This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
 
@@ -2169,6 +2195,13 @@ When set to _true_, the NVMe namespace becomes eligible for automatic deletion w
 This property is optional in POST and PATCH. The default value for a new NVMe namespace is _false_.
 
 There is an added computational cost to retrieving this property's value. It is not populated for a GET request unless it is explicitly requested using the `fields` query parameter. See link:getting_started_with_the_ontap_rest_api.html#Requesting_specific_fields[Requesting specific fields] to learn more.
+
+
+|clone
+|link:#clone[clone]
+a|This sub-object is used in POST to create a new NVMe namespace as a clone of an existing namespace, or PATCH to overwrite an existing namespace as a clone of another. Setting a property in this sub-object indicates that a namespace clone is desired.
+
+When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete` (unless specified in the request), `subsystem_map`, `status.state`, and `uuid`.
 
 
 |comment

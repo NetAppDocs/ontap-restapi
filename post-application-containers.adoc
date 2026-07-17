@@ -14,10 +14,11 @@ summary: 'Create an application container'
 
 Creates one or more of the following:
 
-* New NAS FlexVol or FlexGroup volumes
-* S3 buckets
-* Access policies for NFS, CIFS and S3
-* FlexCache volumes
+*** New NAS FlexVol or FlexGroup volumes (with or without S3 buckets)
+
+*** Access policies for NFS, CIFS, and S3
+
+*** FlexCache volumes
 
 == Required properties
 
@@ -75,19 +76,9 @@ a|The default is false.  If set to true, the records are returned.
 |Type
 |Description
 
-|provisioning_options
-|link:#provisioning_options[provisioning_options]
-a|Options that are applied to the operation.
-
-
 |svm
 |link:#svm[svm]
 a|The SVM in which the container is located.
-
-
-|use_mirrored_aggregates
-|boolean
-a|Specifies whether mirrored aggregates are selected when provisioning the volume. Only mirrored aggregates are used if this parameter is set to _true_ and only unmirrored aggregates are used if this parameter is set to _false_. The default value is _true_ for a MetroCluster configuration and is _false_ for a non-MetroCluster configuration.
 
 
 |volumes
@@ -103,19 +94,16 @@ a|A list of NAS volumes to provision.
 ====
 [source,json,subs=+macros]
 {
-  "provisioning_options": {
-    "exclude_aggregates": [
-      {
-        "name": "aggr1"
-      }
-    ]
-  },
   "svm": {
     "name": "svm1",
     "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
   },
   "volumes": [
     {
+      "comment": "string",
+      "encryption": {
+        "enabled": 1
+      },
       "exclude_aggregates": [
         {
           "name": "aggr1",
@@ -135,6 +123,9 @@ a|A list of NAS volumes to provision.
             }
           }
         ]
+      },
+      "guarantee": {
+        "type": "volume"
       },
       "name": "vol_cs_dept",
       "nas": {
@@ -217,6 +208,9 @@ a|A list of NAS volumes to provision.
                   "delimiters": [
                     "/"
                   ],
+                  "if_match": [
+                    "true"
+                  ],
                   "max_keys": [
                     1000
                   ],
@@ -248,6 +242,7 @@ a|A list of NAS volumes to provision.
           ]
         }
       },
+      "smas_protection": "string",
       "snaplock": {
         "append_mode_enabled": "",
         "autocommit_period": "P30M",
@@ -276,7 +271,8 @@ a|A list of NAS volumes to provision.
           }
         ],
         "policy": "string"
-      }
+      },
+      "type": "string"
     }
   ]
 }
@@ -356,6 +352,18 @@ ONTAP Error Response Codes
 
 | 53412080
 | CIFS shares name already exists.
+
+| 53412083
+| This operation is not supported for FlexVol or FlexCache volumes.
+
+| 53412085
+| FlexGroup or FlexCache volumes cannot be created because SVM is part of a SnapMirror active sync NAS relationship.
+
+| 53412086
+| Failed to determine the SnapMirror active sync NAS relationship for the SVM.
+
+| 53412088
+| Specifying this field requires an effective cluster version of 9.19.1 or later.
 |===
 
 Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
@@ -368,44 +376,6 @@ Also see the table of common errors in the link:getting_started_with_the_ontap_r
 [%collapsible%closed]
 //Start collapsible Definitions block
 ====                
-[#exclude_aggregates]
-[.api-collapsible-fifth-title]
-exclude_aggregates
-
-[cols=3*,options=header]
-|===
-|Name
-|Type
-|Description
-
-|name
-|string
-a|
-
-|===
-
-
-[#provisioning_options]
-[.api-collapsible-fifth-title]
-provisioning_options
-
-Options that are applied to the operation.
-
-
-[cols=3*,options=header]
-|===
-|Name
-|Type
-|Description
-
-|exclude_aggregates
-|array[link:#exclude_aggregates[exclude_aggregates]]
-a|A list of aggregates to exclude when determining the placement of the volume.
-
-
-|===
-
-
 [#href]
 [.api-collapsible-fifth-title]
 href
@@ -447,6 +417,24 @@ a|The name of the SVM. This field cannot be specified in a PATCH method.
 |uuid
 |string
 a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#encryption]
+[.api-collapsible-fifth-title]
+encryption
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Creates an encrypted or unencrypted volume. For POST requests, when set to 'true', a new key is generated and used to encrypt the specified volume. The underlying SVM must be configured with the key manager. When set to 'false', the volume created will be unencrypted.
 
 
 |===
@@ -587,6 +575,11 @@ The FlexCache origin volume.
 a|If set to true, a DR cache is created.
 
 
+|global_file_locking_enabled
+|boolean
+a|Specifies whether a FlexCache volume has global file locking mode enabled. Global file locking mode is a mode where protocol read locking semantics are enforced across all FlexCaches and origins of a FlexCache volume. When global file locking mode is enabled, cache locks are honored when flexcaches are disconnected from the origin.
+
+
 |origins
 |array[link:#container_volume_flexcache_relationship[container_volume_flexcache_relationship]]
 a|
@@ -594,6 +587,24 @@ a|
 |writeback
 |link:#writeback[writeback]
 a|
+
+|===
+
+
+[#guarantee]
+[.api-collapsible-fifth-title]
+guarantee
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|type
+|string
+a|The type of space guarantee of this volume.
+
 
 |===
 
@@ -862,6 +873,11 @@ export_rules
 a|Specifies whether or not device creation is allowed.
 
 
+|allow_nfs_tls_only
+|boolean
+a|Specifies whether to allow NFS access only over TLS connections.
+
+
 |allow_suid
 |boolean
 a|Specifies whether or not SetUID bits in SETATTR Op is to be honored.
@@ -1088,9 +1104,24 @@ Information about policy conditions based on various condition operators and con
 a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
 
 
+|if_match
+|array[string]
+a|Controls conditional writes via If-Match header, evaluated with the Null operator; indicates whether the If-Match header is present or not.
+
+
+|if_none_match
+|boolean
+a|Controls conditional writes via If-None-Match header, evaluated with the Null operator; indicates whether the If-None-Match header is present or not.
+
+
 |max_keys
 |array[integer]
 a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|object_creation_operation
+|boolean
+a|Controls object creation requests, evaluated with the Bool operator; indicates whether it is an object-creation request or not.
 
 
 |operator
@@ -1298,6 +1329,24 @@ a|
 |===
 
 
+[#snapshot]
+[.api-collapsible-fifth-title]
+snapshot
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|reserve_percent
+|integer
+a|The space that has been set aside as a reserve for snapshot usage, in percent.
+
+
+|===
+
+
 [#space]
 [.api-collapsible-fifth-title]
 space
@@ -1312,6 +1361,10 @@ space
 |integer
 a|The total provisioned size of the container, in bytes.
 
+
+|snapshot
+|link:#snapshot[snapshot]
+a|
 
 |===
 
@@ -1379,15 +1432,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 
@@ -1405,6 +1458,15 @@ volumes
 |Type
 |Description
 
+|comment
+|string
+a|A comment for the container volume.
+
+
+|encryption
+|link:#encryption[encryption]
+a|
+
 |exclude_aggregates
 |array[link:#exclude_aggregates[exclude_aggregates]]
 a|A list of aggregates to exclude when determining the placement of the volume.
@@ -1413,6 +1475,15 @@ a|A list of aggregates to exclude when determining the placement of the volume.
 |flexcache
 |link:#flexcache[flexcache]
 a|The FlexCache origin volume.
+
+
+|guarantee
+|link:#guarantee[guarantee]
+a|
+
+|is_s3_arbitrary_part_size_enabled
+|boolean
+a|Specifies whether the volume should allow Amazon S3 multipart uploads with arbitrary part lengths. This is only supported for FlexGroup volumes with advanced granular data. The default value is `false`. When set to `true`, it cannot be reverted to `false`. Clusters with any volumes where this is `true` cannot be reverted to a release that does not support this feature.
 
 
 |name
@@ -1439,9 +1510,19 @@ a|The S3 bucket
 a|Denotes a Flexgroup.
 
 
+|smas_protection
+|string
+a|Specifies whether the volume should be protected by SnapMirror active sync for NAS.
+
+
 |snaplock
 |link:#snaplock[snaplock]
 a|
+
+|snapshot_directory_access_enabled
+|boolean
+a|If set to true, this field enables the visible ".snapshot" directory from the client. The ".snapshot" directory will be available in every directory on the volume.
+
 
 |snapshot_locking_enabled
 |boolean
@@ -1466,6 +1547,13 @@ a|Determines the placement of the volume that is to be provisioned.
 |link:#tiering[tiering]
 a|
 
+|type
+|string
+a|Type of the volume.
+rw &dash; read-write volume.
+dp &dash; data-protection volume.
+
+
 |use_mirrored_aggregates
 |boolean
 a|Specifies whether mirrored aggregates are selected when provisioning the volume. Only mirrored aggregates are used if this parameter is set to _true_ and only unmirrored aggregates are used if this parameter is set to _false_. The default value is _true_ for a MetroCluster configuration and is _false_ for a non-MetroCluster configuration.
@@ -1484,19 +1572,9 @@ container
 |Type
 |Description
 
-|provisioning_options
-|link:#provisioning_options[provisioning_options]
-a|Options that are applied to the operation.
-
-
 |svm
 |link:#svm[svm]
 a|The SVM in which the container is located.
-
-
-|use_mirrored_aggregates
-|boolean
-a|Specifies whether mirrored aggregates are selected when provisioning the volume. Only mirrored aggregates are used if this parameter is set to _true_ and only unmirrored aggregates are used if this parameter is set to _false_. The default value is _true_ for a MetroCluster configuration and is _false_ for a non-MetroCluster configuration.
 
 
 |volumes

@@ -42,34 +42,32 @@ GET "/api/snapmirror/policies"
 |Required
 |Description
 
-|uuid
+|name
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by name
 
 
-|create_snapshot_on_source
-|boolean
-|query
-|False
-a|Filter by create_snapshot_on_source
-
-* Introduced in: 9.11
-
-
-|network_compression_enabled
-|boolean
-|query
-|False
-a|Filter by network_compression_enabled
-
-
-|sync_type
+|svm.uuid
 |string
 |query
 |False
-a|Filter by sync_type
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|throttle
+|integer
+|query
+|False
+a|Filter by throttle
 
 
 |copy_latest_source_snapshot
@@ -88,11 +86,25 @@ a|Filter by copy_latest_source_snapshot
 a|Filter by comment
 
 
-|identity_preservation
+|transfer_schedule.uuid
 |string
 |query
 |False
-a|Filter by identity_preservation
+a|Filter by transfer_schedule.uuid
+
+
+|transfer_schedule.name
+|string
+|query
+|False
+a|Filter by transfer_schedule.name
+
+
+|network_compression_enabled
+|boolean
+|query
+|False
+a|Filter by network_compression_enabled
 
 
 |type
@@ -100,6 +112,29 @@ a|Filter by identity_preservation
 |query
 |False
 a|Filter by type
+
+
+|create_snapshot_on_source
+|boolean
+|query
+|False
+a|Filter by create_snapshot_on_source
+
+* Introduced in: 9.11
+
+
+|sync_common_snapshot_schedule.uuid
+|string
+|query
+|False
+a|Filter by sync_common_snapshot_schedule.uuid
+
+
+|sync_common_snapshot_schedule.name
+|string
+|query
+|False
+a|Filter by sync_common_snapshot_schedule.name
 
 
 |rpo
@@ -111,20 +146,6 @@ a|Filter by rpo
 * Introduced in: 9.10
 
 
-|name
-|string
-|query
-|False
-a|Filter by name
-
-
-|scope
-|string
-|query
-|False
-a|Filter by scope
-
-
 |copy_all_source_snapshots
 |boolean
 |query
@@ -134,55 +155,32 @@ a|Filter by copy_all_source_snapshots
 * Introduced in: 9.10
 
 
-|transfer_schedule.name
+|sync_type
 |string
 |query
 |False
-a|Filter by transfer_schedule.name
+a|Filter by sync_type
 
 
-|transfer_schedule.uuid
+|scope
 |string
 |query
 |False
-a|Filter by transfer_schedule.uuid
+a|Filter by scope
 
 
-|throttle
-|integer
-|query
-|False
-a|Filter by throttle
-
-
-|sync_common_snapshot_schedule.name
+|uuid
 |string
 |query
 |False
-a|Filter by sync_common_snapshot_schedule.name
+a|Filter by uuid
 
 
-|sync_common_snapshot_schedule.uuid
+|retention.prefix
 |string
 |query
 |False
-a|Filter by sync_common_snapshot_schedule.uuid
-
-
-|retention.count
-|integer
-|query
-|False
-a|Filter by retention.count
-
-
-|retention.warn
-|integer
-|query
-|False
-a|Filter by retention.warn
-
-* Introduced in: 9.13
+a|Filter by retention.prefix
 
 
 |retention.period
@@ -194,18 +192,11 @@ a|Filter by retention.period
 * Introduced in: 9.11
 
 
-|retention.creation_schedule.name
+|retention.count
 |string
 |query
 |False
-a|Filter by retention.creation_schedule.name
-
-
-|retention.creation_schedule.uuid
-|string
-|query
-|False
-a|Filter by retention.creation_schedule.uuid
+a|Filter by retention.count
 
 
 |retention.preserve
@@ -224,25 +215,34 @@ a|Filter by retention.preserve
 a|Filter by retention.label
 
 
-|retention.prefix
+|retention.creation_schedule.uuid
 |string
 |query
 |False
-a|Filter by retention.prefix
+a|Filter by retention.creation_schedule.uuid
 
 
-|svm.name
+|retention.creation_schedule.name
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by retention.creation_schedule.name
 
 
-|svm.uuid
+|retention.warn
+|integer
+|query
+|False
+a|Filter by retention.warn
+
+* Introduced in: 9.13
+
+
+|identity_preservation
 |string
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by identity_preservation
 
 
 |fields
@@ -345,7 +345,7 @@ a|
       "name": "Asynchronous",
       "retention": [
         {
-          "count": 7,
+          "count": "7",
           "creation_schedule": {
             "_links": {
               "self": {
@@ -555,7 +555,7 @@ SnapMirror policy rule for retention.
 |Description
 
 |count
-|integer
+|string
 a|Number of snapshots to be kept for retention. Maximum value will differ based on type of relationship and scaling factor.
 
 

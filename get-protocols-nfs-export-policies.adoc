@@ -37,57 +37,11 @@ NOTE: `are_rules_truncated` is set to 'true' if the total number of export-polic
 |Required
 |Description
 
-|id
-|integer
-|query
-|False
-a|Filter by id
-
-
-|are_rules_truncated
-|boolean
-|query
-|False
-a|Filter by are_rules_truncated
-
-* Introduced in: 9.18
-
-
-|svm.name
+|rules.superuser
 |string
 |query
 |False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-* maxLength: 256
-
-
-|rules.index
-|integer
-|query
-|False
-a|Filter by rules.index
-
-
-|rules.clients.match
-|string
-|query
-|False
-a|Filter by rules.clients.match
+a|Filter by rules.superuser
 
 
 |rules.chown_mode
@@ -108,27 +62,20 @@ a|Filter by rules.ntfs_unix_security
 * Introduced in: 9.9
 
 
-|rules.allow_suid
+|rules.allow_device_creation
 |boolean
 |query
 |False
-a|Filter by rules.allow_suid
+a|Filter by rules.allow_device_creation
 
 * Introduced in: 9.9
 
 
-|rules.superuser
-|string
+|rules.index
+|integer
 |query
 |False
-a|Filter by rules.superuser
-
-
-|rules.ro_rule
-|string
-|query
-|False
-a|Filter by rules.ro_rule
+a|Filter by rules.index
 
 
 |rules.protocols
@@ -145,13 +92,36 @@ a|Filter by rules.protocols
 a|Filter by rules.anonymous_user
 
 
-|rules.allow_device_creation
+|rules.allow_suid
 |boolean
 |query
 |False
-a|Filter by rules.allow_device_creation
+a|Filter by rules.allow_suid
 
 * Introduced in: 9.9
+
+
+|rules.allow_nfs_tls_only
+|boolean
+|query
+|False
+a|Filter by rules.allow_nfs_tls_only
+
+* Introduced in: 9.19
+
+
+|rules.ro_rule
+|string
+|query
+|False
+a|Filter by rules.ro_rule
+
+
+|rules.clients.match
+|string
+|query
+|False
+a|Filter by rules.clients.match
 
 
 |rules.rw_rule
@@ -159,6 +129,45 @@ a|Filter by rules.allow_device_creation
 |query
 |False
 a|Filter by rules.rw_rule
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 256
+
+
+|id
+|integer
+|query
+|False
+a|Filter by id
+
+
+|are_rules_truncated
+|boolean
+|query
+|False
+a|Filter by are_rules_truncated
+
+* Introduced in: 9.18
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
 
 
 |fields
@@ -473,6 +482,11 @@ a|
 |allow_device_creation
 |boolean
 a|Specifies whether or not device creation is allowed.
+
+
+|allow_nfs_tls_only
+|boolean
+a|Specifies whether to allow NFS access only over TLS connections.
 
 
 |allow_suid

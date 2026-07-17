@@ -43,22 +43,58 @@ There is an added computational cost to retrieving values for these properties. 
 |Required
 |Description
 
-|proxy_username
+|auth-style
 |string
 |query
 |False
-a|Filter by proxy_username
+a|Filter by auth-style
 
 * Introduced in: 9.15
 
 
-|auth_user_type
+|timeout
+|integer
+|query
+|False
+a|Filter by timeout
+
+* Introduced in: 9.15
+
+
+|key_vault_uri
 |string
 |query
 |False
-a|Filter by auth_user_type
+a|Filter by key_vault_uri
 
-* Introduced in: 9.16
+* Introduced in: 9.15
+
+
+|tenant_id
+|string
+|query
+|False
+a|Filter by tenant_id
+
+* Introduced in: 9.15
+
+
+|proxy_type
+|string
+|query
+|False
+a|Filter by proxy_type
+
+* Introduced in: 9.15
+
+
+|security.encrypt_dc_connection
+|boolean
+|query
+|False
+a|Filter by security.encrypt_dc_connection
+
+* Introduced in: 9.8
 
 
 |security.restrict_anonymous
@@ -68,36 +104,20 @@ a|Filter by auth_user_type
 a|Filter by security.restrict_anonymous
 
 
-|security.use_ldaps
+|security.smb_encryption
 |boolean
 |query
 |False
-a|Filter by security.use_ldaps
-
-* Introduced in: 9.10
+a|Filter by security.smb_encryption
 
 
-|security.smb_signing
-|boolean
+|security.lm_compatibility_level
+|string
 |query
 |False
-a|Filter by security.smb_signing
+a|Filter by security.lm_compatibility_level
 
-
-|security.ldap_referral_enabled
-|boolean
-|query
-|False
-a|Filter by security.ldap_referral_enabled
-
-* Introduced in: 9.10
-
-
-|security.kdc_encryption
-|boolean
-|query
-|False
-a|Filter by security.kdc_encryption
+* Introduced in: 9.8
 
 
 |security.aes_netlogon_enabled
@@ -109,11 +129,52 @@ a|Filter by security.aes_netlogon_enabled
 * Introduced in: 9.10
 
 
+|security.smb_signing
+|boolean
+|query
+|False
+a|Filter by security.smb_signing
+
+
+|security.use_start_tls
+|boolean
+|query
+|False
+a|Filter by security.use_start_tls
+
+* Introduced in: 9.10
+
+
+|security.kdc_encryption
+|boolean
+|query
+|False
+a|Filter by security.kdc_encryption
+
+
 |security.session_security
 |string
 |query
 |False
 a|Filter by security.session_security
+
+* Introduced in: 9.10
+
+
+|security.ldap_referral_enabled
+|boolean
+|query
+|False
+a|Filter by security.ldap_referral_enabled
+
+* Introduced in: 9.10
+
+
+|security.use_ldaps
+|boolean
+|query
+|False
+a|Filter by security.use_ldaps
 
 * Introduced in: 9.10
 
@@ -127,40 +188,6 @@ a|Filter by security.try_ldap_channel_binding
 * Introduced in: 9.10
 
 
-|security.use_start_tls
-|boolean
-|query
-|False
-a|Filter by security.use_start_tls
-
-* Introduced in: 9.10
-
-
-|security.lm_compatibility_level
-|string
-|query
-|False
-a|Filter by security.lm_compatibility_level
-
-* Introduced in: 9.8
-
-
-|security.encrypt_dc_connection
-|boolean
-|query
-|False
-a|Filter by security.encrypt_dc_connection
-
-* Introduced in: 9.8
-
-
-|security.smb_encryption
-|boolean
-|query
-|False
-a|Filter by security.smb_encryption
-
-
 |security.advertised_kdc_encryptions
 |string
 |query
@@ -168,90 +195,6 @@ a|Filter by security.smb_encryption
 a|Filter by security.advertised_kdc_encryptions
 
 * Introduced in: 9.12
-
-
-|proxy_host
-|string
-|query
-|False
-a|Filter by proxy_host
-
-* Introduced in: 9.15
-
-
-|client_id
-|string
-|query
-|False
-a|Filter by client_id
-
-* Introduced in: 9.15
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|ad_domain.default_site
-|string
-|query
-|False
-a|Filter by ad_domain.default_site
-
-* Introduced in: 9.13
-
-
-|ad_domain.fqdn
-|string
-|query
-|False
-a|Filter by ad_domain.fqdn
-
-
-|ad_domain.organizational_unit
-|string
-|query
-|False
-a|Filter by ad_domain.organizational_unit
-
-
-|workgroup
-|string
-|query
-|False
-a|Filter by workgroup
-
-* Introduced in: 9.15
-* maxLength: 15
-* minLength: 1
-
-
-|tenant_id
-|string
-|query
-|False
-a|Filter by tenant_id
-
-* Introduced in: 9.15
-
-
-|verify_host
-|boolean
-|query
-|False
-a|Filter by verify_host
-
-* Introduced in: 9.15
 
 
 |oauth_host
@@ -263,313 +206,20 @@ a|Filter by oauth_host
 * Introduced in: 9.15
 
 
-|options.widelink_reparse_versions
+|metric.duration
 |string
 |query
 |False
-a|Filter by options.widelink_reparse_versions
-
-* Introduced in: 9.10
-
-
-|options.shadowcopy
-|boolean
-|query
-|False
-a|Filter by options.shadowcopy
-
-* Introduced in: 9.11
-
-
-|options.max_same_user_sessions_per_connection
-|integer
-|query
-|False
-a|Filter by options.max_same_user_sessions_per_connection
-
-* Introduced in: 9.16
-
-
-|options.max_watches_set_per_tree
-|integer
-|query
-|False
-a|Filter by options.max_watches_set_per_tree
-
-* Introduced in: 9.16
-
-
-|options.max_opens_same_file_per_tree
-|integer
-|query
-|False
-a|Filter by options.max_opens_same_file_per_tree
-
-* Introduced in: 9.16
-
-
-|options.copy_offload
-|boolean
-|query
-|False
-a|Filter by options.copy_offload
-
-* Introduced in: 9.10
-
-
-|options.fake_open
-|boolean
-|query
-|False
-a|Filter by options.fake_open
-
-* Introduced in: 9.10
-
-
-|options.referral
-|boolean
-|query
-|False
-a|Filter by options.referral
-
-* Introduced in: 9.10
-
-
-|options.max_same_tree_connect_per_session
-|integer
-|query
-|False
-a|Filter by options.max_same_tree_connect_per_session
-
-* Introduced in: 9.16
-
-
-|options.smb_credits
-|integer
-|query
-|False
-a|Filter by options.smb_credits
-
-* Introduced in: 9.10
-* Max value: 8192
-* Min value: 2
-
-
-|options.advanced_sparse_file
-|boolean
-|query
-|False
-a|Filter by options.advanced_sparse_file
-
-* Introduced in: 9.10
-
-
-|options.dac_enabled
-|boolean
-|query
-|False
-a|Filter by options.dac_enabled
-
-* Introduced in: 9.15
-
-
-|options.junction_reparse
-|boolean
-|query
-|False
-a|Filter by options.junction_reparse
-
-* Introduced in: 9.10
-
-
-|options.shadowcopy_dir_depth
-|integer
-|query
-|False
-a|Filter by options.shadowcopy_dir_depth
-
-* Introduced in: 9.11
-
-
-|options.multichannel
-|boolean
-|query
-|False
-a|Filter by options.multichannel
-
-* Introduced in: 9.10
-
-
-|options.fsctl_trim
-|boolean
-|query
-|False
-a|Filter by options.fsctl_trim
-
-* Introduced in: 9.10
-
-
-|options.trusted_domain_enum_search_enabled
-|boolean
-|query
-|False
-a|Filter by options.trusted_domain_enum_search_enabled
-
-* Introduced in: 9.16
-
-
-|options.max_lifs_per_session
-|integer
-|query
-|False
-a|Filter by options.max_lifs_per_session
-
-* Introduced in: 9.16
-* Max value: 256
-* Min value: 1
-
-
-|options.client_dup_detection_enabled
-|boolean
-|query
-|False
-a|Filter by options.client_dup_detection_enabled
-
-* Introduced in: 9.16
-
-
-|options.path_component_cache
-|boolean
-|query
-|False
-a|Filter by options.path_component_cache
-
-* Introduced in: 9.10
-
-
-|options.admin_to_root_mapping
-|boolean
-|query
-|False
-a|Filter by options.admin_to_root_mapping
-
-* Introduced in: 9.10
-
-
-|options.client_version_reporting_enabled
-|boolean
-|query
-|False
-a|Filter by options.client_version_reporting_enabled
-
-* Introduced in: 9.16
-
-
-|options.null_user_windows_name
-|string
-|query
-|False
-a|Filter by options.null_user_windows_name
-
-* Introduced in: 9.10
-
-
-|options.large_mtu
-|boolean
-|query
-|False
-a|Filter by options.large_mtu
-
-* Introduced in: 9.10
-
-
-|options.max_connections_per_session
-|integer
-|query
-|False
-a|Filter by options.max_connections_per_session
-
-* Introduced in: 9.16
-* Max value: 1024
-* Min value: 2
-
-
-|options.backup_symlink_enabled
-|boolean
-|query
-|False
-a|Filter by options.backup_symlink_enabled
-
-* Introduced in: 9.15
-
-
-|options.export_policy_enabled
-|boolean
-|query
-|False
-a|Filter by options.export_policy_enabled
-
-* Introduced in: 9.13
-
-
-|proxy_type
-|string
-|query
-|False
-a|Filter by proxy_type
-
-* Introduced in: 9.15
-
-
-|comment
-|string
-|query
-|False
-a|Filter by comment
-
-* maxLength: 256
-* minLength: 0
-
-
-|default_unix_user
-|string
-|query
-|False
-a|Filter by default_unix_user
-
-
-|metric.iops.other
-|integer
-|query
-|False
-a|Filter by metric.iops.other
+a|Filter by metric.duration
 
 * Introduced in: 9.7
 
 
-|metric.iops.total
+|metric.latency.read
 |integer
 |query
 |False
-a|Filter by metric.iops.total
-
-* Introduced in: 9.7
-
-
-|metric.iops.write
-|integer
-|query
-|False
-a|Filter by metric.iops.write
-
-* Introduced in: 9.7
-
-
-|metric.iops.read
-|integer
-|query
-|False
-a|Filter by metric.iops.read
+a|Filter by metric.latency.read
 
 * Introduced in: 9.7
 
@@ -601,47 +251,11 @@ a|Filter by metric.latency.write
 * Introduced in: 9.7
 
 
-|metric.latency.read
-|integer
-|query
-|False
-a|Filter by metric.latency.read
-
-* Introduced in: 9.7
-
-
 |metric.timestamp
 |string
 |query
 |False
 a|Filter by metric.timestamp
-
-* Introduced in: 9.7
-
-
-|metric.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.throughput.write
-
-* Introduced in: 9.7
-
-
-|metric.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.throughput.read
-
-* Introduced in: 9.7
-
-
-|metric.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.throughput.total
 
 * Introduced in: 9.7
 
@@ -655,83 +269,85 @@ a|Filter by metric.status
 * Introduced in: 9.7
 
 
-|metric.duration
-|string
+|metric.throughput.write
+|integer
 |query
 |False
-a|Filter by metric.duration
+a|Filter by metric.throughput.write
 
 * Introduced in: 9.7
 
 
-|authentication_method
-|string
-|query
-|False
-a|Filter by authentication_method
-
-* Introduced in: 9.15
-
-
-|timeout
+|metric.throughput.total
 |integer
 |query
 |False
-a|Filter by timeout
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.7
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.7
+
+
+|metric.iops.read
+|integer
+|query
+|False
+a|Filter by metric.iops.read
+
+* Introduced in: 9.7
+
+
+|metric.iops.other
+|integer
+|query
+|False
+a|Filter by metric.iops.other
+
+* Introduced in: 9.7
+
+
+|metric.iops.total
+|integer
+|query
+|False
+a|Filter by metric.iops.total
+
+* Introduced in: 9.7
+
+
+|metric.iops.write
+|integer
+|query
+|False
+a|Filter by metric.iops.write
+
+* Introduced in: 9.7
+
+
+|proxy_port
+|integer
+|query
+|False
+a|Filter by proxy_port
 
 * Introduced in: 9.15
 
 
-|group_policy_object_enabled
-|boolean
+|statistics.latency_raw.read
+|integer
 |query
 |False
-a|Filter by group_policy_object_enabled
+a|Filter by statistics.latency_raw.read
 
-* Introduced in: 9.12
-
-
-|netbios.enabled
-|boolean
-|query
-|False
-a|Filter by netbios.enabled
-
-
-|netbios.wins_servers
-|string
-|query
-|False
-a|Filter by netbios.wins_servers
-
-
-|netbios.aliases
-|string
-|query
-|False
-a|Filter by netbios.aliases
-
-* maxLength: 15
-* minLength: 1
-
-
-|auth-style
-|string
-|query
-|False
-a|Filter by auth-style
-
-* Introduced in: 9.15
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-* maxLength: 15
-* minLength: 1
+* Introduced in: 9.7
 
 
 |statistics.latency_raw.other
@@ -761,11 +377,11 @@ a|Filter by statistics.latency_raw.write
 * Introduced in: 9.7
 
 
-|statistics.latency_raw.read
+|statistics.iops_raw.read
 |integer
 |query
 |False
-a|Filter by statistics.latency_raw.read
+a|Filter by statistics.iops_raw.read
 
 * Introduced in: 9.7
 
@@ -797,38 +413,11 @@ a|Filter by statistics.iops_raw.write
 * Introduced in: 9.7
 
 
-|statistics.iops_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.iops_raw.read
-
-* Introduced in: 9.7
-
-
-|statistics.status
-|string
-|query
-|False
-a|Filter by statistics.status
-
-* Introduced in: 9.7
-
-
 |statistics.throughput_raw.write
 |integer
 |query
 |False
 a|Filter by statistics.throughput_raw.write
-
-* Introduced in: 9.7
-
-
-|statistics.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.read
 
 * Introduced in: 9.7
 
@@ -842,6 +431,15 @@ a|Filter by statistics.throughput_raw.total
 * Introduced in: 9.7
 
 
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.7
+
+
 |statistics.timestamp
 |string
 |query
@@ -851,13 +449,315 @@ a|Filter by statistics.timestamp
 * Introduced in: 9.7
 
 
-|proxy_port
+|statistics.status
+|string
+|query
+|False
+a|Filter by statistics.status
+
+* Introduced in: 9.7
+
+
+|default_unix_user
+|string
+|query
+|False
+a|Filter by default_unix_user
+
+
+|proxy_username
+|string
+|query
+|False
+a|Filter by proxy_username
+
+* Introduced in: 9.15
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
+
+
+|verify_host
+|boolean
+|query
+|False
+a|Filter by verify_host
+
+* Introduced in: 9.15
+
+
+|proxy_host
+|string
+|query
+|False
+a|Filter by proxy_host
+
+* Introduced in: 9.15
+
+
+|options.export_policy_enabled
+|boolean
+|query
+|False
+a|Filter by options.export_policy_enabled
+
+* Introduced in: 9.13
+
+
+|options.fsctl_trim
+|boolean
+|query
+|False
+a|Filter by options.fsctl_trim
+
+* Introduced in: 9.10
+
+
+|options.advanced_sparse_file
+|boolean
+|query
+|False
+a|Filter by options.advanced_sparse_file
+
+* Introduced in: 9.10
+
+
+|options.null_user_windows_name
+|string
+|query
+|False
+a|Filter by options.null_user_windows_name
+
+* Introduced in: 9.10
+
+
+|options.dac_enabled
+|boolean
+|query
+|False
+a|Filter by options.dac_enabled
+
+* Introduced in: 9.15
+
+
+|options.smb_credits
 |integer
 |query
 |False
-a|Filter by proxy_port
+a|Filter by options.smb_credits
+
+* Introduced in: 9.10
+* Max value: 8192
+* Min value: 2
+
+
+|options.client_version_reporting_enabled
+|boolean
+|query
+|False
+a|Filter by options.client_version_reporting_enabled
+
+* Introduced in: 9.16
+
+
+|options.widelink_reparse_versions
+|string
+|query
+|False
+a|Filter by options.widelink_reparse_versions
+
+* Introduced in: 9.10
+
+
+|options.multichannel
+|boolean
+|query
+|False
+a|Filter by options.multichannel
+
+* Introduced in: 9.10
+
+
+|options.referral
+|boolean
+|query
+|False
+a|Filter by options.referral
+
+* Introduced in: 9.10
+
+
+|options.shadowcopy
+|boolean
+|query
+|False
+a|Filter by options.shadowcopy
+
+* Introduced in: 9.11
+
+
+|options.fake_open
+|boolean
+|query
+|False
+a|Filter by options.fake_open
+
+* Introduced in: 9.10
+
+
+|options.max_same_tree_connect_per_session
+|integer
+|query
+|False
+a|Filter by options.max_same_tree_connect_per_session
+
+* Introduced in: 9.16
+
+
+|options.max_same_user_sessions_per_connection
+|integer
+|query
+|False
+a|Filter by options.max_same_user_sessions_per_connection
+
+* Introduced in: 9.16
+
+
+|options.max_watches_set_per_tree
+|integer
+|query
+|False
+a|Filter by options.max_watches_set_per_tree
+
+* Introduced in: 9.16
+
+
+|options.path_component_cache
+|boolean
+|query
+|False
+a|Filter by options.path_component_cache
+
+* Introduced in: 9.10
+
+
+|options.admin_to_root_mapping
+|boolean
+|query
+|False
+a|Filter by options.admin_to_root_mapping
+
+* Introduced in: 9.10
+
+
+|options.max_opens_same_file_per_tree
+|integer
+|query
+|False
+a|Filter by options.max_opens_same_file_per_tree
+
+* Introduced in: 9.16
+
+
+|options.max_connections_per_session
+|integer
+|query
+|False
+a|Filter by options.max_connections_per_session
+
+* Introduced in: 9.16
+* Max value: 1024
+* Min value: 2
+
+
+|options.shadowcopy_dir_depth
+|integer
+|query
+|False
+a|Filter by options.shadowcopy_dir_depth
+
+* Introduced in: 9.11
+
+
+|options.trusted_domain_enum_search_enabled
+|boolean
+|query
+|False
+a|Filter by options.trusted_domain_enum_search_enabled
+
+* Introduced in: 9.16
+
+
+|options.large_mtu
+|boolean
+|query
+|False
+a|Filter by options.large_mtu
+
+* Introduced in: 9.10
+
+
+|options.copy_offload
+|boolean
+|query
+|False
+a|Filter by options.copy_offload
+
+* Introduced in: 9.10
+
+
+|options.max_lifs_per_session
+|integer
+|query
+|False
+a|Filter by options.max_lifs_per_session
+
+* Introduced in: 9.16
+* Max value: 256
+* Min value: 1
+
+
+|options.client_dup_detection_enabled
+|boolean
+|query
+|False
+a|Filter by options.client_dup_detection_enabled
+
+* Introduced in: 9.16
+
+
+|options.junction_reparse
+|boolean
+|query
+|False
+a|Filter by options.junction_reparse
+
+* Introduced in: 9.10
+
+
+|options.backup_symlink_enabled
+|boolean
+|query
+|False
+a|Filter by options.backup_symlink_enabled
 
 * Introduced in: 9.15
+
+
+|group_policy_object_enabled
+|boolean
+|query
+|False
+a|Filter by group_policy_object_enabled
+
+* Introduced in: 9.12
 
 
 |enabled
@@ -867,13 +767,122 @@ a|Filter by proxy_port
 a|Filter by enabled
 
 
-|key_vault_uri
+|ad_domain.fqdn
 |string
 |query
 |False
-a|Filter by key_vault_uri
+a|Filter by ad_domain.fqdn
+
+
+|ad_domain.organizational_unit
+|string
+|query
+|False
+a|Filter by ad_domain.organizational_unit
+
+
+|ad_domain.default_site
+|string
+|query
+|False
+a|Filter by ad_domain.default_site
+
+* Introduced in: 9.13
+
+
+|auth_user_type
+|string
+|query
+|False
+a|Filter by auth_user_type
+
+* Introduced in: 9.16
+
+
+|netbios.wins_servers
+|string
+|query
+|False
+a|Filter by netbios.wins_servers
+
+
+|netbios.aliases
+|string
+|query
+|False
+a|Filter by netbios.aliases
+
+* maxLength: 15
+* minLength: 1
+
+
+|netbios.enabled
+|boolean
+|query
+|False
+a|Filter by netbios.enabled
+
+
+|authentication_method
+|string
+|query
+|False
+a|Filter by authentication_method
 
 * Introduced in: 9.15
+
+
+|client_id
+|string
+|query
+|False
+a|Filter by client_id
+
+* Introduced in: 9.15
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+* maxLength: 15
+* minLength: 1
+
+
+|workgroup
+|string
+|query
+|False
+a|Filter by workgroup
+
+* Introduced in: 9.15
+* maxLength: 15
+* minLength: 1
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|azure_cloud_region
+|string
+|query
+|False
+a|Filter by azure_cloud_region
+
+* Introduced in: 9.19
 
 
 |fields
@@ -976,6 +985,7 @@ a|
       "auth-style": "domain",
       "auth_user_type": "string",
       "authentication_method": "string",
+      "azure_cloud_region": "string",
       "client_id": "e959d1b5-5a63-4284-9268-851e30e3eceb",
       "comment": "This CIFS Server Belongs to CS Department",
       "default_unix_user": "string",
@@ -1891,6 +1901,11 @@ The available values are:
 *** client_secret
 
 *** certificate
+
+
+|azure_cloud_region
+|string
+a|Specifies the azure cloud location of the tenant in case of hybrid-user authentication
 
 
 |client_id

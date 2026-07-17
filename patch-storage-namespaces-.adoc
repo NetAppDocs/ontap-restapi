@@ -208,6 +208,9 @@ ONTAP Error Response Codes
 | 5376468
 | An attempt was made to rename an NVMe namespace to a reserved name.
 
+| 5376542
+| Supported values for the snapshot reserve are 0 to 200 percent.
+
 | 13565952
 | The namespace clone request failed.
 
@@ -322,6 +325,12 @@ When used in a PATCH, the patched NVMe namespace's data is over-written as a clo
 |Name
 |Type
 |Description
+
+|created_as_clone
+|boolean
+a|This property is _true_ when the NVMe namespace was created as a clone of another namespace. Note that this property only indicates how the namespace was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for namespaces that are not clones.
+
 
 |source
 |link:#source[source]

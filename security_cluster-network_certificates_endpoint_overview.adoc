@@ -16,9 +16,115 @@ You can use the security cluster-network certificate API endpoints to
 view and modify the certificate configuration for cluster network security.
 The following operations are supported:
 
-* GET to retrieve the certificate configuration for cluster network security: GET security/cluster-network/certificate
-* PATCH to update the certificate configuration for cluster network security for a given node: PATCH security/cluster-network/certificate
-* POST to specify the certificate configuration for cluster network security for a given node: POST security/cluster-network/certificate
-* DELETE to remove the certificate configuration for cluster network security for a given node: DELETE security/cluster-network/certificate
+* GET to retrieve the certificate configuration for cluster network security: GET security/cluster-network/certificates
+* PATCH to update the certificate configuration for cluster network security for a given node: PATCH security/cluster-network/certificates/{node.uuid}
+* POST to specify the certificate configuration for cluster network security for a given node: POST security/cluster-network/certificates
+* DELETE to remove the certificate configuration for cluster network security for a given node: DELETE security/cluster-network/certificates/{node.uuid}
+
+== Examples
+
+=== Retrieving all certificate configurations for cluster network security
+
+----
+
+# The API:
+GET /api/security/cluster-network/certificates
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/cluster-network/certificates?fields=*&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+      "name": "node1"
+    },
+    "certificate": {
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+      "name": "cluster_network_cert_1"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/cluster-network/certificates/4ea7a442-86d1-11e0-ae1c-123478563412"
+      }
+    }
+  },
+  {
+    "node": {
+      "uuid": "5fb8b553-97e2-22f1-bf2d-234589674523",
+      "name": "node2"
+    },
+    "certificate": {
+      "uuid": "2de9b553-97e2-22f1-bf2d-234589674523",
+      "name": "cluster_network_cert_2"
+    },
+    "_links": {
+      "self": {
+        "href": "/api/security/cluster-network/certificates/5fb8b553-97e2-22f1-bf2d-234589674523"
+      }
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/cluster-network/certificates"
+  }
+}
+}
+----
+
+=== Assigning a certificate to a node for cluster network security
+
+----
+
+# The API:
+POST /api/security/cluster-network/certificates
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/cluster-network/certificates" -H "accept: application/json" -H "Content-Type: application/json" -d '{"node": {"uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"}, "certificate": {"name": "cluster_network_cert_1"}}'
+
+# The response:
+{
+"node": {
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+  "name": "node1"
+},
+"certificate": {
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "name": "cluster_network_cert_1"
+}
+}
+----
+
+=== Updating the certificate for a specific node
+
+----
+
+# The API:
+PATCH /api/security/cluster-network/certificates/{node.uuid}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/cluster-network/certificates/4ea7a442-86d1-11e0-ae1c-123478563412" -H "accept: application/json" -H "Content-Type: application/json" -d '{"certificate": {"name": "cluster_network_cert_new"}}'
+
+# The response:
+HTTP/1.1 200 OK
+----
+
+=== Deleting the certificate configuration for a specific node
+
+----
+
+# The API:
+DELETE /api/security/cluster-network/certificates/{node.uuid}
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/cluster-network/certificates/4ea7a442-86d1-11e0-ae1c-123478563412" -H "accept: application/json"
+
+# The response:
+HTTP/1.1 200 OK
+----
 
 

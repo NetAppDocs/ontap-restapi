@@ -45,11 +45,18 @@ There is an added computational cost to retrieving values for these properties. 
 |Required
 |Description
 
-|target.vendor_id
+|uuid
 |string
 |query
 |False
-a|Filter by target.vendor_id
+a|Filter by uuid
+
+
+|target.firmware_revision
+|string
+|query
+|False
+a|Filter by target.firmware_revision
 
 * Introduced in: 9.11
 
@@ -63,30 +70,42 @@ a|Filter by target.product_id
 * Introduced in: 9.11
 
 
-|target.firmware_revision
+|target.vendor_id
 |string
 |query
 |False
-a|Filter by target.firmware_revision
+a|Filter by target.vendor_id
 
 * Introduced in: 9.11
 
 
-|supports_igroups
-|boolean
+|parent_igroups.uuid
+|string
 |query
 |False
-a|Filter by supports_igroups
+a|Filter by parent_igroups.uuid
 
 * Introduced in: 9.9
 
 
-|name
+|parent_igroups.comment
 |string
 |query
 |False
-a|Filter by name
+a|Filter by parent_igroups.comment
 
+* Introduced in: 9.9
+* maxLength: 254
+* minLength: 0
+
+
+|parent_igroups.name
+|string
+|query
+|False
+a|Filter by parent_igroups.name
+
+* Introduced in: 9.9
 * maxLength: 96
 * minLength: 1
 
@@ -96,6 +115,44 @@ a|Filter by name
 |query
 |False
 a|Filter by replication.state
+
+* Introduced in: 9.15
+
+
+|replication.error.igroup.local_svm
+|boolean
+|query
+|False
+a|Filter by replication.error.igroup.local_svm
+
+* Introduced in: 9.15
+
+
+|replication.error.igroup.name
+|string
+|query
+|False
+a|Filter by replication.error.igroup.name
+
+* Introduced in: 9.15
+* maxLength: 96
+* minLength: 1
+
+
+|replication.error.igroup.uuid
+|string
+|query
+|False
+a|Filter by replication.error.igroup.uuid
+
+* Introduced in: 9.15
+
+
+|replication.error.summary.code
+|string
+|query
+|False
+a|Filter by replication.error.summary.code
 
 * Introduced in: 9.15
 
@@ -118,58 +175,11 @@ a|Filter by replication.error.summary.arguments.code
 * Introduced in: 9.15
 
 
-|replication.error.summary.code
-|string
-|query
-|False
-a|Filter by replication.error.summary.code
-
-* Introduced in: 9.15
-
-
 |replication.error.summary.message
 |string
 |query
 |False
 a|Filter by replication.error.summary.message
-
-* Introduced in: 9.15
-
-
-|replication.error.igroup.name
-|string
-|query
-|False
-a|Filter by replication.error.igroup.name
-
-* Introduced in: 9.15
-* maxLength: 96
-* minLength: 1
-
-
-|replication.error.igroup.local_svm
-|boolean
-|query
-|False
-a|Filter by replication.error.igroup.local_svm
-
-* Introduced in: 9.15
-
-
-|replication.error.igroup.uuid
-|string
-|query
-|False
-a|Filter by replication.error.igroup.uuid
-
-* Introduced in: 9.15
-
-
-|replication.peer_svm.name
-|string
-|query
-|False
-a|Filter by replication.peer_svm.name
 
 * Introduced in: 9.15
 
@@ -183,49 +193,62 @@ a|Filter by replication.peer_svm.uuid
 * Introduced in: 9.15
 
 
-|igroups.uuid
+|replication.peer_svm.name
 |string
 |query
 |False
-a|Filter by igroups.uuid
+a|Filter by replication.peer_svm.name
 
-* Introduced in: 9.9
+* Introduced in: 9.15
 
 
-|igroups.name
+|os_type
 |string
 |query
 |False
-a|Filter by igroups.name
-
-* Introduced in: 9.9
-* maxLength: 96
-* minLength: 1
+a|Filter by os_type
 
 
-|igroups.comment
+|lun_maps.lun.name
 |string
 |query
 |False
-a|Filter by igroups.comment
-
-* Introduced in: 9.9
-* maxLength: 254
-* minLength: 0
+a|Filter by lun_maps.lun.name
 
 
-|protocol
+|lun_maps.lun.uuid
 |string
 |query
 |False
-a|Filter by protocol
+a|Filter by lun_maps.lun.uuid
 
 
-|uuid
+|lun_maps.lun.node.name
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by lun_maps.lun.node.name
+
+
+|lun_maps.lun.node.uuid
+|string
+|query
+|False
+a|Filter by lun_maps.lun.node.uuid
+
+
+|lun_maps.logical_unit_number
+|integer
+|query
+|False
+a|Filter by lun_maps.logical_unit_number
+
+
+|delete_on_unmap
+|boolean
+|query
+|False
+a|Filter by delete_on_unmap
 
 
 |comment
@@ -237,6 +260,13 @@ a|Filter by comment
 * Introduced in: 9.9
 * maxLength: 254
 * minLength: 0
+
+
+|protocol
+|string
+|query
+|False
+a|Filter by protocol
 
 
 |connectivity_tracking.connection_state
@@ -266,6 +296,15 @@ a|Filter by connectivity_tracking.required_nodes.uuid
 * Introduced in: 9.11
 
 
+|connectivity_tracking.alerts.summary.code
+|string
+|query
+|False
+a|Filter by connectivity_tracking.alerts.summary.code
+
+* Introduced in: 9.11
+
+
 |connectivity_tracking.alerts.summary.arguments.message
 |string
 |query
@@ -284,15 +323,6 @@ a|Filter by connectivity_tracking.alerts.summary.arguments.code
 * Introduced in: 9.11
 
 
-|connectivity_tracking.alerts.summary.code
-|string
-|query
-|False
-a|Filter by connectivity_tracking.alerts.summary.code
-
-* Introduced in: 9.11
-
-
 |connectivity_tracking.alerts.summary.message
 |string
 |query
@@ -300,88 +330,6 @@ a|Filter by connectivity_tracking.alerts.summary.code
 a|Filter by connectivity_tracking.alerts.summary.message
 
 * Introduced in: 9.11
-
-
-|initiators.proximity.peer_svms.name
-|string
-|query
-|False
-a|Filter by initiators.proximity.peer_svms.name
-
-* Introduced in: 9.15
-
-
-|initiators.proximity.peer_svms.uuid
-|string
-|query
-|False
-a|Filter by initiators.proximity.peer_svms.uuid
-
-* Introduced in: 9.15
-
-
-|initiators.proximity.local_svm
-|boolean
-|query
-|False
-a|Filter by initiators.proximity.local_svm
-
-* Introduced in: 9.15
-
-
-|initiators.name
-|string
-|query
-|False
-a|Filter by initiators.name
-
-* maxLength: 96
-* minLength: 1
-
-
-|initiators.comment
-|string
-|query
-|False
-a|Filter by initiators.comment
-
-* Introduced in: 9.9
-* maxLength: 254
-* minLength: 0
-
-
-|initiators.connectivity_tracking.connection_state
-|string
-|query
-|False
-a|Filter by initiators.connectivity_tracking.connection_state
-
-* Introduced in: 9.11
-
-
-|initiators.igroup.name
-|string
-|query
-|False
-a|Filter by initiators.igroup.name
-
-* Introduced in: 9.9
-* maxLength: 96
-* minLength: 1
-
-
-|initiators.igroup.uuid
-|string
-|query
-|False
-a|Filter by initiators.igroup.uuid
-
-
-|delete_on_unmap
-|boolean
-|query
-|False
-a|Filter by delete_on_unmap
 
 
 |portset.uuid
@@ -404,46 +352,98 @@ a|Filter by portset.name
 * minLength: 1
 
 
-|lun_maps.logical_unit_number
-|integer
-|query
-|False
-a|Filter by lun_maps.logical_unit_number
-
-
-|lun_maps.lun.name
+|name
 |string
 |query
 |False
-a|Filter by lun_maps.lun.name
+a|Filter by name
+
+* maxLength: 96
+* minLength: 1
 
 
-|lun_maps.lun.node.name
+|supports_igroups
+|boolean
+|query
+|False
+a|Filter by supports_igroups
+
+* Introduced in: 9.9
+
+
+|initiators.proximity.peer_svms.uuid
 |string
 |query
 |False
-a|Filter by lun_maps.lun.node.name
+a|Filter by initiators.proximity.peer_svms.uuid
+
+* Introduced in: 9.15
 
 
-|lun_maps.lun.node.uuid
+|initiators.proximity.peer_svms.name
 |string
 |query
 |False
-a|Filter by lun_maps.lun.node.uuid
+a|Filter by initiators.proximity.peer_svms.name
+
+* Introduced in: 9.15
 
 
-|lun_maps.lun.uuid
+|initiators.proximity.local_svm
+|boolean
+|query
+|False
+a|Filter by initiators.proximity.local_svm
+
+* Introduced in: 9.15
+
+
+|initiators.igroup.name
 |string
 |query
 |False
-a|Filter by lun_maps.lun.uuid
+a|Filter by initiators.igroup.name
+
+* Introduced in: 9.9
+* maxLength: 96
+* minLength: 1
 
 
-|svm.name
+|initiators.igroup.uuid
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by initiators.igroup.uuid
+
+
+|initiators.connectivity_tracking.connection_state
+|string
+|query
+|False
+a|Filter by initiators.connectivity_tracking.connection_state
+
+* Introduced in: 9.11
+
+
+|initiators.comment
+|string
+|query
+|False
+a|Filter by initiators.comment
+
+* Introduced in: 9.9
+* maxLength: 254
+* minLength: 0
+
+
+|initiators.name
+|string
+|query
+|False
+a|Filter by initiators.name
+
+* maxLength: 96
+* minLength: 1
 
 
 |svm.uuid
@@ -453,42 +453,42 @@ a|Filter by svm.name
 a|Filter by svm.uuid
 
 
-|os_type
+|svm.name
 |string
 |query
 |False
-a|Filter by os_type
+a|Filter by svm.name
 
 
-|parent_igroups.comment
+|igroups.uuid
 |string
 |query
 |False
-a|Filter by parent_igroups.comment
+a|Filter by igroups.uuid
+
+* Introduced in: 9.9
+
+
+|igroups.comment
+|string
+|query
+|False
+a|Filter by igroups.comment
 
 * Introduced in: 9.9
 * maxLength: 254
 * minLength: 0
 
 
-|parent_igroups.name
+|igroups.name
 |string
 |query
 |False
-a|Filter by parent_igroups.name
+a|Filter by igroups.name
 
 * Introduced in: 9.9
 * maxLength: 96
 * minLength: 1
-
-
-|parent_igroups.uuid
-|string
-|query
-|False
-a|Filter by parent_igroups.uuid
-
-* Introduced in: 9.9
 
 
 |fields

@@ -1,0 +1,135 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_cluster-network_ipsec_associations_endpoints_overview.html'
+summary: 'View IPsec and IKE security associations for the cluster network'
+---
+
+= View IPsec and IKE security associations for the cluster network
+
+
+
+== Overview
+
+You can use the security cluster-network ipsec association API endpoints to
+view IPsec and IKE (Internet Key Exchange) security associations for cluster network security.
+The following operations are supported:
+
+* Collection Get: Retrieve all IPsec/IKE associations: GET security/cluster-network/ipsec/associations
+* Instance Get: Retrieve a specific association by UUID: GET security/cluster-network/ipsec/associations/\{uuid}
+
+== Examples
+
+=== Retrieving all IPsec and IKE security associations
+
+----
+
+# The API:
+GET /api/security/cluster-network/ipsec/associations
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/cluster-network/ipsec/associations?fields=*&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "uuid": "a1b2c3d4-1234-5678-9abc-def012345678",
+    "type": "ipsec",
+    "node": {
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+      "name": "node1"
+    },
+    "policy_name": "policy1",
+    "local_address": "192.168.1.1",
+    "remote_address": "192.168.1.2",
+    "cipher_suite": "suiteb_gcm256",
+    "lifetime": 28800,
+    "ipsec": {
+      "inbound": {
+        "security_parameter_index": "0x12345678",
+        "bytes": 1048576,
+        "packets": 1024
+      },
+      "outbound": {
+        "security_parameter_index": "0x87654321",
+        "bytes": 2097152,
+        "packets": 2048
+      },
+      "action": "esp_transport",
+      "state": "installed"
+    }
+  },
+  {
+    "uuid": "b2c3d4e5-2345-6789-abcd-ef0123456789",
+    "type": "ike",
+    "node": {
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+      "name": "node1"
+    },
+    "policy_name": "policy1",
+    "local_address": "192.168.1.1",
+    "remote_address": "192.168.1.2",
+    "cipher_suite": "suiteb_gcm256",
+    "lifetime": 86400,
+    "ike": {
+      "initiator_security_parameter_index": "0xaabbccdd",
+      "responder_security_parameter_index": "0xddccbbaa",
+      "is_initiator": true,
+      "version": 2,
+      "authentication": "cert",
+      "state": "established"
+    }
+  }
+],
+"num_records": 2,
+"_links": {
+  "self": {
+    "href": "/api/security/cluster-network/ipsec/associations"
+  }
+}
+}
+----
+
+=== Retrieving a specific security association by UUID
+
+----
+
+# The API:
+GET /api/security/cluster-network/ipsec/associations/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/cluster-network/ipsec/associations/a1b2c3d4-1234-5678-9abc-def012345678" -H "accept: application/json"
+
+# The response:
+{
+"uuid": "a1b2c3d4-1234-5678-9abc-def012345678",
+"type": "ipsec",
+"node": {
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+  "name": "node1"
+},
+"policy_name": "policy1",
+"local_address": "192.168.1.1",
+"remote_address": "192.168.1.2",
+"cipher_suite": "suiteb_gcm256",
+"lifetime": 28800,
+"ipsec": {
+  "inbound": {
+    "security_parameter_index": "0x12345678",
+    "bytes": 1048576,
+    "packets": 1024
+  },
+  "outbound": {
+    "security_parameter_index": "0x87654321",
+    "bytes": 2097152,
+    "packets": 2048
+  },
+  "action": "esp_transport",
+  "state": "installed"
+}
+}
+----
+
+

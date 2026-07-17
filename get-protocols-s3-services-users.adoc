@@ -34,23 +34,14 @@ Retrieves the S3 user's SVM configuration.
 |Required
 |Description
 
-|comment
+|name
 |string
 |query
 |False
-a|Filter by comment
+a|Filter by name
 
-* maxLength: 256
-* minLength: 0
-
-
-|key_time_to_live
-|string
-|query
-|False
-a|Filter by key_time_to_live
-
-* Introduced in: 9.14
+* maxLength: 64
+* minLength: 1
 
 
 |svm.name
@@ -60,14 +51,59 @@ a|Filter by key_time_to_live
 a|Filter by svm.name
 
 
-|name
+|access_key
 |string
 |query
 |False
-a|Filter by name
+a|Filter by access_key
 
-* maxLength: 64
-* minLength: 1
+
+|keys.id
+|integer
+|query
+|False
+a|Filter by keys.id
+
+* Introduced in: 9.19
+* Max value: 2
+* Min value: 1
+
+
+|keys.access_key
+|string
+|query
+|False
+a|Filter by keys.access_key
+
+* Introduced in: 9.19
+
+
+|keys.expiry_time
+|string
+|query
+|False
+a|Filter by keys.expiry_time
+
+* Introduced in: 9.19
+
+
+|keys.time_to_live
+|string
+|query
+|False
+a|Filter by keys.time_to_live
+
+* Introduced in: 9.19
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
 
 
 |key_expiry_time
@@ -79,11 +115,13 @@ a|Filter by key_expiry_time
 * Introduced in: 9.14
 
 
-|access_key
+|key_time_to_live
 |string
 |query
 |False
-a|Filter by access_key
+a|Filter by key_time_to_live
+
+* Introduced in: 9.14
 
 
 |svm.uuid
@@ -122,9 +160,9 @@ a|The default is true for GET calls.  When set to false, only the number of reco
 |False
 a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
 
-* Default value: 15
 * Max value: 120
 * Min value: 0
+* Default value: 15
 
 
 |order_by
@@ -183,7 +221,16 @@ a|
       "access_key": "<AWS-ACCESS-KEY-ID>",
       "comment": "S3 user",
       "key_expiry_time": "2024-01-01 00:00:00 +0000",
+      "key_id": 1,
       "key_time_to_live": "PT6H3M",
+      "keys": [
+        {
+          "access_key": "<AWS-ACCESS-KEY-ID>",
+          "expiry_time": "2024-01-01 00:00:00 +0000",
+          "id": 1,
+          "time_to_live": "PT6H3M"
+        }
+      ],
       "name": "user-1",
       "svm": {
         "_links": {
@@ -283,6 +330,47 @@ a|
 |===
 
 
+[#keys]
+[.api-collapsible-fifth-title]
+keys
+
+Specifies a key associated with an S3 user. At most only two keys can be associated with a user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|id
+|integer
+a|Specifies an S3 user key identifier. Each user can only have a maximum of two keys. The key_id can either be '1' or '2'.
+
+
+|time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys do not expire.
+
+
+|===
+
+
 [#_links]
 [.api-collapsible-fifth-title]
 _links
@@ -358,6 +446,11 @@ a|Can contain any additional information about the user being created or modifie
 a|Specifies the date and time after which keys expire and are no longer valid.
 
 
+|key_id
+|integer
+a|Specifies the identifier of an S3 user key that needs to be generated or deleted. The key_id can either be '1' or '2'.
+
+
 |key_time_to_live
 |string
 a|Indicates the time period from when this parameter is specified:
@@ -366,6 +459,11 @@ a|Indicates the time period from when this parameter is specified:
 * when the user keys were last regenerated, after which the user keys expire and are no longer valid.
 * Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
 * If the value specified is '0' seconds, then the keys won't expire.
+
+
+|keys
+|array[link:#keys[keys]]
+a|Specifies the keys associated with an S3 User.
 
 
 |name

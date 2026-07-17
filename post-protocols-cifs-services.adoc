@@ -45,6 +45,7 @@ Creates a CIFS server. Each SVM can have one CIFS server.
 * `key_vault_uri` - URI of the deployed AKV that is used by ONTAP for storing keys.
 * `authentication_method` - Authentication method used by the application to prove its identity to AKV or EntraId. It can be either "client_secret" or "certificate".
 * `auth_user_type` - Type of user who can access the SMB Volume. It can be either "domain_user" or "hybrid_user". The default is domain_user. In the case of a hybrid-user, ONTAP cannot access on-premise ADDS.
+* `azure_cloud_region` - The azure cloud location of the tenant in case of hybrid-user authentication, It can be global, us-gov or china. The default is global.
 * `client_secret` - Secret used by the application to prove its identity to AKV.
 * `client_certificate` - Base64 encoded PKCS12 certificate used by the application to prove its identity to AKV.
 
@@ -159,6 +160,11 @@ The available values are:
 *** client_secret
 
 *** certificate
+
+
+|azure_cloud_region
+|string
+a|Specifies the azure cloud location of the tenant in case of hybrid-user authentication
 
 
 |client_certificate
@@ -291,6 +297,7 @@ a|The workgroup name.
   "auth-style": "domain",
   "auth_user_type": "string",
   "authentication_method": "string",
+  "azure_cloud_region": "string",
   "client_certificate": "PEM Cert",
   "client_id": "e959d1b5-5a63-4284-9268-851e30e3eceb",
   "client_secret": "<APPLICATION-CLIENT-SECRET-FOR-AKV>",
@@ -1217,6 +1224,11 @@ The available values are:
 *** client_secret
 
 *** certificate
+
+
+|azure_cloud_region
+|string
+a|Specifies the azure cloud location of the tenant in case of hybrid-user authentication
 
 
 |client_certificate

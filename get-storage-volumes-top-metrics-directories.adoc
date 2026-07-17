@@ -50,27 +50,11 @@ a|Type of performance metric or capacity metric.
 a|Max records per volume.
 
 
-|non_recursive_bytes_used
+|throughput.read
 |integer
 |query
 |False
-a|Filter by non_recursive_bytes_used
-
-* Introduced in: 9.12
-
-
-|path
-|string
-|query
-|False
-a|Filter by path
-
-
-|throughput.error.upper_bound
-|integer
-|query
-|False
-a|Filter by throughput.error.upper_bound
+a|Filter by throughput.read
 
 
 |throughput.error.lower_bound
@@ -80,11 +64,11 @@ a|Filter by throughput.error.upper_bound
 a|Filter by throughput.error.lower_bound
 
 
-|throughput.read
+|throughput.error.upper_bound
 |integer
 |query
 |False
-a|Filter by throughput.read
+a|Filter by throughput.error.upper_bound
 
 
 |throughput.write
@@ -94,25 +78,13 @@ a|Filter by throughput.read
 a|Filter by throughput.write
 
 
-|svm.name
-|string
+|non_recursive_bytes_used
+|integer
 |query
 |False
-a|Filter by svm.name
+a|Filter by non_recursive_bytes_used
 
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|volume.name
-|string
-|query
-|False
-a|Filter by volume.name
+* Introduced in: 9.12
 
 
 |iops.read
@@ -129,6 +101,13 @@ a|Filter by iops.read
 a|Filter by iops.write
 
 
+|iops.error.lower_bound
+|integer
+|query
+|False
+a|Filter by iops.error.lower_bound
+
+
 |iops.error.upper_bound
 |integer
 |query
@@ -136,11 +115,104 @@ a|Filter by iops.write
 a|Filter by iops.error.upper_bound
 
 
-|iops.error.lower_bound
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|path
+|string
+|query
+|False
+a|Filter by path
+
+
+|total_ops.read
 |integer
 |query
 |False
-a|Filter by iops.error.lower_bound
+a|Filter by total_ops.read
+
+* Introduced in: 9.19
+
+
+|total_ops.write
+|integer
+|query
+|False
+a|Filter by total_ops.write
+
+* Introduced in: 9.19
+
+
+|total_ops.error.lower_bound
+|integer
+|query
+|False
+a|Filter by total_ops.error.lower_bound
+
+* Introduced in: 9.19
+
+
+|total_ops.error.upper_bound
+|integer
+|query
+|False
+a|Filter by total_ops.error.upper_bound
+
+* Introduced in: 9.19
+
+
+|total_throughput.error.lower_bound
+|integer
+|query
+|False
+a|Filter by total_throughput.error.lower_bound
+
+* Introduced in: 9.19
+
+
+|total_throughput.error.upper_bound
+|integer
+|query
+|False
+a|Filter by total_throughput.error.upper_bound
+
+* Introduced in: 9.19
+
+
+|total_throughput.write
+|integer
+|query
+|False
+a|Filter by total_throughput.write
+
+* Introduced in: 9.19
+
+
+|total_throughput.read
+|integer
+|query
+|False
+a|Filter by total_throughput.read
+
+* Introduced in: 9.19
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
 
 
 |fields
@@ -217,6 +289,11 @@ a|Optional field that indicates why no records are returned by the volume activi
 a|Number of records.
 
 
+|observation_window
+|link:#observation_window[observation_window]
+a|The time window over which metrics are aggregated.
+
+
 |partial_response_reason
 |link:#partial_response_reason[partial_response_reason]
 a|Indicates that the metric report provides partial data.
@@ -251,6 +328,11 @@ a|
     "message": "No read/write traffic on volume."
   },
   "num_records": 1,
+  "observation_window": {
+    "duration": 60,
+    "end": "2026-01-11 01:30:00 +0000",
+    "start": "2026-01-11 01:29:55 +0000"
+  },
   "partial_response_reason": {
     "code": "124518424",
     "message": "The top metrics report contains partial data for read operations because NFSv4 reads using Multi-Processor I/O (MPIO) are not tracked."
@@ -291,6 +373,22 @@ a|
         },
         "read": 3,
         "write": 20
+      },
+      "total_ops": {
+        "error": {
+          "lower_bound": 34,
+          "upper_bound": 54
+        },
+        "read": 1400,
+        "write": 400
+      },
+      "total_throughput": {
+        "error": {
+          "lower_bound": 34,
+          "upper_bound": 54
+        },
+        "read": 2800,
+        "write": 600
       },
       "volume": {
         "_links": {
@@ -499,6 +597,37 @@ a|Details why no records are returned.
 |===
 
 
+[#observation_window]
+[.api-collapsible-fifth-title]
+observation_window
+
+The time window over which metrics are aggregated.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|duration
+|integer
+a|Duration of the observation window in seconds.
+
+
+|end
+|string
+a|End timestamp of the observation window in UTC.
+
+
+|start
+|string
+a|Start timestamp of the observation window in UTC.
+
+
+|===
+
+
 [#partial_response_reason]
 [.api-collapsible-fifth-title]
 partial_response_reason
@@ -670,6 +799,60 @@ a|Average number of write bytes received per second.
 |===
 
 
+[#total_ops]
+[.api-collapsible-fifth-title]
+total_ops
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#top_metric_value_error_bounds[top_metric_value_error_bounds]
+a|
+
+|read
+|integer
+a|Total read operations in the observation window.
+
+
+|write
+|integer
+a|Total write operations in the observation window.
+
+
+|===
+
+
+[#total_throughput]
+[.api-collapsible-fifth-title]
+total_throughput
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#top_metric_value_error_bounds[top_metric_value_error_bounds]
+a|
+
+|read
+|integer
+a|Total bytes read in the observation window.
+
+
+|write
+|integer
+a|Total bytes written in the observation window.
+
+
+|===
+
+
 [#volume]
 [.api-collapsible-fifth-title]
 volume
@@ -739,6 +922,14 @@ a|SVM, applies only to SVM-scoped objects.
 
 |throughput
 |link:#throughput[throughput]
+a|
+
+|total_ops
+|link:#total_ops[total_ops]
+a|
+
+|total_throughput
+|link:#total_throughput[total_throughput]
 a|
 
 |volume

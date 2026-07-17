@@ -116,6 +116,11 @@ a|Specifies whether or not a FlexCache volume has global file locking mode enabl
 |link:#guarantee[guarantee]
 a|
 
+|mtime_scrubber
+|link:#mtime_scrubber[mtime_scrubber]
+a|Flexcache Mtime Scrubber
+
+
 |name
 |string
 a|FlexCache name
@@ -168,6 +173,11 @@ a|Specifies whether or not a Fabricpool-enabled aggregate can be used in FlexCac
 |uuid
 |string
 a|FlexCache UUID. Unique identifier for the FlexCache.
+
+
+|write
+|link:#write[write]
+a|Flexcache Write settings
 
 
 |writeback
@@ -447,6 +457,32 @@ a|The type of space guarantee of this volume in the aggregate.
 |===
 
 
+[#mtime_scrubber]
+[.api-collapsible-fifth-title]
+mtime_scrubber
+
+Flexcache Mtime Scrubber
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether mtime-based scrubber is enabled on the FlexCache volume. The mtime scrubber automatically scrubs files from the cache based on their modification time.
+
+
+|threshold
+|integer
+a|Specifies the mtime threshold in seconds. Files that have not been modified within this threshold duration are eligible for scrubbing from the FlexCache volume. Valid range is 900 to 86400 seconds (15 minutes to 24 hours).
+
+
+|===
+
+
 [#nfsv4]
 [.api-collapsible-fifth-title]
 nfsv4
@@ -678,6 +714,27 @@ a|The name of the SVM. This field cannot be specified in a PATCH method.
 |uuid
 |string
 a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#write]
+[.api-collapsible-fifth-title]
+write
+
+Flexcache Write settings
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|absorption_enabled
+|boolean
+a|Indicates whether Write Absorption is enabled on the FlexCache volume. Write Absorption enables the FlexCache volume to absorb writes locally and synchronize them with the origin volume.
 
 
 |===

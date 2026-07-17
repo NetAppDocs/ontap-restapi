@@ -38,87 +38,58 @@ Retrieves the S3 bucket's configuration of an SVM. Note that in order to retriev
 |Required
 |Description
 
-|snapshot_policy.name
+|protection_status.is_protected
+|boolean
+|query
+|False
+a|Filter by protection_status.is_protected
+
+* Introduced in: 9.10
+
+
+|protection_status.destination.is_external_cloud
+|boolean
+|query
+|False
+a|Filter by protection_status.destination.is_external_cloud
+
+* Introduced in: 9.12
+
+
+|protection_status.destination.is_ontap
+|boolean
+|query
+|False
+a|Filter by protection_status.destination.is_ontap
+
+* Introduced in: 9.10
+
+
+|protection_status.destination.is_cloud
+|boolean
+|query
+|False
+a|Filter by protection_status.destination.is_cloud
+
+* Introduced in: 9.10
+
+
+|type
 |string
 |query
 |False
-a|Filter by snapshot_policy.name
+a|Filter by type
 
-* Introduced in: 9.16
+* Introduced in: 9.12
 
 
-|snapshot_policy.uuid
-|string
+|is_nas_path_mutable
+|boolean
 |query
 |False
-a|Filter by snapshot_policy.uuid
+a|Filter by is_nas_path_mutable
 
-* Introduced in: 9.16
-
-
-|cors.rules.allowed_headers
-|string
-|query
-|False
-a|Filter by cors.rules.allowed_headers
-
-* Introduced in: 9.16
-
-
-|cors.rules.id
-|string
-|query
-|False
-a|Filter by cors.rules.id
-
-* Introduced in: 9.16
-* maxLength: 256
-* minLength: 0
-
-
-|cors.rules.max_age_seconds
-|integer
-|query
-|False
-a|Filter by cors.rules.max_age_seconds
-
-* Introduced in: 9.16
-
-
-|cors.rules.allowed_origins
-|string
-|query
-|False
-a|Filter by cors.rules.allowed_origins
-
-* Introduced in: 9.16
-
-
-|cors.rules.expose_headers
-|string
-|query
-|False
-a|Filter by cors.rules.expose_headers
-
-* Introduced in: 9.16
-
-
-|cors.rules.allowed_methods
-|string
-|query
-|False
-a|Filter by cors.rules.allowed_methods
-
-* Introduced in: 9.16
-
-
-|snapshot_restore.state
-|string
-|query
-|False
-a|Filter by snapshot_restore.state
-
-* Introduced in: 9.18
+* Introduced in: 9.17
 
 
 |snapshot_restore.objects_remaining
@@ -130,11 +101,11 @@ a|Filter by snapshot_restore.objects_remaining
 * Introduced in: 9.18
 
 
-|snapshot_restore.progress
-|integer
+|snapshot_restore.state
+|string
 |query
 |False
-a|Filter by snapshot_restore.progress
+a|Filter by snapshot_restore.state
 
 * Introduced in: 9.18
 
@@ -148,115 +119,137 @@ a|Filter by snapshot_restore.snapshot
 * Introduced in: 9.18
 
 
-|name
-|string
-|query
-|False
-a|Filter by name
-
-* maxLength: 63
-* minLength: 3
-
-
-|policy.statements.principals
-|string
-|query
-|False
-a|Filter by policy.statements.principals
-
-* Introduced in: 9.8
-
-
-|policy.statements.sid
-|string
-|query
-|False
-a|Filter by policy.statements.sid
-
-* Introduced in: 9.8
-* maxLength: 256
-* minLength: 0
-
-
-|policy.statements.resources
-|string
-|query
-|False
-a|Filter by policy.statements.resources
-
-* Introduced in: 9.8
-
-
-|policy.statements.effect
-|string
-|query
-|False
-a|Filter by policy.statements.effect
-
-* Introduced in: 9.8
-
-
-|policy.statements.actions
-|string
-|query
-|False
-a|Filter by policy.statements.actions
-
-* Introduced in: 9.8
-
-
-|policy.statements.conditions.operator
-|string
-|query
-|False
-a|Filter by policy.statements.conditions.operator
-
-* Introduced in: 9.8
-
-
-|policy.statements.conditions.delimiters
-|string
-|query
-|False
-a|Filter by policy.statements.conditions.delimiters
-
-* Introduced in: 9.8
-
-
-|policy.statements.conditions.prefixes
-|string
-|query
-|False
-a|Filter by policy.statements.conditions.prefixes
-
-* Introduced in: 9.8
-
-
-|policy.statements.conditions.usernames
-|string
-|query
-|False
-a|Filter by policy.statements.conditions.usernames
-
-* Introduced in: 9.8
-
-
-|policy.statements.conditions.source_ips
-|string
-|query
-|False
-a|Filter by policy.statements.conditions.source_ips
-
-* Introduced in: 9.8
-
-
-|policy.statements.conditions.max_keys
+|snapshot_restore.progress
 |integer
 |query
 |False
-a|Filter by policy.statements.conditions.max_keys
+a|Filter by snapshot_restore.progress
 
-* Introduced in: 9.8
+* Introduced in: 9.18
+
+
+|is_consistent_etag
+|boolean
+|query
+|False
+a|Filter by is_consistent_etag
+
+* Introduced in: 9.17
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|retention.mode
+|string
+|query
+|False
+a|Filter by retention.mode
+
+* Introduced in: 9.14
+
+
+|retention.default_period
+|string
+|query
+|False
+a|Filter by retention.default_period
+
+* Introduced in: 9.14
+
+
+|audit_event_selector.access
+|string
+|query
+|False
+a|Filter by audit_event_selector.access
+
+* Introduced in: 9.10
+
+
+|audit_event_selector.permission
+|string
+|query
+|False
+a|Filter by audit_event_selector.permission
+
+* Introduced in: 9.10
+
+
+|lifecycle_management.rules.expiration.expired_object_delete_marker
+|boolean
+|query
+|False
+a|Filter by lifecycle_management.rules.expiration.expired_object_delete_marker
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.expiration.object_age_days
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.expiration.object_age_days
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.expiration.object_expiry_date
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.expiration.object_expiry_date
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.size_greater_than
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.size_greater_than
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.tags
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.tags
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.prefix
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.prefix
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.object_filter.size_less_than
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.object_filter.size_less_than
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.enabled
+|boolean
+|query
+|False
+a|Filter by lifecycle_management.rules.enabled
+
+* Introduced in: 9.13
 
 
 |lifecycle_management.rules.bucket_name
@@ -268,6 +261,53 @@ a|Filter by lifecycle_management.rules.bucket_name
 * Introduced in: 9.14
 * maxLength: 63
 * minLength: 3
+
+
+|lifecycle_management.rules.name
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.name
+
+* Introduced in: 9.13
+* maxLength: 256
+* minLength: 0
+
+
+|lifecycle_management.rules.svm.uuid
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.svm.uuid
+
+* Introduced in: 9.14
+
+
+|lifecycle_management.rules.svm.name
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.svm.name
+
+* Introduced in: 9.14
+
+
+|lifecycle_management.rules.abort_incomplete_multipart_upload.after_initiation_days
+|integer
+|query
+|False
+a|Filter by lifecycle_management.rules.abort_incomplete_multipart_upload.after_initiation_days
+
+* Introduced in: 9.13
+
+
+|lifecycle_management.rules.uuid
+|string
+|query
+|False
+a|Filter by lifecycle_management.rules.uuid
+
+* Introduced in: 9.14
 
 
 |lifecycle_management.rules.non_current_version_expiration.non_current_days
@@ -288,152 +328,6 @@ a|Filter by lifecycle_management.rules.non_current_version_expiration.new_non_cu
 * Introduced in: 9.13
 
 
-|lifecycle_management.rules.uuid
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.uuid
-
-* Introduced in: 9.14
-
-
-|lifecycle_management.rules.expiration.expired_object_delete_marker
-|boolean
-|query
-|False
-a|Filter by lifecycle_management.rules.expiration.expired_object_delete_marker
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.expiration.object_expiry_date
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.expiration.object_expiry_date
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.expiration.object_age_days
-|integer
-|query
-|False
-a|Filter by lifecycle_management.rules.expiration.object_age_days
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.name
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.name
-
-* Introduced in: 9.13
-* maxLength: 256
-* minLength: 0
-
-
-|lifecycle_management.rules.svm.name
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.svm.name
-
-* Introduced in: 9.14
-
-
-|lifecycle_management.rules.svm.uuid
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.svm.uuid
-
-* Introduced in: 9.14
-
-
-|lifecycle_management.rules.object_filter.prefix
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.object_filter.prefix
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.object_filter.size_greater_than
-|integer
-|query
-|False
-a|Filter by lifecycle_management.rules.object_filter.size_greater_than
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.object_filter.size_less_than
-|integer
-|query
-|False
-a|Filter by lifecycle_management.rules.object_filter.size_less_than
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.object_filter.tags
-|string
-|query
-|False
-a|Filter by lifecycle_management.rules.object_filter.tags
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.enabled
-|boolean
-|query
-|False
-a|Filter by lifecycle_management.rules.enabled
-
-* Introduced in: 9.13
-
-
-|lifecycle_management.rules.abort_incomplete_multipart_upload.after_initiation_days
-|integer
-|query
-|False
-a|Filter by lifecycle_management.rules.abort_incomplete_multipart_upload.after_initiation_days
-
-* Introduced in: 9.13
-
-
-|audit_event_selector.permission
-|string
-|query
-|False
-a|Filter by audit_event_selector.permission
-
-* Introduced in: 9.10
-
-
-|audit_event_selector.access
-|string
-|query
-|False
-a|Filter by audit_event_selector.access
-
-* Introduced in: 9.10
-
-
-|type
-|string
-|query
-|False
-a|Filter by type
-
-* Introduced in: 9.12
-
-
 |versioning_state
 |string
 |query
@@ -443,131 +337,21 @@ a|Filter by versioning_state
 * Introduced in: 9.11
 
 
-|is_consistent_etag
-|boolean
-|query
-|False
-a|Filter by is_consistent_etag
-
-* Introduced in: 9.17
-
-
-|qos_policy.min_throughput_mbps
-|integer
-|query
-|False
-a|Filter by qos_policy.min_throughput_mbps
-
-* Introduced in: 9.8
-* Max value: 4194303
-* Min value: 0
-
-
-|qos_policy.max_throughput_iops
-|integer
-|query
-|False
-a|Filter by qos_policy.max_throughput_iops
-
-* Introduced in: 9.8
-* Max value: 2147483647
-* Min value: 0
-
-
-|qos_policy.max_throughput_mbps
-|integer
-|query
-|False
-a|Filter by qos_policy.max_throughput_mbps
-
-* Introduced in: 9.8
-* Max value: 4194303
-* Min value: 0
-
-
-|qos_policy.name
+|name
 |string
 |query
 |False
-a|Filter by qos_policy.name
+a|Filter by name
 
-* Introduced in: 9.8
-
-
-|qos_policy.min_throughput_iops
-|integer
-|query
-|False
-a|Filter by qos_policy.min_throughput_iops
-
-* Introduced in: 9.8
-* Max value: 2147483647
-* Min value: 0
+* maxLength: 63
+* minLength: 3
 
 
-|qos_policy.uuid
+|svm.name
 |string
 |query
 |False
-a|Filter by qos_policy.uuid
-
-* Introduced in: 9.8
-
-
-|qos_policy.max_throughput
-|string
-|query
-|False
-a|Filter by qos_policy.max_throughput
-
-* Introduced in: 9.17
-
-
-|qos_policy.min_throughput
-|string
-|query
-|False
-a|Filter by qos_policy.min_throughput
-
-* Introduced in: 9.17
-
-
-|comment
-|string
-|query
-|False
-a|Filter by comment
-
-* maxLength: 256
-* minLength: 0
-
-
-|volume.name
-|string
-|query
-|False
-a|Filter by volume.name
-
-
-|volume.uuid
-|string
-|query
-|False
-a|Filter by volume.uuid
-
-
-|logical_used_size
-|integer
-|query
-|False
-a|Filter by logical_used_size
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
+a|Filter by svm.name
 
 
 |size
@@ -589,65 +373,84 @@ a|Filter by role
 * Introduced in: 9.10
 
 
-|retention.default_period
+|qos_policy.uuid
 |string
 |query
 |False
-a|Filter by retention.default_period
+a|Filter by qos_policy.uuid
 
-* Introduced in: 9.14
+* Introduced in: 9.8
 
 
-|retention.mode
+|qos_policy.min_throughput_mbps
+|integer
+|query
+|False
+a|Filter by qos_policy.min_throughput_mbps
+
+* Introduced in: 9.8
+* Max value: 4194303
+* Min value: 0
+
+
+|qos_policy.max_throughput_mbps
+|integer
+|query
+|False
+a|Filter by qos_policy.max_throughput_mbps
+
+* Introduced in: 9.8
+* Max value: 4194303
+* Min value: 0
+
+
+|qos_policy.min_throughput_iops
+|integer
+|query
+|False
+a|Filter by qos_policy.min_throughput_iops
+
+* Introduced in: 9.8
+* Max value: 2147483647
+* Min value: 0
+
+
+|qos_policy.min_throughput
 |string
 |query
 |False
-a|Filter by retention.mode
+a|Filter by qos_policy.min_throughput
 
-* Introduced in: 9.14
+* Introduced in: 9.17
 
 
-|svm.name
+|qos_policy.name
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by qos_policy.name
+
+* Introduced in: 9.8
 
 
-|protection_status.destination.is_cloud
-|boolean
+|qos_policy.max_throughput_iops
+|integer
 |query
 |False
-a|Filter by protection_status.destination.is_cloud
+a|Filter by qos_policy.max_throughput_iops
 
-* Introduced in: 9.10
+* Introduced in: 9.8
+* Max value: 2147483647
+* Min value: 0
 
 
-|protection_status.destination.is_ontap
-|boolean
+|qos_policy.max_throughput
+|string
 |query
 |False
-a|Filter by protection_status.destination.is_ontap
+a|Filter by qos_policy.max_throughput
 
-* Introduced in: 9.10
-
-
-|protection_status.destination.is_external_cloud
-|boolean
-|query
-|False
-a|Filter by protection_status.destination.is_external_cloud
-
-* Introduced in: 9.12
-
-
-|protection_status.is_protected
-|boolean
-|query
-|False
-a|Filter by protection_status.is_protected
-
-* Introduced in: 9.10
+* Introduced in: 9.17
 
 
 |encryption.enabled
@@ -666,13 +469,237 @@ a|Filter by nas_path
 * Introduced in: 9.12
 
 
-|is_nas_path_mutable
+|cors.rules.allowed_methods
+|string
+|query
+|False
+a|Filter by cors.rules.allowed_methods
+
+* Introduced in: 9.16
+
+
+|cors.rules.max_age_seconds
+|integer
+|query
+|False
+a|Filter by cors.rules.max_age_seconds
+
+* Introduced in: 9.16
+
+
+|cors.rules.allowed_origins
+|string
+|query
+|False
+a|Filter by cors.rules.allowed_origins
+
+* Introduced in: 9.16
+
+
+|cors.rules.id
+|string
+|query
+|False
+a|Filter by cors.rules.id
+
+* Introduced in: 9.16
+* maxLength: 256
+* minLength: 0
+
+
+|cors.rules.expose_headers
+|string
+|query
+|False
+a|Filter by cors.rules.expose_headers
+
+* Introduced in: 9.16
+
+
+|cors.rules.allowed_headers
+|string
+|query
+|False
+a|Filter by cors.rules.allowed_headers
+
+* Introduced in: 9.16
+
+
+|policy.statements.resources
+|string
+|query
+|False
+a|Filter by policy.statements.resources
+
+* Introduced in: 9.8
+
+
+|policy.statements.sid
+|string
+|query
+|False
+a|Filter by policy.statements.sid
+
+* Introduced in: 9.8
+* maxLength: 256
+* minLength: 0
+
+
+|policy.statements.actions
+|string
+|query
+|False
+a|Filter by policy.statements.actions
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.source_ips
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.source_ips
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.if_match
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.if_match
+
+* Introduced in: 9.19
+
+
+|policy.statements.conditions.object_creation_operation
 |boolean
 |query
 |False
-a|Filter by is_nas_path_mutable
+a|Filter by policy.statements.conditions.object_creation_operation
 
-* Introduced in: 9.17
+* Introduced in: 9.19
+
+
+|policy.statements.conditions.prefixes
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.prefixes
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.delimiters
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.delimiters
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.max_keys
+|integer
+|query
+|False
+a|Filter by policy.statements.conditions.max_keys
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.operator
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.operator
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.usernames
+|string
+|query
+|False
+a|Filter by policy.statements.conditions.usernames
+
+* Introduced in: 9.8
+
+
+|policy.statements.conditions.if_none_match
+|boolean
+|query
+|False
+a|Filter by policy.statements.conditions.if_none_match
+
+* Introduced in: 9.19
+
+
+|policy.statements.effect
+|string
+|query
+|False
+a|Filter by policy.statements.effect
+
+* Introduced in: 9.8
+
+
+|policy.statements.principals
+|string
+|query
+|False
+a|Filter by policy.statements.principals
+
+* Introduced in: 9.8
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
+
+
+|logical_used_size
+|integer
+|query
+|False
+a|Filter by logical_used_size
+
+
+|snapshot_policy.uuid
+|string
+|query
+|False
+a|Filter by snapshot_policy.uuid
+
+* Introduced in: 9.16
+
+
+|snapshot_policy.name
+|string
+|query
+|False
+a|Filter by snapshot_policy.name
+
+* Introduced in: 9.16
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
+|volume.uuid
+|string
+|query
+|False
+a|Filter by volume.uuid
 
 
 |svm.uuid
@@ -876,6 +903,9 @@ a|
               {
                 "delimiters": [
                   "/"
+                ],
+                "if_match": [
+                  "true"
                 ],
                 "max_keys": [
                   1000
@@ -1346,7 +1376,7 @@ a|Size of the object smaller than specified for which the corresponding lifecycl
 
 |tags
 |array[string]
-a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+a|An array of key-value paired tags of the form +++<tag>+++or <tag=value>.+++</tag>+++
 
 
 |===
@@ -1486,9 +1516,24 @@ Information about policy conditions based on various condition operators and con
 a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
 
 
+|if_match
+|array[string]
+a|Controls conditional writes via If-Match header, evaluated with the Null operator; indicates whether the If-Match header is present or not.
+
+
+|if_none_match
+|boolean
+a|Controls conditional writes via If-None-Match header, evaluated with the Null operator; indicates whether the If-None-Match header is present or not.
+
+
 |max_keys
 |array[integer]
 a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|object_creation_operation
+|boolean
+a|Controls object creation requests, evaluated with the Bool operator; indicates whether it is an object-creation request or not.
 
 
 |operator

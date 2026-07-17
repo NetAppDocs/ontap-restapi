@@ -1,0 +1,109 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'view_the_ipsec_policy_configuration_for_cluster_network_security.html'
+summary: 'View the IPsec policy configuration for cluster network security'
+---
+
+= View the IPsec policy configuration for cluster network security
+
+
+
+== Overview
+
+You can use the security cluster-network ipsec policy API endpoints to
+view the IPsec policy configuration for cluster network security.
+The following operations are supported:
+
+* GET to retrieve IPsec policy configurations for cluster network security: GET security/cluster-network/ipsec/policies
+* GET to retrieve a specific IPsec policy by UUID for a given node: GET security/cluster-network/ipsec/policies/{node.uuid}/\{uuid}
+
+== Examples
+
+=== Retrieving all IPsec policies for cluster network security
+
+----
+
+# The API:
+GET /api/security/cluster-network/ipsec/policies
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/cluster-network/ipsec/policies?fields=*&return_records=true" -H "accept: application/json"
+
+# The response:
+{
+"records": [
+  {
+    "node": {
+      "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+      "name": "node1"
+    },
+    "uuid": "b3c9e220-74af-11e3-9c7d-00505682a1a0",
+    "name": "policy1",
+    "authentication_method": "pki",
+    "certificate": {
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+      "name": "cluster_network_cert_1"
+    },
+    "local_ip": {
+      "address": "192.168.1.1",
+      "netmask": 24
+    },
+    "remote_ip": {
+      "address": "192.168.1.2",
+      "netmask": 24
+    },
+    "action": "esp_transport",
+    "_links": {
+      "self": {
+        "href": "/api/security/cluster-network/ipsec/policies/4ea7a442-86d1-11e0-ae1c-123478563412/b3c9e220-74af-11e3-9c7d-00505682a1a0"
+      }
+    }
+  }
+],
+"num_records": 1,
+"_links": {
+  "self": {
+    "href": "/api/security/cluster-network/ipsec/policies"
+  }
+}
+}
+----
+
+=== Retrieving a specific IPsec policy for a given node
+
+----
+
+# The API:
+GET /api/security/cluster-network/ipsec/policies/{node.uuid}/{uuid}
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/cluster-network/ipsec/policies/4ea7a442-86d1-11e0-ae1c-123478563412/b3c9e220-74af-11e3-9c7d-00505682a1a0" -H "accept: application/json"
+
+# The response:
+{
+"node": {
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412",
+  "name": "node1"
+},
+"uuid": "b3c9e220-74af-11e3-9c7d-00505682a1a0",
+"name": "policy1",
+"authentication_method": "pki",
+"certificate": {
+  "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412",
+  "name": "cluster_network_cert_1"
+},
+"local_ip": {
+  "address": "192.168.1.1",
+  "netmask": 24
+},
+"remote_ip": {
+  "address": "192.168.1.2",
+  "netmask": 24
+},
+"action": "esp_transport"
+}
+----
+
+

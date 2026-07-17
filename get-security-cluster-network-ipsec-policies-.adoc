@@ -1,0 +1,403 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'get-security-cluster-network-ipsec-policies-.html'
+summary: 'Retrieve the IPsec policy configuration for an ONTAP node and policy UUID'
+---
+
+= Retrieve the IPsec policy configuration for an ONTAP node and policy UUID
+
+[.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/cluster-network/ipsec/policies/{node.uuid}/{uuid}`#
+
+*Introduced In:* 9.19
+
+Retrieves the IPsec policy configuration for cluster network security for a given node and policy UUID.
+
+== Related ONTAP commands
+
+* 'security cluster-network ipsec policy show'
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|node.uuid
+|string
+|path
+|True
+a|Node UUID.
+
+
+|uuid
+|string
+|path
+|True
+a|IPsec policy UUID.
+
+* format: uuid
+
+
+|fields
+|array[string]
+|query
+|False
+a|Specify the fields to return.
+
+|===
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|action
+|string
+a|Action for the IPsec policy.
+
+
+|authentication_method
+|string
+a|Authentication method for the IPsec policy. Must be PKI for cluster security.
+
+
+|certificate
+|link:#certificate[certificate]
+a|Certificate for the IPsec policy.
+
+
+|local_ip
+|link:#local_ip[local_ip]
+a|Local IP endpoint for the IPsec policy.
+
+
+|name
+|string
+a|IPsec policy name.
+
+
+|node
+|link:#node_reference[node_reference]
+a|
+
+|remote_ip
+|link:#remote_ip[remote_ip]
+a|Remote IP endpoint for the IPsec policy.
+
+
+|uuid
+|string
+a|Unique identifier for the IPsec policy.
+
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "_links": {
+    "self": {
+      "href": "/api/resourcelink"
+    }
+  },
+  "action": "string",
+  "authentication_method": "string",
+  "certificate": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "string",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "local_ip": {
+    "address": "192.168.1.1",
+    "netmask": 24
+  },
+  "name": "policy1",
+  "node": {
+    "_links": {
+      "self": {
+        "href": "/api/resourcelink"
+      }
+    },
+    "name": "node1",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "remote_ip": {
+    "address": "192.168.1.2",
+    "netmask": 24
+  },
+  "uuid": "4ea7a442-86d1-11e0-ae1c-123478563412"
+}
+====
+
+== Error
+
+```
+Status: Default, Error
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|error
+|link:#returned_error[returned_error]
+a|
+
+|===
+
+
+.Example error
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "error": {
+    "arguments": [
+      {
+        "code": "string",
+        "message": "string"
+      }
+    ],
+    "code": "4",
+    "message": "entry doesn't exist",
+    "target": "uuid"
+  }
+}
+====
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|self
+|link:#href[href]
+a|
+
+|===
+
+
+[#certificate]
+[.api-collapsible-fifth-title]
+certificate
+
+Certificate for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|Certificate name
+
+
+|uuid
+|string
+a|Certificate UUID
+
+
+|===
+
+
+[#local_ip]
+[.api-collapsible-fifth-title]
+local_ip
+
+Local IP endpoint for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address.
+
+
+|netmask
+|integer
+a|IPv4 mask length or IPv6 prefix length.
+
+
+|===
+
+
+[#node_reference]
+[.api-collapsible-fifth-title]
+node_reference
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|_links
+|link:#_links[_links]
+a|
+
+|name
+|string
+a|
+
+|uuid
+|string
+a|
+
+|===
+
+
+[#remote_ip]
+[.api-collapsible-fifth-title]
+remote_ip
+
+Remote IP endpoint for the IPsec policy.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|address
+|string
+a|IPv4 or IPv6 address.
+
+
+|netmask
+|integer
+a|IPv4 mask length or IPv6 prefix length.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

@@ -16,6 +16,7 @@ Updates a consistency group.
 
 NOTE: that this operation will never delete storage elements. You can specify only elements that should be added to the consistency group regardless of existing storage objects.
 Mapping or unmapping a consistency group from igroups or subsystems is not supported.
+The QoS policy can be set using a consistency group PATCH operation only when provisioning new objects (for example, a new volume on an existing consistency group or a new volume on a new child consistency group).
 
 == Related ONTAP commands
 
@@ -201,6 +202,7 @@ The total number of volumes across all child consistency groups contained in a c
       },
       "luns": [
         {
+          "access_mode": "string",
           "clone": {
             "source": {
               "name": "/vol/volume1/lun1",
@@ -385,6 +387,7 @@ The total number of volumes across all child consistency groups contained in a c
   ],
   "luns": [
     {
+      "access_mode": "string",
       "clone": {
         "source": {
           "name": "/vol/volume1/lun1",
@@ -926,6 +929,12 @@ Persistent reservations for the patched LUN are also preserved.
 |Type
 |Description
 
+|created_as_clone
+|boolean
+a|This property is _true_ when the LUN was created as a clone of another LUN. Note that this property only indicates how the LUN was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for LUNs that are not clones.
+
+
 |source
 |link:#source[source]
 a|The source LUN for a LUN clone operation. This can be specified using property `clone.source.uuid` or `clone.source.name`. If both properties are supplied, they must refer to the same LUN.
@@ -1253,6 +1262,17 @@ A LUN can be created to a specified size using thin or thick provisioning. A LUN
 |Name
 |Type
 |Description
+
+|access_mode
+|string
+a|The `access_mode` property controls how SCSI task set management is handled for the LUN.
+This property is only supported on LUNs with the following `os_type`:
+
+* aix
+A value of _global_ is the default access mode, and indicates that task set operations impact all initiators accessing the LUN. In this mode, if an individual initiator encounters an I/O failure, its recovery can cascade the disruption to other initiators accessing the same LUN. Host operating systems not supported by this property are designed to avoid these cascading disruptions, so this property can be safely ignored.
+A value of _local_ indicates that task set operations only impact the initiator that requested the operation. When many hosts of a supported `os_type` are accessing the same LUN, the _local_ `access_mode` should be preferred.
+Modification of this property is only supported while the `status.state` of the LUN is _offline_. If a PATCH is performed while the LUN is _online_, the PATCH will automatically bring the LUN _offline_, perform the `access_mode` modification, and then bring the LUN back _online_. The host must perform a rescan to detect the new `access_mode`.
+
 
 |clone
 |link:#clone[clone]
@@ -2195,6 +2215,11 @@ export_rules
 |allow_device_creation
 |boolean
 a|Specifies whether or not device creation is allowed.
+
+
+|allow_nfs_tls_only
+|boolean
+a|Specifies whether to allow NFS access only over TLS connections.
 
 
 |allow_suid
