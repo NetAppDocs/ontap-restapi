@@ -1,0 +1,296 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'patch-security-webauthn-global-settings-.html'
+summary: 'Update a WebAuthn global settings for an ONTAP cluster or SVM.'
+---
+
+= Update a WebAuthn global settings for an ONTAP cluster or SVM.
+
+[.api-doc-operation .api-doc-operation-patch]#PATCH# [.api-doc-code-block]#`/security/webauthn/global-settings/{owner.uuid}`#
+
+*Introduced In:* 9.19
+
+Updates a WebAuthn global settings for a cluster or an SVM.
+
+== Related ONTAP commands
+
+* `security webauthn modify`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|owner.uuid
+|string
+|path
+|True
+a|Cluster or SVM UUID
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attestation
+|string
+a|Attestation conveyance type.
+
+
+|owner
+|link:#svm_reference[svm_reference]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|require_rk
+|boolean
+a|Specifies whether the resident key is required.
+
+
+|resident_key
+|string
+a|Resident key.
+
+
+|rp_domains
+|array[string]
+a|List of relying party domains
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|timeout
+|integer
+a|The timeout interval for the WebAuthn request, in milliseconds.
+
+
+|user_verification
+|string
+a|User verification.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "attestation": "none",
+  "owner": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "require_rk": "",
+  "resident_key": "discouraged",
+  "rp_domains": [
+    "example.com"
+  ],
+  "scope": "string",
+  "timeout": 600000,
+  "user_verification": "discouraged"
+}
+====
+
+== Response
+
+```
+Status: 200, Ok
+```
+
+== Error
+
+```
+Status: Default, Error
+```
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#self_link]
+[.api-collapsible-fifth-title]
+self_link
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#svm_reference]
+[.api-collapsible-fifth-title]
+svm_reference
+
+SVM, applies only to SVM-scoped objects.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|name
+|string
+a|The name of the SVM. This field cannot be specified in a PATCH method.
+
+
+|uuid
+|string
+a|The unique identifier of the SVM. This field cannot be specified in a PATCH method.
+
+
+|===
+
+
+[#webauthn_global]
+[.api-collapsible-fifth-title]
+webauthn_global
+
+WebAuthn global settings.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|attestation
+|string
+a|Attestation conveyance type.
+
+
+|owner
+|link:#svm_reference[svm_reference]
+a|SVM, applies only to SVM-scoped objects.
+
+
+|require_rk
+|boolean
+a|Specifies whether the resident key is required.
+
+
+|resident_key
+|string
+a|Resident key.
+
+
+|rp_domains
+|array[string]
+a|List of relying party domains
+
+
+|scope
+|string
+a|Scope of the entity. Set to "cluster" for cluster owned objects and to "svm" for SVM owned objects.
+
+
+|timeout
+|integer
+a|The timeout interval for the WebAuthn request, in milliseconds.
+
+
+|user_verification
+|string
+a|User verification.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

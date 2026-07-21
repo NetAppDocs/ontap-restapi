@@ -746,6 +746,15 @@ a|Filter by snapshot_reserve_percent
 * Introduced in: 9.18
 
 
+|san_multipathing
+|string
+|query
+|False
+a|Filter by san_multipathing.
+
+* Introduced in: 9.19
+
+
 |fields
 |array[string]
 |query
@@ -1125,9 +1134,11 @@ a|
         "default_win_user": "string",
         "name": "s3-server-1"
       },
+      "san_multipathing": "string",
       "snapmirror": {
         "protected_consistency_group_count": 0,
-        "protected_volumes_count": 0
+        "protected_volumes_count": 0,
+        "protection_type": "string"
       },
       "snapshot_policy": {
         "_links": {
@@ -2447,6 +2458,11 @@ a|Specifies the number of SVM DR protected consistency groups in the SVM.
 a|Specifies the number of SVM DR protected volumes in the SVM.
 
 
+|protection_type
+|string
+a|Specifies whether the SVM protected using SVM DR or Snapmirror Active Sync relationship.
+
+
 |===
 
 
@@ -2490,12 +2506,12 @@ storage
 
 |allocated
 |integer
-a|Total size of the volumes in SVM, in bytes.
+a|Total size of the volumes in SVM, in bytes. This field is only available if storage.limit is set.
 
 
 |available
 |integer
-a|Currently available storage capacity in SVM, in bytes.
+a|Currently available storage capacity in SVM, in bytes. This field is only available if storage.limit is set.
 
 
 |limit
@@ -2515,7 +2531,7 @@ a|Indicates whether the total storage capacity exceeds the alert percentage.
 
 |used_percentage
 |integer
-a|The percentage of storage capacity used.
+a|The percentage of storage capacity used. This field is only available if storage.limit is set.
 
 
 |===
@@ -2722,6 +2738,18 @@ a|This optionally specifies which QoS non-shared policy group to apply to the SV
 |s3
 |link:#s3[s3]
 a|
+
+|san_multipathing
+|string
+a|Specifies the multipathing mode for SAN and NVMe protocols supported by the SVM. Possible values are:
+
+* local_active - Only node-local paths are active/optimized.
+* active_active - All paths in the HA pair are active/optimized.
+* active_active_scsi_only - This value is available only on the original edition of ONTAP All SAN Array (ASA r1). This value provides the active-active behavior, but only for the iSCSI and FCP protocols.
+* enum: ["local_active", "active_active", "active_active_scsi_only"]
+* Introduced in: 9.19
+* x-nullable: true
+
 
 |snapmirror
 |link:#snapmirror[snapmirror]

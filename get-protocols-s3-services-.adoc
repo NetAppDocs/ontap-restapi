@@ -66,6 +66,11 @@ Status: 200, Ok
 |link:#self_link[self_link]
 a|
 
+|bucket_create_retention_mode
+|string
+a|The default lock mode that will be applied to a S3 bucket when the bucket is created using S3 API.
+
+
 |buckets
 |array[link:#s3_bucket[s3_bucket]]
 a|This field cannot be specified in a PATCH method.
@@ -172,6 +177,7 @@ a|This field cannot be specified in a PATCH method.
       "href": "/api/resourcelink"
     }
   },
+  "bucket_create_retention_mode": "governance",
   "buckets": [
     {
       "audit_event_selector": {
@@ -281,6 +287,9 @@ a|This field cannot be specified in a PATCH method.
               {
                 "delimiters": [
                   "/"
+                ],
+                "if_match": [
+                  "true"
                 ],
                 "max_keys": [
                   1000
@@ -457,7 +466,16 @@ a|This field cannot be specified in a PATCH method.
       "access_key": "<AWS-ACCESS-KEY-ID>",
       "comment": "S3 user",
       "key_expiry_time": "2024-01-01 00:00:00 +0000",
+      "key_id": 1,
       "key_time_to_live": "PT6H3M",
+      "keys": [
+        {
+          "access_key": "<AWS-ACCESS-KEY-ID>",
+          "expiry_time": "2024-01-01 00:00:00 +0000",
+          "id": 1,
+          "time_to_live": "PT6H3M"
+        }
+      ],
       "name": "user-1",
       "svm": {
         "_links": {
@@ -837,7 +855,7 @@ a|Size of the object smaller than specified for which the corresponding lifecycl
 
 |tags
 |array[string]
-a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+a|An array of key-value paired tags of the form +++<tag>+++or <tag=value>.+++</tag>+++
 
 
 |===
@@ -977,9 +995,24 @@ Information about policy conditions based on various condition operators and con
 a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
 
 
+|if_match
+|array[string]
+a|Controls conditional writes via If-Match header, evaluated with the Null operator; indicates whether the If-Match header is present or not.
+
+
+|if_none_match
+|boolean
+a|Controls conditional writes via If-None-Match header, evaluated with the Null operator; indicates whether the If-None-Match header is present or not.
+
+
 |max_keys
 |array[integer]
 a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|object_creation_operation
+|boolean
+a|Controls object creation requests, evaluated with the Bool operator; indicates whether it is an object-creation request or not.
 
 
 |operator
@@ -1809,6 +1842,47 @@ a|The timestamp of the performance data.
 |===
 
 
+[#keys]
+[.api-collapsible-fifth-title]
+keys
+
+Specifies a key associated with an S3 user. At most only two keys can be associated with a user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|id
+|integer
+a|Specifies an S3 user key identifier. Each user can only have a maximum of two keys. The key_id can either be '1' or '2'.
+
+
+|time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys do not expire.
+
+
+|===
+
+
 [#s3_user]
 [.api-collapsible-fifth-title]
 s3_user
@@ -1837,6 +1911,11 @@ a|Can contain any additional information about the user being created or modifie
 a|Specifies the date and time after which keys expire and are no longer valid.
 
 
+|key_id
+|integer
+a|Specifies the identifier of an S3 user key that needs to be generated or deleted. The key_id can either be '1' or '2'.
+
+
 |key_time_to_live
 |string
 a|Indicates the time period from when this parameter is specified:
@@ -1845,6 +1924,11 @@ a|Indicates the time period from when this parameter is specified:
 * when the user keys were last regenerated, after which the user keys expire and are no longer valid.
 * Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
 * If the value specified is '0' seconds, then the keys won't expire.
+
+
+|keys
+|array[link:#keys[keys]]
+a|Specifies the keys associated with an S3 User.
 
 
 |name

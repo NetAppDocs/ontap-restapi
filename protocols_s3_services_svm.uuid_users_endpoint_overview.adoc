@@ -297,6 +297,8 @@ Vary: Origin
 
 === Regenerating first key for a specific S3 user for the specified SVM
 
+=== Note that if key_id is not specified, key with key_id=1 will be regenerated.
+
 ----
 
 # The API:
@@ -304,6 +306,41 @@ Vary: Origin
 
 # The call:
 curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2?regenerate_keys=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ }"
+
+# The response:
+HTTP/1.1 200 OK
+Date: Fri, 31 May 2019 09:55:45 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 391
+Content-Type: application/hal+json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "user-2",
+    "access_key": "<AWS-ACCESS-KEY-ID>",
+    "secret_key": "<AWS-SECRET-ACCESS-KEY>",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2"
+      }
+    }
+  }
+]
+}
+----
+
+=== Regenerating second key for a specific S3 user for the specified SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/users/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2?regenerate_keys=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"key_id\":  \"2\" }"
 
 # The response:
 HTTP/1.1 200 OK
@@ -402,7 +439,45 @@ Content-Type: application/hal+json
 }
 ----
 
+=== Creating another key for a specific S3 user for the specified SVM using key_id '2'
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/users/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2?regenerate_keys=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"key_time_to_live\": \"PT6H3M\", \"key_id\":  \"2\" }"
+
+# The response:
+HTTP/1.1 200 OK
+Date: Fri, 31 May 2019 09:55:45 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Length: 391
+Content-Type: application/hal+json
+{
+"num_records": 1,
+"records": [
+  {
+    "name": "user-2",
+    "access_key": "<AWS-ACCESS-KEY-ID>",
+    "secret_key": "<AWS-SECRET-ACCESS-KEY>",
+    "key_expiry_time": "2023-06-16T16:19:06Z",
+    "_links": {
+      "self": {
+        "href": "/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2"
+      }
+    }
+  }
+]
+}
+----
+
 === Deleting first key for a specific S3 user for a specified SVM
+
+=== Note that if key_id is not specified, key with key_id=1 will be deleted.
 
 ----
 
@@ -411,6 +486,30 @@ Content-Type: application/hal+json
 
 # The call:
 curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2?delete_keys=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ }"
+
+# The response:
+HTTP/1.1 200 OK
+Date: Wed, 08 Feb 2023 13:40:04 GMT
+Server: libzapid-httpd
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache,no-store,must-revalidate
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors: 'self'
+Content-Length: 3
+Content-Type: application/hal+json
+Vary: Origin
+{
+}
+----
+
+=== Deleting second key for a specific S3 user for a specified SVM
+
+----
+
+# The API:
+/api/protocols/s3/services/{svm.uuid}/users/{name}
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/protocols/s3/services/db2ec036-8375-11e9-99e1-0050568e3ed9/users/user-2?delete_keys=true" -H "accept: application/hal+json" -H "Content-Type: application/json" -d "{ \"key_id\":  \"2\" }"
 
 # The response:
 HTTP/1.1 200 OK

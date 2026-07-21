@@ -19,6 +19,8 @@ Creates an NVMe subsystem.
 * `svm.uuid` or `svm.name` - Existing SVM in which to create the NVMe subsystem.
 * `name` - Name for NVMe subsystem. Once created, an NVMe subsystem cannot be renamed.
 * `os_type` - Operating system of the NVMe subsystem's hosts.
+* `hosts.dh_hmac_chap.host_secret_key` - When created with the subsystem host, authentication host secret key must be provided if the TLS key type is "generated".
+Note: The `hosts.dh_hmac_chap.group_size` property should not be set to "None". If the `hosts.dh_hmac_chap.group_size` property is not provided, then DH group size of 2048-bit is considered by default.
 
 == Related ONTAP commands
 
@@ -418,7 +420,10 @@ ONTAP Error Response Codes
 | A TLS configured PSK was not provided when adding an NVMe subsystem host with the configured key type.
 
 | 72090205
-| An invalid combination for the TLS key type and configured PSK values was provided when adding an NVMe subsystem host. When key type is "none", no configured PSK is allowed. When key type is "configured", a configured PSK is required.
+| An invalid combination for the TLS key type and configured PSK values was provided when adding an NVMe subsystem host. When key type is "none" or "generated", no configured PSK is allowed. When key type is "configured", a configured PSK is required.
+
+| 72090206
+| A DH-HMAC-CHAP secret key is required while adding a host to a subsystem with a generated TLS key. If a DH-HMAC-CHAP group size is supplied, it must have a value other than 'none'.
 |===
 
 Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
@@ -586,6 +591,7 @@ Possible values:
 
 * `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
 * `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+* `generated` - A PSK generated via NVMe in-band authentication is configured to setup the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. No value is allowed for `configured_psk`. Secure connection concatenation is only supported when DH-HMAC-CHAP authentication is also being used. A value must be set for property `dh_hmac_chap.host_secret_key` while the property `dh_hmac_chap.group_size` cannot have value `none`.
 
 This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
 

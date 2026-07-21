@@ -35,11 +35,86 @@ Retrieves CIFS shares.
 |Required
 |Description
 
-|svm.name
+|comment
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 1
+
+
+|home_directory
+|boolean
+|query
+|False
+a|Filter by home_directory
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
+|volume.uuid
+|string
+|query
+|False
+a|Filter by volume.uuid
+
+
+|access_based_enumeration
+|boolean
+|query
+|False
+a|Filter by access_based_enumeration
+
+
+|path
+|string
+|query
+|False
+a|Filter by path
+
+* maxLength: 256
+* minLength: 1
+
+
+|force_group_for_create
+|string
+|query
+|False
+a|Filter by force_group_for_create
+
+* Introduced in: 9.10
+
+
+|no_strict_security
+|boolean
+|query
+|False
+a|Filter by no_strict_security
+
+* Introduced in: 9.9
+
+
+|encryption
+|boolean
+|query
+|False
+a|Filter by encryption
+
+
+|show_previous_versions
+|boolean
+|query
+|False
+a|Filter by show_previous_versions
+
+* Introduced in: 9.13
 
 
 |svm.uuid
@@ -49,13 +124,11 @@ a|Filter by svm.name
 a|Filter by svm.uuid
 
 
-|offline_files
+|svm.name
 |string
 |query
 |False
-a|Filter by offline_files
-
-* Introduced in: 9.10
+a|Filter by svm.name
 
 
 |browsable
@@ -67,20 +140,23 @@ a|Filter by browsable
 * Introduced in: 9.13
 
 
-|allow_unencrypted_access
-|boolean
+|name
+|string
 |query
 |False
-a|Filter by allow_unencrypted_access
+a|Filter by name
 
-* Introduced in: 9.11
+* maxLength: 80
+* minLength: 1
 
 
-|encryption
-|boolean
+|dir_umask
+|integer
 |query
 |False
-a|Filter by encryption
+a|Filter by dir_umask
+
+* Introduced in: 9.10
 
 
 |max_connections_per_share
@@ -92,50 +168,45 @@ a|Filter by max_connections_per_share
 * Introduced in: 9.14
 
 
-|home_directory
+|allow_unencrypted_access
 |boolean
 |query
 |False
-a|Filter by home_directory
+a|Filter by allow_unencrypted_access
+
+* Introduced in: 9.11
 
 
-|namespace_caching
-|boolean
+|file_umask
+|integer
 |query
 |False
-a|Filter by namespace_caching
+a|Filter by file_umask
 
 * Introduced in: 9.10
 
 
-|acls.type
+|oplocks
+|boolean
+|query
+|False
+a|Filter by oplocks
+
+
+|unix_symlink
 |string
 |query
 |False
-a|Filter by acls.type
+a|Filter by unix_symlink
 
 
-|acls.user_or_group
-|string
+|show_snapshot
+|boolean
 |query
 |False
-a|Filter by acls.user_or_group
+a|Filter by show_snapshot
 
-
-|acls.permission
-|string
-|query
-|False
-a|Filter by acls.permission
-
-
-|acls.win_sid_unix_id
-|string
-|query
-|False
-a|Filter by acls.win_sid_unix_id
-
-* Introduced in: 9.16
+* Introduced in: 9.10
 
 
 |vscan_profile
@@ -156,60 +227,11 @@ a|Filter by continuously_available
 * Introduced in: 9.10
 
 
-|show_snapshot
+|namespace_caching
 |boolean
 |query
 |False
-a|Filter by show_snapshot
-
-* Introduced in: 9.10
-
-
-|oplocks
-|boolean
-|query
-|False
-a|Filter by oplocks
-
-
-|access_based_enumeration
-|boolean
-|query
-|False
-a|Filter by access_based_enumeration
-
-
-|change_notify
-|boolean
-|query
-|False
-a|Filter by change_notify
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-* maxLength: 80
-* minLength: 1
-
-
-|show_previous_versions
-|boolean
-|query
-|False
-a|Filter by show_previous_versions
-
-* Introduced in: 9.13
-
-
-|dir_umask
-|string
-|query
-|False
-a|Filter by dir_umask
+a|Filter by namespace_caching
 
 * Introduced in: 9.10
 
@@ -223,70 +245,48 @@ a|Filter by attribute_cache
 * Introduced in: 9.14
 
 
-|path
-|string
-|query
-|False
-a|Filter by path
-
-* maxLength: 256
-* minLength: 1
-
-
-|unix_symlink
-|string
-|query
-|False
-a|Filter by unix_symlink
-
-
-|file_umask
-|string
-|query
-|False
-a|Filter by file_umask
-
-* Introduced in: 9.10
-
-
-|no_strict_security
+|change_notify
 |boolean
 |query
 |False
-a|Filter by no_strict_security
-
-* Introduced in: 9.9
+a|Filter by change_notify
 
 
-|volume.name
+|acls.type
 |string
 |query
 |False
-a|Filter by volume.name
+a|Filter by acls.type
 
 
-|volume.uuid
+|acls.win_sid_unix_id
 |string
 |query
 |False
-a|Filter by volume.uuid
+a|Filter by acls.win_sid_unix_id
+
+* Introduced in: 9.16
 
 
-|comment
+|acls.user_or_group
 |string
 |query
 |False
-a|Filter by comment
-
-* maxLength: 256
-* minLength: 1
+a|Filter by acls.user_or_group
 
 
-|force_group_for_create
+|acls.permission
 |string
 |query
 |False
-a|Filter by force_group_for_create
+a|Filter by acls.permission
+
+
+|offline_files
+|string
+|query
+|False
+a|Filter by offline_files
 
 * Introduced in: 9.10
 
@@ -397,8 +397,8 @@ a|
         }
       ],
       "comment": "HR Department Share",
-      "dir_umask": "21",
-      "file_umask": "21",
+      "dir_umask": 21,
+      "file_umask": 21,
       "force_group_for_create": "string",
       "name": "HR_SHARE",
       "offline_files": "string",
@@ -707,7 +707,7 @@ If the Vscan ONTAP feature is used, it is not supported in continuous availabili
 
 
 |dir_umask
-|string
+|integer
 a|Directory Mode Creation Mask to be viewed as an octal number.
 
 
@@ -718,7 +718,7 @@ able to access this share.
 
 
 |file_umask
-|string
+|integer
 a|File Mode Creation Mask to be viewed as an octal number.
 
 

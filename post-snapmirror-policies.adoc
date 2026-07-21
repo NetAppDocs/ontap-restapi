@@ -33,6 +33,7 @@ It takes the following values:
 * The property "retention.count" specifies the maximum number of snapshots that are retained on the SnapMirror destination volume.
 * When the property "retention.label" is specified, the snapshots that have a SnapMirror label matching this property is transferred to the SnapMirror destination.
 * When the property "retention.creation_schedule" is specified, snapshots are directly created on the SnapMirror destination. The snapshots created have the same content as the latest snapshot already present on the SnapMirror destination.
+* Policies with the property "retention.creation_schedule" are supported only on the final SnapMirror destination volume in the cascade.
 * The property "transfer_schedule" cannot be set to null (no-quotes) during SnapMirror policy POST.
 * The properties "retention.label" and "retention.count" must be specified for "async" policies with "create_snapshot_on_source" set to "false".
 * The property "retention.warn" is not supported for a policy when the "retention.preserve" property is false.
@@ -274,7 +275,7 @@ a|Unique identifier of the SnapMirror policy.
   "name": "Asynchronous",
   "retention": [
     {
-      "count": 7,
+      "count": "7",
       "creation_schedule": {
         "name": "weekly",
         "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
@@ -473,7 +474,7 @@ SnapMirror policy rule for retention.
 |Description
 
 |count
-|integer
+|string
 a|Number of snapshots to be kept for retention. Maximum value will differ based on type of relationship and scaling factor.
 
 

@@ -36,6 +36,7 @@ If not specified in POST, the following default property values are assigned:
 * `ntfs_unix_security` - _fail_
 * `chown_mode` - _restricted_
 * `allow_suid` - _true_
+* `allow_nfs_tls_only` - _false_
 
 == Related ONTAP commands
 
@@ -87,6 +88,11 @@ a|The default is false.  If set to true, the records are returned.
 |allow_device_creation
 |boolean
 a|Specifies whether or not device creation is allowed.
+
+
+|allow_nfs_tls_only
+|boolean
+a|Specifies whether to allow NFS access only over TLS connections.
 
 
 |allow_suid
@@ -341,6 +347,9 @@ ONTAP Error Response Codes
 
 | 3277149
 | The "Anon" field cannot be an empty string
+
+| 3277249
+| Setting "allow-cache-async-writes" to "true" in export-policy rules requires an effective cluster version of 9.19.1 or later.
 |===
 
 
@@ -462,6 +471,11 @@ export_rule
 |allow_device_creation
 |boolean
 a|Specifies whether or not device creation is allowed.
+
+
+|allow_nfs_tls_only
+|boolean
+a|Specifies whether to allow NFS access only over TLS connections.
 
 
 |allow_suid

@@ -110,6 +110,50 @@ a|Authentication method used to check the client's access to the volume.
 * Default value: 1
 
 
+|credential_cache.transient_error_ttl
+|integer
+|query
+|False
+a|Filter by credential_cache.transient_error_ttl
+
+* Introduced in: 9.11
+* Max value: 300000
+* Min value: 30000
+
+
+|credential_cache.harvest_timeout
+|integer
+|query
+|False
+a|Filter by credential_cache.harvest_timeout
+
+* Introduced in: 9.18
+* Max value: 604800000
+* Min value: 60000
+
+
+|credential_cache.negative_ttl
+|integer
+|query
+|False
+a|Filter by credential_cache.negative_ttl
+
+* Introduced in: 9.11
+* Max value: 604800000
+* Min value: 60000
+
+
+|credential_cache.positive_ttl
+|integer
+|query
+|False
+a|Filter by credential_cache.positive_ttl
+
+* Introduced in: 9.11
+* Max value: 604800000
+* Min value: 60000
+
+
 |root.ignore_nt_acl
 |boolean
 |query
@@ -128,40 +172,54 @@ a|Filter by root.skip_write_permission_check
 * Introduced in: 9.11
 
 
-|svm.name
-|string
+|rquota_enabled
+|boolean
 |query
 |False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|file_session_io_grouping_duration
-|integer
-|query
-|False
-a|Filter by file_session_io_grouping_duration
-
-* Introduced in: 9.11
-* Max value: 3600
-* Min value: 60
-
-
-|extended_groups_limit
-|integer
-|query
-|False
-a|Filter by extended_groups_limit
+a|Filter by rquota_enabled
 
 * Introduced in: 9.8
-* Max value: 1024
-* Min value: 32
+
+
+|transport.tcp_enabled
+|boolean
+|query
+|False
+a|Filter by transport.tcp_enabled
+
+
+|transport.rdma_enabled
+|boolean
+|query
+|False
+a|Filter by transport.rdma_enabled
+
+* Introduced in: 9.12
+
+
+|transport.tcp_max_transfer_size
+|integer
+|query
+|False
+a|Filter by transport.tcp_max_transfer_size
+
+* Introduced in: 9.11
+* Max value: 1048576
+* Min value: 8192
+
+
+|transport.udp_enabled
+|boolean
+|query
+|False
+a|Filter by transport.udp_enabled
+
+
+|state
+|string
+|query
+|False
+a|Filter by state
 
 
 |protocol_access_rules.nfs3_access_type
@@ -191,83 +249,24 @@ a|Filter by protocol_access_rules.nfs4_access_type
 * Introduced in: 9.10
 
 
-|transport.tcp_enabled
-|boolean
-|query
-|False
-a|Filter by transport.tcp_enabled
-
-
-|transport.udp_enabled
-|boolean
-|query
-|False
-a|Filter by transport.udp_enabled
-
-
-|transport.rdma_enabled
-|boolean
-|query
-|False
-a|Filter by transport.rdma_enabled
-
-* Introduced in: 9.12
-
-
-|transport.tcp_max_transfer_size
+|extended_groups_limit
 |integer
 |query
 |False
-a|Filter by transport.tcp_max_transfer_size
+a|Filter by extended_groups_limit
 
-* Introduced in: 9.11
-* Max value: 1048576
-* Min value: 8192
-
-
-|security.permitted_encryption_types
-|string
-|query
-|False
-a|Filter by security.permitted_encryption_types
-
-* Introduced in: 9.11
+* Introduced in: 9.8
+* Max value: 1024
+* Min value: 32
 
 
-|security.ntfs_unix_security
-|string
-|query
-|False
-a|Filter by security.ntfs_unix_security
-
-* Introduced in: 9.11
-
-
-|security.rpcsec_context_idle
-|integer
-|query
-|False
-a|Filter by security.rpcsec_context_idle
-
-* Introduced in: 9.11
-
-
-|security.chown_mode
-|string
-|query
-|False
-a|Filter by security.chown_mode
-
-* Introduced in: 9.11
-
-
-|security.nt_acl_display_permission
+|showmount_enabled
 |boolean
 |query
 |False
-a|Filter by security.nt_acl_display_permission
+a|Filter by showmount_enabled
 
-* Introduced in: 9.11
+* Introduced in: 9.8
 
 
 |qtree.validate_export
@@ -288,389 +287,22 @@ a|Filter by qtree.export_enabled
 * Introduced in: 9.10
 
 
-|auth_sys_extended_groups_enabled
+|file_session_io_grouping_count
+|integer
+|query
+|False
+a|Filter by file_session_io_grouping_count
+
+* Introduced in: 9.11
+* Max value: 120000
+* Min value: 1000
+
+
+|vstorage_enabled
 |boolean
 |query
 |False
-a|Filter by auth_sys_extended_groups_enabled
-
-* Introduced in: 9.8
-
-
-|showmount_enabled
-|boolean
-|query
-|False
-a|Filter by showmount_enabled
-
-* Introduced in: 9.8
-
-
-|rquota_enabled
-|boolean
-|query
-|False
-a|Filter by rquota_enabled
-
-* Introduced in: 9.8
-
-
-|statistics.v3.latency_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.v3.latency_raw.other
-
-* Introduced in: 9.7
-
-
-|statistics.v3.latency_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v3.latency_raw.total
-
-* Introduced in: 9.7
-
-
-|statistics.v3.latency_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v3.latency_raw.write
-
-* Introduced in: 9.7
-
-
-|statistics.v3.latency_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v3.latency_raw.read
-
-* Introduced in: 9.7
-
-
-|statistics.v3.iops_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.v3.iops_raw.other
-
-* Introduced in: 9.7
-
-
-|statistics.v3.iops_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v3.iops_raw.total
-
-* Introduced in: 9.7
-
-
-|statistics.v3.iops_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v3.iops_raw.write
-
-* Introduced in: 9.7
-
-
-|statistics.v3.iops_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v3.iops_raw.read
-
-* Introduced in: 9.7
-
-
-|statistics.v3.status
-|string
-|query
-|False
-a|Filter by statistics.v3.status
-
-* Introduced in: 9.7
-
-
-|statistics.v3.throughput_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v3.throughput_raw.write
-
-* Introduced in: 9.7
-
-
-|statistics.v3.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v3.throughput_raw.read
-
-* Introduced in: 9.7
-
-
-|statistics.v3.throughput_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v3.throughput_raw.total
-
-* Introduced in: 9.7
-
-
-|statistics.v3.timestamp
-|string
-|query
-|False
-a|Filter by statistics.v3.timestamp
-
-* Introduced in: 9.7
-
-
-|statistics.v41.latency_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.v41.latency_raw.other
-
-* Introduced in: 9.8
-
-
-|statistics.v41.latency_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v41.latency_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.v41.latency_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v41.latency_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.v41.latency_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v41.latency_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.v41.iops_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.v41.iops_raw.other
-
-* Introduced in: 9.8
-
-
-|statistics.v41.iops_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v41.iops_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.v41.iops_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v41.iops_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.v41.iops_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v41.iops_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.v41.status
-|string
-|query
-|False
-a|Filter by statistics.v41.status
-
-* Introduced in: 9.8
-
-
-|statistics.v41.throughput_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v41.throughput_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.v41.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v41.throughput_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.v41.throughput_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v41.throughput_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.v41.timestamp
-|string
-|query
-|False
-a|Filter by statistics.v41.timestamp
-
-* Introduced in: 9.8
-
-
-|statistics.v4.latency_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.v4.latency_raw.other
-
-* Introduced in: 9.8
-
-
-|statistics.v4.latency_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v4.latency_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.v4.latency_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v4.latency_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.v4.latency_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v4.latency_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.v4.iops_raw.other
-|integer
-|query
-|False
-a|Filter by statistics.v4.iops_raw.other
-
-* Introduced in: 9.8
-
-
-|statistics.v4.iops_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v4.iops_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.v4.iops_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v4.iops_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.v4.iops_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v4.iops_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.v4.status
-|string
-|query
-|False
-a|Filter by statistics.v4.status
-
-* Introduced in: 9.8
-
-
-|statistics.v4.throughput_raw.write
-|integer
-|query
-|False
-a|Filter by statistics.v4.throughput_raw.write
-
-* Introduced in: 9.8
-
-
-|statistics.v4.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.v4.throughput_raw.read
-
-* Introduced in: 9.8
-
-
-|statistics.v4.throughput_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.v4.throughput_raw.total
-
-* Introduced in: 9.8
-
-
-|statistics.v4.timestamp
-|string
-|query
-|False
-a|Filter by statistics.v4.timestamp
-
-* Introduced in: 9.8
-
-
-|state
-|string
-|query
-|False
-a|Filter by state
+a|Filter by vstorage_enabled
 
 
 |enabled
@@ -680,182 +312,459 @@ a|Filter by state
 a|Filter by enabled
 
 
-|exports.name_service_lookup_protocol
+|svm.uuid
 |string
 |query
 |False
-a|Filter by exports.name_service_lookup_protocol
-
-* Introduced in: 9.11
+a|Filter by svm.uuid
 
 
-|exports.netgroup_trust_any_nsswitch_no_match
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|access_cache_config.ttl_failure
+|integer
+|query
+|False
+a|Filter by access_cache_config.ttl_failure
+
+* Introduced in: 9.10
+
+
+|access_cache_config.isDnsTTLEnabled
 |boolean
 |query
 |False
-a|Filter by exports.netgroup_trust_any_nsswitch_no_match
+a|Filter by access_cache_config.isDnsTTLEnabled
+
+* Introduced in: 9.10
+
+
+|access_cache_config.ttl_positive
+|integer
+|query
+|False
+a|Filter by access_cache_config.ttl_positive
+
+* Introduced in: 9.10
+
+
+|access_cache_config.harvest_timeout
+|integer
+|query
+|False
+a|Filter by access_cache_config.harvest_timeout
+
+* Introduced in: 9.10
+
+
+|access_cache_config.ttl_negative
+|integer
+|query
+|False
+a|Filter by access_cache_config.ttl_negative
+
+* Introduced in: 9.10
+
+
+|security.nt_acl_display_permission
+|boolean
+|query
+|False
+a|Filter by security.nt_acl_display_permission
 
 * Introduced in: 9.11
 
 
-|metric.v41.iops.other
-|integer
-|query
-|False
-a|Filter by metric.v41.iops.other
-
-* Introduced in: 9.8
-
-
-|metric.v41.iops.total
-|integer
-|query
-|False
-a|Filter by metric.v41.iops.total
-
-* Introduced in: 9.8
-
-
-|metric.v41.iops.write
-|integer
-|query
-|False
-a|Filter by metric.v41.iops.write
-
-* Introduced in: 9.8
-
-
-|metric.v41.iops.read
-|integer
-|query
-|False
-a|Filter by metric.v41.iops.read
-
-* Introduced in: 9.8
-
-
-|metric.v41.latency.other
-|integer
-|query
-|False
-a|Filter by metric.v41.latency.other
-
-* Introduced in: 9.8
-
-
-|metric.v41.latency.total
-|integer
-|query
-|False
-a|Filter by metric.v41.latency.total
-
-* Introduced in: 9.8
-
-
-|metric.v41.latency.write
-|integer
-|query
-|False
-a|Filter by metric.v41.latency.write
-
-* Introduced in: 9.8
-
-
-|metric.v41.latency.read
-|integer
-|query
-|False
-a|Filter by metric.v41.latency.read
-
-* Introduced in: 9.8
-
-
-|metric.v41.timestamp
+|security.ntfs_unix_security
 |string
 |query
 |False
-a|Filter by metric.v41.timestamp
+a|Filter by security.ntfs_unix_security
 
-* Introduced in: 9.8
-
-
-|metric.v41.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.v41.throughput.write
-
-* Introduced in: 9.8
+* Introduced in: 9.11
 
 
-|metric.v41.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.v41.throughput.read
-
-* Introduced in: 9.8
-
-
-|metric.v41.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.v41.throughput.total
-
-* Introduced in: 9.8
-
-
-|metric.v41.status
+|security.chown_mode
 |string
 |query
 |False
-a|Filter by metric.v41.status
+a|Filter by security.chown_mode
 
-* Introduced in: 9.8
-
-
-|metric.v41.duration
-|string
-|query
-|False
-a|Filter by metric.v41.duration
-
-* Introduced in: 9.8
+* Introduced in: 9.11
 
 
-|metric.v3.iops.other
+|security.rpcsec_context_idle
 |integer
 |query
 |False
-a|Filter by metric.v3.iops.other
+a|Filter by security.rpcsec_context_idle
+
+* Introduced in: 9.11
+
+
+|security.permitted_encryption_types
+|string
+|query
+|False
+a|Filter by security.permitted_encryption_types
+
+* Introduced in: 9.11
+
+
+|protocol.v3_64bit_identifiers_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v3_64bit_identifiers_enabled
+
+* Introduced in: 9.8
+
+
+|protocol.v42_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v42_enabled
+
+* Introduced in: 9.19
+
+
+|protocol.v40_features.referrals_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v40_features.referrals_enabled
+
+* Introduced in: 9.13
+
+
+|protocol.v40_features.write_delegation_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v40_features.write_delegation_enabled
+
+
+|protocol.v40_features.acl_max_aces
+|integer
+|query
+|False
+a|Filter by protocol.v40_features.acl_max_aces
+
+* Introduced in: 9.11
+* Max value: 1024
+* Min value: 192
+
+
+|protocol.v40_features.acl_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v40_features.acl_enabled
+
+
+|protocol.v40_features.read_delegation_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v40_features.read_delegation_enabled
+
+
+|protocol.v40_features.acl_preserve
+|boolean
+|query
+|False
+a|Filter by protocol.v40_features.acl_preserve
+
+* Introduced in: 9.11
+
+
+|protocol.v4_id_domain
+|string
+|query
+|False
+a|Filter by protocol.v4_id_domain
+
+
+|protocol.v4_session_slot_reply_cache_size
+|integer
+|query
+|False
+a|Filter by protocol.v4_session_slot_reply_cache_size
+
+* Introduced in: 9.13
+* Max value: 4096
+* Min value: 512
+
+
+|protocol.v4_64bit_identifiers_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v4_64bit_identifiers_enabled
+
+* Introduced in: 9.8
+
+
+|protocol.v41_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_enabled
+
+
+|protocol.v4_lease_seconds
+|integer
+|query
+|False
+a|Filter by protocol.v4_lease_seconds
+
+* Introduced in: 9.13
+
+
+|protocol.v4_session_slots
+|integer
+|query
+|False
+a|Filter by protocol.v4_session_slots
+
+* Introduced in: 9.13
+* Max value: 2000
+* Min value: 1
+
+
+|protocol.v41_features.trunking_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_features.trunking_enabled
+
+* Introduced in: 9.12
+
+
+|protocol.v41_features.write_delegation_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_features.write_delegation_enabled
+
+
+|protocol.v41_features.pnfs_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_features.pnfs_enabled
+
+
+|protocol.v41_features.acl_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_features.acl_enabled
+
+
+|protocol.v41_features.read_delegation_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_features.read_delegation_enabled
+
+
+|protocol.v41_features.implementation_domain
+|string
+|query
+|False
+a|Filter by protocol.v41_features.implementation_domain
+
+* Introduced in: 9.11
+
+
+|protocol.v41_features.referrals_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v41_features.referrals_enabled
+
+* Introduced in: 9.13
+
+
+|protocol.v41_features.implementation_name
+|string
+|query
+|False
+a|Filter by protocol.v41_features.implementation_name
+
+* Introduced in: 9.11
+
+
+|protocol.v4_subnet_filter_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v4_subnet_filter_enabled
+
+* Introduced in: 9.18
+
+
+|protocol.v40_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v40_enabled
+
+
+|protocol.v4_grace_seconds
+|integer
+|query
+|False
+a|Filter by protocol.v4_grace_seconds
+
+* Introduced in: 9.13
+
+
+|protocol.v3_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v3_enabled
+
+
+|protocol.v3_features.ejukebox_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v3_features.ejukebox_enabled
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.network_lock_manager_port
+|integer
+|query
+|False
+a|Filter by protocol.v3_features.network_lock_manager_port
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.rquota_daemon_port
+|integer
+|query
+|False
+a|Filter by protocol.v3_features.rquota_daemon_port
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.connection_drop
+|boolean
+|query
+|False
+a|Filter by protocol.v3_features.connection_drop
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.network_status_monitor_port
+|integer
+|query
+|False
+a|Filter by protocol.v3_features.network_status_monitor_port
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.fsid_change
+|boolean
+|query
+|False
+a|Filter by protocol.v3_features.fsid_change
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.mount_root_only
+|boolean
+|query
+|False
+a|Filter by protocol.v3_features.mount_root_only
+
+* Introduced in: 9.11
+
+
+|protocol.v3_features.hide_snapshot_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v3_features.hide_snapshot_enabled
+
+* Introduced in: 9.13
+
+
+|protocol.v3_features.mount_daemon_port
+|integer
+|query
+|False
+a|Filter by protocol.v3_features.mount_daemon_port
+
+* Introduced in: 9.11
+
+
+|protocol.v4_fsid_change
+|boolean
+|query
+|False
+a|Filter by protocol.v4_fsid_change
+
+* Introduced in: 9.13
+
+
+|protocol.v42_features.xattrs_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v42_features.xattrs_enabled
+
+* Introduced in: 9.12
+
+
+|protocol.v42_features.seclabel_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v42_features.seclabel_enabled
+
+* Introduced in: 9.12
+
+
+|protocol.v42_features.sparsefile_ops_enabled
+|boolean
+|query
+|False
+a|Filter by protocol.v42_features.sparsefile_ops_enabled
+
+* Introduced in: 9.12
+
+
+|metric.v3.duration
+|string
+|query
+|False
+a|Filter by metric.v3.duration
 
 * Introduced in: 9.7
 
 
-|metric.v3.iops.total
+|metric.v3.latency.read
 |integer
 |query
 |False
-a|Filter by metric.v3.iops.total
-
-* Introduced in: 9.7
-
-
-|metric.v3.iops.write
-|integer
-|query
-|False
-a|Filter by metric.v3.iops.write
-
-* Introduced in: 9.7
-
-
-|metric.v3.iops.read
-|integer
-|query
-|False
-a|Filter by metric.v3.iops.read
+a|Filter by metric.v3.latency.read
 
 * Introduced in: 9.7
 
@@ -887,47 +796,11 @@ a|Filter by metric.v3.latency.write
 * Introduced in: 9.7
 
 
-|metric.v3.latency.read
-|integer
-|query
-|False
-a|Filter by metric.v3.latency.read
-
-* Introduced in: 9.7
-
-
 |metric.v3.timestamp
 |string
 |query
 |False
 a|Filter by metric.v3.timestamp
-
-* Introduced in: 9.7
-
-
-|metric.v3.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.v3.throughput.write
-
-* Introduced in: 9.7
-
-
-|metric.v3.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.v3.throughput.read
-
-* Introduced in: 9.7
-
-
-|metric.v3.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.v3.throughput.total
 
 * Introduced in: 9.7
 
@@ -941,47 +814,209 @@ a|Filter by metric.v3.status
 * Introduced in: 9.7
 
 
-|metric.v3.duration
-|string
+|metric.v3.throughput.write
+|integer
 |query
 |False
-a|Filter by metric.v3.duration
+a|Filter by metric.v3.throughput.write
 
 * Introduced in: 9.7
 
 
-|metric.v4.iops.other
+|metric.v3.throughput.total
 |integer
 |query
 |False
-a|Filter by metric.v4.iops.other
+a|Filter by metric.v3.throughput.total
+
+* Introduced in: 9.7
+
+
+|metric.v3.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.v3.throughput.read
+
+* Introduced in: 9.7
+
+
+|metric.v3.iops.read
+|integer
+|query
+|False
+a|Filter by metric.v3.iops.read
+
+* Introduced in: 9.7
+
+
+|metric.v3.iops.other
+|integer
+|query
+|False
+a|Filter by metric.v3.iops.other
+
+* Introduced in: 9.7
+
+
+|metric.v3.iops.total
+|integer
+|query
+|False
+a|Filter by metric.v3.iops.total
+
+* Introduced in: 9.7
+
+
+|metric.v3.iops.write
+|integer
+|query
+|False
+a|Filter by metric.v3.iops.write
+
+* Introduced in: 9.7
+
+
+|metric.v41.duration
+|string
+|query
+|False
+a|Filter by metric.v41.duration
 
 * Introduced in: 9.8
 
 
-|metric.v4.iops.total
+|metric.v41.latency.read
 |integer
 |query
 |False
-a|Filter by metric.v4.iops.total
+a|Filter by metric.v41.latency.read
 
 * Introduced in: 9.8
 
 
-|metric.v4.iops.write
+|metric.v41.latency.other
 |integer
 |query
 |False
-a|Filter by metric.v4.iops.write
+a|Filter by metric.v41.latency.other
 
 * Introduced in: 9.8
 
 
-|metric.v4.iops.read
+|metric.v41.latency.total
 |integer
 |query
 |False
-a|Filter by metric.v4.iops.read
+a|Filter by metric.v41.latency.total
+
+* Introduced in: 9.8
+
+
+|metric.v41.latency.write
+|integer
+|query
+|False
+a|Filter by metric.v41.latency.write
+
+* Introduced in: 9.8
+
+
+|metric.v41.timestamp
+|string
+|query
+|False
+a|Filter by metric.v41.timestamp
+
+* Introduced in: 9.8
+
+
+|metric.v41.status
+|string
+|query
+|False
+a|Filter by metric.v41.status
+
+* Introduced in: 9.8
+
+
+|metric.v41.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.v41.throughput.write
+
+* Introduced in: 9.8
+
+
+|metric.v41.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.v41.throughput.total
+
+* Introduced in: 9.8
+
+
+|metric.v41.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.v41.throughput.read
+
+* Introduced in: 9.8
+
+
+|metric.v41.iops.read
+|integer
+|query
+|False
+a|Filter by metric.v41.iops.read
+
+* Introduced in: 9.8
+
+
+|metric.v41.iops.other
+|integer
+|query
+|False
+a|Filter by metric.v41.iops.other
+
+* Introduced in: 9.8
+
+
+|metric.v41.iops.total
+|integer
+|query
+|False
+a|Filter by metric.v41.iops.total
+
+* Introduced in: 9.8
+
+
+|metric.v41.iops.write
+|integer
+|query
+|False
+a|Filter by metric.v41.iops.write
+
+* Introduced in: 9.8
+
+
+|metric.v4.duration
+|string
+|query
+|False
+a|Filter by metric.v4.duration
+
+* Introduced in: 9.8
+
+
+|metric.v4.latency.read
+|integer
+|query
+|False
+a|Filter by metric.v4.latency.read
 
 * Introduced in: 9.8
 
@@ -1013,47 +1048,11 @@ a|Filter by metric.v4.latency.write
 * Introduced in: 9.8
 
 
-|metric.v4.latency.read
-|integer
-|query
-|False
-a|Filter by metric.v4.latency.read
-
-* Introduced in: 9.8
-
-
 |metric.v4.timestamp
 |string
 |query
 |False
 a|Filter by metric.v4.timestamp
-
-* Introduced in: 9.8
-
-
-|metric.v4.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.v4.throughput.write
-
-* Introduced in: 9.8
-
-
-|metric.v4.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.v4.throughput.read
-
-* Introduced in: 9.8
-
-
-|metric.v4.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.v4.throughput.total
 
 * Introduced in: 9.8
 
@@ -1067,13 +1066,436 @@ a|Filter by metric.v4.status
 * Introduced in: 9.8
 
 
-|metric.v4.duration
+|metric.v4.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.v4.throughput.write
+
+* Introduced in: 9.8
+
+
+|metric.v4.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.v4.throughput.total
+
+* Introduced in: 9.8
+
+
+|metric.v4.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.v4.throughput.read
+
+* Introduced in: 9.8
+
+
+|metric.v4.iops.read
+|integer
+|query
+|False
+a|Filter by metric.v4.iops.read
+
+* Introduced in: 9.8
+
+
+|metric.v4.iops.other
+|integer
+|query
+|False
+a|Filter by metric.v4.iops.other
+
+* Introduced in: 9.8
+
+
+|metric.v4.iops.total
+|integer
+|query
+|False
+a|Filter by metric.v4.iops.total
+
+* Introduced in: 9.8
+
+
+|metric.v4.iops.write
+|integer
+|query
+|False
+a|Filter by metric.v4.iops.write
+
+* Introduced in: 9.8
+
+
+|exports.name_service_lookup_protocol
 |string
 |query
 |False
-a|Filter by metric.v4.duration
+a|Filter by exports.name_service_lookup_protocol
+
+* Introduced in: 9.11
+
+
+|exports.netgroup_trust_any_nsswitch_no_match
+|boolean
+|query
+|False
+a|Filter by exports.netgroup_trust_any_nsswitch_no_match
+
+* Introduced in: 9.11
+
+
+|statistics.v4.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v4.latency_raw.read
 
 * Introduced in: 9.8
+
+
+|statistics.v4.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.v4.latency_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.v4.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v4.latency_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.v4.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v4.latency_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.v4.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v4.iops_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.v4.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.v4.iops_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.v4.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v4.iops_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.v4.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v4.iops_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.v4.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v4.throughput_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.v4.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v4.throughput_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.v4.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v4.throughput_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.v4.timestamp
+|string
+|query
+|False
+a|Filter by statistics.v4.timestamp
+
+* Introduced in: 9.8
+
+
+|statistics.v4.status
+|string
+|query
+|False
+a|Filter by statistics.v4.status
+
+* Introduced in: 9.8
+
+
+|statistics.v41.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v41.latency_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.v41.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.v41.latency_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.v41.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v41.latency_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.v41.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v41.latency_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.v41.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v41.iops_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.v41.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.v41.iops_raw.other
+
+* Introduced in: 9.8
+
+
+|statistics.v41.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v41.iops_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.v41.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v41.iops_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.v41.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v41.throughput_raw.write
+
+* Introduced in: 9.8
+
+
+|statistics.v41.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v41.throughput_raw.total
+
+* Introduced in: 9.8
+
+
+|statistics.v41.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v41.throughput_raw.read
+
+* Introduced in: 9.8
+
+
+|statistics.v41.timestamp
+|string
+|query
+|False
+a|Filter by statistics.v41.timestamp
+
+* Introduced in: 9.8
+
+
+|statistics.v41.status
+|string
+|query
+|False
+a|Filter by statistics.v41.status
+
+* Introduced in: 9.8
+
+
+|statistics.v3.latency_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v3.latency_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.v3.latency_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.v3.latency_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.v3.latency_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v3.latency_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.v3.latency_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v3.latency_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.v3.iops_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v3.iops_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.v3.iops_raw.other
+|integer
+|query
+|False
+a|Filter by statistics.v3.iops_raw.other
+
+* Introduced in: 9.7
+
+
+|statistics.v3.iops_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v3.iops_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.v3.iops_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v3.iops_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.v3.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.v3.throughput_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.v3.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.v3.throughput_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.v3.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.v3.throughput_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.v3.timestamp
+|string
+|query
+|False
+a|Filter by statistics.v3.timestamp
+
+* Introduced in: 9.7
+
+
+|statistics.v3.status
+|string
+|query
+|False
+a|Filter by statistics.v3.status
+
+* Introduced in: 9.7
 
 
 |windows.default_user
@@ -1081,15 +1503,6 @@ a|Filter by metric.v4.duration
 |query
 |False
 a|Filter by windows.default_user
-
-* Introduced in: 9.11
-
-
-|windows.v3_ms_dos_client_enabled
-|boolean
-|query
-|False
-a|Filter by windows.v3_ms_dos_client_enabled
 
 * Introduced in: 9.11
 
@@ -1103,437 +1516,33 @@ a|Filter by windows.map_unknown_uid_to_default_user
 * Introduced in: 9.11
 
 
-|access_cache_config.ttl_failure
-|integer
-|query
-|False
-a|Filter by access_cache_config.ttl_failure
-
-* Introduced in: 9.10
-
-
-|access_cache_config.ttl_negative
-|integer
-|query
-|False
-a|Filter by access_cache_config.ttl_negative
-
-* Introduced in: 9.10
-
-
-|access_cache_config.isDnsTTLEnabled
+|windows.v3_ms_dos_client_enabled
 |boolean
 |query
 |False
-a|Filter by access_cache_config.isDnsTTLEnabled
+a|Filter by windows.v3_ms_dos_client_enabled
 
-* Introduced in: 9.10
+* Introduced in: 9.11
 
 
-|access_cache_config.harvest_timeout
+|file_session_io_grouping_duration
 |integer
 |query
 |False
-a|Filter by access_cache_config.harvest_timeout
+a|Filter by file_session_io_grouping_duration
 
-* Introduced in: 9.10
-
-
-|access_cache_config.ttl_positive
-|integer
-|query
-|False
-a|Filter by access_cache_config.ttl_positive
-
-* Introduced in: 9.10
+* Introduced in: 9.11
+* Max value: 3600
+* Min value: 60
 
 
-|protocol.v4_fsid_change
+|auth_sys_extended_groups_enabled
 |boolean
 |query
 |False
-a|Filter by protocol.v4_fsid_change
-
-* Introduced in: 9.13
-
-
-|protocol.v4_id_domain
-|string
-|query
-|False
-a|Filter by protocol.v4_id_domain
-
-
-|protocol.v40_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v40_enabled
-
-
-|protocol.v4_grace_seconds
-|integer
-|query
-|False
-a|Filter by protocol.v4_grace_seconds
-
-* Introduced in: 9.13
-
-
-|protocol.v3_64bit_identifiers_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v3_64bit_identifiers_enabled
+a|Filter by auth_sys_extended_groups_enabled
 
 * Introduced in: 9.8
-
-
-|protocol.v4_64bit_identifiers_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v4_64bit_identifiers_enabled
-
-* Introduced in: 9.8
-
-
-|protocol.v4_lease_seconds
-|integer
-|query
-|False
-a|Filter by protocol.v4_lease_seconds
-
-* Introduced in: 9.13
-
-
-|protocol.v4_subnet_filter_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v4_subnet_filter_enabled
-
-* Introduced in: 9.18
-
-
-|protocol.v3_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v3_enabled
-
-
-|protocol.v40_features.acl_preserve
-|boolean
-|query
-|False
-a|Filter by protocol.v40_features.acl_preserve
-
-* Introduced in: 9.11
-
-
-|protocol.v40_features.write_delegation_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v40_features.write_delegation_enabled
-
-
-|protocol.v40_features.read_delegation_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v40_features.read_delegation_enabled
-
-
-|protocol.v40_features.acl_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v40_features.acl_enabled
-
-
-|protocol.v40_features.referrals_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v40_features.referrals_enabled
-
-* Introduced in: 9.13
-
-
-|protocol.v40_features.acl_max_aces
-|integer
-|query
-|False
-a|Filter by protocol.v40_features.acl_max_aces
-
-* Introduced in: 9.11
-* Max value: 1024
-* Min value: 192
-
-
-|protocol.v4_session_slot_reply_cache_size
-|integer
-|query
-|False
-a|Filter by protocol.v4_session_slot_reply_cache_size
-
-* Introduced in: 9.13
-* Max value: 4096
-* Min value: 512
-
-
-|protocol.v41_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_enabled
-
-
-|protocol.v41_features.pnfs_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_features.pnfs_enabled
-
-
-|protocol.v41_features.read_delegation_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_features.read_delegation_enabled
-
-
-|protocol.v41_features.acl_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_features.acl_enabled
-
-
-|protocol.v41_features.write_delegation_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_features.write_delegation_enabled
-
-
-|protocol.v41_features.trunking_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_features.trunking_enabled
-
-* Introduced in: 9.12
-
-
-|protocol.v41_features.referrals_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v41_features.referrals_enabled
-
-* Introduced in: 9.13
-
-
-|protocol.v41_features.implementation_name
-|string
-|query
-|False
-a|Filter by protocol.v41_features.implementation_name
-
-* Introduced in: 9.11
-
-
-|protocol.v41_features.implementation_domain
-|string
-|query
-|False
-a|Filter by protocol.v41_features.implementation_domain
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.network_status_monitor_port
-|integer
-|query
-|False
-a|Filter by protocol.v3_features.network_status_monitor_port
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.fsid_change
-|boolean
-|query
-|False
-a|Filter by protocol.v3_features.fsid_change
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.ejukebox_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v3_features.ejukebox_enabled
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.mount_daemon_port
-|integer
-|query
-|False
-a|Filter by protocol.v3_features.mount_daemon_port
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.rquota_daemon_port
-|integer
-|query
-|False
-a|Filter by protocol.v3_features.rquota_daemon_port
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.hide_snapshot_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v3_features.hide_snapshot_enabled
-
-* Introduced in: 9.13
-
-
-|protocol.v3_features.connection_drop
-|boolean
-|query
-|False
-a|Filter by protocol.v3_features.connection_drop
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.mount_root_only
-|boolean
-|query
-|False
-a|Filter by protocol.v3_features.mount_root_only
-
-* Introduced in: 9.11
-
-
-|protocol.v3_features.network_lock_manager_port
-|integer
-|query
-|False
-a|Filter by protocol.v3_features.network_lock_manager_port
-
-* Introduced in: 9.11
-
-
-|protocol.v42_features.xattrs_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v42_features.xattrs_enabled
-
-* Introduced in: 9.12
-
-
-|protocol.v42_features.sparsefile_ops_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v42_features.sparsefile_ops_enabled
-
-* Introduced in: 9.12
-
-
-|protocol.v42_features.seclabel_enabled
-|boolean
-|query
-|False
-a|Filter by protocol.v42_features.seclabel_enabled
-
-* Introduced in: 9.12
-
-
-|protocol.v4_session_slots
-|integer
-|query
-|False
-a|Filter by protocol.v4_session_slots
-
-* Introduced in: 9.13
-* Max value: 2000
-* Min value: 1
-
-
-|credential_cache.harvest_timeout
-|integer
-|query
-|False
-a|Filter by credential_cache.harvest_timeout
-
-* Introduced in: 9.18
-* Max value: 604800000
-* Min value: 60000
-
-
-|credential_cache.transient_error_ttl
-|integer
-|query
-|False
-a|Filter by credential_cache.transient_error_ttl
-
-* Introduced in: 9.11
-* Max value: 300000
-* Min value: 30000
-
-
-|credential_cache.negative_ttl
-|integer
-|query
-|False
-a|Filter by credential_cache.negative_ttl
-
-* Introduced in: 9.11
-* Max value: 604800000
-* Min value: 60000
-
-
-|credential_cache.positive_ttl
-|integer
-|query
-|False
-a|Filter by credential_cache.positive_ttl
-
-* Introduced in: 9.11
-* Max value: 604800000
-* Min value: 60000
-
-
-|file_session_io_grouping_count
-|integer
-|query
-|False
-a|Filter by file_session_io_grouping_count
-
-* Introduced in: 9.11
-* Max value: 120000
-* Min value: 1000
-
-
-|vstorage_enabled
-|boolean
-|query
-|False
-a|Filter by vstorage_enabled
 
 
 |fields
@@ -2527,6 +2536,11 @@ a|Specifies whether NFSv4.1 or later protocol is enabled.
 |v41_features
 |link:#v41_features[v41_features]
 a|
+
+|v42_enabled
+|boolean
+a|Specifies whether NFSv4.2 protocol is enabled.
+
 
 |v42_features
 |link:#v42_features[v42_features]

@@ -96,6 +96,7 @@ Creates and provisions an SVM. If no IPspace is provided, then the SVM is create
 * `auto_enable_activity_tracking` - Auto-enable volume activity-tracking on new volumes created in the SVM.
 * `storage.limit` - Maximum storage permitted on a single SVM.
 * `storage.limit_threshold_alert` - At what percentage of storage capacity, alert message needs to be sent.
+* `san_multipathing` - SAN multipathing mode.
 
 == Default property values
 
@@ -253,6 +254,12 @@ POST "/api/svm/svms" '{"name":"testVs", "qos_policy_group_template":{"name":"per
 +
 ----
 POST "/api/svm/svms" '{"name":"testVs", "qos_adaptive_policy_group_template":{"name":"performance"}}'
+----
+
+* Creates an SVM and specifies the SAN multipathing mode.
++
+----
+POST "/api/svm/svms" '{"name":"testVs", "san_multipathing":"active_active"}}'
 ----
 
 == Learn more
@@ -484,6 +491,18 @@ a|Optional array of routes for the SVM
 |s3
 |link:#s3[s3]
 a|
+
+|san_multipathing
+|string
+a|Specifies the multipathing mode for SAN and NVMe protocols supported by the SVM. Possible values are:
+
+* local_active - Only node-local paths are active/optimized.
+* active_active - All paths in the HA pair are active/optimized.
+* active_active_scsi_only - This value is available only on the original edition of ONTAP All SAN Array (ASA r1). This value provides the active-active behavior, but only for the iSCSI and FCP protocols.
+* enum: ["local_active", "active_active", "active_active_scsi_only"]
+* Introduced in: 9.19
+* x-nullable: true
+
 
 |snapmirror
 |link:#snapmirror[snapmirror]
@@ -717,9 +736,11 @@ a|The unique identifier of the SVM.
     "default_win_user": "string",
     "name": "s3-server-1"
   },
+  "san_multipathing": "string",
   "snapmirror": {
     "protected_consistency_group_count": 0,
-    "protected_volumes_count": 0
+    "protected_volumes_count": 0,
+    "protection_type": "string"
   },
   "snapshot_policy": {
     "name": "default",
@@ -864,6 +885,9 @@ ONTAP Error Response Codes
 
 | 23724038
 | Invalid source for the provided ns-switch database.
+
+| 2621797
+| Invalid value provided for san-multipathing.
 |===
 
 
@@ -2025,6 +2049,11 @@ a|Specifies the number of SVM DR protected consistency groups in the SVM.
 a|Specifies the number of SVM DR protected volumes in the SVM.
 
 
+|protection_type
+|string
+a|Specifies whether the SVM protected using SVM DR or Snapmirror Active Sync relationship.
+
+
 |===
 
 
@@ -2064,12 +2093,12 @@ storage
 
 |allocated
 |integer
-a|Total size of the volumes in SVM, in bytes.
+a|Total size of the volumes in SVM, in bytes. This field is only available if storage.limit is set.
 
 
 |available
 |integer
-a|Currently available storage capacity in SVM, in bytes.
+a|Currently available storage capacity in SVM, in bytes. This field is only available if storage.limit is set.
 
 
 |limit
@@ -2089,7 +2118,7 @@ a|Indicates whether the total storage capacity exceeds the alert percentage.
 
 |used_percentage
 |integer
-a|The percentage of storage capacity used.
+a|The percentage of storage capacity used. This field is only available if storage.limit is set.
 
 
 |===
@@ -2287,6 +2316,18 @@ a|Optional array of routes for the SVM
 |s3
 |link:#s3[s3]
 a|
+
+|san_multipathing
+|string
+a|Specifies the multipathing mode for SAN and NVMe protocols supported by the SVM. Possible values are:
+
+* local_active - Only node-local paths are active/optimized.
+* active_active - All paths in the HA pair are active/optimized.
+* active_active_scsi_only - This value is available only on the original edition of ONTAP All SAN Array (ASA r1). This value provides the active-active behavior, but only for the iSCSI and FCP protocols.
+* enum: ["local_active", "active_active", "active_active_scsi_only"]
+* Introduced in: 9.19
+* x-nullable: true
+
 
 |snapmirror
 |link:#snapmirror[snapmirror]

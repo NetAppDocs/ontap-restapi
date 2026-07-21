@@ -84,6 +84,11 @@ a|Can contain any additional information about the user being created or modifie
 a|Specifies the date and time after which keys expire and are no longer valid.
 
 
+|key_id
+|integer
+a|Specifies the identifier of an S3 user key that needs to be generated or deleted. The key_id can either be '1' or '2'.
+
+
 |key_time_to_live
 |string
 a|Indicates the time period from when this parameter is specified:
@@ -92,6 +97,11 @@ a|Indicates the time period from when this parameter is specified:
 * when the user keys were last regenerated, after which the user keys expire and are no longer valid.
 * Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
 * If the value specified is '0' seconds, then the keys won't expire.
+
+
+|keys
+|array[link:#keys[keys]]
+a|Specifies the keys associated with an S3 User.
 
 
 |name
@@ -115,7 +125,16 @@ a|SVM, applies only to SVM-scoped objects.
   "access_key": "<AWS-ACCESS-KEY-ID>",
   "comment": "S3 user",
   "key_expiry_time": "2024-01-01 00:00:00 +0000",
+  "key_id": 1,
   "key_time_to_live": "PT6H3M",
+  "keys": [
+    {
+      "access_key": "<AWS-ACCESS-KEY-ID>",
+      "expiry_time": "2024-01-01 00:00:00 +0000",
+      "id": 1,
+      "time_to_live": "PT6H3M"
+    }
+  ],
   "name": "user-1",
   "svm": {
     "_links": {
@@ -175,6 +194,47 @@ a|
 [%collapsible%closed]
 //Start collapsible Definitions block
 ====                
+[#keys]
+[.api-collapsible-fifth-title]
+keys
+
+Specifies a key associated with an S3 user. At most only two keys can be associated with a user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|id
+|integer
+a|Specifies an S3 user key identifier. Each user can only have a maximum of two keys. The key_id can either be '1' or '2'.
+
+
+|time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys do not expire.
+
+
+|===
+
+
 [#href]
 [.api-collapsible-fifth-title]
 href

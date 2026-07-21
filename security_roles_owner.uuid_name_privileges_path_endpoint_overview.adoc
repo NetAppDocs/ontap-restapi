@@ -42,7 +42,62 @@ A role can comprise of multiple tuples and each tuple consists of a REST API pat
 
 &ndash; _/api/protocols/s3/services/{svm.uuid}/users_
 
+==== Artificial Intelligence Data Engine (AIDE) APIs
+
+===== Data Compute Node (DCN) APIs
+
+&ndash; _/api/dcn/cluster/nodes/{node.uuid}/metrics_
+
+&ndash; _/api/dcn/network/ports/{port.uuid}/metrics_
+
+===== Data-Engine APIs
+
+&ndash; _/api/data-engine/policies/{policy.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/acls_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/acls_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{entity.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/search_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-collections/{datacollection.uuid}/versions/{version.uuid}/diffs_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/data-sources_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/entities/{entity.uuid}/custom-attributes_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/queries_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/queries/{query.uuid}/entities_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/versions_
+
+&ndash; _/api/data-engine/workspaces/{workspace.uuid}/versions/{version.uuid}/diffs_
+
+When used in the context of data collection APIs, _{version.uuid}_ refers to a data collection version. In the context of workspace APIs, it refers to a workspace version.
+
 In the APIs above, and in the context of REST roles, the wildcard character &#42; can be used in place of _{volume.uuid}_ or _{svm.uuid}_ to represent _all_ volumes or _all_ SVMs, depending on whether the REST endpoint references volumes or SVMs. The _{volume.uuid}_ corresponds to the _-instance-uuid_ field in the output of the "volume show" command at the diagnostic privilege level. It can also be retrieved through the REST endpoint _/api/storage/volumes_.
+
+In the AIDE APIs described above, and in the context of REST roles, the wildcard character &#42; can be used in place of variable components in the Uniform Resource Identifier (URI) path, such as _{node.uuid}_, _{port.uuid}_, _{policy.uuid}_, _{workspace.uuid}_, _{datacollection.uuid}_, _{entity.uuid}_, _{version.uuid}_, or _{query.uuid}_. The specific variable to be replaced depends on whether the REST endpoint references nodes, ports, policies, workspaces, data collections, entities, versions, or queries.
+
+However, when using the wildcard character &#42; in place of a variable component in a URI path, it must replace
+
+*all* variable components in that path. Mixing wildcards and specific values for different variable components within the same URI path is not supported in REST roles. For example, a URI path such as _/api/data-engine/workspaces/c6e1b325-4125-11f0-abb5-bc2411f6fd43/data-collections/*/search_ is not supported.
+
+In summary, only the following two types of resource-qualified endpoints are supported in a REST role:
+
+* All variable components in the URI path are specific values. Example: _/api/data-engine/workspaces/c6e1b325-4125-11f0-abb5-bc2411f6fd43/data-collections/b09b6d25-4126-11f0-abb5-bc2411f6fd43/search_
+* All variable components in the URI path are wildcards. Example: _/api/data-engine/workspaces/*/data-collections/*/search_
+
+AIDE APIs are supported only in cluster-scoped REST roles, not in SVM-scoped REST roles.
 
 The role can be SVM-scoped or cluster-scoped.
 
@@ -86,6 +141,17 @@ PATCH "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
 
 # The call:
 curl -X PATCH "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fvolumes%2F742ef001-24f0-4d5a-9ec1-2fdaadb282f4%2Ffiles" -d '{"access":"readonly"}'
+----
+
+=== Updating the access level for an AIDE resource-qualified endpoint in the privilege tuple of an existing role
+
+----
+
+# The API:
+PATCH "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/cluster_role1/privileges/%2Fapi%2Fdata-engine%2Fpolicies%2F%2A%2Fversions" -d '{"access":"readonly"}'
 ----
 
 === Retrieving the access level for a REST API path in the privilege tuple of an existing role
@@ -167,6 +233,32 @@ curl -X GET "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-005056
 }
 ----
 
+=== Retrieving the access level for an AIDE resource-qualified endpoint in the privilege tuple of an existing role
+
+----
+
+# The API:
+GET "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/roles/223e4567-e89b-12d3-a456-426614174000/cluster_role1/privileges/%2Fapi%2Fdata-engine%2Fworkspaces%2Fd0f3b91a-4ce7-4de4-afb9-7eda668659dd%2Fentities"
+
+# The response:
+{
+"owner": {
+  "uuid": "223e4567-e89b-12d3-a456-426614174000"
+},
+"name": "cluster_role1",
+"path": "/api/data-engine/workspaces/d0f3b91a-4ce7-4de4-afb9-7eda668659dd/entities",
+"access": "readonly",
+"_links": {
+  "self": {
+    "href": "/api/security/roles/223e4567-e89b-12d3-a456-426614174000/cluster_role1/privileges/%2Fapi%2Fdata-engine%2Fworkspaces%2Fd0f3b91a-4ce7-4de4-afb9-7eda668659dd%2Fentities"
+  }
+}
+}
+----
+
 === Deleting a privilege tuple, containing a REST API path, from an existing role
 
 ----
@@ -198,6 +290,17 @@ DELETE "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
 
 # The call:
 curl -X DELETE "https://<mgmt-ip>/api/security/roles/aaef7c38-4bd3-11e9-b238-0050568e2e25/svm_role1/privileges/%2Fapi%2Fstorage%2Fsvm%2F6e000659-9a16-11ec-819e-005056bb1a7c%2Ftop-metrics%2Ffiles"
+----
+
+=== Deleting a privilege tuple, containing an AIDE resource-qualified endpoint, from an existing role
+
+----
+
+# The API:
+DELETE "/api/security/roles/{owner.uuid}/{name}/privileges/{path}"
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/roles/a6786ae5-93a0-411c-bcfd-16c53ecff612/cluster_role1/privileges/%2Fapi%2Fdcn%2Fnetwork%2Fports%2F91796b96-5207-4d0b-93fb-7a2062b8358e%2Fmetrics"
 ----
 
 

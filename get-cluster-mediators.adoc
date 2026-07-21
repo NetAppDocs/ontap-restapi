@@ -30,40 +30,6 @@ summary: 'Retrieve ONTAP Mediators configured in the cluster'
 |Required
 |Description
 
-|peer_mediator_connectivity
-|string
-|query
-|False
-a|Filter by peer_mediator_connectivity
-
-* Introduced in: 9.10
-
-
-|use_http_proxy_local
-|boolean
-|query
-|False
-a|Filter by use_http_proxy_local
-
-* Introduced in: 9.17
-
-
-|type
-|string
-|query
-|False
-a|Filter by type
-
-* Introduced in: 9.17
-
-
-|port
-|integer
-|query
-|False
-a|Filter by port
-
-
 |uuid
 |string
 |query
@@ -80,6 +46,45 @@ a|Filter by strict_cert_validation
 * Introduced in: 9.17
 
 
+|type
+|string
+|query
+|False
+a|Filter by type
+
+* Introduced in: 9.17
+
+
+|local_mediator_connectivity
+|string
+|query
+|False
+a|Filter by local_mediator_connectivity
+
+* Introduced in: 9.17
+
+
+|ip_address
+|string
+|query
+|False
+a|Filter by ip_address
+
+
+|port
+|integer
+|query
+|False
+a|Filter by port
+
+
+|reachable
+|boolean
+|query
+|False
+a|Filter by reachable
+
+
 |peer_cluster.name
 |string
 |query
@@ -94,27 +99,31 @@ a|Filter by peer_cluster.name
 a|Filter by peer_cluster.uuid
 
 
-|ip_address
-|string
+|use_http_proxy_local
+|boolean
 |query
 |False
-a|Filter by ip_address
-
-
-|local_mediator_connectivity
-|string
-|query
-|False
-a|Filter by local_mediator_connectivity
+a|Filter by use_http_proxy_local
 
 * Introduced in: 9.17
 
 
-|reachable
-|boolean
+|peer_mediator_connectivity
+|string
 |query
 |False
-a|Filter by reachable
+a|Filter by peer_mediator_connectivity
+
+* Introduced in: 9.10
+
+
+|connection_type
+|string
+|query
+|False
+a|Filter by connection_type
+
+* Introduced in: 9.19
 
 
 |fields
@@ -204,6 +213,7 @@ a|
   "num_records": 1,
   "records": [
     {
+      "connection_type": "string",
       "dr_group": {
         "id": 0
       },
@@ -403,6 +413,17 @@ Mediator information
 |Name
 |Type
 |Description
+
+|connection_type
+|string
+a|Connection type from ONTAP MetroCluster to mediator. Applicable only to on-prem mediator used in ONTAP MetroCluster configurations.
+
+* Default value: 1
+* enum: ["iscsi_mediator", "https_mediator"]
+* Introduced in: 9.19
+* readCreate: 1
+* x-nullable: true
+
 
 |dr_group
 |link:#dr_group[dr_group]

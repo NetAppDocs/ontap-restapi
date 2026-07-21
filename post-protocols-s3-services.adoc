@@ -82,6 +82,11 @@ a|The default is false.  If set to true, the records are returned.
 |Type
 |Description
 
+|bucket_create_retention_mode
+|string
+a|The default lock mode that will be applied to a S3 bucket when the bucket is created using S3 API.
+
+
 |buckets
 |array[link:#s3_bucket[s3_bucket]]
 a|This field cannot be specified in a PATCH method.
@@ -173,6 +178,7 @@ a|This field cannot be specified in a PATCH method.
 ====
 [source,json,subs=+macros]
 {
+  "bucket_create_retention_mode": "governance",
   "buckets": [
     {
       "aggregates": [
@@ -250,6 +256,9 @@ a|This field cannot be specified in a PATCH method.
               {
                 "delimiters": [
                   "/"
+                ],
+                "if_match": [
+                  "true"
                 ],
                 "max_keys": [
                   1000
@@ -357,7 +366,16 @@ a|This field cannot be specified in a PATCH method.
       "access_key": "<AWS-ACCESS-KEY-ID>",
       "comment": "S3 user",
       "key_expiry_time": "2024-01-01 00:00:00 +0000",
+      "key_id": 1,
       "key_time_to_live": "PT6H3M",
+      "keys": [
+        {
+          "access_key": "<AWS-ACCESS-KEY-ID>",
+          "expiry_time": "2024-01-01 00:00:00 +0000",
+          "id": 1,
+          "time_to_live": "PT6H3M"
+        }
+      ],
       "name": "user-1",
       "secret_key": "<AWS-SECRET-ACCESS-KEY>",
       "svm": {
@@ -444,7 +462,7 @@ Status: Default
 
 ONTAP Error Response Codes
 //start table
-[cols=2__,options=header]
+[cols=2*,options=header]
 |===
 //header
 | Error Code | Description
@@ -457,10 +475,16 @@ ONTAP Error Response Codes
 |The cluster lacks a valid S3 license.
 //end row
 //start row
+|
+//end row
+//start row
 |2621706  +
 //end row
 //start row
 |The specified "{svm.uuid}" and "{svm.name}" refer to different SVMs.
+//end row
+//start row
+|
 //end row
 //start row
 |92405789 +
@@ -469,10 +493,16 @@ ONTAP Error Response Codes
 |The specified object server name contains invalid characters or not a fully qualified domain name. Valid characters for an object store server name are 0-9, A-Z, a-z, ".", and "-".
 //end row
 //start row
+|
+//end row
+//start row
 |92405790 +
 //end row
 //start row
 |Object store server names must have between 3 and 253 characters.
+//end row
+//start row
+|
 //end row
 //start row
 |92405839 +
@@ -481,10 +511,16 @@ ONTAP Error Response Codes
 |Creating an object store server requires an effective cluster version of data ONTAP 9.7.0 or later. Upgrade all the nodes to 9.7.0 or later and try the operation again.
 //end row
 //start row
+|
+//end row
+//start row
 |92405853 +
 //end row
 //start row
 |Failed to create the object store server because Cloud Volumes ONTAP does not support object store servers.
+//end row
+//start row
+|
 //end row
 //start row
 |92405863 +
@@ -493,16 +529,25 @@ ONTAP Error Response Codes
 |An error occurs when creating an S3 user or bucket. The reason for failure is detailed in the error message. Follow the error codes specified for the user or bucket endpoints to see details for the failure.
 //end row
 //start row
+|
+//end row
+//start row
 |92405863 +
 //end row
 //start row
 |Failed to create bucket "{bucket name}". Reason: "Failed to create bucket "{bucket name}" for SVM "{svm.name}". Reason: Bucket name "{bucket name}" contains invalid characters or invalid character combinations. Valid characters for a bucket name are 0-9, a-z, ".", and "-". Invalid character combinations are ".-", "-.", and "..". ". Resolve all the issues and retry the operation.
 //end row
 //start row
+|
+//end row
+//start row
 |92405863 +
 //end row
 //start row
-|Failed to create bucket "{bucket name}". Reason: "Failed to create bucket "{bucket name}" for SVM "{svm.name}". Reason: Invalid QoS policy group specified "{qos policy}". The specified QoS policy group has a min-throughput value set, and the workload being assigned resides on a platform that does not support min-throughput or the cluster is in a mixed version state and the effective cluster version of ONTAP does not support min-throughput on this platform. Resolve all the issues and retry the operation.
+|Failed to create bucket "{bucket name}". Reason: "Failed to create bucket "{bucket name}" for SVM "{svm.name}". Reason: Invalid QoS policy group specified "{qos policy}". The specified QoS policy group has a min-throughput value set, and the workload being assigned resides on a platform that does not support min-throughput or the cluster is in a mixed version state and the effective cluster version of ONTAP does not support min-throughput on this platform. Resolve all the issues and retry the operation. +
+//end row
+//start row
+|
 //end row
 //start row
 |92405863 +
@@ -511,10 +556,16 @@ ONTAP Error Response Codes
 |Failed to create bucket "{bucket name}". Reason: "User(s) "{user name(s)}" specified in the principal list do not exist for SVM "{svm.name}". Use the "object-store-server user create" command to create a user.". Resolve all the issues and retry the operation.
 //end row
 //start row
+|
+//end row
+//start row
 |92405863 +
 //end row
 //start row
 |Failed to create user "{user name}". Reason: "SVM "Cluster" is not a data SVM. Specify a data SVM.". Resolve all the issues and retry the operation.
+//end row
+//start row
+|
 //end row
 //start row
 |92405884 +
@@ -523,46 +574,70 @@ ONTAP Error Response Codes
 |An object store server can only be created on a data SVM. An object store server can also be created on a system SVM on a mixed platform cluster.
 //end row
 //start row
+|
+//end row
+//start row
 |92405903 +
 //end row
 //start row
-|Failed to configure HTTPS on an object store server for SVM "{svm.name}". Reason: {Reason of failure}.
+|Failed to configure HTTPS on an object store server for SVM "{svm.name}". Reason: {Reason of failure}. +
+//end row
+//start row
+|
 //end row
 //start row
 |92405900 +
 //end row
 //start row
-|Certificate not found for SVM "{svm.name}".
+|Certificate not found for SVM "{svm.name}". +
+//end row
+//start row
+|
 //end row
 //start row
 |92405917 +
 //end row
 //start row
-|The specified certificate name and UUID do not refer to the same certificate.
+|The specified certificate name and UUID do not refer to the same certificate. +
+//end row
+//start row
+|
 //end row
 //start row
 |92406020 +
 //end row
 //start row
-|Only certificates of type "server" are supported.
+|Only certificates of type "server" are supported. +
+//end row
+//start row
+|
 //end row
 //start row
 |92406044 +
 //end row
 //start row
-|Failed to set default UNIX user for SVM "{svm.name}". Reason: UNIX user can only be created on a Data SVM.
+|Failed to set default UNIX user for SVM "{svm.name}". Reason: UNIX user can only be created on a Data SVM. +
+//end row
+//start row
+|
 //end row
 //start row
 |92406071 +
 //end row
 //start row
-|S3 protocol is not present in the allowed protocol list for SVM "{svm.name}".
+|S3 protocol is not present in the allowed protocol list for SVM "{svm.name}". +
+//end row
+//start row
+|
 //end row
 //start row
 |92406196 +
 //end row
 //start row
 |The specified value for the "key_time_to_live" field cannot be greater than the maximum limit specified for the "max_key_time_to_live" field in the object store server.
+//end row
+//start row
+|
 //end row
 //start row
 |92406197 +
@@ -574,70 +649,7 @@ ONTAP Error Response Codes
 |92406230 +
 //end row
 //start row
-|The value for "retention.default_period" parameter for object store bucket "\{bucket}" cannot be greater than the maximum lock retention period set in the object store server for SVM "\{SVM}". Check the maximum allowed lock retention period present in the object store server for SVM "\{SVM}" and try the operation again.
-//end row
-//start row
-|92406231 +
-//end row
-//start row
-|One or more object store buckets exist with a default retention period greater than the "max_lock_retention_period" specified. Check the default retention period set for each bucket in the specified SVM and try the operation again.
-//end row
-//start row
-|92406236 +
-//end row
-//start row
-|The value for "retention.default_period" parameter for object store bucket "\{bucket}" cannot be less than the minimum lock retention period set in the object store server for SVM "\{SVM}". Check the minimum allowed lock retention period present in the object store server for SVM "\{SVM}" and try the operation again.
-//end row
-//start row
-|92406237 +
-//end row
-//start row
-|One or more object store buckets exist with a default retention period less than the "min_lock_retention_period" specified. Check the default retention period set for each bucket in the specified SVM and try the operation again.
-//end row
-//start row
-|92406238 +
-//end row
-//start row
-|The value for the "min_lock_retention_period" parameter cannot be greater than the "max_lock_retention_period" parameter for the object store server for SVM "vs1".
-//end row
-//start row
-|92406217 +
-//end row
-//start row
-|The specified "-allowed-headers" in not valid because it contains more than one wild card ("__") character.;
-//end row
-//start row
-|92406224 +
-//end row
-//start row
-|A Cross-Origin Resource Sharing (CORS) rule must have an origin and HTTP method specified.;
-//end row
-//start row
-|92406211 +
-//end row
-//start row
-|The specified method "DONE" is not valid. Valid methods are GET, PUT, DELETE, HEAD, and POST.;
-//end row
-//start row
-|92405863 +
-//end row
-//start row
-|Failed to create CORS rules for bucket "bb1". Reason: "Field "index" cannot be specified for this operation.". Resolve all the issues and retry the operation.;
-//end row
-//start row
-|92406228 +
-//end row
-//start row
-|Cannot exceed the maximum limit of 100 Cross-Origin Resource Sharing (CORS) rules per S3 bucket "\{bucket}" in SVM "\{SVM}".;
-//end row
-//start row
-|92405968 +
-//end row
-//start row
-|Subnet "{condition.source_ips}" is not a valid IP subnet because it contains non-zero values in the host component of the address. Subnet address "{valid source ips subnet}" identifies a valid subnet for the given mask length. Example: "10.0.1.0/24" is a valid subnet while as"10.0.1.1/24" is invalid.";
-//end row
-|===
-//end table
+|The value for "retention.default_period" parameter for object store bucket "+++<bucket>+++" cannot be greater than the maximum lock retention period set in the object store server for SVM "+++<SVM>+++". Check the maximum allowed lock retention period present in the object store server for SVM "+++<SVM>+++" and try the operation again. //end row //start row |92406231 //end row //start row |One or more object store buckets exist with a default retention period greater than the "max_lock_retention_period" specified. Check the default retention period set for each bucket in the specified SVM and try the operation again. //end row //start row |92406236 //end row //start row |The value for "retention.default_period" parameter for object store bucket "+++<bucket>+++" cannot be less than the minimum lock retention period set in the object store server for SVM "+++<SVM>+++". Check the minimum allowed lock retention period present in the object store server for SVM "+++<SVM>+++" and try the operation again. //end row //start row |92406237 //end row //start row |One or more object store buckets exist with a default retention period less than the "min_lock_retention_period" specified. Check the default retention period set for each bucket in the specified SVM and try the operation again. //end row //start row |92406238 //end row //start row |The value for the "min_lock_retention_period" parameter cannot be greater than the "max_lock_retention_period" parameter for the object store server for SVM "vs1". //end row //start row |92406217 //end row //start row |The specified "-allowed-headers" in not valid because it contains more than one wild card ("*") character.; //end row //start row |92406224 //end row //start row |A Cross-Origin Resource Sharing (CORS) rule must have an origin and HTTP method specified.; //end row //start row |92406211 //end row //start row |The specified method "DONE" is not valid. Valid methods are GET, PUT, DELETE, HEAD, and POST.; //end row //start row |92405863 //end row //start row |Failed to create CORS rules for bucket "bb1". Reason: "Field "index" cannot be specified for this operation.". Resolve all the issues and retry the operation.; //end row //start row |92406228 //end row //start row |Cannot exceed the maximum limit of 100 Cross-Origin Resource Sharing (CORS) rules per S3 bucket "+++<bucket>+++" in SVM "+++<SVM>+++".; //end row //start row |92405968 //end row //start row |Subnet "{condition.source_ips}" is not a valid IP subnet because it contains non-zero values in the host component of the address. Subnet address "{valid source ips subnet}" identifies a valid subnet for the given mask length. Example: "10.0.1.0/24" is a valid subnet while as"10.0.1.1/24" is invalid."; //end row |=== //end table+++</SVM>++++++</bucket>++++++</SVM>++++++</SVM>++++++</bucket>++++++</SVM>++++++</SVM>++++++</bucket>+++
 
 
 == Definitions
@@ -913,7 +925,7 @@ a|Size of the object smaller than specified for which the corresponding lifecycl
 
 |tags
 |array[string]
-a|An array of key-value paired tags of the form \{tag} or {tag=value}.
+a|An array of key-value paired tags of the form +++<tag>+++or <tag=value>.+++</tag>+++
 
 
 |===
@@ -1045,9 +1057,24 @@ Information about policy conditions based on various condition operators and con
 a|An array of delimiters that are compared with the delimiter value specified at the time of execution of an S3-based command, using the condition operator specified.
 
 
+|if_match
+|array[string]
+a|Controls conditional writes via If-Match header, evaluated with the Null operator; indicates whether the If-Match header is present or not.
+
+
+|if_none_match
+|boolean
+a|Controls conditional writes via If-None-Match header, evaluated with the Null operator; indicates whether the If-None-Match header is present or not.
+
+
 |max_keys
 |array[integer]
 a|An array of maximum keys that are allowed or denied to be retrieved using an S3 list operation, based on the condition operator specified.
+
+
+|object_creation_operation
+|boolean
+a|Controls object creation requests, evaluated with the Bool operator; indicates whether it is an object-creation request or not.
 
 
 |operator
@@ -1877,6 +1904,47 @@ a|The timestamp of the performance data.
 |===
 
 
+[#keys]
+[.api-collapsible-fifth-title]
+keys
+
+Specifies a key associated with an S3 user. At most only two keys can be associated with a user.
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_key
+|string
+a|Specifies the access key for the user.
+
+
+|expiry_time
+|string
+a|Specifies the date and time after which keys expire and are no longer valid.
+
+
+|id
+|integer
+a|Specifies an S3 user key identifier. Each user can only have a maximum of two keys. The key_id can either be '1' or '2'.
+
+
+|time_to_live
+|string
+a|Indicates the time period from when this parameter is specified:
+
+* when creating or modifying a user or
+* when the user keys were last regenerated, after which the user keys expire and are no longer valid.
+* Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
+* If the value specified is '0' seconds, then the keys do not expire.
+
+
+|===
+
+
 [#s3_user]
 [.api-collapsible-fifth-title]
 s3_user
@@ -1905,6 +1973,11 @@ a|Can contain any additional information about the user being created or modifie
 a|Specifies the date and time after which keys expire and are no longer valid.
 
 
+|key_id
+|integer
+a|Specifies the identifier of an S3 user key that needs to be generated or deleted. The key_id can either be '1' or '2'.
+
+
 |key_time_to_live
 |string
 a|Indicates the time period from when this parameter is specified:
@@ -1913,6 +1986,11 @@ a|Indicates the time period from when this parameter is specified:
 * when the user keys were last regenerated, after which the user keys expire and are no longer valid.
 * Valid format is: 'PnDTnHnMnS\|PnW'. For example, P2DT6H3M10S specifies a time period of 2 days, 6 hours, 3 minutes, and 10 seconds.
 * If the value specified is '0' seconds, then the keys won't expire.
+
+
+|keys
+|array[link:#keys[keys]]
+a|Specifies the keys associated with an S3 User.
 
 
 |name
@@ -1945,6 +2023,11 @@ Specifies the S3 server configuration.
 |Name
 |Type
 |Description
+
+|bucket_create_retention_mode
+|string
+a|The default lock mode that will be applied to a S3 bucket when the bucket is created using S3 API.
+
 
 |buckets
 |array[link:#s3_bucket[s3_bucket]]

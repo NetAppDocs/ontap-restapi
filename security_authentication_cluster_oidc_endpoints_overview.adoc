@@ -1,0 +1,151 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'security_authentication_cluster_oidc_endpoints_overview.html'
+summary: 'Manage the OIDC authentication configuration for the cluster'
+---
+
+= Manage the OIDC authentication configuration for the cluster
+
+
+
+== Overview
+
+This API is used to manage the OpenID Connect (OIDC) authentication configuration for the cluster. The POST method is used to create a new OIDC configuration, while the GET method is used to retrieve the current OIDC configuration.
+The PATCH method is used to enable or disable the OIDC feature, and the DELETE method is used to remove an existing OIDC configuration.
+ +
+
+'''
+
+== Examples
+
+=== Retrieving the OIDC configuration in the cluster
+
+The following output shows the OIDC configuration in the cluster.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/oidc
+
+# The call:
+curl -X GET "https://<mgmt-ip>/api/security/authentication/cluster/oidc" -H "accept: application/hal+json"
+
+# The response:
+{
+"provider": "adfs",
+"issuer": "https://example.com/adfs",
+"client_id": "client-id-value",
+"client_secret_hash": "<HASHED-CLIENT-SECRET>",
+"provider_jwks_uri": "https://example.com/adfs/discovery/keys",
+"remote_user_claim": "unique_name",
+"authorization_endpoint": "https://example.com/adfs/oauth2/authorize/",
+"token_endpoint": "https://example.com/adfs/oauth2/token/",
+"skip_uri_validation": false,
+"enabled": false,
+"redirect_ipaddress": "10.10.10.10",
+"end_session_endpoint": "https://example.com/adfs/oauth2/logout",
+"jwks_refresh_interval": "PT1H",
+"outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080",
+"access_token_issuer": "https://example.com/adfs/services/trust",
+"_links": {
+    "self": {
+        "href": "/api/security/authentication/cluster/oidc"
+    }
+}
+}
+----
+
+'''
+
+=== Creating the OIDC configuration in the cluster
+
+The following output shows how to create the OIDC configuration in the cluster.
+ +
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/oidc
+
+# The call:
+curl -X POST "https://<mgmt-ip>/api/security/authentication/cluster/oidc" -H "accept: application/hal+json" -H "Content-Type: application/json" -d '{ "provider": "adfs", "issuer": "https://example.com/adfs", "client_id": "client-id-value", "client_secret": "<CLIENT-SECRET>", "provider_jwks_uri": "https://example.com/adfs/discovery/keys", "remote_user_claim": "unique_name", "authorization_endpoint": "https://example.com/adfs/oauth2/authorize/", "token_endpoint": "https://example.com/adfs/oauth2/token/", "skip_uri_validation": false, "redirect_ipaddress": "10.10.10.10", "end_session_endpoint": "https://example.com/adfs/oauth2/logout", "jwks_refresh_interval": "PT1H", "outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080", "access_token_issuer": "https://example.com/adfs/services/trust"}'
+
+# The response:
+{
+"job": {
+  "uuid": "1ffeb651-21bb-11f0-8af9-000c29aa7d15",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/1ffeb651-21bb-11f0-8af9-000c29aa7d15"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Updating the OIDC configuration in the cluster
+
+The following output shows how to update the OIDC configuration in the cluster.
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/oidc
+
+# The call:
+curl -X PATCH "https://<mgmt-ip>/api/security/authentication/cluster/oidc" -H "accept: application/hal+json" -H "Content-Type: application/json" -d '{ "enabled": true }'
+
+# The response:
+{
+"job": {
+  "uuid": "1ffeb651-21bb-11f0-8af9-000c29aa7d15",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/1ffeb651-21bb-11f0-8af9-000c29aa7d15"
+    }
+  }
+}
+}
+----
+
+'''
+
+=== Deleting the OIDC configuration in the cluster
+
+The following output shows how to delete the OIDC configuration in the cluster.
+
+'''
+
+----
+
+# The API:
+/api/security/authentication/cluster/oidc
+
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/security/authentication/cluster/oidc" -H "accept: application/hal+json"
+
+# The response:
+{
+"job": {
+  "uuid": "1ffeb651-21bb-11f0-8af9-000c29aa7d15",
+  "_links": {
+    "self": {
+      "href": "/api/cluster/jobs/1ffeb651-21bb-11f0-8af9-000c29aa7d15"
+    }
+  }
+}
+}
+----
+
+

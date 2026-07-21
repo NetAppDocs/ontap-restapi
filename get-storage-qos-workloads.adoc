@@ -26,32 +26,11 @@ Retrieves a collection of QoS workloads.
 |Required
 |Description
 
-|svm.name
+|policy.uuid
 |string
 |query
 |False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-
-|wid
-|integer
-|query
-|False
-a|Filter by wid
+a|Filter by policy.uuid
 
 
 |policy.name
@@ -61,18 +40,18 @@ a|Filter by wid
 a|Filter by policy.name
 
 
-|policy.uuid
+|wid
+|integer
+|query
+|False
+a|Filter by wid
+
+
+|uuid
 |string
 |query
 |False
-a|Filter by policy.uuid
-
-
-|lun
-|string
-|query
-|False
-a|Filter by lun
+a|Filter by uuid
 
 
 |volume
@@ -89,6 +68,63 @@ a|Filter by volume
 a|Filter by qtree
 
 
+|lun
+|string
+|query
+|False
+a|Filter by lun
+
+
+|name
+|string
+|query
+|False
+a|Filter by name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|min_throughput_iops
+|integer
+|query
+|False
+a|Filter by min_throughput_iops
+
+* Introduced in: 9.19
+* Max value: 2147483647
+* Min value: 0
+
+
+|min_throughput
+|string
+|query
+|False
+a|Filter by min_throughput
+
+* Introduced in: 9.19
+
+
+|max_throughput
+|string
+|query
+|False
+a|Filter by max_throughput
+
+* Introduced in: 9.19
+
+
 |workload_class
 |string
 |query
@@ -96,11 +132,15 @@ a|Filter by qtree
 a|Filter by workload_class
 
 
-|uuid
-|string
+|max_throughput_iops
+|integer
 |query
 |False
-a|Filter by uuid
+a|Filter by max_throughput_iops
+
+* Introduced in: 9.19
+* Max value: 2147483647
+* Min value: 0
 
 
 |file
@@ -139,9 +179,9 @@ a|The default is true for GET calls.  When set to false, only the number of reco
 |False
 a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
 
-* Default value: 15
 * Max value: 120
 * Min value: 0
+* Default value: 15
 
 
 |order_by
@@ -218,6 +258,10 @@ a|
       },
       "file": "string",
       "lun": "string",
+      "max_throughput": "500MB/s",
+      "max_throughput_iops": 10000,
+      "min_throughput": "100MB/s",
+      "min_throughput_iops": 2000,
       "name": "volume1-wid123",
       "policy": {
         "_links": {
@@ -481,6 +525,26 @@ a|Name of the file.
 |lun
 |string
 a|Name of the LUN. The name of the LUN will be displayed as "(unknown)" if the name cannot be retrieved.
+
+
+|max_throughput
+|string
+a|Specifies the maximum throughput in MB/s or B/s as appropriate.
+
+
+|max_throughput_iops
+|integer
+a|Specifies the maximum throughput in IOPS, 0 means none.
+
+
+|min_throughput
+|string
+a|Specifies the minimum throughput in MB/s or B/s as appropriate.
+
+
+|min_throughput_iops
+|integer
+a|Specifies the minimum throughput in IOPS, 0 means none.
 
 
 |name

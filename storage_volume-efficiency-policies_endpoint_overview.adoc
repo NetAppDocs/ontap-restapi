@@ -10,8 +10,6 @@ summary: 'Manage volume efficiency policies'
 
 
 
-:doctype: book
-
 === Overview
 
 Volume efficiency policies specify information about efficiency policies that are applied to the volume.
@@ -138,16 +136,15 @@ Content-Type: application/json
 
 The GET operation is used to retrieve the attributes of a specific volume efficiency policy.
 
-= The API:
+----
 
-/api/storage/volume-efficiency-policies/\{uuid}
+# The API:
+/api/storage/volume-efficiency-policies/{uuid}
 
-= The call:
+# The call:
+curl -X GET "https://<mgmt-ip>/api/storage/volume-efficiency-policies/3c112527-2fe8-11e9-b55e-005056bbf1c8" -H "accept: application/hal+json"
 
-curl -X GET "https://+++<mgmt-ip>+++/api/storage/volume-efficiency-policies/3c112527-2fe8-11e9-b55e-005056bbf1c8" -H "accept: application/hal+json"+++</mgmt-ip>+++
-
-= The response:
-
+# The response:
 HTTP/1.1 200 OK
 Date: Tue, 12 Mar 2019 21:24:48 GMT
 Server: libzapid-httpd
@@ -161,37 +158,35 @@ Content-Type: application/json
 "type": "scheduled",
 "schedule": {
   "name": "daily"
-}
+},
 "duration": "2",
 "qos_policy": "best_effort",
 "enabled": "true",
 "comment": "schedule-policy",
 "svm": {
-      "name": "vs1"
-}
+  "name": "vs1"
+},
 "_links": {
   "self": {
     "href": "/api/storage/volume-efficiency-policies/3c112527-2fe8-11e9-b55e-005056bbf1c8"
   }
 }
 }
-
 ----
 
-### Updating a volume efficiency policy
+=== Updating a volume efficiency policy
+
 The PATCH operation is used to update the specific attributes of a volume efficiency policy.
+
 ----
 
-= The API:
+# The API:
+/api/storage/volume-efficiency-policies/{uuid}
 
-/api/storage/volume-efficiency-policies/\{uuid}
+# The call:
+curl -X PATCH  "https://<mgmt-ip>/api/storage/volume-efficiency-policies/ae9e65c4-4506-11e9-aa44-005056bbc848" -d '{"duration": "3" }' -H "accept: application/hal+json"
 
-= The call:
-
-curl -X PATCH  "https://+++<mgmt-ip>+++/api/storage/volume-efficiency-policies/ae9e65c4-4506-11e9-aa44-005056bbc848" -d '{"duration": "3" }' -H "accept: application/hal+json"+++</mgmt-ip>+++
-
-= The response:
-
+# The response:
 HTTP/1.1 200 OK
 Date: Tue, 12 Mar 2019 21:27:04 GMT
 Server: libzapid-httpd
@@ -199,23 +194,21 @@ X-Content-Type-Options: nosniff
 Cache-Control: no-cache,no-store,must-revalidate
 Content-Length: 3
 Content-Type: application/json
-
 ----
 
-### Deleting a volume efficiency policy
+=== Deleting a volume efficiency policy
+
 The DELETE operation is used to delete a volume efficiency policy.
+
 ----
 
-= The API:
+# The API:
+/api/storage/volume-efficiency-policies/{uuid}
 
-/api/storage/volume-efficiency-policies/\{uuid}
+# The call:
+curl -X DELETE "https://<mgmt-ip>/api/storage/volume-efficiency-policies/  ae9e65c4-4506-11e9-aa44-005056bbc848" -H "accept: application/hal+json"
 
-= The call:
-
-curl -X DELETE "https://+++<mgmt-ip>+++/api/storage/volume-efficiency-policies/ ae9e65c4-4506-11e9-aa44-005056bbc848" -H "accept: application/hal+json"+++</mgmt-ip>+++
-
-= The response:
-
+# The response:
 HTTP/1.1 200 OK
 Date: Tue, 12 Mar 2019 21:19:04 GMT
 Server: libzapid-httpd
@@ -223,7 +216,6 @@ X-Content-Type-Options: nosniff
 Cache-Control: no-cache,no-store,must-revalidate
 Content-Length: 3
 Content-Type: application/json
-
-```
+----
 
 

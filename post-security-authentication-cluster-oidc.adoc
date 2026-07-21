@@ -1,0 +1,460 @@
+---
+sidebar: sidebar
+api: true
+explorer: false
+permalink: 'post-security-authentication-cluster-oidc.html'
+summary: 'Create the OIDC configuration in the ONTAP cluster'
+---
+
+= Create the OIDC configuration in the ONTAP cluster
+
+[.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/authentication/cluster/oidc`#
+
+*Introduced In:* 9.19
+
+Creates the OIDC configuration in the cluster.
+
+== Optional properties
+
+* `skip_uri_validation`
+* `jwks_refresh_interval`
+* `outgoing_proxy`
+* `access_token_issuer`
+
+== Related ONTAP commands
+
+* `security oidc create`
+
+
+== Parameters
+
+[cols=5*,options=header]
+|===
+
+|Name
+|Type
+|In
+|Required
+|Description
+
+|return_timeout
+|integer
+|query
+|False
+a|The number of seconds to allow the call to execute before returning. When doing a POST, PATCH, or DELETE operation on a single record, the default is 0 seconds.  This means that if an asynchronous operation is started, the server immediately returns HTTP code 202 (Accepted) along with a link to the job.  If a non-zero value is specified for POST, PATCH, or DELETE operations, ONTAP waits that length of time to see if the job completes so it can return something other than 202.
+
+* Default value: 0
+* Max value: 120
+* Min value: 0
+
+|===
+
+== Request Body
+
+                
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_token_issuer
+|string
+a|The issuer value for the access token when it is different from the OpenID Connect issuer.
+
+
+|authorization_endpoint
+|string
+a|The URI of the authorization endpoint for the OpenID Connect provider.
+
+
+|client_id
+|string
+a|The client ID for the application.
+
+
+|client_secret
+|string
+a|The client secret for the application.
+
+
+|client_secret_hash
+|string
+a|The hash of the client secret for the application.
+
+
+|end_session_endpoint
+|string
+a|The URI of the end session endpoint for the OpenID Connect provider.
+
+
+|issuer
+|string
+a|The URI of the OpenID Connect provider.
+
+
+|jwks_refresh_interval
+|string
+a|The refresh interval for the JSON Web Key Set (JWKS), in ISO-8601 format. This can be set to a value from 300 seconds to 2147483647 seconds.
+
+
+|outgoing_proxy
+|string
+a|Outgoing proxy to access external identity providers (IdPs). If not specified, no proxy is configured.
+
+
+|provider
+|string
+a|The OpenID Connect provider type.
+
+
+|provider_jwks_uri
+|string
+a|The URI of the JSON Web Key Set (JWKS) for the OpenID Connect provider.
+
+
+|redirect_ipaddress
+|string
+a|The IP address to redirect to after authentication.
+
+
+|remote_user_claim
+|string
+a|The claim used to identify the remote user.
+
+
+|skip_uri_validation
+|boolean
+a|Indicates whether to skip URI validation.
+
+
+|token_endpoint
+|string
+a|The URI of the token endpoint for the OpenID Connect provider.
+
+
+|===
+
+
+.Example request
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "access_token_issuer": "https://example.netapp.com/adfs/services/trust",
+  "authorization_endpoint": "https://example.netapp.com/adfs/oauth2/authorize",
+  "client_id": "1234567890abcdef",
+  "client_secret": "1234567890abcdef1234567890abcdef",
+  "client_secret_hash": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "enabled": 1,
+  "end_session_endpoint": "https://example.netapp.com/adfs/oauth2/logout",
+  "issuer": "https://example.netapp.com/adfs",
+  "jwks_refresh_interval": "PT2H",
+  "outgoing_proxy": "https://johndoe:secretpass@proxy.example.com:8080",
+  "provider": "adfs",
+  "provider_jwks_uri": "https://example.netapp.com/adfs/discovery/v2.0/keys",
+  "redirect_ipaddress": "10.10.10.10",
+  "remote_user_claim": "unique_name",
+  "skip_uri_validation": "",
+  "token_endpoint": "https://example.netapp.com/adfs/oauth2/token"
+}
+====
+
+== Response
+
+```
+Status: 202, Accepted
+```
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|job
+|link:#job_link[job_link]
+a|
+
+|===
+
+
+.Example response
+[%collapsible%closed]
+====
+[source,json,subs=+macros]
+{
+  "job": {
+    "uuid": "string"
+  }
+}
+====
+
+=== Headers
+
+[cols=3*,options=header]
+|===
+//header
+|Name
+|Description
+|Type
+//end header
+
+//start row
+|Location
+|Useful for tracking the resource location
+|string
+//end row
+//end table
+|=== 
+
+== Response
+
+```
+Status: 201, Created
+```
+
+== Error
+
+```
+Status: Default
+```
+
+ONTAP Error Response Codes
+
+|===
+| Error Code | Description
+
+| 301465601
+| Provided client secret is invalid.
+
+| 301465603
+| The value specified for client secret is too long. The text must be between 1 and 256 characters.
+
+| 301465606
+| Failed to hash the client secret.
+
+| 301465613
+| OIDC provider JWKS URI validation failed. Unable to reach the JWKS URI.
+
+| 301465614
+| OIDC provider JWKS URI validation failed. Received incorrect response from the JWKS URI.
+
+| 301465617
+| Invalid IP address specified for the "redirect_ipaddress". The IP address must be associated with a cluster management or node management LIF.
+
+| 301465619
+| Cannot delete the OIDC configuration because OIDC authentication is enabled.
+
+| 301465620
+| OAuth 2.0 configuration already exists for this OIDC configuration.
+
+| 301465621
+| An error occurred while while creating OAuth 2.0 configuration for this OIDC configuration.
+
+| 301465623
+| Cannot configure OIDC because SAML default metadata is configured.
+
+| 301465624
+| Cannot configure OIDC because SAML is configured.
+
+| 301465625
+| Specified value for the JWKS refresh interval is invalid. The value must be between 300 seconds to 2147483647 seconds.
+|===
+
+Also see the table of common errors in the link:getting_started_with_the_ontap_rest_api.html#Response_body[Response body] overview section of this documentation.
+
+
+== Definitions
+
+[.api-def-first-level]
+.See Definitions
+[%collapsible%closed]
+//Start collapsible Definitions block
+====                
+[#href]
+[.api-collapsible-fifth-title]
+href
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|href
+|string
+a|
+
+|===
+
+
+[#_links]
+[.api-collapsible-fifth-title]
+_links
+[#security_oidc]
+[.api-collapsible-fifth-title]
+security_oidc
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|access_token_issuer
+|string
+a|The issuer value for the access token when it is different from the OpenID Connect issuer.
+
+
+|authorization_endpoint
+|string
+a|The URI of the authorization endpoint for the OpenID Connect provider.
+
+
+|client_id
+|string
+a|The client ID for the application.
+
+
+|client_secret
+|string
+a|The client secret for the application.
+
+
+|client_secret_hash
+|string
+a|The hash of the client secret for the application.
+
+
+|end_session_endpoint
+|string
+a|The URI of the end session endpoint for the OpenID Connect provider.
+
+
+|issuer
+|string
+a|The URI of the OpenID Connect provider.
+
+
+|jwks_refresh_interval
+|string
+a|The refresh interval for the JSON Web Key Set (JWKS), in ISO-8601 format. This can be set to a value from 300 seconds to 2147483647 seconds.
+
+
+|outgoing_proxy
+|string
+a|Outgoing proxy to access external identity providers (IdPs). If not specified, no proxy is configured.
+
+
+|provider
+|string
+a|The OpenID Connect provider type.
+
+
+|provider_jwks_uri
+|string
+a|The URI of the JSON Web Key Set (JWKS) for the OpenID Connect provider.
+
+
+|redirect_ipaddress
+|string
+a|The IP address to redirect to after authentication.
+
+
+|remote_user_claim
+|string
+a|The claim used to identify the remote user.
+
+
+|skip_uri_validation
+|boolean
+a|Indicates whether to skip URI validation.
+
+
+|token_endpoint
+|string
+a|The URI of the token endpoint for the OpenID Connect provider.
+
+
+|===
+
+
+[#job_link]
+[.api-collapsible-fifth-title]
+job_link
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|uuid
+|string
+a|The UUID of the asynchronous job that is triggered by a POST, PATCH, or DELETE operation.
+
+
+|===
+
+
+[#error_arguments]
+[.api-collapsible-fifth-title]
+error_arguments
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|code
+|string
+a|Argument code
+
+
+|message
+|string
+a|Message argument
+
+
+|===
+
+
+[#returned_error]
+[.api-collapsible-fifth-title]
+returned_error
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|arguments
+|array[link:#error_arguments[error_arguments]]
+a|Message arguments
+
+
+|code
+|string
+a|Error code
+
+
+|message
+|string
+a|Error message
+
+
+|target
+|string
+a|The target parameter that caused the error.
+
+
+|===
+
+
+//end collapsible .Definitions block
+====

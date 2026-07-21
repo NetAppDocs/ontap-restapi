@@ -24,7 +24,7 @@ Creates a volume on a specified SVM and storage aggregates.
 
 * `state` -  _online_
 * `size` - _20MB_
-* `style` - _flexvol_
+* `style` - Determined by the specified aggregates. Specifying a single aggregate, without "constituents_per_aggregate", creates a FlexVol. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup.
 * `type` - _rw_
 * `encryption.enabled` - _false_
 * `snapshot_policy.name` - _default_
@@ -95,7 +95,12 @@ a|Aggregate(s) hosting the volume. Optional.
 
 |aggressive_readahead_mode
 |string
-a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. When the option is set to _sequential_read_, the system aggressively prefetches the file completely, or to a certain length based on the file size limit, and continues as the read makes progress. If the option is set to _cross_file_sequential_read_, then the system aggressively prefetches multiple files completely, or to a certain length, and continues as the read makes progress.
+a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. If the option is set to _cross_file_sequential_read_, then the system reads ahead the current file, predicts the next set of files the application would read and aggressively prefetches them  up to a fixed length. cross_file_sequential_read mode is enabled by default on AFX platforms starting from ONTAP 9.19.1.
+
+* Default value: 1
+* enum: ["none", "file_prefetch", "cross_file_sequential_read"]
+* Introduced in: 9.13
+* x-nullable: true
 
 
 |analytics
@@ -374,7 +379,11 @@ a|Describes the current status of a volume.
 
 |style
 |string
-a|The style of the volume. If "style" is not specified, the volume type is determined based on the specified aggregates or license. Specifying a single aggregate, without "constituents_per_aggregate", creates a flexible volume. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup volume. When the UDO License is installed, and no aggregates are specified, the system automatically provisions a FlexGroup volume on system selected aggregates. Specifying a volume "style" creates a volume of that type. For example, if the style is "flexvol", you must specify a single aggregate. If the style is "flexgroup", the system either uses the specified aggregates or automatically provisions aggregates if there are no specified aggregates. The style "flexgroup_constituent" is not supported when creating a volume.
+a|The style of the volume.
+
+If "style" is not specified, the volume type is determined based on the specified aggregates. Specifying a single aggregate, without "constituents_per_aggregate", creates a flexible volume. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup volume. When the UDO License is installed, and no aggregates are specified, the system automatically provisions a FlexGroup volume on system selected aggregates.
+
+Specifying a volume "style" creates a volume of that type. For example, if the style is "flexvol", you must specify a single aggregate. If the style is "flexgroup", the system either uses the specified aggregates or automatically provisions aggregates if there are no specified aggregates. The style "flexgroup_constituent" is not supported when creating a volume.
 flexvol &dash; flexible volumes and FlexClone volumes
 flexgroup &dash; FlexGroup volumes
 flexgroup_constituent &dash; FlexGroup volume constituents.
@@ -5942,11 +5951,21 @@ a|This parameter specifies tags of a volume for objects stored on a FabricPool-e
 
 |policy
 |string
-a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold. FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate.
+Temperature of a volume block increases if it is accessed frequently and decreases when it is not.
+Valid in POST or PATCH.
+
 all &dash; This policy allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
+
 auto &dash; This policy allows tiering of both snapshot and active file system user data to the cloud store
+
 none &dash; Volume blocks will not be tiered to the cloud store.
-snapshot_only &dash; This policy allows tiering of only the volume snapshots not associated with the active file system. The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy is 31 days.
+
+snapshot_only &dash; This policy allows tiering of only the volume snapshots not associated with the active file system.
+The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume.
+
+The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy is 31 days.
 
 
 |supported
@@ -5983,7 +6002,12 @@ a|Aggregate(s) hosting the volume. Optional.
 
 |aggressive_readahead_mode
 |string
-a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. When the option is set to _sequential_read_, the system aggressively prefetches the file completely, or to a certain length based on the file size limit, and continues as the read makes progress. If the option is set to _cross_file_sequential_read_, then the system aggressively prefetches multiple files completely, or to a certain length, and continues as the read makes progress.
+a|Specifies the `aggressive_readahead_mode` enabled on the volume. When set to _file_prefetch_, on a file read, the system aggressively issues readaheads for all of the blocks in the file and retains those blocks in a cache for a finite period of time. If the option is set to _cross_file_sequential_read_, then the system reads ahead the current file, predicts the next set of files the application would read and aggressively prefetches them  up to a fixed length. cross_file_sequential_read mode is enabled by default on AFX platforms starting from ONTAP 9.19.1.
+
+* Default value: 1
+* enum: ["none", "file_prefetch", "cross_file_sequential_read"]
+* Introduced in: 9.13
+* x-nullable: true
 
 
 |analytics
@@ -6262,7 +6286,11 @@ a|Describes the current status of a volume.
 
 |style
 |string
-a|The style of the volume. If "style" is not specified, the volume type is determined based on the specified aggregates or license. Specifying a single aggregate, without "constituents_per_aggregate", creates a flexible volume. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup volume. When the UDO License is installed, and no aggregates are specified, the system automatically provisions a FlexGroup volume on system selected aggregates. Specifying a volume "style" creates a volume of that type. For example, if the style is "flexvol", you must specify a single aggregate. If the style is "flexgroup", the system either uses the specified aggregates or automatically provisions aggregates if there are no specified aggregates. The style "flexgroup_constituent" is not supported when creating a volume.
+a|The style of the volume.
+
+If "style" is not specified, the volume type is determined based on the specified aggregates. Specifying a single aggregate, without "constituents_per_aggregate", creates a flexible volume. Specifying multiple aggregates, or a single aggregate with "constituents_per_aggregate", creates a FlexGroup volume. When the UDO License is installed, and no aggregates are specified, the system automatically provisions a FlexGroup volume on system selected aggregates.
+
+Specifying a volume "style" creates a volume of that type. For example, if the style is "flexvol", you must specify a single aggregate. If the style is "flexgroup", the system either uses the specified aggregates or automatically provisions aggregates if there are no specified aggregates. The style "flexgroup_constituent" is not supported when creating a volume.
 flexvol &dash; flexible volumes and FlexClone volumes
 flexgroup &dash; FlexGroup volumes
 flexgroup_constituent &dash; FlexGroup volume constituents.

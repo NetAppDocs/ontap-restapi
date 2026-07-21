@@ -64,25 +64,32 @@ a|Filter by relative_size.percentage
 * Introduced in: 9.13
 
 
-|origins.create_time
-|string
-|query
-|False
-a|Filter by origins.create_time
-
-
-|origins.ip_address
-|string
-|query
-|False
-a|Filter by origins.ip_address
-
-
 |origins.state
 |string
 |query
 |False
 a|Filter by origins.state
+
+
+|origins.svm.uuid
+|string
+|query
+|False
+a|Filter by origins.svm.uuid
+
+
+|origins.svm.name
+|string
+|query
+|False
+a|Filter by origins.svm.name
+
+
+|origins.size
+|integer
+|query
+|False
+a|Filter by origins.size
 
 
 |origins.volume.name
@@ -99,25 +106,11 @@ a|Filter by origins.volume.name
 a|Filter by origins.volume.uuid
 
 
-|origins.svm.name
+|origins.cluster.uuid
 |string
 |query
 |False
-a|Filter by origins.svm.name
-
-
-|origins.svm.uuid
-|string
-|query
-|False
-a|Filter by origins.svm.uuid
-
-
-|origins.size
-|integer
-|query
-|False
-a|Filter by origins.size
+a|Filter by origins.cluster.uuid
 
 
 |origins.cluster.name
@@ -127,111 +120,18 @@ a|Filter by origins.size
 a|Filter by origins.cluster.name
 
 
-|origins.cluster.uuid
+|origins.create_time
 |string
 |query
 |False
-a|Filter by origins.cluster.uuid
+a|Filter by origins.create_time
 
 
-|s3.enabled
-|boolean
-|query
-|False
-a|Filter by s3.enabled
-
-* Introduced in: 9.18
-
-
-|atime_scrub.period
-|integer
-|query
-|False
-a|Filter by atime_scrub.period
-
-* Introduced in: 9.14
-
-
-|atime_scrub.enabled
-|boolean
-|query
-|False
-a|Filter by atime_scrub.enabled
-
-* Introduced in: 9.14
-
-
-|global_file_locking_enabled
-|boolean
-|query
-|False
-a|Filter by global_file_locking_enabled
-
-* Introduced in: 9.9
-
-
-|use_tiered_aggregate
-|boolean
-|query
-|False
-a|Filter by use_tiered_aggregate
-
-* Introduced in: 9.8
-
-
-|svm.name
+|origins.ip_address
 |string
 |query
 |False
-a|Filter by svm.name
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|override_encryption
-|boolean
-|query
-|False
-a|Filter by override_encryption
-
-* Introduced in: 9.14
-
-
-|constituents_per_aggregate
-|integer
-|query
-|False
-a|Filter by constituents_per_aggregate
-
-
-|guarantee.type
-|string
-|query
-|False
-a|Filter by guarantee.type
-
-* Introduced in: 9.7
-
-
-|dr_cache
-|boolean
-|query
-|False
-a|Filter by dr_cache
-
-* Introduced in: 9.9
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
+a|Filter by origins.ip_address
 
 
 |size
@@ -241,36 +141,27 @@ a|Filter by uuid
 a|Filter by size
 
 
-|nfsv4.enabled
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|cifs.enabled
 |boolean
 |query
 |False
-a|Filter by nfsv4.enabled
+a|Filter by cifs.enabled
 
 * Introduced in: 9.18
-
-
-|cifs_change_notify.enabled
-|boolean
-|query
-|False
-a|Filter by cifs_change_notify.enabled
-
-* Introduced in: 9.14
-
-
-|aggregates.name
-|string
-|query
-|False
-a|Filter by aggregates.name
-
-
-|aggregates.uuid
-|string
-|query
-|False
-a|Filter by aggregates.uuid
 
 
 |name
@@ -283,22 +174,69 @@ a|Filter by name
 * minLength: 1
 
 
-|writeback.enabled
+|mtime_scrubber.threshold
+|integer
+|query
+|False
+a|Filter by mtime_scrubber.threshold
+
+* Introduced in: 9.19
+* Max value: 2592000
+* Min value: 5
+
+
+|mtime_scrubber.enabled
 |boolean
 |query
 |False
-a|Filter by writeback.enabled
+a|Filter by mtime_scrubber.enabled
 
-* Introduced in: 9.12
+* Introduced in: 9.19
 
 
-|cifs.enabled
+|atime_scrub.enabled
 |boolean
 |query
 |False
-a|Filter by cifs.enabled
+a|Filter by atime_scrub.enabled
+
+* Introduced in: 9.14
+
+
+|atime_scrub.period
+|integer
+|query
+|False
+a|Filter by atime_scrub.period
+
+* Introduced in: 9.14
+
+
+|dr_cache
+|boolean
+|query
+|False
+a|Filter by dr_cache
+
+* Introduced in: 9.9
+
+
+|nfsv4.enabled
+|boolean
+|query
+|False
+a|Filter by nfsv4.enabled
 
 * Introduced in: 9.18
+
+
+|global_file_locking_enabled
+|boolean
+|query
+|False
+a|Filter by global_file_locking_enabled
+
+* Introduced in: 9.9
 
 
 |path
@@ -308,15 +246,106 @@ a|Filter by cifs.enabled
 a|Filter by path
 
 
+|use_tiered_aggregate
+|boolean
+|query
+|False
+a|Filter by use_tiered_aggregate
+
+* Introduced in: 9.8
+
+
+|guarantee.type
+|string
+|query
+|False
+a|Filter by guarantee.type
+
+* Introduced in: 9.7
+
+
+|cifs_change_notify.enabled
+|boolean
+|query
+|False
+a|Filter by cifs_change_notify.enabled
+
+* Introduced in: 9.14
+
+
+|aggregates.uuid
+|string
+|query
+|False
+a|Filter by aggregates.uuid
+
+
+|aggregates.name
+|string
+|query
+|False
+a|Filter by aggregates.name
+
+
+|writeback.enabled
+|boolean
+|query
+|False
+a|Filter by writeback.enabled
+
+* Introduced in: 9.12
+
+
+|constituents_per_aggregate
+|integer
+|query
+|False
+a|Filter by constituents_per_aggregate
+
+
+|s3.enabled
+|boolean
+|query
+|False
+a|Filter by s3.enabled
+
+* Introduced in: 9.18
+
+
+|write.absorption_enabled
+|boolean
+|query
+|False
+a|Filter by write.absorption_enabled
+
+* Introduced in: 9.19
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|override_encryption
+|boolean
+|query
+|False
+a|Filter by override_encryption
+
+* Introduced in: 9.14
+
+
 |return_timeout
 |integer
 |query
 |False
 a|The number of seconds to allow the call to execute before returning.  When iterating over a collection, the default is 15 seconds.  ONTAP returns earlier if either max records or the end of the collection is reached.
 
-* Default value: 15
 * Max value: 120
 * Min value: 0
+* Default value: 15
 
 
 |fields
@@ -682,6 +711,32 @@ a|The type of space guarantee of this volume in the aggregate.
 |===
 
 
+[#mtime_scrubber]
+[.api-collapsible-fifth-title]
+mtime_scrubber
+
+Flexcache Mtime Scrubber
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|enabled
+|boolean
+a|Indicates whether mtime-based scrubber is enabled on the FlexCache volume. The mtime scrubber automatically scrubs files from the cache based on their modification time.
+
+
+|threshold
+|integer
+a|Specifies the mtime threshold in seconds. Files that have not been modified within this threshold duration are eligible for scrubbing from the FlexCache volume. Valid range is 900 to 86400 seconds (15 minutes to 24 hours).
+
+
+|===
+
+
 [#nfsv4]
 [.api-collapsible-fifth-title]
 nfsv4
@@ -918,6 +973,27 @@ a|The unique identifier of the SVM. This field cannot be specified in a PATCH me
 |===
 
 
+[#write]
+[.api-collapsible-fifth-title]
+write
+
+Flexcache Write settings
+
+
+[cols=3*,options=header]
+|===
+|Name
+|Type
+|Description
+
+|absorption_enabled
+|boolean
+a|Indicates whether Write Absorption is enabled on the FlexCache volume. Write Absorption enables the FlexCache volume to absorb writes locally and synchronize them with the origin volume.
+
+
+|===
+
+
 [#writeback]
 [.api-collapsible-fifth-title]
 writeback
@@ -994,6 +1070,11 @@ a|Specifies whether or not a FlexCache volume has global file locking mode enabl
 |link:#guarantee[guarantee]
 a|
 
+|mtime_scrubber
+|link:#mtime_scrubber[mtime_scrubber]
+a|Flexcache Mtime Scrubber
+
+
 |name
 |string
 a|FlexCache name
@@ -1046,6 +1127,11 @@ a|Specifies whether or not a Fabricpool-enabled aggregate can be used in FlexCac
 |uuid
 |string
 a|FlexCache UUID. Unique identifier for the FlexCache.
+
+
+|write
+|link:#write[write]
+a|Flexcache Write settings
 
 
 |writeback

@@ -14,6 +14,8 @@ summary: 'View a WebAuthn global setting entry'
 
 This API endpoint retrieves WebAuthn global settings for the cluster or SVM.
 Specify the owner UUID and the unique identifier for the cluster or SVM to retrieve the WebAuthn global settings for the cluster or SVM.
+The PATCH method is used to update relying party domains of the cluster.
+Only the 'rp_domains' parameter can be modified. Modification of other parameters is not supported.
 
 == Examples
 
@@ -25,7 +27,18 @@ Specify the owner UUID and the unique identifier for the cluster or SVM to retri
 GET "/api/security/webauthn/global-settings/{owner.uuid}"
 
 # The call:
-curl -k https://<mgmt-ip>/api/security/webauthn/global-settings/d49de271-8c11-11e9-8f78-005056bbf6ac
+curl https://<mgmt-ip>/api/security/webauthn/global-settings/d49de271-8c11-11e9-8f78-005056bbf6ac
+----
+
+=== Modifying the relying party domain list for a cluster or SVM
+
+----
+
+# The API:
+PATCH "/api/security/webauthn/global-settings/{owner.uuid}"
+
+# The call:
+curl -X PATCH https://<mgmt-ip>/api/security/webauthn/global-settings/d49de271-8c11-11e9-8f78-005056bbf6ac -d '{"rp_domains": ["example.com"]}'
 ----
 
 

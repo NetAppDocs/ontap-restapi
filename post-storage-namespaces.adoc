@@ -431,6 +431,9 @@ ONTAP Error Response Codes
 | 5374158
 | LUN contains an operating system type that is not supported for NVMe namespace.
 
+| 5374184
+| A namespace cannot be created because the SVM is part of a SnapMirror active sync NAS relationship.
+
 | 5374352
 | An invalid name was provided for the NVMe namespace.
 
@@ -457,6 +460,9 @@ ONTAP Error Response Codes
 
 | 5376463
 | The snapshot portion of the specified namespace name is too long.
+
+| 5376756
+| A vvol LUN cannot be transitioned to an NVMe namespace.
 
 | 5440509
 | No suitable storage can be found for the specified requirements.
@@ -608,6 +614,12 @@ When used in a PATCH, the patched NVMe namespace's data is over-written as a clo
 |Name
 |Type
 |Description
+
+|created_as_clone
+|boolean
+a|This property is _true_ when the NVMe namespace was created as a clone of another namespace. Note that this property only indicates how the namespace was created and does not imply space savings by itself. If the clone and its source have diverged significantly since the clone was created, the original space saving behavior of a clone will have been lost.
+This property is unset for namespaces that are not clones.
+
 
 |source
 |link:#source[source]
@@ -1125,15 +1137,15 @@ a|Object stores to use. Used for placement.
 |string
 a|Policy that determines whether the user data blocks of a volume in a FabricPool will be tiered to the cloud store when they become cold.
 
-FabricPool combines flash (performance tier) with a cloud store into a single aggregate. Temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
+FabricPool combines flash (performance tier) with a cloud store into a single aggregate. The temperature of a volume block increases if it is accessed frequently and decreases when it is not. Valid in POST or PATCH.
 
 all &dash; Allows tiering of both snapshots and active file system user data to the cloud store as soon as possible by ignoring the temperature on the volume blocks.
 
-auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store
+auto &dash; Allows tiering of both snapshot and active file system user data to the cloud store.
 
-none &dash; Volume blocks are not be tiered to the cloud store.
+none &dash; Volume blocks are not tiered to the cloud store.
 
-snapshot_only &dash; Allows tiering of only the volume snapshots not associated with the active file system.
+snapshot_only &dash; Allows tiering of only the volume snapshots that are not associated with the active file system.
 
 The default tiering policy is "snapshot-only" for a FlexVol volume and "none" for a FlexGroup volume. The default minimum cooling period for the "snapshot-only" tiering policy is 2 days and for the "auto" tiering policy it is 31 days.
 
@@ -1642,6 +1654,7 @@ Possible values:
 
 * `none` - TLS is not configured for the host connection. No value is allowed for property `configured_psk`.
 * `configured` - A user supplied PSK is configured for the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. A valid value for property `configured_psk` is required.
+* `generated` - A PSK generated via NVMe in-band authentication is configured to setup the NVMe/TCP-TLS transport connection between the host and the NVMe subsystem. No value is allowed for `configured_psk`. Secure connection concatenation is only supported when DH-HMAC-CHAP authentication is also being used. A value must be set for property `dh_hmac_chap.host_secret_key` while the property `dh_hmac_chap.group_size` cannot have value `none`.
 
 This property defaults to `none` unless a value is supplied for `configured_psk` in which case it defaults to `configured`.
 
