@@ -7,6 +7,7 @@ summary: 'List key servers configured in an external key manager'
 ---
 
 = List key servers configured in an external key manager
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/key-managers/{uuid}/key-servers`#
 
@@ -61,15 +62,20 @@ GET /security/key-managers/{uuid}/key-servers?fields=connectivity.cluster_availa
 a|External key manager UUID
 
 
-|create_remove_timeout
-|integer
+|secondary_key_servers
+|string
 |query
 |False
-a|Filter by create_remove_timeout
+a|Filter by secondary_key_servers
 
-* Introduced in: 9.14
-* Max value: 60
-* Min value: -1
+* Introduced in: 9.8
+
+
+|username
+|string
+|query
+|False
+a|Filter by username
 
 
 |server
@@ -79,22 +85,25 @@ a|Filter by create_remove_timeout
 a|Filter by server
 
 
-|connectivity.cluster_availability
-|boolean
+|timeout
+|integer
 |query
 |False
-a|Filter by connectivity.cluster_availability
+a|Filter by timeout
 
-* Introduced in: 9.7
+* Max value: 60
+* Min value: -1
 
 
-|connectivity.node_states.state
-|string
+|create_remove_timeout
+|integer
 |query
 |False
-a|Filter by connectivity.node_states.state
+a|Filter by create_remove_timeout
 
-* Introduced in: 9.13
+* Introduced in: 9.14
+* Max value: 60
+* Min value: -1
 
 
 |connectivity.node_states.node.name
@@ -115,30 +124,22 @@ a|Filter by connectivity.node_states.node.uuid
 * Introduced in: 9.13
 
 
-|timeout
-|integer
-|query
-|False
-a|Filter by timeout
-
-* Max value: 60
-* Min value: -1
-
-
-|secondary_key_servers
+|connectivity.node_states.state
 |string
 |query
 |False
-a|Filter by secondary_key_servers
+a|Filter by connectivity.node_states.state
 
-* Introduced in: 9.8
+* Introduced in: 9.13
 
 
-|username
-|string
+|connectivity.cluster_availability
+|boolean
 |query
 |False
-a|Filter by username
+a|Filter by connectivity.cluster_availability
+
+* Introduced in: 9.7
 
 
 |fields
@@ -251,7 +252,6 @@ a|
       },
       "create_remove_timeout": 60,
       "password": "password",
-      "port": 5698,
       "secondary_key_servers": [
         "secondary1.com",
         "10.1.2.3"
@@ -467,11 +467,6 @@ This is an advanced property; there is an added computational cost to retrieving
 a|Password credentials for connecting with the key server. This is not audited.
 
 
-|port
-|integer
-a|TCP port number for the key server.
-
-
 |server
 |string
 a|External key server for key management. If no port is provided, a default port of 5696 is used. Not valid in POST if `records` is provided.
@@ -519,11 +514,6 @@ a|The key server timeout for create and remove operations.
 |password
 |string
 a|Password credentials for connecting with the key server. This is not audited.
-
-
-|port
-|integer
-a|TCP port number for the key server.
 
 
 |secondary_key_servers

@@ -7,6 +7,7 @@ summary: 'Manage disks'
 ---
 
 = Manage disks
+:imagesdir: ./media/
 
 
 
@@ -383,7 +384,7 @@ curl -X GET "https://<mgmt-ip>/api/storage/disks/NET-3.2" -H "accept: applicatio
 The storage disk PATCH API modifies disk ownership, unfails a disk, updates encrypting drive authentication keys (AKs), sanitizes encrypting drives, or sanitizes non-encrypting spare drives in the cluster.
 The storage disk API currently supports patching one attribute at a time.
 
-=== Updating the disk ownership for a specified disk.
+=== Updating the disk ownership for a specified disk. Disk ownership cannot be updated on the ASA r2 platform.
 
 === 1. When the disk is not assigned
 
@@ -403,7 +404,7 @@ When the disk is already assigned, and node name is specified as null (no-quotes
 
 == Examples
 
-=== Update the disk ownership for an unowned disk
+=== 1. Update the disk ownership for an unowned disk
 
 '''
 
@@ -422,7 +423,7 @@ curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -H "accept:
 
 '''
 
-=== Update the disk ownership for an already owned disk
+=== 2. Update the disk ownership for an already owned disk
 
 '''
 
@@ -441,7 +442,7 @@ curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -H "accept:
 
 '''
 
-=== Update the disk pool for a disk (can be either owned or unowned)
+=== 3. Update the disk pool for a disk (can be either owned or unowned).
 
 '''
 
@@ -460,7 +461,7 @@ curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -H "accept:
 
 '''
 
-=== Rekey the data authentication key (AK) of all encrypting drives to an authentication key (AK) selected automatically by the system
+=== 4. Rekey the data authentication key (AK) of all encrypting drives to an authentication key (AK) selected automatically by the system
 
 '''
 
@@ -480,7 +481,7 @@ curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=*&encryption_operation=r
 
 '''
 
-=== Cryptographically sanitize a spare or broken disk
+=== 5. Cryptographically sanitize a spare or broken disk
 
 '''
 
@@ -519,9 +520,9 @@ curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -d '{"state
 
 '''
 
-=== Unfailing a disk and attempting to reassimilate filesystem labels
+=== 7. Unfailing a disk and attempting to reassimilate filesystem labels.
 
-==== If unable or unnecessary to reassimilate filesystem labels, the disk will be set as spare.
+=== If unable or unnecessary to reassimilate filesystem labels, the disk will be set as spare.
 
 '''
 
@@ -540,7 +541,7 @@ curl -X PATCH "https://<mgmt-ip>/api/storage/disks?name=<disk-name>" -d '{"state
 
 '''
 
-=== Sanitize spare disks (non-cryptographically)
+=== 8. Sanitize spare disks (non-cryptographically)
 
 '''
 

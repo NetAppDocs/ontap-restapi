@@ -7,6 +7,7 @@ summary: 'Retrieve key managers'
 ---
 
 = Retrieve key managers
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/security/key-managers`#
 
@@ -54,11 +55,61 @@ GET /security/key-managers/?fields=status.code,status.message
 |Required
 |Description
 
-|onboard.key_backup
+|configuration.uuid
 |string
 |query
 |False
-a|Filter by onboard.key_backup
+a|Filter by configuration.uuid
+
+* Introduced in: 9.16
+
+
+|configuration.name
+|string
+|query
+|False
+a|Filter by configuration.name
+
+* Introduced in: 9.16
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|policy
+|string
+|query
+|False
+a|Filter by policy
+
+* Introduced in: 9.9
+
+
+|status.code
+|integer
+|query
+|False
+a|Filter by status.code
+
+* Introduced in: 9.7
+
+
+|status.message
+|string
+|query
+|False
+a|Filter by status.message
 
 * Introduced in: 9.7
 
@@ -70,105 +121,31 @@ a|Filter by onboard.key_backup
 a|Filter by onboard.enabled
 
 
-|external.servers.username
+|onboard.key_backup
 |string
 |query
 |False
-a|Filter by external.servers.username
-
-
-|external.servers.server
-|string
-|query
-|False
-a|Filter by external.servers.server
-
-
-|external.servers.connectivity.cluster_availability
-|boolean
-|query
-|False
-a|Filter by external.servers.connectivity.cluster_availability
+a|Filter by onboard.key_backup
 
 * Introduced in: 9.7
 
 
-|external.servers.connectivity.node_states.state
-|string
+|enabled
+|boolean
 |query
 |False
-a|Filter by external.servers.connectivity.node_states.state
+a|Filter by enabled
 
-* Introduced in: 9.13
+* Introduced in: 9.16
 
 
-|external.servers.connectivity.node_states.node.name
-|string
+|is_default_data_at_rest_encryption_disabled
+|boolean
 |query
 |False
-a|Filter by external.servers.connectivity.node_states.node.name
+a|Filter by is_default_data_at_rest_encryption_disabled
 
-* Introduced in: 9.13
-
-
-|external.servers.connectivity.node_states.node.uuid
-|string
-|query
-|False
-a|Filter by external.servers.connectivity.node_states.node.uuid
-
-* Introduced in: 9.13
-
-
-|external.servers.secondary_key_servers
-|string
-|query
-|False
-a|Filter by external.servers.secondary_key_servers
-
-* Introduced in: 9.8
-
-
-|external.servers.timeout
-|integer
-|query
-|False
-a|Filter by external.servers.timeout
-
-* Max value: 60
-* Min value: 1
-
-
-|external.server_ca_certificates.uuid
-|string
-|query
-|False
-a|Filter by external.server_ca_certificates.uuid
-
-
-|external.server_ca_certificates.name
-|string
-|query
-|False
-a|Filter by external.server_ca_certificates.name
-
-* Introduced in: 9.8
-
-
-|external.client_certificate.uuid
-|string
-|query
-|False
-a|Filter by external.client_certificate.uuid
-
-
-|external.client_certificate.name
-|string
-|query
-|False
-a|Filter by external.client_certificate.name
-
-* Introduced in: 9.8
+* Introduced in: 9.7
 
 
 |volume_encryption.message
@@ -198,6 +175,107 @@ a|Filter by volume_encryption.code
 * Introduced in: 9.7
 
 
+|external.client_certificate.name
+|string
+|query
+|False
+a|Filter by external.client_certificate.name
+
+* Introduced in: 9.8
+
+
+|external.client_certificate.uuid
+|string
+|query
+|False
+a|Filter by external.client_certificate.uuid
+
+
+|external.servers.connectivity.node_states.node.name
+|string
+|query
+|False
+a|Filter by external.servers.connectivity.node_states.node.name
+
+* Introduced in: 9.13
+
+
+|external.servers.connectivity.node_states.node.uuid
+|string
+|query
+|False
+a|Filter by external.servers.connectivity.node_states.node.uuid
+
+* Introduced in: 9.13
+
+
+|external.servers.connectivity.node_states.state
+|string
+|query
+|False
+a|Filter by external.servers.connectivity.node_states.state
+
+* Introduced in: 9.13
+
+
+|external.servers.connectivity.cluster_availability
+|boolean
+|query
+|False
+a|Filter by external.servers.connectivity.cluster_availability
+
+* Introduced in: 9.7
+
+
+|external.servers.username
+|string
+|query
+|False
+a|Filter by external.servers.username
+
+
+|external.servers.server
+|string
+|query
+|False
+a|Filter by external.servers.server
+
+
+|external.servers.timeout
+|integer
+|query
+|False
+a|Filter by external.servers.timeout
+
+* Max value: 60
+* Min value: 1
+
+
+|external.servers.secondary_key_servers
+|string
+|query
+|False
+a|Filter by external.servers.secondary_key_servers
+
+* Introduced in: 9.8
+
+
+|external.server_ca_certificates.name
+|string
+|query
+|False
+a|Filter by external.server_ca_certificates.name
+
+* Introduced in: 9.8
+
+
+|external.server_ca_certificates.uuid
+|string
+|query
+|False
+a|Filter by external.server_ca_certificates.uuid
+
+
 |uuid
 |string
 |query
@@ -205,88 +283,11 @@ a|Filter by volume_encryption.code
 a|Filter by uuid
 
 
-|configuration.uuid
-|string
-|query
-|False
-a|Filter by configuration.uuid
-
-* Introduced in: 9.16
-
-
-|configuration.name
-|string
-|query
-|False
-a|Filter by configuration.name
-
-* Introduced in: 9.16
-
-
-|policy
-|string
-|query
-|False
-a|Filter by policy
-
-* Introduced in: 9.9
-
-
 |scope
 |string
 |query
 |False
 a|Filter by scope
-
-
-|enabled
-|boolean
-|query
-|False
-a|Filter by enabled
-
-* Introduced in: 9.16
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|status.message
-|string
-|query
-|False
-a|Filter by status.message
-
-* Introduced in: 9.7
-
-
-|status.code
-|integer
-|query
-|False
-a|Filter by status.code
-
-* Introduced in: 9.7
-
-
-|is_default_data_at_rest_encryption_disabled
-|boolean
-|query
-|False
-a|Filter by is_default_data_at_rest_encryption_disabled
-
-* Introduced in: 9.7
 
 
 |fields

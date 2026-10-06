@@ -7,6 +7,7 @@ summary: 'Retrieve NVMe subsystem controllers'
 ---
 
 = Retrieve NVMe subsystem controllers
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/nvme/subsystem-controllers`#
 
@@ -34,13 +35,11 @@ Retrieves NVMe subsystem controllers.
 |Required
 |Description
 
-|transport_protocol
+|svm.name
 |string
 |query
 |False
-a|Filter by transport_protocol
-
-* Introduced in: 9.16
+a|Filter by svm.name
 
 
 |svm.uuid
@@ -50,34 +49,21 @@ a|Filter by transport_protocol
 a|Filter by svm.uuid
 
 
-|svm.name
+|subsystem.uuid
 |string
 |query
 |False
-a|Filter by svm.name
+a|Filter by subsystem.uuid
 
 
-|keep_alive_timeout
-|integer
-|query
-|False
-a|Filter by keep_alive_timeout
-
-* Introduced in: 9.14
-
-
-|interface.name
+|subsystem.name
 |string
 |query
 |False
-a|Filter by interface.name
+a|Filter by subsystem.name
 
-
-|interface.uuid
-|string
-|query
-|False
-a|Filter by interface.uuid
+* maxLength: 64
+* minLength: 1
 
 
 |interface.transport_address
@@ -87,31 +73,27 @@ a|Filter by interface.uuid
 a|Filter by interface.transport_address
 
 
-|tls.key_type
+|interface.uuid
 |string
 |query
 |False
-a|Filter by tls.key_type
-
-* Introduced in: 9.16
+a|Filter by interface.uuid
 
 
-|tls.psk_identity
+|interface.name
 |string
 |query
 |False
-a|Filter by tls.psk_identity
-
-* Introduced in: 9.16
+a|Filter by interface.name
 
 
-|tls.cipher
+|dh_hmac_chap.group_size
 |string
 |query
 |False
-a|Filter by tls.cipher
+a|Filter by dh_hmac_chap.group_size
 
-* Introduced in: 9.16
+* Introduced in: 9.12
 
 
 |dh_hmac_chap.hash_function
@@ -132,13 +114,22 @@ a|Filter by dh_hmac_chap.mode
 * Introduced in: 9.12
 
 
-|dh_hmac_chap.group_size
-|string
+|digest.header
+|boolean
 |query
 |False
-a|Filter by dh_hmac_chap.group_size
+a|Filter by digest.header
 
-* Introduced in: 9.12
+* Introduced in: 9.15
+
+
+|digest.data
+|boolean
+|query
+|False
+a|Filter by digest.data
+
+* Introduced in: 9.15
 
 
 |id
@@ -146,54 +137,6 @@ a|Filter by dh_hmac_chap.group_size
 |query
 |False
 a|Filter by id
-
-
-|host.nqn
-|string
-|query
-|False
-a|Filter by host.nqn
-
-* maxLength: 223
-* minLength: 1
-
-
-|host.transport_address
-|string
-|query
-|False
-a|Filter by host.transport_address
-
-
-|host.id
-|string
-|query
-|False
-a|Filter by host.id
-
-
-|admin_queue.depth
-|integer
-|query
-|False
-a|Filter by admin_queue.depth
-
-
-|subsystem.uuid
-|string
-|query
-|False
-a|Filter by subsystem.uuid
-
-
-|subsystem.name
-|string
-|query
-|False
-a|Filter by subsystem.name
-
-* maxLength: 64
-* minLength: 1
 
 
 |node.name
@@ -210,13 +153,6 @@ a|Filter by node.name
 a|Filter by node.uuid
 
 
-|io_queue.depth
-|integer
-|query
-|False
-a|Filter by io_queue.depth
-
-
 |io_queue.count
 |integer
 |query
@@ -224,22 +160,87 @@ a|Filter by io_queue.depth
 a|Filter by io_queue.count
 
 
-|digest.data
-|boolean
+|io_queue.depth
+|integer
 |query
 |False
-a|Filter by digest.data
-
-* Introduced in: 9.15
+a|Filter by io_queue.depth
 
 
-|digest.header
-|boolean
+|keep_alive_timeout
+|integer
 |query
 |False
-a|Filter by digest.header
+a|Filter by keep_alive_timeout
 
-* Introduced in: 9.15
+* Introduced in: 9.14
+
+
+|tls.key_type
+|string
+|query
+|False
+a|Filter by tls.key_type
+
+* Introduced in: 9.16
+
+
+|tls.cipher
+|string
+|query
+|False
+a|Filter by tls.cipher
+
+* Introduced in: 9.16
+
+
+|tls.psk_identity
+|string
+|query
+|False
+a|Filter by tls.psk_identity
+
+* Introduced in: 9.16
+
+
+|host.id
+|string
+|query
+|False
+a|Filter by host.id
+
+
+|host.transport_address
+|string
+|query
+|False
+a|Filter by host.transport_address
+
+
+|host.nqn
+|string
+|query
+|False
+a|Filter by host.nqn
+
+* maxLength: 223
+* minLength: 1
+
+
+|admin_queue.depth
+|integer
+|query
+|False
+a|Filter by admin_queue.depth
+
+
+|transport_protocol
+|string
+|query
+|False
+a|Filter by transport_protocol
+
+* Introduced in: 9.16
 
 
 |fields
@@ -778,7 +779,6 @@ Possible values:
 
 * `none` - TLS encryption is not configured for the host connection.
 * `configured` - A user supplied PSK was used for the encrypted NVMe/TCP-TLS transport connection between the host and the NVMe subsystem.
-* `generated` - A PSK generated via NVMe in-band authentication was used to setup the encrypted NVMe/TCP-TLS transport connection between the host and the NVMe subsystem.
 
 
 |psk_identity

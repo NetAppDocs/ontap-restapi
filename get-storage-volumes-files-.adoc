@@ -7,6 +7,7 @@ summary: 'Retrieve files and directories'
 ---
 
 = Retrieve files and directories
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/volumes/{volume.uuid}/files/{path}`#
 
@@ -78,38 +79,34 @@ a|If true, the request returns metadata for the the directory or file specified 
 * Default value:
 
 
-|volume.name
+|unix_permissions
+|integer
+|query
+|False
+a|Filter by unix_permissions
+
+
+|creation_time
 |string
 |query
 |False
-a|Filter by volume.name
+a|Filter by creation_time
 
 
-|qos_policy.name
+|target
 |string
 |query
 |False
-a|Filter by qos_policy.name
+a|Filter by target
 
 * Introduced in: 9.8
 
 
-|qos_policy.uuid
+|type
 |string
 |query
 |False
-a|Filter by qos_policy.uuid
-
-* Introduced in: 9.8
-
-
-|fill_enabled
-|boolean
-|query
-|False
-a|Filter by fill_enabled
-
-* Introduced in: 9.8
+a|Filter by type
 
 
 |inode_number
@@ -119,20 +116,6 @@ a|Filter by fill_enabled
 a|Filter by inode_number
 
 
-|size
-|integer
-|query
-|False
-a|Filter by size
-
-
-|hard_links_count
-|integer
-|query
-|False
-a|Filter by hard_links_count
-
-
 |name
 |string
 |query
@@ -140,150 +123,50 @@ a|Filter by hard_links_count
 a|Filter by name
 
 
-|unique_bytes
+|inode_generation
 |integer
 |query
 |False
-a|Filter by unique_bytes
-
-* Introduced in: 9.8
+a|Filter by inode_generation
 
 
-|owner_id
+|constituent.uuid
+|string
+|query
+|False
+a|Filter by constituent.uuid
+
+* Introduced in: 9.10
+
+
+|constituent.name
+|string
+|query
+|False
+a|Filter by constituent.name
+
+* Introduced in: 9.10
+
+
+|size
 |integer
 |query
 |False
-a|Filter by owner_id
+a|Filter by size
 
 
-|modified_time
-|string
-|query
-|False
-a|Filter by modified_time
-
-
-|bytes_used
-|integer
-|query
-|False
-a|Filter by bytes_used
-
-
-|accessed_time
-|string
-|query
-|False
-a|Filter by accessed_time
-
-
-|changed_time
-|string
-|query
-|False
-a|Filter by changed_time
-
-
-|is_junction
+|is_empty
 |boolean
 |query
 |False
-a|Filter by is_junction
+a|Filter by is_empty
 
 
-|is_vm_aligned
-|boolean
-|query
-|False
-a|Filter by is_vm_aligned
-
-
-|analytics.report_time
+|analytics.by_modified_time.bytes_used.labels
 |string
 |query
 |False
-a|Filter by analytics.report_time
-
-* Introduced in: 9.17
-
-
-|analytics.by_accessed_time.bytes_used.newest_label
-|string
-|query
-|False
-a|Filter by analytics.by_accessed_time.bytes_used.newest_label
-
-* Introduced in: 9.8
-
-
-|analytics.by_accessed_time.bytes_used.labels
-|string
-|query
-|False
-a|Filter by analytics.by_accessed_time.bytes_used.labels
-
-* Introduced in: 9.8
-
-
-|analytics.by_accessed_time.bytes_used.oldest_label
-|string
-|query
-|False
-a|Filter by analytics.by_accessed_time.bytes_used.oldest_label
-
-* Introduced in: 9.8
-
-
-|analytics.by_accessed_time.bytes_used.percentages
-|number
-|query
-|False
-a|Filter by analytics.by_accessed_time.bytes_used.percentages
-
-* Introduced in: 9.8
-
-
-|analytics.by_accessed_time.bytes_used.values
-|integer
-|query
-|False
-a|Filter by analytics.by_accessed_time.bytes_used.values
-
-* Introduced in: 9.8
-
-
-|analytics.by_accessed_time.bytes_used.aged_data_metric
-|number
-|query
-|False
-a|Filter by analytics.by_accessed_time.bytes_used.aged_data_metric
-
-* Introduced in: 9.17
-
-
-|analytics.incomplete_data
-|boolean
-|query
-|False
-a|Filter by analytics.incomplete_data
-
-* Introduced in: 9.12
-
-
-|analytics.subdir_count
-|integer
-|query
-|False
-a|Filter by analytics.subdir_count
-
-* Introduced in: 9.8
-
-
-|analytics.file_count
-|integer
-|query
-|False
-a|Filter by analytics.file_count
+a|Filter by analytics.by_modified_time.bytes_used.labels
 
 * Introduced in: 9.8
 
@@ -297,29 +180,11 @@ a|Filter by analytics.by_modified_time.bytes_used.newest_label
 * Introduced in: 9.8
 
 
-|analytics.by_modified_time.bytes_used.labels
-|string
-|query
-|False
-a|Filter by analytics.by_modified_time.bytes_used.labels
-
-* Introduced in: 9.8
-
-
 |analytics.by_modified_time.bytes_used.oldest_label
 |string
 |query
 |False
 a|Filter by analytics.by_modified_time.bytes_used.oldest_label
-
-* Introduced in: 9.8
-
-
-|analytics.by_modified_time.bytes_used.percentages
-|number
-|query
-|False
-a|Filter by analytics.by_modified_time.bytes_used.percentages
 
 * Introduced in: 9.8
 
@@ -342,6 +207,87 @@ a|Filter by analytics.by_modified_time.bytes_used.aged_data_metric
 * Introduced in: 9.17
 
 
+|analytics.by_modified_time.bytes_used.percentages
+|number
+|query
+|False
+a|Filter by analytics.by_modified_time.bytes_used.percentages
+
+* Introduced in: 9.8
+
+
+|analytics.subdir_count
+|integer
+|query
+|False
+a|Filter by analytics.subdir_count
+
+* Introduced in: 9.8
+
+
+|analytics.report_time
+|string
+|query
+|False
+a|Filter by analytics.report_time
+
+* Introduced in: 9.17
+
+
+|analytics.by_accessed_time.bytes_used.labels
+|string
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.labels
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.newest_label
+|string
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.newest_label
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.oldest_label
+|string
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.oldest_label
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.values
+|integer
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.values
+
+* Introduced in: 9.8
+
+
+|analytics.by_accessed_time.bytes_used.aged_data_metric
+|number
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.aged_data_metric
+
+* Introduced in: 9.17
+
+
+|analytics.by_accessed_time.bytes_used.percentages
+|number
+|query
+|False
+a|Filter by analytics.by_accessed_time.bytes_used.percentages
+
+* Introduced in: 9.8
+
+
 |analytics.bytes_used
 |integer
 |query
@@ -351,50 +297,22 @@ a|Filter by analytics.bytes_used
 * Introduced in: 9.8
 
 
-|unix_permissions
+|analytics.incomplete_data
+|boolean
+|query
+|False
+a|Filter by analytics.incomplete_data
+
+* Introduced in: 9.12
+
+
+|analytics.file_count
 |integer
 |query
 |False
-a|Filter by unix_permissions
-
-
-|target
-|string
-|query
-|False
-a|Filter by target
+a|Filter by analytics.file_count
 
 * Introduced in: 9.8
-
-
-|creation_time
-|string
-|query
-|False
-a|Filter by creation_time
-
-
-|type
-|string
-|query
-|False
-a|Filter by type
-
-
-|overwrite_enabled
-|boolean
-|query
-|False
-a|Filter by overwrite_enabled
-
-* Introduced in: 9.8
-
-
-|is_empty
-|boolean
-|query
-|False
-a|Filter by is_empty
 
 
 |is_snapshot
@@ -406,6 +324,40 @@ a|Filter by is_snapshot
 * Introduced in: 9.8
 
 
+|qos_policy.uuid
+|string
+|query
+|False
+a|Filter by qos_policy.uuid
+
+* Introduced in: 9.8
+
+
+|qos_policy.name
+|string
+|query
+|False
+a|Filter by qos_policy.name
+
+* Introduced in: 9.8
+
+
+|overwrite_enabled
+|boolean
+|query
+|False
+a|Filter by overwrite_enabled
+
+* Introduced in: 9.8
+
+
+|volume.name
+|string
+|query
+|False
+a|Filter by volume.name
+
+
 |group_id
 |integer
 |query
@@ -413,29 +365,78 @@ a|Filter by is_snapshot
 a|Filter by group_id
 
 
-|constituent.name
-|string
-|query
-|False
-a|Filter by constituent.name
-
-* Introduced in: 9.10
-
-
-|constituent.uuid
-|string
-|query
-|False
-a|Filter by constituent.uuid
-
-* Introduced in: 9.10
-
-
-|inode_generation
+|bytes_used
 |integer
 |query
 |False
-a|Filter by inode_generation
+a|Filter by bytes_used
+
+
+|owner_id
+|integer
+|query
+|False
+a|Filter by owner_id
+
+
+|is_vm_aligned
+|boolean
+|query
+|False
+a|Filter by is_vm_aligned
+
+
+|hard_links_count
+|integer
+|query
+|False
+a|Filter by hard_links_count
+
+
+|unique_bytes
+|integer
+|query
+|False
+a|Filter by unique_bytes
+
+* Introduced in: 9.8
+
+
+|fill_enabled
+|boolean
+|query
+|False
+a|Filter by fill_enabled
+
+* Introduced in: 9.8
+
+
+|changed_time
+|string
+|query
+|False
+a|Filter by changed_time
+
+
+|accessed_time
+|string
+|query
+|False
+a|Filter by accessed_time
+
+
+|modified_time
+|string
+|query
+|False
+a|Filter by modified_time
+
+
+|is_junction
+|boolean
+|query
+|False
+a|Filter by is_junction
 
 
 |analytics.histogram_by_time_labels
@@ -1095,7 +1096,7 @@ Additional file system analytics information summarizing all descendants of a di
 
 This property is only populated if file system analytics is enabled on the containing volume.
 
-In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+In the context of the `records` property of a link:file-info-response_model-file-info-response_,analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection_forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection_theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response_model-file-info-response_thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
 
 
 [cols=3*,options=header]
@@ -1275,7 +1276,7 @@ a|Additional file system analytics information summarizing all descendants of a 
 
 This property is only populated if file system analytics is enabled on the containing volume.
 
-In the context of the `records` property of a link:file-info-response(#model-file-info-response),analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection.forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection.theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response(#model-file-info-response).thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
+In the context of the `records` property of a link:file-info-response_model-file-info-response_,analyticsobjectswillonlyincludepropertiesthatmayvarybetweenelementswithinthecollection_forexample,theanalyticsobjectswillnotcontainhistogramlabels,sincethesamehistogramlabelsareusedforallelementswithinthecollection_theinvariantinformationisinsteadavailableviatheanalyticspropertyofthefile-info-response_model-file-info-response_thisavoidsanexcessiveamountofduplicatedinformationwhenaget-storage-volumes-files-.html<<model-file_info_response,file_info_response>>, analytics objects will only include properties that may vary between elements within the collection. For example, the analytics objects will not contain histogram labels, since the same histogram labels are used for all elements within the collection. The invariant information is instead available via the analytics property of the <<model-file_info_response,file_info_response>>. This avoids an excessive amount of duplicated information when a [GET  /storage/volumes/{volume.uuid}/files/\{path}]  call returns a large collection.
 
 
 |bytes_used
