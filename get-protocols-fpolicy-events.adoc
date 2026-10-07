@@ -7,6 +7,7 @@ summary: 'Retrieve the FPolicy event configuration for all events for an SVM'
 ---
 
 = Retrieve the FPolicy event configuration for all events for an SVM
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/fpolicy/{svm.uuid}/events`#
 
@@ -34,20 +35,11 @@ Retrieves FPolicy event configurations for all events for a specified SVM. ONTAP
 |Required
 |Description
 
-|volume_monitoring
-|boolean
+|protocol
+|string
 |query
 |False
-a|Filter by volume_monitoring
-
-
-|monitor_fileop_failure
-|boolean
-|query
-|False
-a|Filter by monitor_fileop_failure
-
-* Introduced in: 9.13
+a|Filter by protocol
 
 
 |filters.first_write
@@ -57,18 +49,53 @@ a|Filter by monitor_fileop_failure
 a|Filter by filters.first_write
 
 
-|filters.open_with_write_intent
+|filters.setattr_with_modify_time_change
 |boolean
 |query
 |False
-a|Filter by filters.open_with_write_intent
+a|Filter by filters.setattr_with_modify_time_change
 
 
-|filters.setattr_with_allocation_size_change
+|filters.monitor_ads
 |boolean
 |query
 |False
-a|Filter by filters.setattr_with_allocation_size_change
+a|Filter by filters.monitor_ads
+
+
+|filters.setattr_with_dacl_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_dacl_change
+
+
+|filters.close_with_read
+|boolean
+|query
+|False
+a|Filter by filters.close_with_read
+
+
+|filters.write_with_size_change
+|boolean
+|query
+|False
+a|Filter by filters.write_with_size_change
+
+
+|filters.setattr_with_owner_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_owner_change
+
+
+|filters.exclude_directory
+|boolean
+|query
+|False
+a|Filter by filters.exclude_directory
 
 
 |filters.first_read
@@ -78,11 +105,74 @@ a|Filter by filters.setattr_with_allocation_size_change
 a|Filter by filters.first_read
 
 
+|filters.open_with_delete_intent
+|boolean
+|query
+|False
+a|Filter by filters.open_with_delete_intent
+
+
+|filters.close_without_modification
+|boolean
+|query
+|False
+a|Filter by filters.close_without_modification
+
+
+|filters.setattr_with_size_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_size_change
+
+
 |filters.setattr_with_access_time_change
 |boolean
 |query
 |False
 a|Filter by filters.setattr_with_access_time_change
+
+
+|filters.setattr_with_sacl_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_sacl_change
+
+
+|filters.setattr_with_mode_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_mode_change
+
+
+|filters.setattr_with_group_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_group_change
+
+
+|filters.setattr_with_allocation_size_change
+|boolean
+|query
+|False
+a|Filter by filters.setattr_with_allocation_size_change
+
+
+|filters.open_with_write_intent
+|boolean
+|query
+|False
+a|Filter by filters.open_with_write_intent
+
+
+|filters.close_with_modification
+|boolean
+|query
+|False
+a|Filter by filters.close_with_modification
 
 
 |filters.setattr_with_creation_time_change
@@ -99,104 +189,6 @@ a|Filter by filters.setattr_with_creation_time_change
 a|Filter by filters.offline_bit
 
 
-|filters.close_with_modification
-|boolean
-|query
-|False
-a|Filter by filters.close_with_modification
-
-
-|filters.setattr_with_size_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_size_change
-
-
-|filters.setattr_with_group_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_group_change
-
-
-|filters.setattr_with_dacl_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_dacl_change
-
-
-|filters.close_without_modification
-|boolean
-|query
-|False
-a|Filter by filters.close_without_modification
-
-
-|filters.open_with_delete_intent
-|boolean
-|query
-|False
-a|Filter by filters.open_with_delete_intent
-
-
-|filters.monitor_ads
-|boolean
-|query
-|False
-a|Filter by filters.monitor_ads
-
-
-|filters.setattr_with_owner_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_owner_change
-
-
-|filters.write_with_size_change
-|boolean
-|query
-|False
-a|Filter by filters.write_with_size_change
-
-
-|filters.setattr_with_sacl_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_sacl_change
-
-
-|filters.exclude_directory
-|boolean
-|query
-|False
-a|Filter by filters.exclude_directory
-
-
-|filters.close_with_read
-|boolean
-|query
-|False
-a|Filter by filters.close_with_read
-
-
-|filters.setattr_with_modify_time_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_modify_time_change
-
-
-|filters.setattr_with_mode_change
-|boolean
-|query
-|False
-a|Filter by filters.setattr_with_mode_change
-
-
 |name
 |string
 |query
@@ -204,76 +196,20 @@ a|Filter by filters.setattr_with_mode_change
 a|Filter by name
 
 
-|file_operations.create_dir
+|volume_monitoring
 |boolean
 |query
 |False
-a|Filter by file_operations.create_dir
+a|Filter by volume_monitoring
 
 
-|file_operations.delete
+|monitor_fileop_failure
 |boolean
 |query
 |False
-a|Filter by file_operations.delete
-
-
-|file_operations.create
-|boolean
-|query
-|False
-a|Filter by file_operations.create
-
-
-|file_operations.rename
-|boolean
-|query
-|False
-a|Filter by file_operations.rename
-
-
-|file_operations.access
-|boolean
-|query
-|False
-a|Filter by file_operations.access
+a|Filter by monitor_fileop_failure
 
 * Introduced in: 9.13
-
-
-|file_operations.delete_dir
-|boolean
-|query
-|False
-a|Filter by file_operations.delete_dir
-
-
-|file_operations.rename_dir
-|boolean
-|query
-|False
-a|Filter by file_operations.rename_dir
-
-
-|file_operations.close
-|boolean
-|query
-|False
-a|Filter by file_operations.close
-
-
-|file_operations.getattr
-|boolean
-|query
-|False
-a|Filter by file_operations.getattr
-
-
-|file_operations.write
-|boolean
-|query
-|False
-a|Filter by file_operations.write
 
 
 |file_operations.read
@@ -283,11 +219,32 @@ a|Filter by file_operations.write
 a|Filter by file_operations.read
 
 
-|file_operations.link
+|file_operations.write
 |boolean
 |query
 |False
-a|Filter by file_operations.link
+a|Filter by file_operations.write
+
+
+|file_operations.getattr
+|boolean
+|query
+|False
+a|Filter by file_operations.getattr
+
+
+|file_operations.create
+|boolean
+|query
+|False
+a|Filter by file_operations.create
+
+
+|file_operations.close
+|boolean
+|query
+|False
+a|Filter by file_operations.close
 
 
 |file_operations.setattr
@@ -304,11 +261,27 @@ a|Filter by file_operations.setattr
 a|Filter by file_operations.lookup
 
 
-|file_operations.symlink
+|file_operations.create_dir
 |boolean
 |query
 |False
-a|Filter by file_operations.symlink
+a|Filter by file_operations.create_dir
+
+
+|file_operations.delete
+|boolean
+|query
+|False
+a|Filter by file_operations.delete
+
+
+|file_operations.access
+|boolean
+|query
+|False
+a|Filter by file_operations.access
+
+* Introduced in: 9.13
 
 
 |file_operations.open
@@ -318,11 +291,39 @@ a|Filter by file_operations.symlink
 a|Filter by file_operations.open
 
 
-|protocol
-|string
+|file_operations.delete_dir
+|boolean
 |query
 |False
-a|Filter by protocol
+a|Filter by file_operations.delete_dir
+
+
+|file_operations.rename_dir
+|boolean
+|query
+|False
+a|Filter by file_operations.rename_dir
+
+
+|file_operations.symlink
+|boolean
+|query
+|False
+a|Filter by file_operations.symlink
+
+
+|file_operations.rename
+|boolean
+|query
+|False
+a|Filter by file_operations.rename
+
+
+|file_operations.link
+|boolean
+|query
+|False
+a|Filter by file_operations.link
 
 
 |svm.uuid

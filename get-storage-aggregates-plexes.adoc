@@ -7,6 +7,7 @@ summary: 'Retrieve a collection of plexes for an aggregate'
 ---
 
 = Retrieve a collection of plexes for an aggregate
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/aggregates/{aggregate.uuid}/plexes`#
 
@@ -37,25 +38,18 @@ Retrieves the collection of plexes for the specified aggregate.
 a|Aggregate UUID
 
 
-|resync.level
-|string
-|query
-|False
-a|Filter by resync.level
-
-
-|resync.active
+|online
 |boolean
 |query
 |False
-a|Filter by resync.active
+a|Filter by online
 
 
-|resync.percent
-|integer
+|name
+|string
 |query
 |False
-a|Filter by resync.percent
+a|Filter by name
 
 
 |state
@@ -65,52 +59,66 @@ a|Filter by resync.percent
 a|Filter by state
 
 
-|aggregate.name
+|resync.percent
+|integer
+|query
+|False
+a|Filter by resync.percent
+
+
+|resync.active
+|boolean
+|query
+|False
+a|Filter by resync.active
+
+
+|resync.level
 |string
 |query
 |False
-a|Filter by aggregate.name
+a|Filter by resync.level
 
 
-|online
+|pool
+|string
+|query
+|False
+a|Filter by pool
+
+
+|raid_groups.raid_type
+|string
+|query
+|False
+a|Filter by raid_groups.raid_type
+
+* Introduced in: 9.9
+
+
+|raid_groups.reconstruct.active
 |boolean
 |query
 |False
-a|Filter by online
-
-
-|raid_groups.cache_tier
-|boolean
-|query
-|False
-a|Filter by raid_groups.cache_tier
+a|Filter by raid_groups.reconstruct.active
 
 * Introduced in: 9.7
 
 
-|raid_groups.name
-|string
+|raid_groups.reconstruct.percent
+|integer
 |query
 |False
-a|Filter by raid_groups.name
+a|Filter by raid_groups.reconstruct.percent
 
 * Introduced in: 9.7
 
 
-|raid_groups.degraded
-|boolean
-|query
-|False
-a|Filter by raid_groups.degraded
-
-* Introduced in: 9.7
-
-
-|raid_groups.disks.position
+|raid_groups.disks.disk.name
 |string
 |query
 |False
-a|Filter by raid_groups.disks.position
+a|Filter by raid_groups.disks.disk.name
 
 * Introduced in: 9.7
 
@@ -142,11 +150,20 @@ a|Filter by raid_groups.disks.state
 * Introduced in: 9.7
 
 
-|raid_groups.disks.disk.name
+|raid_groups.disks.position
 |string
 |query
 |False
-a|Filter by raid_groups.disks.disk.name
+a|Filter by raid_groups.disks.position
+
+* Introduced in: 9.7
+
+
+|raid_groups.cache_tier
+|boolean
+|query
+|False
+a|Filter by raid_groups.cache_tier
 
 * Introduced in: 9.7
 
@@ -169,45 +186,29 @@ a|Filter by raid_groups.recomputing_parity.active
 * Introduced in: 9.7
 
 
-|raid_groups.reconstruct.percent
-|integer
+|raid_groups.name
+|string
 |query
 |False
-a|Filter by raid_groups.reconstruct.percent
+a|Filter by raid_groups.name
 
 * Introduced in: 9.7
 
 
-|raid_groups.reconstruct.active
+|raid_groups.degraded
 |boolean
 |query
 |False
-a|Filter by raid_groups.reconstruct.active
+a|Filter by raid_groups.degraded
 
 * Introduced in: 9.7
 
 
-|raid_groups.raid_type
+|aggregate.name
 |string
 |query
 |False
-a|Filter by raid_groups.raid_type
-
-* Introduced in: 9.9
-
-
-|pool
-|string
-|query
-|False
-a|Filter by pool
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
+a|Filter by aggregate.name
 
 
 |fields

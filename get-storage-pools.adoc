@@ -7,6 +7,7 @@ summary: 'Retrieve storage pools for the entire cluster'
 ---
 
 = Retrieve storage pools for the entire cluster
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/pools`#
 
@@ -30,11 +31,11 @@ Retrieves the collection of storage pools for the entire cluster.
 |Required
 |Description
 
-|capacity.remaining
-|integer
+|name
+|string
 |query
 |False
-a|Filter by capacity.remaining
+a|Filter by name
 
 
 |capacity.disks.disk.name
@@ -44,13 +45,6 @@ a|Filter by capacity.remaining
 a|Filter by capacity.disks.disk.name
 
 
-|capacity.disks.total_size
-|integer
-|query
-|False
-a|Filter by capacity.disks.total_size
-
-
 |capacity.disks.usable_size
 |integer
 |query
@@ -58,60 +52,11 @@ a|Filter by capacity.disks.total_size
 a|Filter by capacity.disks.usable_size
 
 
-|capacity.used_allocation_units.node.name
-|string
-|query
-|False
-a|Filter by capacity.used_allocation_units.node.name
-
-
-|capacity.used_allocation_units.node.uuid
-|string
-|query
-|False
-a|Filter by capacity.used_allocation_units.node.uuid
-
-
-|capacity.used_allocation_units.current_usage
+|capacity.disks.total_size
 |integer
 |query
 |False
-a|Filter by capacity.used_allocation_units.current_usage
-
-
-|capacity.used_allocation_units.count
-|integer
-|query
-|False
-a|Filter by capacity.used_allocation_units.count
-
-
-|capacity.used_allocation_units.aggregate.uuid
-|string
-|query
-|False
-a|Filter by capacity.used_allocation_units.aggregate.uuid
-
-
-|capacity.used_allocation_units.aggregate.name
-|string
-|query
-|False
-a|Filter by capacity.used_allocation_units.aggregate.name
-
-
-|capacity.disk_count
-|integer
-|query
-|False
-a|Filter by capacity.disk_count
-
-
-|capacity.total
-|integer
-|query
-|False
-a|Filter by capacity.total
+a|Filter by capacity.disks.total_size
 
 
 |capacity.spare_allocation_units.syncmirror_pool
@@ -121,11 +66,18 @@ a|Filter by capacity.total
 a|Filter by capacity.spare_allocation_units.syncmirror_pool
 
 
-|capacity.spare_allocation_units.available_size
+|capacity.spare_allocation_units.size
 |integer
 |query
 |False
-a|Filter by capacity.spare_allocation_units.available_size
+a|Filter by capacity.spare_allocation_units.size
+
+
+|capacity.spare_allocation_units.count
+|integer
+|query
+|False
+a|Filter by capacity.spare_allocation_units.count
 
 
 |capacity.spare_allocation_units.node.name
@@ -142,32 +94,102 @@ a|Filter by capacity.spare_allocation_units.node.name
 a|Filter by capacity.spare_allocation_units.node.uuid
 
 
-|capacity.spare_allocation_units.count
+|capacity.spare_allocation_units.available_size
 |integer
 |query
 |False
-a|Filter by capacity.spare_allocation_units.count
+a|Filter by capacity.spare_allocation_units.available_size
 
 
-|capacity.spare_allocation_units.size
+|capacity.disk_count
 |integer
 |query
 |False
-a|Filter by capacity.spare_allocation_units.size
+a|Filter by capacity.disk_count
 
 
-|name
+|capacity.used_allocation_units.current_usage
+|integer
+|query
+|False
+a|Filter by capacity.used_allocation_units.current_usage
+
+
+|capacity.used_allocation_units.node.name
 |string
 |query
 |False
-a|Filter by name
+a|Filter by capacity.used_allocation_units.node.name
 
 
-|health.unhealthy_reason.code
+|capacity.used_allocation_units.node.uuid
 |string
 |query
 |False
-a|Filter by health.unhealthy_reason.code
+a|Filter by capacity.used_allocation_units.node.uuid
+
+
+|capacity.used_allocation_units.count
+|integer
+|query
+|False
+a|Filter by capacity.used_allocation_units.count
+
+
+|capacity.used_allocation_units.aggregate.name
+|string
+|query
+|False
+a|Filter by capacity.used_allocation_units.aggregate.name
+
+
+|capacity.used_allocation_units.aggregate.uuid
+|string
+|query
+|False
+a|Filter by capacity.used_allocation_units.aggregate.uuid
+
+
+|capacity.total
+|integer
+|query
+|False
+a|Filter by capacity.total
+
+
+|capacity.remaining
+|integer
+|query
+|False
+a|Filter by capacity.remaining
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|nodes.name
+|string
+|query
+|False
+a|Filter by nodes.name
+
+
+|nodes.uuid
+|string
+|query
+|False
+a|Filter by nodes.uuid
+
+
+|health.is_healthy
+|boolean
+|query
+|False
+a|Filter by health.is_healthy
 
 
 |health.unhealthy_reason.arguments.message
@@ -184,6 +206,13 @@ a|Filter by health.unhealthy_reason.arguments.message
 a|Filter by health.unhealthy_reason.arguments.code
 
 
+|health.unhealthy_reason.code
+|string
+|query
+|False
+a|Filter by health.unhealthy_reason.code
+
+
 |health.unhealthy_reason.message
 |string
 |query
@@ -198,39 +227,11 @@ a|Filter by health.unhealthy_reason.message
 a|Filter by health.state
 
 
-|health.is_healthy
-|boolean
-|query
-|False
-a|Filter by health.is_healthy
-
-
-|uuid
-|string
-|query
-|False
-a|Filter by uuid
-
-
 |storage_type
 |string
 |query
 |False
 a|Filter by storage_type
-
-
-|nodes.name
-|string
-|query
-|False
-a|Filter by nodes.name
-
-
-|nodes.uuid
-|string
-|query
-|False
-a|Filter by nodes.uuid
 
 
 |fields

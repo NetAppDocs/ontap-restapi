@@ -7,6 +7,7 @@ summary: 'Retrieve the Vscan configuration'
 ---
 
 = Retrieve the Vscan configuration
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/vscan`#
 
@@ -49,11 +50,35 @@ Important notes:
 |Required
 |Description
 
-|enabled
-|boolean
+|scanner_pools.role
+|string
 |query
 |False
-a|Filter by enabled
+a|Filter by scanner_pools.role
+
+
+|scanner_pools.name
+|string
+|query
+|False
+a|Filter by scanner_pools.name
+
+* maxLength: 256
+* minLength: 1
+
+
+|scanner_pools.cluster.name
+|string
+|query
+|False
+a|Filter by scanner_pools.cluster.name
+
+
+|scanner_pools.cluster.uuid
+|string
+|query
+|False
+a|Filter by scanner_pools.cluster.uuid
 
 
 |scanner_pools.privileged_users
@@ -70,49 +95,35 @@ a|Filter by scanner_pools.privileged_users
 a|Filter by scanner_pools.servers
 
 
-|scanner_pools.name
+|on_demand_policies.scan_paths
 |string
 |query
 |False
-a|Filter by scanner_pools.name
-
-* maxLength: 256
-* minLength: 1
+a|Filter by on_demand_policies.scan_paths
 
 
-|scanner_pools.role
+|on_demand_policies.scope.exclude_extensions
 |string
 |query
 |False
-a|Filter by scanner_pools.role
+a|Filter by on_demand_policies.scope.exclude_extensions
 
 
-|scanner_pools.cluster.uuid
+|on_demand_policies.scope.include_extensions
 |string
 |query
 |False
-a|Filter by scanner_pools.cluster.uuid
+a|Filter by on_demand_policies.scope.include_extensions
 
 
-|scanner_pools.cluster.name
-|string
+|on_demand_policies.scope.max_file_size
+|integer
 |query
 |False
-a|Filter by scanner_pools.cluster.name
+a|Filter by on_demand_policies.scope.max_file_size
 
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
+* Max value: 1099511627776
+* Min value: 1024
 
 
 |on_demand_policies.scope.exclude_paths
@@ -132,35 +143,11 @@ a|Filter by on_demand_policies.scope.exclude_paths
 a|Filter by on_demand_policies.scope.scan_without_extension
 
 
-|on_demand_policies.scope.include_extensions
+|on_demand_policies.log_path
 |string
 |query
 |False
-a|Filter by on_demand_policies.scope.include_extensions
-
-
-|on_demand_policies.scope.exclude_extensions
-|string
-|query
-|False
-a|Filter by on_demand_policies.scope.exclude_extensions
-
-
-|on_demand_policies.scope.max_file_size
-|integer
-|query
-|False
-a|Filter by on_demand_policies.scope.max_file_size
-
-* Max value: 1099511627776
-* Min value: 1024
-
-
-|on_demand_policies.schedule.uuid
-|string
-|query
-|False
-a|Filter by on_demand_policies.schedule.uuid
+a|Filter by on_demand_policies.log_path
 
 
 |on_demand_policies.schedule.name
@@ -168,6 +155,13 @@ a|Filter by on_demand_policies.schedule.uuid
 |query
 |False
 a|Filter by on_demand_policies.schedule.name
+
+
+|on_demand_policies.schedule.uuid
+|string
+|query
+|False
+a|Filter by on_demand_policies.schedule.uuid
 
 
 |on_demand_policies.name
@@ -180,34 +174,27 @@ a|Filter by on_demand_policies.name
 * minLength: 1
 
 
-|on_demand_policies.scan_paths
+|svm.name
 |string
 |query
 |False
-a|Filter by on_demand_policies.scan_paths
+a|Filter by svm.name
 
 
-|on_demand_policies.log_path
+|svm.uuid
 |string
 |query
 |False
-a|Filter by on_demand_policies.log_path
+a|Filter by svm.uuid
 
 
-|on_access_policies.scope.scan_without_extension
-|boolean
-|query
-|False
-a|Filter by on_access_policies.scope.scan_without_extension
-
-
-|on_access_policies.scope.exclude_paths
+|on_access_policies.name
 |string
 |query
 |False
-a|Filter by on_access_policies.scope.exclude_paths
+a|Filter by on_access_policies.name
 
-* maxLength: 255
+* maxLength: 256
 * minLength: 1
 
 
@@ -228,13 +215,6 @@ a|Filter by on_access_policies.scope.max_file_size
 a|Filter by on_access_policies.scope.only_execute_access
 
 
-|on_access_policies.scope.exclude_extensions
-|string
-|query
-|False
-a|Filter by on_access_policies.scope.exclude_extensions
-
-
 |on_access_policies.scope.include_extensions
 |string
 |query
@@ -249,11 +229,28 @@ a|Filter by on_access_policies.scope.include_extensions
 a|Filter by on_access_policies.scope.scan_readonly_volumes
 
 
-|on_access_policies.enabled
+|on_access_policies.scope.exclude_extensions
+|string
+|query
+|False
+a|Filter by on_access_policies.scope.exclude_extensions
+
+
+|on_access_policies.scope.scan_without_extension
 |boolean
 |query
 |False
-a|Filter by on_access_policies.enabled
+a|Filter by on_access_policies.scope.scan_without_extension
+
+
+|on_access_policies.scope.exclude_paths
+|string
+|query
+|False
+a|Filter by on_access_policies.scope.exclude_paths
+
+* maxLength: 255
+* minLength: 1
 
 
 |on_access_policies.mandatory
@@ -261,6 +258,13 @@ a|Filter by on_access_policies.enabled
 |query
 |False
 a|Filter by on_access_policies.mandatory
+
+
+|on_access_policies.enabled
+|boolean
+|query
+|False
+a|Filter by on_access_policies.enabled
 
 
 |on_access_policies.protocol
@@ -272,14 +276,11 @@ a|Filter by on_access_policies.protocol
 * Introduced in: 9.18
 
 
-|on_access_policies.name
-|string
+|enabled
+|boolean
 |query
 |False
-a|Filter by on_access_policies.name
-
-* maxLength: 256
-* minLength: 1
+a|Filter by enabled
 
 
 |fields

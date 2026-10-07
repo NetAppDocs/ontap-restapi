@@ -7,6 +7,7 @@ summary: 'Retrieve the S3 policies in an SVM configuration'
 ---
 
 = Retrieve the S3 policies in an SVM configuration
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/s3/services/{svm.uuid}/policies`#
 
@@ -34,38 +35,11 @@ Retrieves the S3 policies SVM configuration.
 |Required
 |Description
 
-|name
+|statements.actions
 |string
 |query
 |False
-a|Filter by name
-
-* maxLength: 128
-* minLength: 1
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|comment
-|string
-|query
-|False
-a|Filter by comment
-
-* maxLength: 256
-* minLength: 0
-
-
-|statements.index
-|integer
-|query
-|False
-a|Filter by statements.index
+a|Filter by statements.actions
 
 
 |statements.resources
@@ -73,6 +47,20 @@ a|Filter by statements.index
 |query
 |False
 a|Filter by statements.resources
+
+
+|statements.effect
+|string
+|query
+|False
+a|Filter by statements.effect
+
+
+|statements.index
+|integer
+|query
+|False
+a|Filter by statements.index
 
 
 |statements.sid
@@ -85,18 +73,31 @@ a|Filter by statements.sid
 * minLength: 0
 
 
-|statements.actions
+|name
 |string
 |query
 |False
-a|Filter by statements.actions
+a|Filter by name
+
+* maxLength: 128
+* minLength: 1
 
 
-|statements.effect
+|comment
 |string
 |query
 |False
-a|Filter by statements.effect
+a|Filter by comment
+
+* maxLength: 256
+* minLength: 0
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
 
 
 |read-only
@@ -352,7 +353,6 @@ a|For each resource, S3 supports a set of operations. The resource operations al
 * PutBucketPolicy - puts bucket policy on the bucket specified.
 * GetBucketPolicy - retrieves the bucket policy of a bucket.
 * DeleteBucketPolicy - deletes the policy created for a bucket.
-* AbortMultipartUpload - cancels an in-progress multipart upload for a bucket.
 The wildcard character "*" can be used to form a regular expression for specifying actions.
 
 

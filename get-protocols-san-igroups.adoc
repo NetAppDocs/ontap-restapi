@@ -7,6 +7,7 @@ summary: 'Retrieve initiator groups'
 ---
 
 = Retrieve initiator groups
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/igroups`#
 
@@ -45,18 +46,11 @@ There is an added computational cost to retrieving values for these properties. 
 |Required
 |Description
 
-|uuid
+|target.vendor_id
 |string
 |query
 |False
-a|Filter by uuid
-
-
-|target.firmware_revision
-|string
-|query
-|False
-a|Filter by target.firmware_revision
+a|Filter by target.vendor_id
 
 * Introduced in: 9.11
 
@@ -70,42 +64,30 @@ a|Filter by target.product_id
 * Introduced in: 9.11
 
 
-|target.vendor_id
+|target.firmware_revision
 |string
 |query
 |False
-a|Filter by target.vendor_id
+a|Filter by target.firmware_revision
 
 * Introduced in: 9.11
 
 
-|parent_igroups.uuid
-|string
+|supports_igroups
+|boolean
 |query
 |False
-a|Filter by parent_igroups.uuid
+a|Filter by supports_igroups
 
 * Introduced in: 9.9
 
 
-|parent_igroups.comment
+|name
 |string
 |query
 |False
-a|Filter by parent_igroups.comment
+a|Filter by name
 
-* Introduced in: 9.9
-* maxLength: 254
-* minLength: 0
-
-
-|parent_igroups.name
-|string
-|query
-|False
-a|Filter by parent_igroups.name
-
-* Introduced in: 9.9
 * maxLength: 96
 * minLength: 1
 
@@ -115,44 +97,6 @@ a|Filter by parent_igroups.name
 |query
 |False
 a|Filter by replication.state
-
-* Introduced in: 9.15
-
-
-|replication.error.igroup.local_svm
-|boolean
-|query
-|False
-a|Filter by replication.error.igroup.local_svm
-
-* Introduced in: 9.15
-
-
-|replication.error.igroup.name
-|string
-|query
-|False
-a|Filter by replication.error.igroup.name
-
-* Introduced in: 9.15
-* maxLength: 96
-* minLength: 1
-
-
-|replication.error.igroup.uuid
-|string
-|query
-|False
-a|Filter by replication.error.igroup.uuid
-
-* Introduced in: 9.15
-
-
-|replication.error.summary.code
-|string
-|query
-|False
-a|Filter by replication.error.summary.code
 
 * Introduced in: 9.15
 
@@ -175,6 +119,15 @@ a|Filter by replication.error.summary.arguments.code
 * Introduced in: 9.15
 
 
+|replication.error.summary.code
+|string
+|query
+|False
+a|Filter by replication.error.summary.code
+
+* Introduced in: 9.15
+
+
 |replication.error.summary.message
 |string
 |query
@@ -184,11 +137,31 @@ a|Filter by replication.error.summary.message
 * Introduced in: 9.15
 
 
-|replication.peer_svm.uuid
+|replication.error.igroup.name
 |string
 |query
 |False
-a|Filter by replication.peer_svm.uuid
+a|Filter by replication.error.igroup.name
+
+* Introduced in: 9.15
+* maxLength: 96
+* minLength: 1
+
+
+|replication.error.igroup.local_svm
+|boolean
+|query
+|False
+a|Filter by replication.error.igroup.local_svm
+
+* Introduced in: 9.15
+
+
+|replication.error.igroup.uuid
+|string
+|query
+|False
+a|Filter by replication.error.igroup.uuid
 
 * Introduced in: 9.15
 
@@ -202,60 +175,40 @@ a|Filter by replication.peer_svm.name
 * Introduced in: 9.15
 
 
-|os_type
+|replication.peer_svm.uuid
 |string
 |query
 |False
-a|Filter by os_type
+a|Filter by replication.peer_svm.uuid
+
+* Introduced in: 9.15
 
 
-|lun_maps.lun.name
+|igroups.uuid
 |string
 |query
 |False
-a|Filter by lun_maps.lun.name
+a|Filter by igroups.uuid
+
+* Introduced in: 9.9
 
 
-|lun_maps.lun.uuid
+|igroups.name
 |string
 |query
 |False
-a|Filter by lun_maps.lun.uuid
+a|Filter by igroups.name
+
+* Introduced in: 9.9
+* maxLength: 96
+* minLength: 1
 
 
-|lun_maps.lun.node.name
+|igroups.comment
 |string
 |query
 |False
-a|Filter by lun_maps.lun.node.name
-
-
-|lun_maps.lun.node.uuid
-|string
-|query
-|False
-a|Filter by lun_maps.lun.node.uuid
-
-
-|lun_maps.logical_unit_number
-|integer
-|query
-|False
-a|Filter by lun_maps.logical_unit_number
-
-
-|delete_on_unmap
-|boolean
-|query
-|False
-a|Filter by delete_on_unmap
-
-
-|comment
-|string
-|query
-|False
-a|Filter by comment
+a|Filter by igroups.comment
 
 * Introduced in: 9.9
 * maxLength: 254
@@ -267,6 +220,24 @@ a|Filter by comment
 |query
 |False
 a|Filter by protocol
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
+|comment
+|string
+|query
+|False
+a|Filter by comment
+
+* Introduced in: 9.9
+* maxLength: 254
+* minLength: 0
 
 
 |connectivity_tracking.connection_state
@@ -296,15 +267,6 @@ a|Filter by connectivity_tracking.required_nodes.uuid
 * Introduced in: 9.11
 
 
-|connectivity_tracking.alerts.summary.code
-|string
-|query
-|False
-a|Filter by connectivity_tracking.alerts.summary.code
-
-* Introduced in: 9.11
-
-
 |connectivity_tracking.alerts.summary.arguments.message
 |string
 |query
@@ -323,6 +285,15 @@ a|Filter by connectivity_tracking.alerts.summary.arguments.code
 * Introduced in: 9.11
 
 
+|connectivity_tracking.alerts.summary.code
+|string
+|query
+|False
+a|Filter by connectivity_tracking.alerts.summary.code
+
+* Introduced in: 9.11
+
+
 |connectivity_tracking.alerts.summary.message
 |string
 |query
@@ -330,6 +301,88 @@ a|Filter by connectivity_tracking.alerts.summary.arguments.code
 a|Filter by connectivity_tracking.alerts.summary.message
 
 * Introduced in: 9.11
+
+
+|initiators.proximity.peer_svms.name
+|string
+|query
+|False
+a|Filter by initiators.proximity.peer_svms.name
+
+* Introduced in: 9.15
+
+
+|initiators.proximity.peer_svms.uuid
+|string
+|query
+|False
+a|Filter by initiators.proximity.peer_svms.uuid
+
+* Introduced in: 9.15
+
+
+|initiators.proximity.local_svm
+|boolean
+|query
+|False
+a|Filter by initiators.proximity.local_svm
+
+* Introduced in: 9.15
+
+
+|initiators.name
+|string
+|query
+|False
+a|Filter by initiators.name
+
+* maxLength: 96
+* minLength: 1
+
+
+|initiators.comment
+|string
+|query
+|False
+a|Filter by initiators.comment
+
+* Introduced in: 9.9
+* maxLength: 254
+* minLength: 0
+
+
+|initiators.connectivity_tracking.connection_state
+|string
+|query
+|False
+a|Filter by initiators.connectivity_tracking.connection_state
+
+* Introduced in: 9.11
+
+
+|initiators.igroup.name
+|string
+|query
+|False
+a|Filter by initiators.igroup.name
+
+* Introduced in: 9.9
+* maxLength: 96
+* minLength: 1
+
+
+|initiators.igroup.uuid
+|string
+|query
+|False
+a|Filter by initiators.igroup.uuid
+
+
+|delete_on_unmap
+|boolean
+|query
+|False
+a|Filter by delete_on_unmap
 
 
 |portset.uuid
@@ -352,105 +405,39 @@ a|Filter by portset.name
 * minLength: 1
 
 
-|name
+|lun_maps.logical_unit_number
+|integer
+|query
+|False
+a|Filter by lun_maps.logical_unit_number
+
+
+|lun_maps.lun.name
 |string
 |query
 |False
-a|Filter by name
-
-* maxLength: 96
-* minLength: 1
+a|Filter by lun_maps.lun.name
 
 
-|supports_igroups
-|boolean
-|query
-|False
-a|Filter by supports_igroups
-
-* Introduced in: 9.9
-
-
-|initiators.proximity.peer_svms.uuid
+|lun_maps.lun.node.name
 |string
 |query
 |False
-a|Filter by initiators.proximity.peer_svms.uuid
-
-* Introduced in: 9.15
+a|Filter by lun_maps.lun.node.name
 
 
-|initiators.proximity.peer_svms.name
+|lun_maps.lun.node.uuid
 |string
 |query
 |False
-a|Filter by initiators.proximity.peer_svms.name
-
-* Introduced in: 9.15
+a|Filter by lun_maps.lun.node.uuid
 
 
-|initiators.proximity.local_svm
-|boolean
-|query
-|False
-a|Filter by initiators.proximity.local_svm
-
-* Introduced in: 9.15
-
-
-|initiators.igroup.name
+|lun_maps.lun.uuid
 |string
 |query
 |False
-a|Filter by initiators.igroup.name
-
-* Introduced in: 9.9
-* maxLength: 96
-* minLength: 1
-
-
-|initiators.igroup.uuid
-|string
-|query
-|False
-a|Filter by initiators.igroup.uuid
-
-
-|initiators.connectivity_tracking.connection_state
-|string
-|query
-|False
-a|Filter by initiators.connectivity_tracking.connection_state
-
-* Introduced in: 9.11
-
-
-|initiators.comment
-|string
-|query
-|False
-a|Filter by initiators.comment
-
-* Introduced in: 9.9
-* maxLength: 254
-* minLength: 0
-
-
-|initiators.name
-|string
-|query
-|False
-a|Filter by initiators.name
-
-* maxLength: 96
-* minLength: 1
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
+a|Filter by lun_maps.lun.uuid
 
 
 |svm.name
@@ -460,35 +447,49 @@ a|Filter by svm.uuid
 a|Filter by svm.name
 
 
-|igroups.uuid
+|svm.uuid
 |string
 |query
 |False
-a|Filter by igroups.uuid
-
-* Introduced in: 9.9
+a|Filter by svm.uuid
 
 
-|igroups.comment
+|os_type
 |string
 |query
 |False
-a|Filter by igroups.comment
+a|Filter by os_type
+
+
+|parent_igroups.comment
+|string
+|query
+|False
+a|Filter by parent_igroups.comment
 
 * Introduced in: 9.9
 * maxLength: 254
 * minLength: 0
 
 
-|igroups.name
+|parent_igroups.name
 |string
 |query
 |False
-a|Filter by igroups.name
+a|Filter by parent_igroups.name
 
 * Introduced in: 9.9
 * maxLength: 96
 * minLength: 1
+
+
+|parent_igroups.uuid
+|string
+|query
+|False
+a|Filter by parent_igroups.uuid
+
+* Introduced in: 9.9
 
 
 |fields
@@ -1639,7 +1640,7 @@ All initiators or nested initiator groups in an initiator group must be from the
 
 When an initiator group is created, the `protocol` property is used to restrict member initiators to Fibre Channel (_fcp_), iSCSI (_iscsi_), or both (_mixed_). Initiator groups within a nested hierarchy may not have conflicting protocols.
 
-Zero or more initiators or nested initiator groups can be supplied when the initiator group is created. After creation, initiators can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/initiators` endpoint. Initiator groups containing other initiator groups report the aggregated list of initiators from all nested initiator groups, but modifications of the initiator list must be performed on the initiator group that directly contains the initiators. See link:post-protocols-san-igroups-initiators(#-san-igroup-initiator-create)anddelete-protocols-san-igroups-initiators-.html<</SAN/igroup_initiator_create,POST /protocols/san/igroups/{igroup.uuid}/initiators>> and [DELETE /protocols/san/igroups/{igroup.uuid}/initiators/\{name}]  for more details.
+Zero or more initiators or nested initiator groups can be supplied when the initiator group is created. After creation, initiators can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/initiators` endpoint. Initiator groups containing other initiator groups report the aggregated list of initiators from all nested initiator groups, but modifications of the initiator list must be performed on the initiator group that directly contains the initiators. See link:post-protocols-san-igroups-initiators_-san-igroup-initiator-create_anddelete-protocols-san-igroups-initiators-.html<</SAN/igroup_initiator_create,POST /protocols/san/igroups/{igroup.uuid}/initiators>> and [DELETE /protocols/san/igroups/{igroup.uuid}/initiators/\{name}]  for more details.
 
 
 [cols=3*,options=header]
@@ -1680,7 +1681,7 @@ This array contains only the direct children of the initiator group. If the memb
 
 Zero or more nested initiator groups can be supplied when the initiator group is created. The initiator group will act as if it contains the aggregation of all initiators in any nested initiator groups.
 
-After creation, nested initiator groups can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/igroups` endpoint. See link:post-protocols-san-igroups-igroups(#-san-igroup-nested-create)anddelete-protocols-san-igroups-igroups-.html<</SAN/igroup_nested_create,POST /protocols/san/igroups/{igroup.uuid}/igroups>> and [DELETE /protocols/san/igroups/{igroup.uuid}/igroups/\{uuid}]  for more details.
+After creation, nested initiator groups can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/igroups` endpoint. See link:post-protocols-san-igroups-igroups_-san-igroup-nested-create_anddelete-protocols-san-igroups-igroups-.html<</SAN/igroup_nested_create,POST /protocols/san/igroups/{igroup.uuid}/igroups>> and [DELETE /protocols/san/igroups/{igroup.uuid}/igroups/\{uuid}]  for more details.
 
 
 |initiators
@@ -1691,7 +1692,7 @@ This property is mutually exclusive with the _igroups_ property during POST.
 
 During GET, this array contains initiators that are members of this group or any nested initiator groups below this group. When initiators of nested groups are returned, they include links to the initiator group that directly contains the initiator.
 
-Zero or more initiators can be supplied when the initiator group is created. After creation, initiators can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/initiators` endpoint. See link:post-protocols-san-igroups-initiators(#-san-igroup-initiator-create)anddelete-protocols-san-igroups-initiators-.html<</SAN/igroup_initiator_create,POST /protocols/san/igroups/{igroup.uuid}/initiators>> and [DELETE /protocols/san/igroups/{igroup.uuid}/initiators/\{name}]  for more details.
+Zero or more initiators can be supplied when the initiator group is created. After creation, initiators can be added or removed from the initiator group using the `/protocols/san/igroups/{igroup.uuid}/initiators` endpoint. See link:post-protocols-san-igroups-initiators_-san-igroup-initiator-create_anddelete-protocols-san-igroups-initiators-.html<</SAN/igroup_initiator_create,POST /protocols/san/igroups/{igroup.uuid}/initiators>> and [DELETE /protocols/san/igroups/{igroup.uuid}/initiators/\{name}]  for more details.
 
 
 |lun_maps

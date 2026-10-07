@@ -7,6 +7,7 @@ summary: 'Retrieve SnapMirror async and sync policy types'
 ---
 
 = Retrieve SnapMirror async and sync policy types
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/snapmirror/policies`#
 
@@ -42,32 +43,34 @@ GET "/api/snapmirror/policies"
 |Required
 |Description
 
-|name
+|uuid
 |string
 |query
 |False
-a|Filter by name
+a|Filter by uuid
 
 
-|svm.uuid
+|create_snapshot_on_source
+|boolean
+|query
+|False
+a|Filter by create_snapshot_on_source
+
+* Introduced in: 9.11
+
+
+|network_compression_enabled
+|boolean
+|query
+|False
+a|Filter by network_compression_enabled
+
+
+|sync_type
 |string
 |query
 |False
-a|Filter by svm.uuid
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|throttle
-|integer
-|query
-|False
-a|Filter by throttle
+a|Filter by sync_type
 
 
 |copy_latest_source_snapshot
@@ -86,25 +89,11 @@ a|Filter by copy_latest_source_snapshot
 a|Filter by comment
 
 
-|transfer_schedule.uuid
+|identity_preservation
 |string
 |query
 |False
-a|Filter by transfer_schedule.uuid
-
-
-|transfer_schedule.name
-|string
-|query
-|False
-a|Filter by transfer_schedule.name
-
-
-|network_compression_enabled
-|boolean
-|query
-|False
-a|Filter by network_compression_enabled
+a|Filter by identity_preservation
 
 
 |type
@@ -112,29 +101,6 @@ a|Filter by network_compression_enabled
 |query
 |False
 a|Filter by type
-
-
-|create_snapshot_on_source
-|boolean
-|query
-|False
-a|Filter by create_snapshot_on_source
-
-* Introduced in: 9.11
-
-
-|sync_common_snapshot_schedule.uuid
-|string
-|query
-|False
-a|Filter by sync_common_snapshot_schedule.uuid
-
-
-|sync_common_snapshot_schedule.name
-|string
-|query
-|False
-a|Filter by sync_common_snapshot_schedule.name
 
 
 |rpo
@@ -146,20 +112,11 @@ a|Filter by rpo
 * Introduced in: 9.10
 
 
-|copy_all_source_snapshots
-|boolean
-|query
-|False
-a|Filter by copy_all_source_snapshots
-
-* Introduced in: 9.10
-
-
-|sync_type
+|name
 |string
 |query
 |False
-a|Filter by sync_type
+a|Filter by name
 
 
 |scope
@@ -169,18 +126,64 @@ a|Filter by sync_type
 a|Filter by scope
 
 
-|uuid
+|copy_all_source_snapshots
+|boolean
+|query
+|False
+a|Filter by copy_all_source_snapshots
+
+* Introduced in: 9.10
+
+
+|transfer_schedule.name
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by transfer_schedule.name
 
 
-|retention.prefix
+|transfer_schedule.uuid
 |string
 |query
 |False
-a|Filter by retention.prefix
+a|Filter by transfer_schedule.uuid
+
+
+|throttle
+|integer
+|query
+|False
+a|Filter by throttle
+
+
+|sync_common_snapshot_schedule.name
+|string
+|query
+|False
+a|Filter by sync_common_snapshot_schedule.name
+
+
+|sync_common_snapshot_schedule.uuid
+|string
+|query
+|False
+a|Filter by sync_common_snapshot_schedule.uuid
+
+
+|retention.count
+|integer
+|query
+|False
+a|Filter by retention.count
+
+
+|retention.warn
+|integer
+|query
+|False
+a|Filter by retention.warn
+
+* Introduced in: 9.13
 
 
 |retention.period
@@ -192,11 +195,18 @@ a|Filter by retention.period
 * Introduced in: 9.11
 
 
-|retention.count
+|retention.creation_schedule.name
 |string
 |query
 |False
-a|Filter by retention.count
+a|Filter by retention.creation_schedule.name
+
+
+|retention.creation_schedule.uuid
+|string
+|query
+|False
+a|Filter by retention.creation_schedule.uuid
 
 
 |retention.preserve
@@ -215,34 +225,25 @@ a|Filter by retention.preserve
 a|Filter by retention.label
 
 
-|retention.creation_schedule.uuid
+|retention.prefix
 |string
 |query
 |False
-a|Filter by retention.creation_schedule.uuid
+a|Filter by retention.prefix
 
 
-|retention.creation_schedule.name
+|svm.name
 |string
 |query
 |False
-a|Filter by retention.creation_schedule.name
+a|Filter by svm.name
 
 
-|retention.warn
-|integer
-|query
-|False
-a|Filter by retention.warn
-
-* Introduced in: 9.13
-
-
-|identity_preservation
+|svm.uuid
 |string
 |query
 |False
-a|Filter by identity_preservation
+a|Filter by svm.uuid
 
 
 |fields
@@ -345,7 +346,7 @@ a|
       "name": "Asynchronous",
       "retention": [
         {
-          "count": "7",
+          "count": 7,
           "creation_schedule": {
             "_links": {
               "self": {
@@ -555,7 +556,7 @@ SnapMirror policy rule for retention.
 |Description
 
 |count
-|string
+|integer
 a|Number of snapshots to be kept for retention. Maximum value will differ based on type of relationship and scaling factor.
 
 

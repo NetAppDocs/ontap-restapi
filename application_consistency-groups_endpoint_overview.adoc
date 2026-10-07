@@ -7,6 +7,7 @@ summary: 'Manage application consistency groups'
 ---
 
 = Manage application consistency groups
+:imagesdir: ./media/
 
 
 
@@ -746,26 +747,6 @@ To add two NVMe Namespaces to an existing volume in an existing consistency grou
 
 ----
 curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{ "namespaces": [ { "name": "/vol/vol1/new_namespace", "space": { "size": "10M" }, "os_type": "windows", "provisioning_options": { "count": 2 }, "subsystem_map": { "subsystem": { "name": "mySubsystem", "hosts": [ { "nqn": "nqn.1992-08.com.netapp:sn.d04594ef915b4c73b642169e72e4c0b1:subsystem.host1" }, { "nqn": "nqn.1992-08.com.netapp:sn.d04594ef915b4c73b642169e72e4c0b1:subsystem.host2" } ] } } } ] }'
-
-#### Response:
-{
-"job": {
-  "uuid": "8c9cabf3-0a88-11ec-a449-005056bbcf9f",
-  "_links": {
-    "self": {
-      "href": "/api/cluster/jobs/8c9cabf3-0a88-11ec-a449-005056bbcf9f"
-    }
-  }
-}
-}
-----
-
-=== Assign a QoS policy when adding a new volume to a consistency group
-
-The following example adds a single new volume with a QoS policy to an existing consistency group.
-
-----
-curl -X PATCH 'https://<mgmt-ip>/api/application/consistency-groups/6f51748a-0a7f-11ec-a449-005056bbcf9f' -d '{"volumes":[{"name":"new_cg_vol","provisioning_options":{"action":"create"},"space":{"size":"500MB"},"qos":{"policy":{"name":"value-fixed"}}}]}'
 
 #### Response:
 {

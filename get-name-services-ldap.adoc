@@ -7,6 +7,7 @@ summary: 'Retrieve the LDAP configuration for all SVMs'
 ---
 
 = Retrieve the LDAP configuration for all SVMs
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/name-services/ldap`#
 
@@ -40,22 +41,40 @@ Retrieves the LDAP configurations for all SVMs.
 |Required
 |Description
 
-|base_dn
+|min_bind_level
 |string
 |query
 |False
-a|Filter by base_dn
+a|Filter by min_bind_level
 
 * Introduced in: 9.7
 
 
-|use_start_tls
+|bind_dn
+|string
+|query
+|False
+a|Filter by bind_dn
+
+* Introduced in: 9.7
+
+
+|netgroup_dn
+|string
+|query
+|False
+a|Filter by netgroup_dn
+
+* Introduced in: 9.9
+
+
+|bind_as_cifs_server
 |boolean
 |query
 |False
-a|Filter by use_start_tls
+a|Filter by bind_as_cifs_server
 
-* Introduced in: 9.7
+* Introduced in: 9.9
 
 
 |restrict_discovery_to_site
@@ -67,15 +86,6 @@ a|Filter by restrict_discovery_to_site
 * Introduced in: 9.13
 
 
-|netgroup_byhost_scope
-|string
-|query
-|False
-a|Filter by netgroup_byhost_scope
-
-* Introduced in: 9.9
-
-
 |user_dn
 |string
 |query
@@ -85,11 +95,29 @@ a|Filter by user_dn
 * Introduced in: 9.9
 
 
-|query_timeout
-|integer
+|use_start_tls
+|boolean
 |query
 |False
-a|Filter by query_timeout
+a|Filter by use_start_tls
+
+* Introduced in: 9.7
+
+
+|ldaps_enabled
+|boolean
+|query
+|False
+a|Filter by ldaps_enabled
+
+* Introduced in: 9.9
+
+
+|netgroup_byhost_scope
+|string
+|query
+|False
+a|Filter by netgroup_byhost_scope
 
 * Introduced in: 9.9
 
@@ -103,11 +131,119 @@ a|Filter by is_owner
 * Introduced in: 9.9
 
 
+|base_scope
+|string
+|query
+|False
+a|Filter by base_scope
+
+* Introduced in: 9.7
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+* Introduced in: 9.7
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+* Introduced in: 9.7
+
+
+|ad_domain
+|string
+|query
+|False
+a|Filter by ad_domain
+
+* Introduced in: 9.7
+
+
+|netgroup_byhost_dn
+|string
+|query
+|False
+a|Filter by netgroup_byhost_dn
+
+* Introduced in: 9.9
+
+
+|session_security
+|string
+|query
+|False
+a|Filter by session_security
+
+* Introduced in: 9.7
+
+
+|user_scope
+|string
+|query
+|False
+a|Filter by user_scope
+
+* Introduced in: 9.9
+
+
+|schema
+|string
+|query
+|False
+a|Filter by schema
+
+* Introduced in: 9.7
+
+
+|base_dn
+|string
+|query
+|False
+a|Filter by base_dn
+
+* Introduced in: 9.7
+
+
+|group_dn
+|string
+|query
+|False
+a|Filter by group_dn
+
+* Introduced in: 9.9
+
+
+|group_scope
+|string
+|query
+|False
+a|Filter by group_scope
+
+* Introduced in: 9.9
+
+
 |netgroup_scope
 |string
 |query
 |False
 a|Filter by netgroup_scope
+
+* Introduced in: 9.9
+
+
+|group_membership_filter
+|string
+|query
+|False
+a|Filter by group_membership_filter
 
 * Introduced in: 9.9
 
@@ -123,164 +259,11 @@ a|Filter by port
 * Min value: 1
 
 
-|bind_as_cifs_server
-|boolean
-|query
-|False
-a|Filter by bind_as_cifs_server
-
-* Introduced in: 9.9
-
-
-|group_membership_filter
-|string
-|query
-|False
-a|Filter by group_membership_filter
-
-* Introduced in: 9.9
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-* Introduced in: 9.7
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-* Introduced in: 9.7
-
-
-|referral_enabled
-|boolean
-|query
-|False
-a|Filter by referral_enabled
-
-* Introduced in: 9.9
-
-
-|ad_domain
-|string
-|query
-|False
-a|Filter by ad_domain
-
-* Introduced in: 9.7
-
-
-|ldaps_enabled
-|boolean
-|query
-|False
-a|Filter by ldaps_enabled
-
-* Introduced in: 9.9
-
-
-|netgroup_dn
-|string
-|query
-|False
-a|Filter by netgroup_dn
-
-* Introduced in: 9.9
-
-
-|user_scope
-|string
-|query
-|False
-a|Filter by user_scope
-
-* Introduced in: 9.9
-
-
-|bind_dn
-|string
-|query
-|False
-a|Filter by bind_dn
-
-* Introduced in: 9.7
-
-
-|is_netgroup_byhost_enabled
-|boolean
-|query
-|False
-a|Filter by is_netgroup_byhost_enabled
-
-* Introduced in: 9.9
-
-
-|base_scope
-|string
-|query
-|False
-a|Filter by base_scope
-
-* Introduced in: 9.7
-
-
-|schema
-|string
-|query
-|False
-a|Filter by schema
-
-* Introduced in: 9.7
-
-
-|min_bind_level
-|string
-|query
-|False
-a|Filter by min_bind_level
-
-* Introduced in: 9.7
-
-
-|servers
-|string
-|query
-|False
-a|Filter by servers
-
-* Introduced in: 9.7
-
-
-|group_scope
-|string
-|query
-|False
-a|Filter by group_scope
-
-* Introduced in: 9.9
-
-
 |preferred_ad_servers
 |string
 |query
 |False
 a|Filter by preferred_ad_servers
-
-* Introduced in: 9.7
-
-
-|session_security
-|string
-|query
-|False
-a|Filter by session_security
 
 * Introduced in: 9.7
 
@@ -294,58 +277,13 @@ a|Filter by try_channel_binding
 * Introduced in: 9.10
 
 
-|status.code
-|integer
-|query
-|False
-a|Filter by status.code
-
-* Introduced in: 9.9
-
-
-|status.ipv4.state
+|servers
 |string
 |query
 |False
-a|Filter by status.ipv4.state
+a|Filter by servers
 
-* Introduced in: 9.14
-
-
-|status.ipv4.dn_messages
-|string
-|query
-|False
-a|Filter by status.ipv4.dn_messages
-
-* Introduced in: 9.14
-
-
-|status.ipv4.code
-|integer
-|query
-|False
-a|Filter by status.ipv4.code
-
-* Introduced in: 9.14
-
-
-|status.ipv4.message
-|string
-|query
-|False
-a|Filter by status.ipv4.message
-
-* Introduced in: 9.14
-
-
-|status.state
-|string
-|query
-|False
-a|Filter by status.state
-
-* Introduced in: 9.9
+* Introduced in: 9.7
 
 
 |status.ipv4_state
@@ -357,38 +295,11 @@ a|Filter by status.ipv4_state
 * Introduced in: 9.13
 
 
-|status.dn_message
+|status.ipv6.message
 |string
 |query
 |False
-a|Filter by status.dn_message
-
-* Introduced in: 9.9
-
-
-|status.message
-|string
-|query
-|False
-a|Filter by status.message
-
-* Introduced in: 9.9
-
-
-|status.ipv6_state
-|string
-|query
-|False
-a|Filter by status.ipv6_state
-
-* Introduced in: 9.13
-
-
-|status.ipv6.state
-|string
-|query
-|False
-a|Filter by status.ipv6.state
+a|Filter by status.ipv6.message
 
 * Introduced in: 9.14
 
@@ -411,29 +322,119 @@ a|Filter by status.ipv6.code
 * Introduced in: 9.14
 
 
-|status.ipv6.message
+|status.ipv6.state
 |string
 |query
 |False
-a|Filter by status.ipv6.message
+a|Filter by status.ipv6.state
 
 * Introduced in: 9.14
 
 
-|group_dn
+|status.ipv4.message
 |string
 |query
 |False
-a|Filter by group_dn
+a|Filter by status.ipv4.message
+
+* Introduced in: 9.14
+
+
+|status.ipv4.dn_messages
+|string
+|query
+|False
+a|Filter by status.ipv4.dn_messages
+
+* Introduced in: 9.14
+
+
+|status.ipv4.code
+|integer
+|query
+|False
+a|Filter by status.ipv4.code
+
+* Introduced in: 9.14
+
+
+|status.ipv4.state
+|string
+|query
+|False
+a|Filter by status.ipv4.state
+
+* Introduced in: 9.14
+
+
+|status.state
+|string
+|query
+|False
+a|Filter by status.state
 
 * Introduced in: 9.9
 
 
-|netgroup_byhost_dn
+|status.ipv6_state
 |string
 |query
 |False
-a|Filter by netgroup_byhost_dn
+a|Filter by status.ipv6_state
+
+* Introduced in: 9.13
+
+
+|status.message
+|string
+|query
+|False
+a|Filter by status.message
+
+* Introduced in: 9.9
+
+
+|status.code
+|integer
+|query
+|False
+a|Filter by status.code
+
+* Introduced in: 9.9
+
+
+|status.dn_message
+|string
+|query
+|False
+a|Filter by status.dn_message
+
+* Introduced in: 9.9
+
+
+|referral_enabled
+|boolean
+|query
+|False
+a|Filter by referral_enabled
+
+* Introduced in: 9.9
+
+
+|is_netgroup_byhost_enabled
+|boolean
+|query
+|False
+a|Filter by is_netgroup_byhost_enabled
+
+* Introduced in: 9.9
+
+
+|query_timeout
+|integer
+|query
+|False
+a|Filter by query_timeout
 
 * Introduced in: 9.9
 

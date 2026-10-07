@@ -7,6 +7,7 @@ summary: 'Retrieve Ethernet switch ports'
 ---
 
 = Retrieve Ethernet switch ports
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/network/ethernet/switch/ports`#
 
@@ -34,132 +35,6 @@ Retrieves the ethernet switch ports.
 |Required
 |Description
 
-|mtu
-|integer
-|query
-|False
-a|Filter by mtu
-
-
-|type
-|string
-|query
-|False
-a|Filter by type
-
-
-|remote_port.name
-|string
-|query
-|False
-a|Filter by remote_port.name
-
-
-|remote_port.mtu
-|integer
-|query
-|False
-a|Filter by remote_port.mtu
-
-
-|remote_port.functional_roles
-|string
-|query
-|False
-a|Filter by remote_port.functional_roles
-
-* Introduced in: 9.17
-
-
-|remote_port.device.discovered_name
-|string
-|query
-|False
-a|Filter by remote_port.device.discovered_name
-
-* Introduced in: 9.17
-
-
-|remote_port.device.node.name
-|string
-|query
-|False
-a|Filter by remote_port.device.node.name
-
-
-|remote_port.device.node.uuid
-|string
-|query
-|False
-a|Filter by remote_port.device.node.uuid
-
-
-|remote_port.device.shelf.uid
-|string
-|query
-|False
-a|Filter by remote_port.device.shelf.uid
-
-
-|remote_port.device.shelf.name
-|string
-|query
-|False
-a|Filter by remote_port.device.shelf.name
-
-* Introduced in: 9.12
-
-
-|remote_port.device.shelf.module
-|string
-|query
-|False
-a|Filter by remote_port.device.shelf.module
-
-* Introduced in: 9.12
-
-
-|remote_port.device.dcn.uuid
-|string
-|query
-|False
-a|Filter by remote_port.device.dcn.uuid
-
-* Introduced in: 9.18
-
-
-|remote_port.device.dcn.name
-|string
-|query
-|False
-a|Filter by remote_port.device.dcn.name
-
-* Introduced in: 9.18
-
-
-|remote_port.device.dcn.serial_number
-|string
-|query
-|False
-a|Filter by remote_port.device.dcn.serial_number
-
-* Introduced in: 9.18
-
-
-|state
-|string
-|query
-|False
-a|Filter by state
-
-
-|isl
-|boolean
-|query
-|False
-a|Filter by isl
-
-
 |switch.name
 |string
 |query
@@ -167,27 +42,13 @@ a|Filter by isl
 a|Filter by switch.name
 
 
-|mac_address
+|identity.breakout.physical_port
 |string
 |query
 |False
-a|Filter by mac_address
+a|Filter by identity.breakout.physical_port
 
-
-|identity.name
-|string
-|query
-|False
-a|Filter by identity.name
-
-
-|identity.slot
-|integer
-|query
-|False
-a|Filter by identity.slot
-
-* Introduced in: 9.19
+* Introduced in: 9.17
 
 
 |identity.breakout.number
@@ -195,15 +56,6 @@ a|Filter by identity.slot
 |query
 |False
 a|Filter by identity.breakout.number
-
-* Introduced in: 9.17
-
-
-|identity.breakout.physical_port
-|string
-|query
-|False
-a|Filter by identity.breakout.physical_port
 
 * Introduced in: 9.17
 
@@ -222,6 +74,29 @@ a|Filter by identity.number
 a|Filter by identity.index
 
 
+|identity.name
+|string
+|query
+|False
+a|Filter by identity.name
+
+
+|vpc_peer_link
+|boolean
+|query
+|False
+a|Filter by vpc_peer_link
+
+* Introduced in: 9.15
+
+
+|mtu
+|integer
+|query
+|False
+a|Filter by mtu
+
+
 |configured
 |string
 |query
@@ -229,11 +104,34 @@ a|Filter by identity.index
 a|Filter by configured
 
 
+|isl
+|boolean
+|query
+|False
+a|Filter by isl
+
+
+|duplex_type
+|string
+|query
+|False
+a|Filter by duplex_type
+
+
 |roles.type
 |string
 |query
 |False
 a|Filter by roles.type
+
+* Introduced in: 9.17
+
+
+|roles.dr_group
+|string
+|query
+|False
+a|Filter by roles.dr_group
 
 * Introduced in: 9.17
 
@@ -248,13 +146,11 @@ a|Filter by roles.zone
 * Min value: 1
 
 
-|roles.dr_group
+|mac_address
 |string
 |query
 |False
-a|Filter by roles.dr_group
-
-* Introduced in: 9.17
+a|Filter by mac_address
 
 
 |speed
@@ -264,48 +160,109 @@ a|Filter by roles.dr_group
 a|Filter by speed
 
 
-|duplex_type
+|state
 |string
 |query
 |False
-a|Filter by duplex_type
+a|Filter by state
 
 
-|vlan_id
+|remote_port.functional_roles
+|string
+|query
+|False
+a|Filter by remote_port.functional_roles
+
+* Introduced in: 9.17
+
+
+|remote_port.device.node.name
+|string
+|query
+|False
+a|Filter by remote_port.device.node.name
+
+
+|remote_port.device.node.uuid
+|string
+|query
+|False
+a|Filter by remote_port.device.node.uuid
+
+
+|remote_port.device.discovered_name
+|string
+|query
+|False
+a|Filter by remote_port.device.discovered_name
+
+* Introduced in: 9.17
+
+
+|remote_port.device.dcn.serial_number
+|string
+|query
+|False
+a|Filter by remote_port.device.dcn.serial_number
+
+* Introduced in: 9.18
+
+
+|remote_port.device.dcn.name
+|string
+|query
+|False
+a|Filter by remote_port.device.dcn.name
+
+* Introduced in: 9.18
+
+
+|remote_port.device.dcn.uuid
+|string
+|query
+|False
+a|Filter by remote_port.device.dcn.uuid
+
+* Introduced in: 9.18
+
+
+|remote_port.device.shelf.name
+|string
+|query
+|False
+a|Filter by remote_port.device.shelf.name
+
+* Introduced in: 9.12
+
+
+|remote_port.device.shelf.uid
+|string
+|query
+|False
+a|Filter by remote_port.device.shelf.uid
+
+
+|remote_port.device.shelf.module
+|string
+|query
+|False
+a|Filter by remote_port.device.shelf.module
+
+* Introduced in: 9.12
+
+
+|remote_port.mtu
 |integer
 |query
 |False
-a|Filter by vlan_id
+a|Filter by remote_port.mtu
 
 
-|vpc_peer_link
-|boolean
+|remote_port.name
+|string
 |query
 |False
-a|Filter by vpc_peer_link
-
-* Introduced in: 9.15
-
-
-|statistics.receive_raw.errors
-|integer
-|query
-|False
-a|Filter by statistics.receive_raw.errors
-
-
-|statistics.receive_raw.packets
-|integer
-|query
-|False
-a|Filter by statistics.receive_raw.packets
-
-
-|statistics.receive_raw.discards
-|integer
-|query
-|False
-a|Filter by statistics.receive_raw.discards
+a|Filter by remote_port.name
 
 
 |statistics.timestamp
@@ -315,6 +272,13 @@ a|Filter by statistics.receive_raw.discards
 a|Filter by statistics.timestamp
 
 * Introduced in: 9.17
+
+
+|statistics.transmit_raw.discards
+|integer
+|query
+|False
+a|Filter by statistics.transmit_raw.discards
 
 
 |statistics.transmit_raw.errors
@@ -331,11 +295,39 @@ a|Filter by statistics.transmit_raw.errors
 a|Filter by statistics.transmit_raw.packets
 
 
-|statistics.transmit_raw.discards
+|statistics.receive_raw.discards
 |integer
 |query
 |False
-a|Filter by statistics.transmit_raw.discards
+a|Filter by statistics.receive_raw.discards
+
+
+|statistics.receive_raw.errors
+|integer
+|query
+|False
+a|Filter by statistics.receive_raw.errors
+
+
+|statistics.receive_raw.packets
+|integer
+|query
+|False
+a|Filter by statistics.receive_raw.packets
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|vlan_id
+|integer
+|query
+|False
+a|Filter by vlan_id
 
 
 |fields
@@ -439,8 +431,7 @@ a|
         },
         "index": 0,
         "name": "string",
-        "number": 0,
-        "slot": 0
+        "number": 0
       },
       "mac_address": "string",
       "mtu": 0,
@@ -672,11 +663,6 @@ a|Interface Name.
 |number
 |integer
 a|Interface Number.
-
-
-|slot
-|integer
-a|Interface slot.
 
 
 |===

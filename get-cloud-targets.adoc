@@ -7,6 +7,7 @@ summary: 'Retrieve cloud targets in the cluster'
 ---
 
 = Retrieve cloud targets in the cluster
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cloud/targets`#
 
@@ -31,22 +32,32 @@ Retrieves the collection of cloud targets in the cluster.
 |Required
 |Description
 
-|url_style
+|name
 |string
 |query
 |False
-a|Filter by url_style
-
-* Introduced in: 9.8
+a|Filter by name
 
 
-|server_side_encryption
+|container
 |string
 |query
 |False
-a|Filter by server_side_encryption
+a|Filter by container
 
-* Introduced in: 9.7
+
+|cap_url
+|string
+|query
+|False
+a|Filter by cap_url
+
+
+|access_key
+|string
+|query
+|False
+a|Filter by access_key
 
 
 |certificate_validation_enabled
@@ -54,6 +65,27 @@ a|Filter by server_side_encryption
 |query
 |False
 a|Filter by certificate_validation_enabled
+
+
+|port
+|integer
+|query
+|False
+a|Filter by port
+
+
+|owner
+|string
+|query
+|False
+a|Filter by owner
+
+
+|snapmirror_use
+|string
+|query
+|False
+a|Filter by snapmirror_use
 
 
 |uuid
@@ -70,38 +102,6 @@ a|Filter by uuid
 a|Filter by use_http_proxy
 
 * Introduced in: 9.7
-
-
-|server
-|string
-|query
-|False
-a|Filter by server
-
-
-|scope
-|string
-|query
-|False
-a|Filter by scope
-
-* Introduced in: 9.12
-
-
-|used
-|integer
-|query
-|False
-a|Filter by used
-
-
-|read_latency_warning_threshold
-|integer
-|query
-|False
-a|Filter by read_latency_warning_threshold
-
-* Introduced in: 9.15
 
 
 |cluster.name
@@ -122,18 +122,57 @@ a|Filter by cluster.uuid
 * Introduced in: 9.7
 
 
-|authentication_type
+|url_style
 |string
 |query
 |False
-a|Filter by authentication_type
+a|Filter by url_style
+
+* Introduced in: 9.8
 
 
-|cap_url
+|server
 |string
 |query
 |False
-a|Filter by cap_url
+a|Filter by server
+
+
+|used
+|integer
+|query
+|False
+a|Filter by used
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|read_latency_warning_threshold
+|integer
+|query
+|False
+a|Filter by read_latency_warning_threshold
+
+* Introduced in: 9.15
+
+
+|azure_account
+|string
+|query
+|False
+a|Filter by azure_account
 
 
 |ssl_enabled
@@ -141,6 +180,20 @@ a|Filter by cap_url
 |query
 |False
 a|Filter by ssl_enabled
+
+
+|authentication_type
+|string
+|query
+|False
+a|Filter by authentication_type
+
+
+|provider_type
+|string
+|query
+|False
+a|Filter by provider_type
 
 
 |ipspace.name
@@ -157,74 +210,22 @@ a|Filter by ipspace.name
 a|Filter by ipspace.uuid
 
 
-|snapmirror_use
+|server_side_encryption
 |string
 |query
 |False
-a|Filter by snapmirror_use
+a|Filter by server_side_encryption
+
+* Introduced in: 9.7
 
 
-|port
-|integer
-|query
-|False
-a|Filter by port
-
-
-|owner
+|scope
 |string
 |query
 |False
-a|Filter by owner
+a|Filter by scope
 
-
-|container
-|string
-|query
-|False
-a|Filter by container
-
-
-|provider_type
-|string
-|query
-|False
-a|Filter by provider_type
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|access_key
-|string
-|query
-|False
-a|Filter by access_key
-
-
-|azure_account
-|string
-|query
-|False
-a|Filter by azure_account
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
+* Introduced in: 9.12
 
 
 |fields
@@ -626,7 +627,7 @@ a|Port number of the object store that ONTAP uses when establishing a connection
 
 |provider_type
 |string
-a|Type of cloud provider. Allowed values depend on owner type. For FabricPool, AliCloud, AWS_S3, Azure_Cloud, GoogleCloud, IBM_COS, SGWS, and ONTAP_S3 are allowed.  For SnapMirror, the valid values are AWS_S3 or SGWS. For FabricLink, AWS_S3, SGWS, S3_Compatible, S3EMU, LOOPBACK and ONTAP_S3 are allowed.
+a|Type of cloud provider. Allowed values depend on owner type.  For FabricPool, AliCloud, AWS_S3, Azure_Cloud, GoogleCloud, IBM_COS, SGWS, and ONTAP_S3 are allowed.  For SnapMirror, the valid values are AWS_S3 or SGWS. For FabricLink, AWS_S3, SGWS, S3_Compatible, S3EMU, LOOPBACK and ONTAP_S3 are allowed.
 
 * Introduced in: 9.6
 * readCreate: 1

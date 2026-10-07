@@ -7,6 +7,7 @@ summary: 'Retrieve schedules'
 ---
 
 = Retrieve schedules
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/cluster/schedules`#
 
@@ -26,11 +27,49 @@ Retrieves a schedule.
 |Required
 |Description
 
-|uuid
+|name
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by name
+
+* maxLength: 256
+* minLength: 1
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+* Introduced in: 9.10
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+* Introduced in: 9.10
+
+
+|type
+|string
+|query
+|False
+a|Filter by type
+
+
+|cron.hours
+|integer
+|query
+|False
+a|Filter by cron.hours
+
+* Max value: 23
+* Min value: 0
 
 
 |cron.days
@@ -43,14 +82,14 @@ a|Filter by cron.days
 * Min value: 1
 
 
-|cron.hours
+|cron.months
 |integer
 |query
 |False
-a|Filter by cron.hours
+a|Filter by cron.months
 
-* Max value: 23
-* Min value: 0
+* Max value: 12
+* Min value: 1
 
 
 |cron.minutes
@@ -73,33 +112,6 @@ a|Filter by cron.weekdays
 * Min value: 0
 
 
-|cron.months
-|integer
-|query
-|False
-a|Filter by cron.months
-
-* Max value: 12
-* Min value: 1
-
-
-|type
-|string
-|query
-|False
-a|Filter by type
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
-
-* maxLength: 256
-* minLength: 1
-
-
 |interval
 |string
 |query
@@ -107,22 +119,20 @@ a|Filter by name
 a|Filter by interval
 
 
-|svm.uuid
+|scope
 |string
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by scope
 
 * Introduced in: 9.10
 
 
-|svm.name
+|uuid
 |string
 |query
 |False
-a|Filter by svm.name
-
-* Introduced in: 9.10
+a|Filter by uuid
 
 
 |cluster.name
@@ -137,15 +147,6 @@ a|Filter by cluster.name
 |query
 |False
 a|Filter by cluster.uuid
-
-
-|scope
-|string
-|query
-|False
-a|Filter by scope
-
-* Introduced in: 9.10
 
 
 |fields

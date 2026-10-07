@@ -7,6 +7,7 @@ summary: 'Retrieve the SVM migration status'
 ---
 
 = Retrieve the SVM migration status
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/svm/migrations`#
 
@@ -30,13 +31,11 @@ Retrieves the SVM migration status.
 |Required
 |Description
 
-|throttle
-|integer
+|state
+|string
 |query
 |False
-a|Filter by throttle
-
-* Introduced in: 9.12
+a|Filter by state
 
 
 |post_ponr_retry_count
@@ -48,60 +47,11 @@ a|Filter by post_ponr_retry_count
 * Introduced in: 9.17
 
 
-|auto_cutover
-|boolean
-|query
-|False
-a|Filter by auto_cutover
-
-
-|last_failed_state
-|string
-|query
-|False
-a|Filter by last_failed_state
-
-
-|point_of_no_return
-|boolean
-|query
-|False
-a|Filter by point_of_no_return
-
-
-|last_operation
-|string
-|query
-|False
-a|Filter by last_operation
-
-
 |auto_source_cleanup
 |boolean
 |query
 |False
 a|Filter by auto_source_cleanup
-
-
-|source.svm.uuid
-|string
-|query
-|False
-a|Filter by source.svm.uuid
-
-
-|source.svm.name
-|string
-|query
-|False
-a|Filter by source.svm.name
-
-
-|source.cluster.uuid
-|string
-|query
-|False
-a|Filter by source.cluster.uuid
 
 
 |source.cluster.name
@@ -111,25 +61,60 @@ a|Filter by source.cluster.uuid
 a|Filter by source.cluster.name
 
 
+|source.cluster.uuid
+|string
+|query
+|False
+a|Filter by source.cluster.uuid
+
+
+|source.svm.name
+|string
+|query
+|False
+a|Filter by source.svm.name
+
+
+|source.svm.uuid
+|string
+|query
+|False
+a|Filter by source.svm.uuid
+
+
+|point_of_no_return
+|boolean
+|query
+|False
+a|Filter by point_of_no_return
+
+
+|destination.ipspace.name
+|string
+|query
+|False
+a|Filter by destination.ipspace.name
+
+
+|destination.ipspace.uuid
+|string
+|query
+|False
+a|Filter by destination.ipspace.uuid
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
+
+
 |current_operation
 |string
 |query
 |False
 a|Filter by current_operation
-
-
-|state
-|string
-|query
-|False
-a|Filter by state
-
-
-|restart_count
-|integer
-|query
-|False
-a|Filter by restart_count
 
 
 |messages.message
@@ -146,18 +131,48 @@ a|Filter by messages.message
 a|Filter by messages.code
 
 
-|uuid
+|auto_cutover
+|boolean
+|query
+|False
+a|Filter by auto_cutover
+
+
+|restart_count
+|integer
+|query
+|False
+a|Filter by restart_count
+
+
+|throttle
+|integer
+|query
+|False
+a|Filter by throttle
+
+* Introduced in: 9.12
+
+
+|last_operation
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by last_operation
 
 
-|time_metrics.end_time
+|time_metrics.start_time
 |string
 |query
 |False
-a|Filter by time_metrics.end_time
+a|Filter by time_metrics.start_time
+
+
+|time_metrics.last_resume_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_resume_time
 
 
 |time_metrics.last_pause_time
@@ -165,6 +180,15 @@ a|Filter by time_metrics.end_time
 |query
 |False
 a|Filter by time_metrics.last_pause_time
+
+
+|time_metrics.last_post_ponr_retry_time
+|string
+|query
+|False
+a|Filter by time_metrics.last_post_ponr_retry_time
+
+* Introduced in: 9.17
 
 
 |time_metrics.cutover_start_time
@@ -181,29 +205,6 @@ a|Filter by time_metrics.cutover_start_time
 a|Filter by time_metrics.cutover_trigger_time
 
 
-|time_metrics.last_resume_time
-|string
-|query
-|False
-a|Filter by time_metrics.last_resume_time
-
-
-|time_metrics.start_time
-|string
-|query
-|False
-a|Filter by time_metrics.start_time
-
-
-|time_metrics.last_post_ponr_retry_time
-|string
-|query
-|False
-a|Filter by time_metrics.last_post_ponr_retry_time
-
-* Introduced in: 9.17
-
-
 |time_metrics.cutover_complete_time
 |string
 |query
@@ -211,18 +212,18 @@ a|Filter by time_metrics.last_post_ponr_retry_time
 a|Filter by time_metrics.cutover_complete_time
 
 
-|destination.ipspace.name
+|time_metrics.end_time
 |string
 |query
 |False
-a|Filter by destination.ipspace.name
+a|Filter by time_metrics.end_time
 
 
-|destination.ipspace.uuid
+|last_failed_state
 |string
 |query
 |False
-a|Filter by destination.ipspace.uuid
+a|Filter by last_failed_state
 
 
 |fields
