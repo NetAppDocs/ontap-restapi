@@ -7,6 +7,7 @@ summary: 'Retrieve snapshot policies'
 ---
 
 = Retrieve snapshot policies
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/storage/snapshot-policies`#
 
@@ -34,25 +35,18 @@ Retrieves a collection of snapshot policies.
 |Required
 |Description
 
-|uuid
+|enabled
+|boolean
+|query
+|False
+a|Filter by enabled
+
+
+|name
 |string
 |query
 |False
-a|Filter by uuid
-
-
-|comment
-|string
-|query
-|False
-a|Filter by comment
-
-
-|svm.uuid
-|string
-|query
-|False
-a|Filter by svm.uuid
+a|Filter by name
 
 
 |svm.name
@@ -62,11 +56,18 @@ a|Filter by svm.uuid
 a|Filter by svm.name
 
 
-|copies.prefix
+|svm.uuid
 |string
 |query
 |False
-a|Filter by copies.prefix
+a|Filter by svm.uuid
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
 
 
 |copies.count
@@ -76,13 +77,18 @@ a|Filter by copies.prefix
 a|Filter by copies.count
 
 
-|copies.retention_period
+|copies.snapmirror_label
 |string
 |query
 |False
-a|Filter by copies.retention_period
+a|Filter by copies.snapmirror_label
 
-* Introduced in: 9.12
+
+|copies.schedule.name
+|string
+|query
+|False
+a|Filter by copies.schedule.name
 
 
 |copies.schedule.uuid
@@ -94,28 +100,20 @@ a|Filter by copies.schedule.uuid
 * Introduced in: 9.14
 
 
-|copies.schedule.name
+|copies.retention_period
 |string
 |query
 |False
-a|Filter by copies.schedule.name
+a|Filter by copies.retention_period
+
+* Introduced in: 9.12
 
 
-|copies.snapmirror_label
+|copies.prefix
 |string
 |query
 |False
-a|Filter by copies.snapmirror_label
-
-* maxLength: 31
-* minLength: 1
-
-
-|name
-|string
-|query
-|False
-a|Filter by name
+a|Filter by copies.prefix
 
 
 |scope
@@ -125,11 +123,11 @@ a|Filter by name
 a|Filter by scope
 
 
-|enabled
-|boolean
+|comment
+|string
 |query
 |False
-a|Filter by enabled
+a|Filter by comment
 
 
 |fields

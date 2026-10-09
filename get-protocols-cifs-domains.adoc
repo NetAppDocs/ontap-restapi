@@ -7,6 +7,7 @@ summary: 'Retrieve the CIFS domain-related information of all SVMs'
 ---
 
 = Retrieve the CIFS domain-related information of all SVMs
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/domains`#
 
@@ -38,6 +39,20 @@ Retrieves the CIFS domain-related information of all SVMs.
 |Required
 |Description
 
+|password_schedule.schedule_warn_message
+|string
+|query
+|False
+a|Filter by password_schedule.schedule_warn_message
+
+
+|password_schedule.schedule_last_changed_time
+|string
+|query
+|False
+a|Filter by password_schedule.schedule_last_changed_time
+
+
 |password_schedule.schedule_randomized_minute
 |integer
 |query
@@ -48,20 +63,6 @@ a|Filter by password_schedule.schedule_randomized_minute
 * Min value: 1
 
 
-|password_schedule.schedule_last_changed_time
-|string
-|query
-|False
-a|Filter by password_schedule.schedule_last_changed_time
-
-
-|password_schedule.schedule_enabled
-|boolean
-|query
-|False
-a|Filter by password_schedule.schedule_enabled
-
-
 |password_schedule.schedule_description
 |string
 |query
@@ -69,11 +70,11 @@ a|Filter by password_schedule.schedule_enabled
 a|Filter by password_schedule.schedule_description
 
 
-|password_schedule.schedule_warn_message
-|string
+|password_schedule.schedule_enabled
+|boolean
 |query
 |False
-a|Filter by password_schedule.schedule_warn_message
+a|Filter by password_schedule.schedule_enabled
 
 
 |password_schedule.schedule_weekly_interval
@@ -86,25 +87,13 @@ a|Filter by password_schedule.schedule_weekly_interval
 * Min value: 1
 
 
-|svm.uuid
+|tenant_id
 |string
 |query
 |False
-a|Filter by svm.uuid
+a|Filter by tenant_id
 
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
-
-
-|trust_relationships.trusted_domains
-|string
-|query
-|False
-a|Filter by trust_relationships.trusted_domains
+* Introduced in: 9.16
 
 
 |trust_relationships.node.name
@@ -121,11 +110,48 @@ a|Filter by trust_relationships.node.name
 a|Filter by trust_relationships.node.uuid
 
 
+|trust_relationships.trusted_domains
+|string
+|query
+|False
+a|Filter by trust_relationships.trusted_domains
+
+
 |trust_relationships.home_domain
 |string
 |query
 |False
 a|Filter by trust_relationships.home_domain
+
+
+|svm.name
+|string
+|query
+|False
+a|Filter by svm.name
+
+
+|svm.uuid
+|string
+|query
+|False
+a|Filter by svm.uuid
+
+
+|server_discovery_mode
+|string
+|query
+|False
+a|Filter by server_discovery_mode
+
+* Introduced in: 9.13
+
+
+|name_mapping.trusted_domains
+|string
+|query
+|False
+a|Filter by name_mapping.trusted_domains
 
 
 |client_id
@@ -137,41 +163,18 @@ a|Filter by client_id
 * Introduced in: 9.16
 
 
-|tenant_id
+|preferred_dcs.server_ip
 |string
 |query
 |False
-a|Filter by tenant_id
-
-* Introduced in: 9.16
+a|Filter by preferred_dcs.server_ip
 
 
-|name_mapping.trusted_domains
+|preferred_dcs.fqdn
 |string
 |query
 |False
-a|Filter by name_mapping.trusted_domains
-
-
-|discovered_servers.server_name
-|string
-|query
-|False
-a|Filter by discovered_servers.server_name
-
-
-|discovered_servers.domain
-|string
-|query
-|False
-a|Filter by discovered_servers.domain
-
-
-|discovered_servers.server_ip
-|string
-|query
-|False
-a|Filter by discovered_servers.server_ip
+a|Filter by preferred_dcs.fqdn
 
 
 |discovered_servers.node.name
@@ -188,20 +191,6 @@ a|Filter by discovered_servers.node.name
 a|Filter by discovered_servers.node.uuid
 
 
-|discovered_servers.server_type
-|string
-|query
-|False
-a|Filter by discovered_servers.server_type
-
-
-|discovered_servers.state
-|string
-|query
-|False
-a|Filter by discovered_servers.state
-
-
 |discovered_servers.preference
 |string
 |query
@@ -209,27 +198,39 @@ a|Filter by discovered_servers.state
 a|Filter by discovered_servers.preference
 
 
-|server_discovery_mode
+|discovered_servers.server_name
 |string
 |query
 |False
-a|Filter by server_discovery_mode
-
-* Introduced in: 9.13
+a|Filter by discovered_servers.server_name
 
 
-|preferred_dcs.fqdn
+|discovered_servers.server_type
 |string
 |query
 |False
-a|Filter by preferred_dcs.fqdn
+a|Filter by discovered_servers.server_type
 
 
-|preferred_dcs.server_ip
+|discovered_servers.server_ip
 |string
 |query
 |False
-a|Filter by preferred_dcs.server_ip
+a|Filter by discovered_servers.server_ip
+
+
+|discovered_servers.domain
+|string
+|query
+|False
+a|Filter by discovered_servers.domain
+
+
+|discovered_servers.state
+|string
+|query
+|False
+a|Filter by discovered_servers.state
 
 
 |fields

@@ -7,6 +7,7 @@ summary: 'Add primary key servers to an external key manager'
 ---
 
 = Add primary key servers to an external key manager
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/security/key-managers/{uuid}/key-servers`#
 
@@ -67,11 +68,6 @@ a|The default is false.  If set to true, the records are returned.
 a|Password credentials for connecting with the key server. This is not audited.
 
 
-|port
-|integer
-a|TCP port number for the key server.
-
-
 |records
 |array[link:#records[records]]
 a|An array of key servers specified to add multiple key servers to a key manager in a single API call. Valid in POST only and not valid if `server` is provided.
@@ -91,11 +87,9 @@ a|External key server for key management. If no port is provided, a default port
 [source,json,subs=+macros]
 {
   "password": "password",
-  "port": 5698,
   "records": [
     {
       "password": "password",
-      "port": 5698,
       "server": "bulkkeyserver.com:5698"
     }
   ],
@@ -137,11 +131,9 @@ a|
   "records": [
     {
       "password": "password",
-      "port": 5698,
       "records": [
         {
           "password": "password",
-          "port": 5698,
           "server": "bulkkeyserver.com:5698"
         }
       ],
@@ -344,11 +336,6 @@ records
 a|Password credentials for connecting with the key server. This is not audited.
 
 
-|port
-|integer
-a|TCP port number for the key server.
-
-
 |server
 |string
 a|External key server for key management. If no port is provided, a default port of 5696 is used. Not valid in POST if `records` is provided.
@@ -370,11 +357,6 @@ key_server
 |password
 |string
 a|Password credentials for connecting with the key server. This is not audited.
-
-
-|port
-|integer
-a|TCP port number for the key server.
 
 
 |records

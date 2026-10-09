@@ -7,6 +7,7 @@ summary: 'Retrieve applied group policy objects for an SVM'
 ---
 
 = Retrieve applied group policy objects for an SVM
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/cifs/group-policies/{svm.uuid}/objects`#
 
@@ -30,55 +31,18 @@ Retrieves applied group policy objects for specified SVM.
 |Required
 |Description
 
-|name
+|registry_settings.branchcache.supported_hash_version
 |string
 |query
 |False
-a|Filter by name
-
-* minLength: 1
+a|Filter by registry_settings.branchcache.supported_hash_version
 
 
-|version
-|integer
-|query
-|False
-a|Filter by version
-
-
-|svm.name
+|registry_settings.branchcache.hash_publication_mode
 |string
 |query
 |False
-a|Filter by svm.name
-
-
-|link
-|string
-|query
-|False
-a|Filter by link
-
-
-|ldap_path
-|string
-|query
-|False
-a|Filter by ldap_path
-
-
-|index
-|integer
-|query
-|False
-a|Filter by index
-
-
-|enabled
-|boolean
-|query
-|False
-a|Filter by enabled
+a|Filter by registry_settings.branchcache.hash_publication_mode
 
 
 |registry_settings.refresh_time_random_offset
@@ -95,18 +59,20 @@ a|Filter by registry_settings.refresh_time_random_offset
 a|Filter by registry_settings.refresh_time_interval
 
 
-|registry_settings.branchcache.hash_publication_mode
+|name
 |string
 |query
 |False
-a|Filter by registry_settings.branchcache.hash_publication_mode
+a|Filter by name
+
+* minLength: 1
 
 
-|registry_settings.branchcache.supported_hash_version
+|svm.name
 |string
 |query
 |False
-a|Filter by registry_settings.branchcache.supported_hash_version
+a|Filter by svm.name
 
 
 |central_access_policy_settings
@@ -116,18 +82,18 @@ a|Filter by registry_settings.branchcache.supported_hash_version
 a|Filter by central_access_policy_settings
 
 
-|uuid
+|file_system_path
 |string
 |query
 |False
-a|Filter by uuid
+a|Filter by file_system_path
 
 
-|extensions
-|string
+|enabled
+|boolean
 |query
 |False
-a|Filter by extensions
+a|Filter by enabled
 
 
 |central_access_policy_staging_audit_type
@@ -137,11 +103,18 @@ a|Filter by extensions
 a|Filter by central_access_policy_staging_audit_type
 
 
-|file_system_path
+|ldap_path
 |string
 |query
 |False
-a|Filter by file_system_path
+a|Filter by ldap_path
+
+
+|extensions
+|string
+|query
+|False
+a|Filter by extensions
 
 
 |security_settings.event_audit_settings.object_access_type
@@ -158,46 +131,32 @@ a|Filter by security_settings.event_audit_settings.object_access_type
 a|Filter by security_settings.event_audit_settings.logon_type
 
 
-|security_settings.event_log_settings.retention_method
-|string
-|query
-|False
-a|Filter by security_settings.event_log_settings.retention_method
-
-
-|security_settings.event_log_settings.max_size
-|integer
-|query
-|False
-a|Filter by security_settings.event_log_settings.max_size
-
-
-|security_settings.registry_values.signing_required
+|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
 |boolean
 |query
 |False
-a|Filter by security_settings.registry_values.signing_required
+a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
 
 
-|security_settings.kerberos.max_renew_age
+|security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
 |string
 |query
 |False
-a|Filter by security_settings.kerberos.max_renew_age
+a|Filter by security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
 
 
-|security_settings.kerberos.max_clock_skew
-|string
+|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
+|boolean
 |query
 |False
-a|Filter by security_settings.kerberos.max_clock_skew
+a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
 
 
-|security_settings.kerberos.max_ticket_age
-|string
+|security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
+|boolean
 |query
 |False
-a|Filter by security_settings.kerberos.max_ticket_age
+a|Filter by security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
 
 
 |security_settings.files_or_folders
@@ -205,6 +164,13 @@ a|Filter by security_settings.kerberos.max_ticket_age
 |query
 |False
 a|Filter by security_settings.files_or_folders
+
+
+|security_settings.registry_values.signing_required
+|boolean
+|query
+|False
+a|Filter by security_settings.registry_values.signing_required
 
 
 |security_settings.privilege_rights.change_notify_users
@@ -228,39 +194,74 @@ a|Filter by security_settings.privilege_rights.security_privilege_users
 a|Filter by security_settings.privilege_rights.take_ownership_users
 
 
-|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
-|boolean
-|query
-|False
-a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts
-
-
-|security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
-|boolean
-|query
-|False
-a|Filter by security_settings.restrict_anonymous.no_enumeration_of_sam_accounts_and_shares
-
-
-|security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
-|string
-|query
-|False
-a|Filter by security_settings.restrict_anonymous.combined_restriction_for_anonymous_user
-
-
-|security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
-|boolean
-|query
-|False
-a|Filter by security_settings.restrict_anonymous.anonymous_access_to_shares_and_named_pipes_restricted
-
-
 |security_settings.restricted_groups
 |string
 |query
 |False
 a|Filter by security_settings.restricted_groups
+
+
+|security_settings.kerberos.max_ticket_age
+|string
+|query
+|False
+a|Filter by security_settings.kerberos.max_ticket_age
+
+
+|security_settings.kerberos.max_renew_age
+|string
+|query
+|False
+a|Filter by security_settings.kerberos.max_renew_age
+
+
+|security_settings.kerberos.max_clock_skew
+|string
+|query
+|False
+a|Filter by security_settings.kerberos.max_clock_skew
+
+
+|security_settings.event_log_settings.max_size
+|integer
+|query
+|False
+a|Filter by security_settings.event_log_settings.max_size
+
+
+|security_settings.event_log_settings.retention_method
+|string
+|query
+|False
+a|Filter by security_settings.event_log_settings.retention_method
+
+
+|link
+|string
+|query
+|False
+a|Filter by link
+
+
+|version
+|integer
+|query
+|False
+a|Filter by version
+
+
+|index
+|integer
+|query
+|False
+a|Filter by index
+
+
+|uuid
+|string
+|query
+|False
+a|Filter by uuid
 
 
 |svm.uuid

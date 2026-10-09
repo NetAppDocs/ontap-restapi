@@ -7,6 +7,7 @@ summary: 'Retrieve iSCSI services'
 ---
 
 = Retrieve iSCSI services
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/san/iscsi/services`#
 
@@ -41,20 +42,18 @@ There is an added computational cost to retrieving values for these properties. 
 |Required
 |Description
 
-|enabled
-|boolean
+|svm.name
+|string
 |query
 |False
-a|Filter by enabled
+a|Filter by svm.name
 
 
-|statistics.latency_raw.read
-|integer
+|svm.uuid
+|string
 |query
 |False
-a|Filter by statistics.latency_raw.read
-
-* Introduced in: 9.7
+a|Filter by svm.uuid
 
 
 |statistics.latency_raw.other
@@ -84,11 +83,11 @@ a|Filter by statistics.latency_raw.write
 * Introduced in: 9.7
 
 
-|statistics.iops_raw.read
+|statistics.latency_raw.read
 |integer
 |query
 |False
-a|Filter by statistics.iops_raw.read
+a|Filter by statistics.latency_raw.read
 
 * Introduced in: 9.7
 
@@ -120,38 +119,11 @@ a|Filter by statistics.iops_raw.write
 * Introduced in: 9.7
 
 
-|statistics.throughput_raw.write
+|statistics.iops_raw.read
 |integer
 |query
 |False
-a|Filter by statistics.throughput_raw.write
-
-* Introduced in: 9.7
-
-
-|statistics.throughput_raw.total
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.total
-
-* Introduced in: 9.7
-
-
-|statistics.throughput_raw.read
-|integer
-|query
-|False
-a|Filter by statistics.throughput_raw.read
-
-* Introduced in: 9.7
-
-
-|statistics.timestamp
-|string
-|query
-|False
-a|Filter by statistics.timestamp
+a|Filter by statistics.iops_raw.read
 
 * Introduced in: 9.7
 
@@ -165,101 +137,38 @@ a|Filter by statistics.status
 * Introduced in: 9.7
 
 
-|metric.duration
+|statistics.throughput_raw.write
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.write
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.read
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.read
+
+* Introduced in: 9.7
+
+
+|statistics.throughput_raw.total
+|integer
+|query
+|False
+a|Filter by statistics.throughput_raw.total
+
+* Introduced in: 9.7
+
+
+|statistics.timestamp
 |string
 |query
 |False
-a|Filter by metric.duration
-
-* Introduced in: 9.7
-
-
-|metric.latency.read
-|integer
-|query
-|False
-a|Filter by metric.latency.read
-
-* Introduced in: 9.7
-
-
-|metric.latency.other
-|integer
-|query
-|False
-a|Filter by metric.latency.other
-
-* Introduced in: 9.7
-
-
-|metric.latency.total
-|integer
-|query
-|False
-a|Filter by metric.latency.total
-
-* Introduced in: 9.7
-
-
-|metric.latency.write
-|integer
-|query
-|False
-a|Filter by metric.latency.write
-
-* Introduced in: 9.7
-
-
-|metric.timestamp
-|string
-|query
-|False
-a|Filter by metric.timestamp
-
-* Introduced in: 9.7
-
-
-|metric.status
-|string
-|query
-|False
-a|Filter by metric.status
-
-* Introduced in: 9.7
-
-
-|metric.throughput.write
-|integer
-|query
-|False
-a|Filter by metric.throughput.write
-
-* Introduced in: 9.7
-
-
-|metric.throughput.total
-|integer
-|query
-|False
-a|Filter by metric.throughput.total
-
-* Introduced in: 9.7
-
-
-|metric.throughput.read
-|integer
-|query
-|False
-a|Filter by metric.throughput.read
-
-* Introduced in: 9.7
-
-
-|metric.iops.read
-|integer
-|query
-|False
-a|Filter by metric.iops.read
+a|Filter by statistics.timestamp
 
 * Introduced in: 9.7
 
@@ -291,6 +200,105 @@ a|Filter by metric.iops.write
 * Introduced in: 9.7
 
 
+|metric.iops.read
+|integer
+|query
+|False
+a|Filter by metric.iops.read
+
+* Introduced in: 9.7
+
+
+|metric.latency.other
+|integer
+|query
+|False
+a|Filter by metric.latency.other
+
+* Introduced in: 9.7
+
+
+|metric.latency.total
+|integer
+|query
+|False
+a|Filter by metric.latency.total
+
+* Introduced in: 9.7
+
+
+|metric.latency.write
+|integer
+|query
+|False
+a|Filter by metric.latency.write
+
+* Introduced in: 9.7
+
+
+|metric.latency.read
+|integer
+|query
+|False
+a|Filter by metric.latency.read
+
+* Introduced in: 9.7
+
+
+|metric.timestamp
+|string
+|query
+|False
+a|Filter by metric.timestamp
+
+* Introduced in: 9.7
+
+
+|metric.throughput.write
+|integer
+|query
+|False
+a|Filter by metric.throughput.write
+
+* Introduced in: 9.7
+
+
+|metric.throughput.read
+|integer
+|query
+|False
+a|Filter by metric.throughput.read
+
+* Introduced in: 9.7
+
+
+|metric.throughput.total
+|integer
+|query
+|False
+a|Filter by metric.throughput.total
+
+* Introduced in: 9.7
+
+
+|metric.status
+|string
+|query
+|False
+a|Filter by metric.status
+
+* Introduced in: 9.7
+
+
+|metric.duration
+|string
+|query
+|False
+a|Filter by metric.duration
+
+* Introduced in: 9.7
+
+
 |target.name
 |string
 |query
@@ -311,18 +319,11 @@ a|Filter by target.alias
 * minLength: 1
 
 
-|svm.uuid
-|string
+|enabled
+|boolean
 |query
 |False
-a|Filter by svm.uuid
-
-
-|svm.name
-|string
-|query
-|False
-a|Filter by svm.name
+a|Filter by enabled
 
 
 |fields

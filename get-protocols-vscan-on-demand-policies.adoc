@@ -7,6 +7,7 @@ summary: 'Retrieve a Vscan On-Demand policy'
 ---
 
 = Retrieve a Vscan On-Demand policy
+:imagesdir: ./media/
 
 [.api-doc-operation .api-doc-operation-get]#GET# [.api-doc-code-block]#`/protocols/vscan/{svm.uuid}/on-demand-policies`#
 
@@ -34,6 +35,13 @@ Retrieves the Vscan On-Demand policy.
 |Required
 |Description
 
+|log_path
+|string
+|query
+|False
+a|Filter by log_path
+
+
 |svm.name
 |string
 |query
@@ -43,18 +51,18 @@ a|Filter by svm.name
 * Introduced in: 9.10
 
 
-|scan_paths
+|schedule.name
 |string
 |query
 |False
-a|Filter by scan_paths
+a|Filter by schedule.name
 
 
-|log_path
+|schedule.uuid
 |string
 |query
 |False
-a|Filter by log_path
+a|Filter by schedule.uuid
 
 
 |name
@@ -67,18 +75,11 @@ a|Filter by name
 * minLength: 1
 
 
-|schedule.uuid
+|scan_paths
 |string
 |query
 |False
-a|Filter by schedule.uuid
-
-
-|schedule.name
-|string
-|query
-|False
-a|Filter by schedule.name
+a|Filter by scan_paths
 
 
 |scope.include_extensions
@@ -86,13 +87,6 @@ a|Filter by schedule.name
 |query
 |False
 a|Filter by scope.include_extensions
-
-
-|scope.exclude_extensions
-|string
-|query
-|False
-a|Filter by scope.exclude_extensions
 
 
 |scope.max_file_size
@@ -105,6 +99,20 @@ a|Filter by scope.max_file_size
 * Min value: 1024
 
 
+|scope.exclude_extensions
+|string
+|query
+|False
+a|Filter by scope.exclude_extensions
+
+
+|scope.scan_without_extension
+|boolean
+|query
+|False
+a|Filter by scope.scan_without_extension
+
+
 |scope.exclude_paths
 |string
 |query
@@ -113,13 +121,6 @@ a|Filter by scope.exclude_paths
 
 * maxLength: 255
 * minLength: 1
-
-
-|scope.scan_without_extension
-|boolean
-|query
-|False
-a|Filter by scope.scan_without_extension
 
 
 |svm.uuid
