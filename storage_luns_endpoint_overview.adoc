@@ -414,7 +414,7 @@ The value of property `space.scsi_thin_provisioning_support_enabled` is not prop
 
 === Creating a new LUN clone
 
-You create a new LUN clone as you create any LUN - a POST request to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_create[/storage/luns]. Set `clone.source.uuid` or `clone.source.name` to identify the source LUN from which the clone is created. The LUN clone and its source must reside in the same volume.
+You create a new LUN clone as you create any LUN - a POST request to link:post-storage-luns.html[/storage/luns]. Set `clone.source.uuid` or `clone.source.name` to identify the source LUN from which the clone is created. The LUN clone and its source must reside in the same volume.
 
 The source LUN can reside in a snapshot, in which case the `clone.source.name` field must be used to identify it. Add `/.snapshot/<snapshot_name>` to the path after the volume name to identify the snapshot. For example `/vol/vol1/.snapshot/snap1/lun1`.
 
@@ -431,7 +431,7 @@ curl -X POST 'https://<mgmt-ip>/api/storage/luns' -H 'Accept: application/hal+js
 
 === Over-writing an existing LUN's data as a clone of another
 
-You can overwrite an existing LUN as a clone of another, using a PATCH request to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_modify[/storage/luns/\{uuid}]. Set the `clone.source.uuid` or `clone.source.name` property to identify the source LUN from which the clone data is taken. The LUN clone and its source must reside in the same volume.
+You can overwrite an existing LUN as a clone of another, using a PATCH request to link:patch-storage-luns-.html[/storage/luns/\{uuid}]. Set the `clone.source.uuid` or `clone.source.name` property to identify the source LUN from which the clone data is taken. The LUN clone and its source must reside in the same volume.
 
 When used in a PATCH request, the patched LUN's data is overwritten as a clone of the source. The following properties are preserved from the patched LUN unless otherwise specified as part of the PATCH: `class`, `auto_delete`, `lun_maps`, `vvol`, `serial_number`, `status.state`, and `uuid`.
 
@@ -456,7 +456,7 @@ The conversion process updates the metadata to the NVMe namespace, making it a L
 
 === Convert an NVMe namespace into a LUN
 
-You convert an NVMe namespace into a LUN by calling a POST to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_create[/storage/luns]. Set `convert.namespace.uuid` or `convert.namespace.name` to identify the source NVMe namespace which is to be converted in-place into a LUN.
+You convert an NVMe namespace into a LUN by calling a POST to link:post-storage-luns.html[/storage/luns]. Set `convert.namespace.uuid` or `convert.namespace.name` to identify the source NVMe namespace which is to be converted in-place into a LUN.
 
 ----
 
@@ -471,7 +471,7 @@ curl -X POST 'https://<mgmt-ip>/api/storage/luns' -H 'Accept: application/hal+js
 
 == Moving LUNs between volumes
 
-You move a LUN between volumes by using a PATCH request to link:getting_started_with_the_ontap_rest_api.html#/SAN/lun_modify[/storage/luns/\{uuid}]. Set the volume portion of the fully qualified LUN path `name` property, `path.volume.uuid`, or `path.volume.name` property to a different volume than the LUN's current volume. Moving a LUN between volumes is an asynchronous activity. A successful request returns a response of 200 synchronously, which indicates that the movement has been successfully queued. The LUN object can then be further polled with a GET request to <<lun_get,`+/storage/luns/{uuid}+`>> to monitor the status of the movement.
+You move a LUN between volumes by using a PATCH request to link:patch-storage-luns-.html[/storage/luns/\{uuid}]. Set the volume portion of the fully qualified LUN path `name` property, `path.volume.uuid`, or `path.volume.name` property to a different volume than the LUN's current volume. Moving a LUN between volumes is an asynchronous activity. A successful request returns a response of 200 synchronously, which indicates that the movement has been successfully queued. The LUN object can then be further polled with a GET request to link:get-storage-luns-.html[/storage/luns/\{uuid}] to monitor the status of the movement.
 
 The `movement` sub-object of the LUN object is populated while a LUN movement is in progress and for two minutes following completion of a movement.
 
