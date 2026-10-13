@@ -3961,6 +3961,14 @@ paths:
         filename: get-protocols-san-lun-maps-.html
         subcategory: Manage SAN LUN maps
         explorer: false
+    patch:
+      x-doc:
+        title: Modify an ONTAP LUN map
+        category: San
+        filename: patch-protocols-san-lun-maps-.html
+        sidebar_title: Modify a LUN map
+        subcategory: Manage SAN LUN maps
+        explorer: false
   "/protocols/san/lun-maps/{lun.uuid}/{igroup.uuid}/reporting-nodes":
     get:
       x-doc:
@@ -7360,7 +7368,7 @@ paths:
           of an SVM for a specific time
         category: SAN
         filename: get-protocols-san-fcp-services-metrics-.html
-        subcategory: 
+        subcategory: Manage FC services for SVMs
         explorer: false
   "/protocols/san/initiators":
     get:
@@ -7625,7 +7633,7 @@ paths:
         title: Retrieve historical performance metrics for a LUN
         category: SAN
         filename: get-storage-luns-metrics.html
-        subcategory: 
+        subcategory: Manage LUN attributes
         explorer: false
   "/storage/luns/{lun.uuid}/metrics/{timestamp}":
     get:
@@ -7633,7 +7641,7 @@ paths:
         title: Retrieve historical performance metrics for a LUN for a specific time
         category: SAN
         filename: get-storage-luns-metrics-.html
-        subcategory: 
+        subcategory: Manage LUN attributes
         explorer: false
   "/storage/namespaces/{nvme_namespace.uuid}/metrics":
     get:
@@ -7940,6 +7948,14 @@ paths:
         category: Security
         filename: get-security-webauthn-global-settings-.html
         subcategory: View a WebAuthn global setting entry
+        explorer: false
+    patch:
+      x-doc:
+        title: Update a WebAuthn global settings for an ONTAP cluster or SVM.
+        category: Security
+        filename: patch-security-webauthn-global-settings-.html
+        sidebar_title: Update a WebAuthn global settings for a cluster or SVM
+        subcategory: 
         explorer: false
   "/security/webauthn/supported-algorithms":
     get:
@@ -8346,7 +8362,86 @@ paths:
         filename: get-storage-flexcache-connection-status---.html
         subcategory: Manage FlexCache connection status
         explorer: false
-
+  "/security/authentication/cluster/oidc":
+    delete:
+      x-doc:
+        title:  Delete the OIDC configuration in the ONTAP cluster
+        category: Security
+        filename: delete-security-authentication-cluster-oidc.html
+        sidebar_title: Delete the OIDC configuration in the cluster
+        subcategory: Manage the OIDC authentication configuration for the cluster
+        explorer: false
+    get:
+      x-doc:
+        title: Retrieve the OIDC configuration in the ONTAP cluster
+        category: Security
+        filename: get-security-authentication-cluster-oidc.html
+        sidebar_title: Retrieve the OIDC configuration in the cluster
+        subcategory: Manage the OIDC authentication configuration for the cluster
+        explorer: false
+    patch:
+      x-doc:
+        title: Update the OIDC configuration in the ONTAP cluster
+        category: Security
+        filename: patch-security-authentication-cluster-oidc.html
+        sidebar_title: Update the OIDC configuration in the cluster
+        subcategory: Manage the OIDC authentication configuration for the cluster
+        explorer: false
+    post:
+      x-doc:
+        title: Create the OIDC configuration in the ONTAP cluster
+        category: Security
+        filename: post-security-authentication-cluster-oidc.html
+        sidebar_title: Create the OIDC configuration in the cluster
+        subcategory: Manage the OIDC authentication configuration for the cluster
+        explorer: false
+  "/security/cluster-network/ipsec/associations":
+    get:
+      x-doc:
+        title: Retrieve the IPsec and IKE security associations for the ONTAP cluster network
+        category: Security
+        filename: get-security-cluster-network-ipsec-associations.html
+        sidebar_title: Retrieve the IPsec and IKE security associations for the cluster network
+        subcategory: View IPsec and IKE security associations for the cluster network
+        explorer: false
+  "/security/cluster-network/ipsec/associations/{uuid}":
+    get:
+      x-doc:
+        title: Retrieve an IPsec or IKE security association for the ONTAP cluster network
+        category: Security
+        filename: get-security-cluster-network-ipsec-associations-.html
+        sidebar_title: Retrieve an IPsec or IKE security association for the cluster network
+        subcategory: View IPsec and IKE security associations for the cluster network
+        explorer: false
+  "/security/cluster-network/ipsec/policies":
+    get:
+      x-doc:
+        title:  Retrieve the IPsec policy configurations used for ONTAP cluster network security
+        category: Security
+        filename: get-security-cluster-network-ipsec-policies.html
+        sidebar_title: Retrieve the IPsec policy configurations used for cluster
+          network security
+        subcategory: View the IPsec policy configuration for cluster network security
+        explorer: false
+  "/security/cluster-network/ipsec/policies/{node.uuid}/{uuid}":
+    get:
+      x-doc:
+        title: Retrieve the IPsec policy configuration for an ONTAP node and policy UUID
+        category: Security
+        filename: get-security-cluster-network-ipsec-policies-.html
+        sidebar_title: Retrieve the IPsec policy configuration for a node and policy UUID
+        subcategory: View the IPsec policy configuration for cluster network security
+        explorer: false
+  "/security/login/whoami":
+    get:
+      x-doc:
+        title:  Retrieve username, role, and permissions information for the logged-in ONTAP user
+        category: Security
+        filename: get-security-login-whoami.html
+        sidebar_title: Retrieve the username, role, and permissions information for
+          the logged-in user
+        subcategory: View user details
+        explorer: false
 
 
 categories:
@@ -8992,3 +9087,11 @@ subcategories:
   permalink: storage_flexcache_connection-status_endpoint_overview.html
 - id: view fc login information
   permalink: network_fc_logins_endpoint_overview.html
+- id: view user details
+  permalink: security_login_whoami_endpoints_overview.html
+- id: View the ipsec policy configuration for cluster network security
+  permalink: security_cluster-network_ipsec_policies_endpoints_overview.html
+- id: view ipsec and ike security associations for the cluster network
+  permalink: security_cluster-network_ipsec_associations_endpoints_overview.html
+- id: manage the oidc authentication configuration for the cluster
+  permalink: security_authentication_cluster_oidc_endpoints_overview.html

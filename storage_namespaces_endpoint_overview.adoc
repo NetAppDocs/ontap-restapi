@@ -111,6 +111,7 @@ This example sets the `comment` property of an NVMe namespace.
 PATCH /api/storage/namespaces/{uuid}
 
 # The call:
+curl -X PATCH 'https://<mgmt-ip>/api/storage/namespaces/dccdc3e6-cf4e-498f-bec6-f7897f945669' -H 'Accept: application/hal+json' -d '{ "comment": "Your new comment here" }'
 ----
 
 === Updating the size of an NVMe namespace
@@ -335,7 +336,7 @@ An NVMe namespace clone can also be set to auto-delete by setting the `auto_dele
 
 === Creating a new NVMe namespace clone
 
-You create an NVMe namespace clone as you create any NVMe namespace -- a POST to link:getting_started_with_the_ontap_rest_api.html#/NVMe/nvme_namespace_create[/storage/namespaces]. Set `clone.source.uuid` or `clone.source.name` to identify the source NVMe namespace from which the clone is created. The NVMe namespace clone and its source must reside in the same volume.
+You create an NVMe namespace clone as you create any NVMe namespace -- a POST to link:post-storage-namespaces.html[/storage/namespaces]. Set `clone.source.uuid` or `clone.source.name` to identify the source NVMe namespace from which the clone is created. The NVMe namespace clone and its source must reside in the same volume.
 
 The source NVMe namespace can reside in a snapshot, in which case, the `clone.source.name` field must be used to identify it. Add `/.snapshot/<snapshot_name>` to the path after the volume name to identify the snapshot. For example `/vol/vol1/.snapshot/snap1/namespace1`.
 
@@ -352,7 +353,7 @@ curl -X POST 'https://<mgmt-ip>/api/storage/namespaces' -H 'Accept: application/
 
 === Over-writing an existing NVMe namespace's data as a clone of another
 
-You can over-write an existing NVMe namespace as a clone of another. You do this as a PATCH on the NVMe namespace to overwrite -- a PATCH to link:getting_started_with_the_ontap_rest_api.html#/NVMe/nvme_namespace_modify[/storage/namespaces/\{uuid}]. Set the `clone.source.uuid` or `clone.source.name` property to identify the source NVMe namespace from which the clone data is taken. The NVMe namespace clone and its source must reside in the same volume.
+You can over-write an existing NVMe namespace as a clone of another. You do this as a PATCH on the NVMe namespace to overwrite -- a PATCH to link:patch-storage-namespaces-.html[/storage/namespaces/\{uuid}]. Set the `clone.source.uuid` or `clone.source.name` property to identify the source NVMe namespace from which the clone data is taken. The NVMe namespace clone and its source must reside in the same volume.
 
 When used in a PATCH, the patched NVMe namespace's data is over-written as a clone of the source and the following properties are preserved from the patched namespace unless otherwise specified as part of the PATCH: `auto_delete`, `subsystem_map`, `status.state`, and `uuid`.
 
@@ -375,7 +376,7 @@ The conversion process updates the metadata to the LUN, making it an NVMe namesp
 
 === Convert a LUN into an NVMe namespace
 
-You convert a LUN into an NVMe namespace by calling a POST to link:getting_started_with_the_ontap_rest_api.html#/NVMe/nvme_namespace_create[/storage/namespaces]. Set `convert.lun.uuid` or `convert.lun.name` to identify the source LUN which is to be converted in-place into an NVMe namespace.
+You convert a LUN into an NVMe namespace by calling a POST to link:post-storage-namespaces.html[/storage/namespaces]. Set `convert.lun.uuid` or `convert.lun.name` to identify the source LUN which is to be converted in-place into an NVMe namespace.
 
 ----
 
