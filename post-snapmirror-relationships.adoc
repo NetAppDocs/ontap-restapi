@@ -3,17 +3,27 @@ sidebar: sidebar
 api: true
 explorer: false
 permalink: 'post-snapmirror-relationships.html'
+keywords: 'snapmirror relationships,snapmirror destination,snapmirror source,svm peer relationship,flexvol provisioning'
 summary: 'Create a SnapMirror relationship'
 ---
 
 = Create a SnapMirror relationship
 :imagesdir: ./media/
 
+[.lead]
+Creates a SnapMirror relationship to establish data replication between source and destination endpoints. This can include provisioning the destination if it doesn't exist, making it useful for data protection and disaster recovery scenarios.
+
+== HTTP method and endpoint
+
 [.api-doc-operation .api-doc-operation-post]#POST# [.api-doc-code-block]#`/snapmirror/relationships`#
 
-*Introduced In:* 9.6
+== Introduced in
 
-Creates a SnapMirror relationship. This API can optionally provision the destination endpoint when it does not exist. This API must be executed on the cluster containing the destination endpoint unless the destination endpoint is being provisioned. When the destination endpoint is being provisioned, this API can also be executed from the cluster containing the source endpoint. Provisioning of the destination endpoint from the source cluster is supported for the FlexVol volume, FlexGroup volume, Application Consistency Group  endpoints.
+ONTAP 9.6
+
+== Usage notes
+
+This API can optionally provision the destination endpoint when it does not exist. This API must be executed on the cluster containing the destination endpoint unless the destination endpoint is being provisioned. When the destination endpoint is being provisioned, this API can also be executed from the cluster containing the source endpoint. Provisioning of the destination endpoint from the source cluster is supported for the FlexVol volume, FlexGroup volume, Application Consistency Group  endpoints.
 
 For SVM endpoints, when the destination endpoint exists, the source SVM and the destination SVM must be in an SVM peer relationship. When provisioning the destination endpoint, the SVM peer relationship between the source SVM and the destination SVM is established as part of the destination provision, provided that the source SVM has SVM peering permissions for the destination cluster.
 
